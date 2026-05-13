@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 
 const FUXION_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson";
 const WA = "59898950206";
-const META_PIXEL_ID = "2212676212813152";
+const META_PIXEL_ID = "TU_META_PIXEL_ID";
 const GOOGLE_TAG_ID = "TU_GOOGLE_TAG_ID";
 
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
-const CERTS = ["Clean Label","FDA Registered","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","+15,000 Socios","Ingredientes Naturales","Sin Conservantes Artificiales","Ciencia + Naturaleza"];
+const CERTS = ["Clean Label","FDA Registered","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","+15,000 Socios","Ingredientes Naturales","Sin Conservantes Artificiales"];
 
 const PRODUCTS = [
   {id:1,line:"Detox",name:"REXET",tag:"¡Reinicia tu cuerpo!",emoji:"🌿",desc:"Bebida efervescente que protege el hígado y elimina toxinas con tuna roja, alcachofa y clorofila.",benefits:["Depura el hígado","Elimina toxinas","Equilibra el metabolismo"],ing:"Tuna roja · Alcachofa · Hierba luisa · Clorofila · Zinc"},
@@ -53,17 +53,6 @@ const BIZ_TESTIMONIALS = [
   {name:"Pedro Fernandes",country:"Portugal",flag:"🇵🇹",gender:"male",role:"Diamond Partner",text:"Comecei do zero e hoje tenho renda passiva de 6 dígitos. O modelo da FuXion é revolucionário."},
 ];
 const SOCIAL_PROOF = ["🇲🇽 Carlos de México acaba de unirse","🇨🇴 Laura de Colombia compró Energy+","🇧🇷 Pedro de Brasil se registró","🇦🇷 Sofía de Argentina compró Detox Kit","🇪🇸 Elena de España se unió al equipo","🇨🇱 Diego de Chile compró Immuno Shield","🇺🇸 James de USA se convirtió en Partner","🇺🇾 Marcos de Uruguay se registró"];
-const QUIZ_Q = [
-  {q:{es:"¿Cuál es tu principal objetivo?",en:"What's your main goal?",pt:"Qual é seu objetivo?"},opts:[{es:"💪 Más energía",en:"💪 More energy",pt:"💪 Mais energia",tag:"energy"},{es:"🌿 Detox corporal",en:"🌿 Body detox",pt:"🌿 Detox corporal",tag:"detox"},{es:"🛡️ Fortalecer inmunidad",en:"🛡️ Boost immunity",pt:"🛡️ Fortalecer imunidade",tag:"immunity"},{es:"💼 Negocio global",en:"💼 Global business",pt:"💼 Negócio global",tag:"biz"}]},
-  {q:{es:"¿Cómo es tu estilo de vida?",en:"How is your lifestyle?",pt:"Como é seu estilo de vida?"},opts:[{es:"🏃 Muy activo",en:"🏃 Very active",pt:"🏃 Muito ativo",tag:"energy"},{es:"💼 Trabajo intenso",en:"💼 Intense work",pt:"💼 Trabalho intenso",tag:"detox"},{es:"🏠 Sedentario",en:"🏠 Sedentary",pt:"🏠 Sedentário",tag:"immunity"},{es:"✈️ Emprendedor",en:"✈️ Entrepreneur",pt:"✈️ Empreendedor",tag:"biz"}]},
-  {q:{es:"¿Qué resultado quieres en 30 días?",en:"What result in 30 days?",pt:"Que resultado em 30 dias?"},opts:[{es:"⚡ Energía sin café",en:"⚡ Energy no coffee",pt:"⚡ Energia sem café",tag:"energy"},{es:"🌱 Digestión perfecta",en:"🌱 Perfect digestion",pt:"🌱 Digestão perfeita",tag:"detox"},{es:"💚 Sin enfermedades",en:"💚 No sickness",pt:"💚 Sem doenças",tag:"immunity"},{es:"💰 Primera comisión",en:"💰 First commission",pt:"💰 Primeira comissão",tag:"biz"}]},
-];
-const QUIZ_RES = {
-  energy:{emoji:"⚡",title:{es:"Tu Plan Energy Power",en:"Your Energy Power Plan",pt:"Seu Plano Energy Power"},products:["VITA XTRA T+","NUTRADAY","XPEED"]},
-  detox:{emoji:"🌿",title:{es:"Tu Plan Detox Premium",en:"Your Detox Premium Plan",pt:"Seu Plano Detox Premium"},products:["REXET","LIQUID FIBER","BALANCE"]},
-  immunity:{emoji:"🛡️",title:{es:"Tu Plan Immunity Shield",en:"Your Immunity Shield",pt:"Seu Plano Immunity Shield"},products:["BIOPRO+ TECT","NO STRESS","YOUTH ELIXIR HGH"]},
-  biz:{emoji:"👑",title:{es:"Tu Plan Business Builder",en:"Your Business Builder",pt:"Seu Plano Business Builder"},products:["Kit de Inicio FuXion","Acceso 37 mercados","Soporte digital completo"]},
-};
 
 function detectLang(){const l=(navigator.language||"es").slice(0,2).toLowerCase();return ["es","en","pt"].includes(l)?l:"es";}
 function detectCountry(){
@@ -77,26 +66,12 @@ function detectCountry(){
   return "mi país";
 }
 
-// ── TRACKING ──────────────────────────────────────────────────────────────────
-function TrackingPixels(){
-  useEffect(()=>{
-    if(META_PIXEL_ID!=="2212676212813152"){
-      (function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)})(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      window.fbq('init',META_PIXEL_ID);window.fbq('track','PageView');
-    }
-    if(GOOGLE_TAG_ID!=="TU_GOOGLE_TAG_ID"){
-      const s=document.createElement('script');s.async=true;s.src=`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`;document.head.appendChild(s);
-      window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};window.gtag('js',new Date());window.gtag('config',GOOGLE_TAG_ID);
-    }
-  },[]);
-  return null;
-}
 function trackEvent(name,params={}){
-  if(window.fbq&&META_PIXEL_ID!=="2212676212813152")window.fbq('track',name,params);
+  if(window.fbq&&META_PIXEL_ID!=="TU_META_PIXEL_ID")window.fbq('track',name,params);
   if(window.gtag&&GOOGLE_TAG_ID!=="TU_GOOGLE_TAG_ID")window.gtag('event',name,params);
 }
 
-// ── PARTICLES 3D ─────────────────────────────────────────────────────────────
+// ── PARTICLES ────────────────────────────────────────────────────────────────
 function Particles(){
   const ref=useRef();
   useEffect(()=>{
@@ -148,26 +123,13 @@ function Avatar({name,gender,size=52}){
   return(
     <svg width={size} height={size} viewBox="0 0 60 60" style={{borderRadius:"50%",flexShrink:0,border:"2.5px solid #1B5E3B",boxShadow:"0 2px 8px rgba(27,94,59,0.2)"}}>
       <circle cx="30" cy="30" r="30" fill={p.bg}/>
-      {/* Cabello */}
-      {f?(
-        <><ellipse cx="30" cy="17" rx="13" ry="6" fill={p.hair}/><ellipse cx="18" cy="26" rx="4" ry="9" fill={p.hair}/><ellipse cx="42" cy="26" rx="4" ry="9" fill={p.hair}/><rect x="17" y="13" width="26" height="10" rx="5" fill={p.hair}/></>
-      ):(
-        <><ellipse cx="30" cy="16" rx="13" ry="5" fill={p.hair}/><rect x="17" y="12" width="26" height="9" rx="4" fill={p.hair}/></>
-      )}
-      {/* Cabeza */}
+      {f?(<><ellipse cx="30" cy="17" rx="13" ry="6" fill={p.hair}/><ellipse cx="18" cy="26" rx="4" ry="9" fill={p.hair}/><ellipse cx="42" cy="26" rx="4" ry="9" fill={p.hair}/><rect x="17" y="13" width="26" height="10" rx="5" fill={p.hair}/></>):(<><ellipse cx="30" cy="16" rx="13" ry="5" fill={p.hair}/><rect x="17" y="12" width="26" height="9" rx="4" fill={p.hair}/></>)}
       <ellipse cx="30" cy="25" rx="12" ry="13" fill={p.skin}/>
-      {/* Ojos */}
-      <ellipse cx="25" cy="24" rx="2.2" ry="2.4" fill="#2C3E50"/>
-      <ellipse cx="35" cy="24" rx="2.2" ry="2.4" fill="#2C3E50"/>
-      <circle cx="25.8" cy="23.2" r=".8" fill="#fff"/>
-      <circle cx="35.8" cy="23.2" r=".8" fill="#fff"/>
-      {/* Nariz */}
+      <ellipse cx="25" cy="24" rx="2.2" ry="2.4" fill="#2C3E50"/><ellipse cx="35" cy="24" rx="2.2" ry="2.4" fill="#2C3E50"/>
+      <circle cx="25.8" cy="23.2" r=".8" fill="#fff"/><circle cx="35.8" cy="23.2" r=".8" fill="#fff"/>
       <ellipse cx="30" cy="28" rx="1.5" ry="1" fill={p.skin} stroke="#D4A076" strokeWidth=".5"/>
-      {/* Boca */}
       <path d="M26 31 Q30 35 34 31" stroke="#C0392B" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
-      {/* Cuerpo */}
       <ellipse cx="30" cy="50" rx="18" ry="12" fill={f?"#C9A84C":"#1B5E3B"}/>
-      {/* Cuello */}
       <rect x="26" y="36" width="8" height="8" rx="2" fill={p.skin}/>
     </svg>
   );
@@ -176,16 +138,11 @@ function Avatar({name,gender,size=52}){
 // ── TESTIMONIO ────────────────────────────────────────────────────────────────
 function TC({d,verified,large}){
   return(
-    <div style={{minWidth:large?"auto":285,maxWidth:large?520:285,margin:large?"0 auto":undefined,
-      background:"rgba(255,255,255,0.88)",backdropFilter:"blur(18px)",
-      border:"1px solid rgba(27,94,59,0.14)",borderRadius:20,padding:20,
-      flexShrink:0,boxShadow:"0 4px 20px rgba(27,94,59,0.09)"}}>
+    <div style={{minWidth:large?"auto":285,maxWidth:large?520:285,margin:large?"0 auto":undefined,background:"rgba(255,255,255,0.88)",backdropFilter:"blur(18px)",border:"1px solid rgba(27,94,59,0.14)",borderRadius:20,padding:20,flexShrink:0,boxShadow:"0 4px 20px rgba(27,94,59,0.09)"}}>
       <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:12}}>
         <div style={{position:"relative",flexShrink:0}}>
           <Avatar name={d.name} gender={d.gender} size={50}/>
-          <div style={{position:"absolute",bottom:-2,right:-2,width:18,height:18,borderRadius:"50%",
-            background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",
-            fontSize:11,boxShadow:"0 1px 4px rgba(0,0,0,0.2)"}}>{d.flag}</div>
+          <div style={{position:"absolute",bottom:-2,right:-2,width:18,height:18,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,boxShadow:"0 1px 4px rgba(0,0,0,0.2)"}}>{d.flag}</div>
         </div>
         <div style={{flex:1}}>
           <div style={{fontWeight:800,color:"#1B5E3B",fontSize:13}}>{d.name}</div>
@@ -212,35 +169,103 @@ function Toast(){
     const id=setInterval(show,7000);setTimeout(show,2500);return()=>clearInterval(id);
   },[]);
   return(
-    <div style={{position:"fixed",bottom:90,left:16,zIndex:200,
-      transform:vis?"translateY(0)":"translateY(130px)",opacity:vis?1:0,
-      transition:"all .5s cubic-bezier(.34,1.56,.64,1)",
-      background:"rgba(255,255,255,0.96)",backdropFilter:"blur(16px)",
-      border:"1px solid rgba(27,94,59,0.2)",borderRadius:13,
-      padding:"9px 14px",display:"flex",alignItems:"center",gap:9,
-      boxShadow:"0 8px 32px rgba(27,94,59,0.15)",maxWidth:230}}>
+    <div style={{position:"fixed",bottom:90,left:16,zIndex:200,transform:vis?"translateY(0)":"translateY(130px)",opacity:vis?1:0,transition:"all .5s cubic-bezier(.34,1.56,.64,1)",background:"rgba(255,255,255,0.96)",backdropFilter:"blur(16px)",border:"1px solid rgba(27,94,59,0.2)",borderRadius:13,padding:"9px 14px",display:"flex",alignItems:"center",gap:9,boxShadow:"0 8px 32px rgba(27,94,59,0.15)",maxWidth:230}}>
       <div style={{width:7,height:7,borderRadius:"50%",background:"#25D366",flexShrink:0,boxShadow:"0 0 0 3px rgba(37,211,102,0.3)"}}/>
       <span style={{fontSize:11,fontWeight:600,color:"#1B5E3B",lineHeight:1.3}}>{msg}</span>
     </div>
   );
 }
 
-// ── QUIZ ──────────────────────────────────────────────────────────────────────
-function Quiz({lang}){
-  const [step,setStep]=useState(-1);
-  const [answers,setAnswers]=useState([]);
-  const [result,setResult]=useState(null);
-  const labels={es:{title:"¿Cuál es tu Power Profile?",sub:"Descubre tu plan en 30 segundos",start:"Iniciar Quiz",retake:"Repetir Quiz",profile:"POWER PROFILE"},en:{title:"What's Your Power Profile?",sub:"Discover your plan in 30 seconds",start:"Start Quiz",retake:"Retake Quiz",profile:"POWER PROFILE"},pt:{title:"Qual é o seu Power Profile?",sub:"Descubra seu plano em 30 segundos",start:"Iniciar Quiz",retake:"Refazer Quiz",profile:"POWER PROFILE"}};
-  const l=labels[lang]||labels.es;
-  const pick=(tag,i)=>{
-    const a=[...answers,tag];
-    if(i<QUIZ_Q.length-1){setAnswers(a);setStep(i+1);}
-    else{const freq=a.reduce((acc,x)=>{acc[x]=(acc[x]||0)+1;return acc;},{});const top=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];setResult(QUIZ_RES[top]||QUIZ_RES.energy);}
+// ── AI CHAT ───────────────────────────────────────────────────────────────────
+function Chat({lang,open,onClose}){
+  const welcome={es:"¡Hola! Soy tu Vita Advisor 🌿 ¿En qué puedo ayudarte? Puedo recomendarte productos FuXion según tus objetivos o contarte sobre el negocio en 37 países.",en:"Hi! I'm your Vita Advisor 🌿 How can I help? I can recommend FuXion products or tell you about the business in 37 countries.",pt:"Olá! Sou seu Vita Advisor 🌿 Como posso ajudar? Posso recomendar produtos FuXion ou contar sobre o negócio em 37 países."};
+  const title={es:"Vita Advisor IA",en:"Vita Advisor AI",pt:"Vita Advisor IA"};
+  const ph={es:"Pregúntame sobre salud o negocio...",en:"Ask about health or business...",pt:"Pergunte sobre saúde ou negócio..."};
+  const [msgs,setMsgs]=useState([{role:"assistant",text:welcome[lang]||welcome.es}]);
+  const [inp,setInp]=useState("");const [loading,setLoading]=useState(false);
+  const botRef=useRef();
+  useEffect(()=>{botRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
+  const send=async()=>{
+    if(!inp.trim()||loading)return;
+    const um={role:"user",text:inp};setMsgs(m=>[...m,um]);setInp("");setLoading(true);
+    try{
+      const sys=`Eres Vita Advisor, asistente IA de Power Vita (distribuidor FuXion Global). Responde en ${lang==="en"?"inglés":lang==="pt"?"portugués":"español"}. Experto en nutrición biotecnológica FuXion y negocio en 37 países. Máx 3 oraciones, amable, usa emojis. Link compra: ${FUXION_LINK}. WhatsApp: +${WA}.`;
+      const history=msgs.concat(um).map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}));
+      const res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,system:sys,messages:history})});
+      const data=await res.json();
+      setMsgs(m=>[...m,{role:"assistant",text:data.content?.map(b=>b.text||"").join("")||"Intenta de nuevo 🌿"}]);
+    }catch{setMsgs(m=>[...m,{role:"assistant",text:"Error. Contáctanos por WhatsApp 💬"}]);}
+    finally{setLoading(false);}
   };
-  if(step===-1)return(<div style={{textAlign:"center",padding:"28px 20px"}}><div style={{fontSize:44,marginBottom:8}}>🧬</div><h3 style={{fontSize:17,fontWeight:900,color:"#1B5E3B",marginBottom:6}}>{l.title}</h3><p style={{color:"#4a7c5e",marginBottom:20,fontSize:12}}>{l.sub}</p><button onClick={()=>setStep(0)} style={{background:"#1B5E3B",color:"#fff",border:"none",padding:"12px 28px",borderRadius:12,fontWeight:800,fontSize:13,cursor:"pointer"}}>{l.start} →</button></div>);
-  if(result)return(<div style={{textAlign:"center",padding:"24px 18px"}}><div style={{fontSize:40,marginBottom:5}}>{result.emoji}</div><div style={{fontSize:9,fontWeight:700,letterSpacing:2,color:"#C9A84C",marginBottom:4}}>{l.profile}</div><h3 style={{fontSize:16,fontWeight:900,color:"#1B5E3B",marginBottom:11}}>{result.title[lang]||result.title.es}</h3><div style={{background:"rgba(27,94,59,0.06)",borderRadius:11,padding:"11px 14px",marginBottom:14,textAlign:"left"}}>{result.products.map((p,i)=><div key={i} style={{fontSize:12,color:"#2d5a3d",padding:"2px 0",display:"flex",gap:6}}><span style={{color:"#C9A84C"}}>·</span>{p}</div>)}</div><a href={FUXION_LINK} target="_blank" rel="noreferrer" style={{display:"inline-block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",padding:"9px 22px",borderRadius:10,fontWeight:800,textDecoration:"none",fontSize:12,marginBottom:9}}>Ver Productos →</a><br/><button onClick={()=>{setStep(-1);setAnswers([]);setResult(null);}} style={{background:"none",border:"1px solid rgba(27,94,59,0.3)",color:"#1B5E3B",padding:"6px 14px",borderRadius:8,cursor:"pointer",fontSize:11,fontWeight:600}}>{l.retake}</button></div>);
-  const q=QUIZ_Q[step];
-  return(<div style={{padding:"24px 18px"}}><div style={{display:"flex",gap:4,marginBottom:14}}>{QUIZ_Q.map((_,i)=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=step?"#1B5E3B":"rgba(27,94,59,0.18)",transition:"background .3s"}}/>)}</div><div style={{fontSize:9,color:"#4a7c5e",fontWeight:700,letterSpacing:1,marginBottom:6}}>PREGUNTA {step+1}/{QUIZ_Q.length}</div><h3 style={{fontSize:14,fontWeight:800,color:"#1B5E3B",marginBottom:14}}>{q.q[lang]||q.q.es}</h3><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>{q.opts.map((o,i)=>(<button key={i} onClick={()=>pick(o.tag,step)} style={{background:"rgba(27,94,59,0.06)",border:"1.5px solid rgba(27,94,59,0.15)",borderRadius:10,padding:"11px 7px",cursor:"pointer",fontWeight:700,fontSize:11,color:"#1B5E3B",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(27,94,59,0.14)";e.currentTarget.style.borderColor="#1B5E3B";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(27,94,59,0.06)";e.currentTarget.style.borderColor="rgba(27,94,59,0.15)";}}>  {o[lang]||o.es}</button>))}</div></div>);
+  if(!open)return null;
+  return(<div style={{position:"fixed",bottom:88,right:20,width:300,zIndex:300,background:"rgba(245,240,232,0.97)",backdropFilter:"blur(20px)",border:"1.5px solid rgba(27,94,59,0.25)",borderRadius:20,boxShadow:"0 24px 60px rgba(27,94,59,0.22)",overflow:"hidden"}}><div style={{background:"#1B5E3B",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:28,height:28,borderRadius:"50%",background:"rgba(201,168,76,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🌿</div><div><div style={{color:"#fff",fontWeight:800,fontSize:12}}>{title[lang]||title.es}</div><div style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>● Online</div></div></div><button onClick={onClose} style={{background:"none",border:"none",color:"rgba(255,255,255,0.7)",fontSize:16,cursor:"pointer"}}>✕</button></div><div style={{height:250,overflowY:"auto",padding:"11px 11px 5px",display:"flex",flexDirection:"column",gap:8}}>{msgs.map((m,i)=>(<div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"83%",background:m.role==="user"?"#1B5E3B":"rgba(27,94,59,0.09)",color:m.role==="user"?"#fff":"#1a1a1a",borderRadius:11,padding:"7px 10px",fontSize:12,lineHeight:1.5}}>{m.text}</div></div>))}{loading&&<div style={{display:"flex"}}><div style={{background:"rgba(27,94,59,0.09)",borderRadius:11,padding:"7px 12px",color:"#1B5E3B",fontSize:16}}>···</div></div>}<div ref={botRef}/></div><div style={{padding:"7px 10px 10px",borderTop:"1px solid rgba(27,94,59,0.1)",display:"flex",gap:6}}><input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={ph[lang]||ph.es} style={{flex:1,background:"rgba(27,94,59,0.06)",border:"1px solid rgba(27,94,59,0.2)",borderRadius:8,padding:"8px 10px",fontSize:11,outline:"none",color:"#1a1a1a"}}/><button onClick={send} disabled={loading} style={{background:"#1B5E3B",border:"none",borderRadius:8,width:32,color:"#fff",fontSize:14,cursor:"pointer"}}>→</button></div></div>);
+}
+
+// ── NUTRI PLAN (WhatsApp) ─────────────────────────────────────────────────────
+function NutriPlan(){
+  const [selGoal,setSelGoal]=useState("");
+  const [selDiet,setSelDiet]=useState("");
+  const [selSymptoms,setSelSymptoms]=useState([]);
+  const goals=["💪 Más energía","🌿 Detox y digestión","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","😴 Dormir mejor","✨ Mejorar piel"];
+  const diets=["🥩 Omnívoro","🐟 Pescetariano","🥚 Vegetariano","🌱 Vegano","🌾 Sin gluten"];
+  const symptoms=["Fatiga crónica","Hinchazón","Insomnio","Estrés","Digestión lenta","Piel opaca","Inmunidad baja","Ansiedad"];
+  const send=()=>{
+    const msg=encodeURIComponent(`¡Hola! Quiero mi Plan Nutricional personalizado con Power Vita 🌿\nObjetivo: ${selGoal}\nDieta: ${selDiet}\nSíntomas: ${selSymptoms.join(", ")||"ninguno"}\n\n¿Pueden recomendarme los productos FuXion ideales?`);
+    trackEvent('Lead',{content_name:'NutriPlan'});
+    window.open(`https://wa.me/${WA}?text=${msg}`,"_blank");
+  };
+  return(
+    <div style={{padding:"18px 20px"}}>
+      <div style={{textAlign:"center",marginBottom:16}}><div style={{fontSize:36}}>🥗</div><h3 style={{fontSize:15,fontWeight:900,color:"#1B5E3B",margin:"5px 0 3px"}}>Plan Nutricional</h3><p style={{fontSize:11,color:"#4a7c5e"}}>Personalizado · Productos FuXion · Gratis</p></div>
+      <div style={{marginBottom:11}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>OBJETIVO</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5}}>{goals.map(g=><button key={g} onClick={()=>setSelGoal(g)} style={{padding:"8px 5px",borderRadius:8,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:selGoal===g?"#1B5E3B":"rgba(27,94,59,0.18)",background:selGoal===g?"#1B5E3B":"rgba(27,94,59,0.04)",color:selGoal===g?"#fff":"#1B5E3B",transition:"all .2s"}}>{g}</button>)}</div></div>
+      <div style={{marginBottom:11}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>SÍNTOMAS</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{symptoms.map(s=>{const sel=selSymptoms.includes(s);return(<button key={s} onClick={()=>setSelSymptoms(p=>sel?p.filter(x=>x!==s):[...p,s])} style={{padding:"4px 8px",borderRadius:999,fontWeight:600,fontSize:9,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(27,94,59,0.18)",background:sel?"rgba(201,168,76,0.15)":"transparent",color:sel?"#8B6914":"#1B5E3B",transition:"all .2s"}}>{s}</button>);})}</div></div>
+      <div style={{marginBottom:16}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>DIETA</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{diets.map(d=><button key={d} onClick={()=>setSelDiet(d)} style={{padding:"6px 10px",borderRadius:999,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:selDiet===d?"#1B5E3B":"rgba(27,94,59,0.18)",background:selDiet===d?"#1B5E3B":"transparent",color:selDiet===d?"#fff":"#1B5E3B",transition:"all .2s"}}>{d}</button>)}</div></div>
+      <button onClick={send} disabled={!selGoal||!selDiet} style={{width:"100%",background:(!selGoal||!selDiet)?"rgba(27,94,59,0.3)":"#25D366",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:(!selGoal||!selDiet)?"not-allowed":"pointer"}}>💬 Recibir mi plan por WhatsApp →</button>
+      {(!selGoal||!selDiet)&&<p style={{fontSize:9,color:"#9ca3af",textAlign:"center",marginTop:5}}>Selecciona objetivo y dieta para continuar</p>}
+    </div>
+  );
+}
+
+// ── SYMPTOM ANALYZER (WhatsApp) ───────────────────────────────────────────────
+function SymptomAnalyzer(){
+  const [text,setText]=useState("");
+  const examples=["Me siento cansado todo el día aunque duermo bien","Tengo el estómago hinchado después de comer","Me cuesta concentrarme y tengo mucho estrés","Quiero bajar de peso pero no sé por dónde empezar"];
+  const send=()=>{
+    const msg=encodeURIComponent(`¡Hola! Quiero analizar mis síntomas con Power Vita 🔬\n\nCómo me siento: "${text}"\n\n¿Qué productos FuXion me recomiendan?`);
+    trackEvent('Lead',{content_name:'SymptomAnalyzer'});
+    window.open(`https://wa.me/${WA}?text=${msg}`,"_blank");
+  };
+  return(
+    <div style={{padding:"18px 20px"}}>
+      <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:36}}>🔬</div><h3 style={{fontSize:15,fontWeight:900,color:"#1B5E3B",margin:"5px 0 3px"}}>Analizador de Síntomas</h3><p style={{fontSize:11,color:"#4a7c5e"}}>Describí cómo te sentís y te recomendamos tus productos FuXion ideales</p></div>
+      <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Ej: Me siento cansado todo el día, tengo el estómago hinchado y me cuesta dormir..." rows={3} style={{width:"100%",background:"rgba(27,94,59,0.04)",border:"1.5px solid rgba(27,94,59,0.2)",borderRadius:11,padding:"11px 13px",fontSize:12,outline:"none",resize:"vertical",color:"#1a1a1a",boxSizing:"border-box",marginBottom:9,fontFamily:"inherit"}} onFocus={e=>e.target.style.borderColor="#1B5E3B"} onBlur={e=>e.target.style.borderColor="rgba(27,94,59,0.2)"}/>
+      <div style={{marginBottom:12}}><div style={{fontSize:9,color:"#4a7c5e",marginBottom:5,fontWeight:600}}>💡 EJEMPLOS:</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{examples.map((e,i)=><button key={i} onClick={()=>setText(e)} style={{fontSize:9,color:"#1B5E3B",background:"rgba(27,94,59,0.06)",border:"1px solid rgba(27,94,59,0.15)",borderRadius:7,padding:"4px 8px",cursor:"pointer",textAlign:"left"}}>{e}</button>)}</div></div>
+      <button onClick={send} disabled={!text.trim()} style={{width:"100%",background:!text.trim()?"rgba(27,94,59,0.3)":"#25D366",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:!text.trim()?"not-allowed":"pointer"}}>💬 Enviar síntomas por WhatsApp →</button>
+    </div>
+  );
+}
+
+// ── ROI PREDICTOR (WhatsApp) ──────────────────────────────────────────────────
+function ROIPredictor(){
+  const [form,setForm]=useState({country:"",hours:"",contacts:"",experience:""});
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const hours=["⏰ 5-10 hrs/sem","⏰ 10-20 hrs/sem","⏰ 20-30 hrs/sem","⏰ +30 hrs/sem"];
+  const contacts=["👥 0-50","👥 50-200","👥 200-500","👥 +500"];
+  const experience=["🌱 Sin experiencia","📊 Algo de exp.","💼 Con experiencia","🏆 Muy exp."];
+  const ready=form.country&&form.hours&&form.contacts&&form.experience;
+  const send=()=>{
+    const msg=encodeURIComponent(`¡Hola! Quiero conocer mi potencial de negocio con Power Vita 💰\n\nPaís: ${form.country}\nHoras disponibles: ${form.hours}\nRed de contactos: ${form.contacts}\nExperiencia: ${form.experience}\n\n¿Pueden darme una proyección de ingresos?`);
+    trackEvent('Lead',{content_name:'ROIPredictor'});
+    window.open(`https://wa.me/${WA}?text=${msg}`,"_blank");
+  };
+  return(
+    <div style={{padding:"18px 20px"}}>
+      <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:36}}>💰</div><h3 style={{fontSize:15,fontWeight:900,color:"#fff",margin:"5px 0 3px"}}>ROI Predictor</h3><p style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}>Calculá tu potencial de ingresos con FuXion</p></div>
+      <div style={{marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)",letterSpacing:1,marginBottom:5}}>PAÍS</div><select value={form.country} onChange={e=>set("country",e.target.value)} style={{width:"100%",background:"rgba(255,255,255,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:9,padding:"9px 11px",color:form.country?"#fff":"rgba(255,255,255,0.4)",fontSize:12,outline:"none",cursor:"pointer",boxSizing:"border-box"}}><option value="">Selecciona tu país...</option>{COUNTRIES.map(c=><option key={c} value={c} style={{color:"#1a1a1a"}}>{c}</option>)}</select></div>
+      {[{label:"HORAS / SEMANA",opts:hours,key:"hours"},{label:"RED DE CONTACTOS",opts:contacts,key:"contacts"},{label:"EXPERIENCIA",opts:experience,key:"experience"}].map(({label,opts,key})=>(<div key={key} style={{marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)",letterSpacing:1,marginBottom:5}}>{label}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{opts.map(o=><button key={o} onClick={()=>set(key,o)} style={{padding:"7px 5px",borderRadius:8,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:form[key]===o?"#C9A84C":"rgba(255,255,255,0.15)",background:form[key]===o?"rgba(201,168,76,0.2)":"rgba(255,255,255,0.06)",color:form[key]===o?"#C9A84C":"rgba(255,255,255,0.7)",transition:"all .2s"}}>{o}</button>)}</div></div>))}
+      <button onClick={send} disabled={!ready} style={{width:"100%",background:!ready?"rgba(201,168,76,0.3)":"#25D366",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:!ready?"not-allowed":"pointer",marginTop:4}}>💬 Recibir proyección por WhatsApp →</button>
+    </div>
+  );
 }
 
 // ── LEAD FORM ─────────────────────────────────────────────────────────────────
@@ -261,115 +286,8 @@ function LeadForm({lang}){
   };
   const inp={width:"100%",background:"rgba(27,94,59,0.04)",border:"1.5px solid rgba(27,94,59,0.2)",borderRadius:11,padding:"11px 13px",fontSize:13,outline:"none",color:"#1a1a1a",boxSizing:"border-box"};
   const lbl={fontSize:10,fontWeight:700,color:"#1B5E3B",letterSpacing:.8,display:"block",marginBottom:5};
-  if(sent)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:8}}>🎉</div><h3 style={{fontSize:17,fontWeight:900,color:"#1B5E3B",marginBottom:6}}>¡Listo! Te esperamos en WhatsApp</h3><p style={{color:"#4a7c5e",fontSize:12,marginBottom:16}}>Tu mensaje fue preparado. Completa el envío y recibirás tu plan.</p><button onClick={()=>{setSent(false);setForm({name:"",email:"",country:"",goal:""}); }} style={{background:"none",border:"1.5px solid rgba(27,94,59,0.3)",color:"#1B5E3B",padding:"8px 20px",borderRadius:9,cursor:"pointer",fontSize:12,fontWeight:700}}>Enviar otro →</button></div>);
+  if(sent)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:8}}>🎉</div><h3 style={{fontSize:17,fontWeight:900,color:"#1B5E3B",marginBottom:6}}>¡Listo! Te esperamos en WhatsApp</h3><p style={{color:"#4a7c5e",fontSize:12,marginBottom:16}}>Tu mensaje fue preparado. Completa el envío y recibirás tu plan.</p><button onClick={()=>{setSent(false);setForm({name:"",email:"",country:"",goal:""});}} style={{background:"none",border:"1.5px solid rgba(27,94,59,0.3)",color:"#1B5E3B",padding:"8px 20px",borderRadius:9,cursor:"pointer",fontSize:12,fontWeight:700}}>Enviar otro →</button></div>);
   return(<div><div style={{marginBottom:12}}><label style={lbl}>NOMBRE *</label><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="Tu nombre" style={inp} onFocus={e=>e.target.style.borderColor="#1B5E3B"} onBlur={e=>e.target.style.borderColor="rgba(27,94,59,0.2)"}/></div><div style={{marginBottom:12}}><label style={lbl}>EMAIL <span style={{color:"#aaa",fontWeight:400}}>(opcional)</span></label><input value={form.email} onChange={e=>set("email",e.target.value)} placeholder="tu@email.com" type="email" style={inp} onFocus={e=>e.target.style.borderColor="#1B5E3B"} onBlur={e=>e.target.style.borderColor="rgba(27,94,59,0.2)"}/></div><div style={{marginBottom:12}}><label style={lbl}>PAÍS *</label><select value={form.country} onChange={e=>set("country",e.target.value)} style={{...inp,cursor:"pointer",color:form.country?"#1a1a1a":"#9ca3af"}}><option value="">Selecciona tu país...</option>{COUNTRIES.map(c=><option key={c} value={c}>{c}</option>)}</select></div><div style={{marginBottom:20}}><label style={lbl}>¿QUÉ BUSCAS? *</label><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>{goals.map(g=>(<button key={g.v} onClick={()=>set("goal",g.v)} style={{padding:"10px 7px",borderRadius:10,fontWeight:700,fontSize:11,cursor:"pointer",border:"1.5px solid",transition:"all .2s",borderColor:form.goal===g.v?"#1B5E3B":"rgba(27,94,59,0.18)",background:form.goal===g.v?"#1B5E3B":"rgba(27,94,59,0.04)",color:form.goal===g.v?"#fff":"#1B5E3B"}}>{g.l}</button>))}</div></div>{err&&<p style={{color:"#e53e3e",fontSize:11,marginBottom:10,fontWeight:600}}>⚠️ {err}</p>}<button onClick={submit} style={{width:"100%",background:"linear-gradient(135deg,#1B5E3B,#2d7a50)",color:"#fff",border:"none",borderRadius:12,padding:"14px 0",fontWeight:800,fontSize:14,cursor:"pointer",boxShadow:"0 8px 22px rgba(27,94,59,0.28)"}}>💬 Quiero mi plan gratis →</button><p style={{fontSize:9,color:"#9ca3af",textAlign:"center",marginTop:8}}>Sin spam. Solo abrimos WhatsApp con tu info lista.</p></div>);
-}
-
-// ── AI CHAT ───────────────────────────────────────────────────────────────────
-function Chat({lang,open,onClose}){
-  const labels={es:{title:"Vita Advisor IA",ph:"Pregúntame sobre salud o negocio...",welcome:"¡Hola! Soy tu Vita Advisor 🌿 ¿En qué puedo ayudarte? Puedo recomendarte productos FuXion según tus objetivos o contarte sobre el negocio en 37 países."},en:{title:"Vita Advisor AI",ph:"Ask me about health or business...",welcome:"Hi! I'm your Vita Advisor 🌿 How can I help? I can recommend FuXion products based on your goals or tell you about the business in 37 countries."},pt:{title:"Vita Advisor IA",ph:"Pergunte sobre saúde ou negócio...",welcome:"Olá! Sou seu Vita Advisor 🌿 Como posso ajudar? Posso recomendar produtos FuXion com base em seus objetivos ou contar sobre o negócio em 37 países."}};
-  const l=labels[lang]||labels.es;
-  const [msgs,setMsgs]=useState([{role:"assistant",text:l.welcome}]);
-  const [inp,setInp]=useState("");const [loading,setLoading]=useState(false);
-  const botRef=useRef();
-  useEffect(()=>{botRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
-  const send=async()=>{
-    if(!inp.trim()||loading)return;
-    const um={role:"user",text:inp};setMsgs(m=>[...m,um]);setInp("");setLoading(true);
-    try{
-      const sys=`Eres Vita Advisor, asistente IA de Power Vita (distribuidor FuXion Global). Responde en ${lang==="en"?"inglés":lang==="pt"?"portugués":"español"}. Experto en nutrición biotecnológica FuXion y negocio en 37 países. Máx 3 oraciones, amable, usa emojis. Link compra: ${FUXION_LINK}. WhatsApp: +${WA}.`;
-      const history=msgs.concat(um).map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}));
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,system:sys,messages:history})});
-      const data=await res.json();
-      setMsgs(m=>[...m,{role:"assistant",text:data.content?.map(b=>b.text||"").join("")||"Intenta de nuevo 🌿"}]);
-    }catch{setMsgs(m=>[...m,{role:"assistant",text:"Error. Contáctanos por WhatsApp 💬"}]);}
-    finally{setLoading(false);}
-  };
-  if(!open)return null;
-  return(<div style={{position:"fixed",bottom:88,right:20,width:300,zIndex:300,background:"rgba(245,240,232,0.97)",backdropFilter:"blur(20px)",border:"1.5px solid rgba(27,94,59,0.25)",borderRadius:20,boxShadow:"0 24px 60px rgba(27,94,59,0.22)",overflow:"hidden"}}><div style={{background:"#1B5E3B",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:28,height:28,borderRadius:"50%",background:"rgba(201,168,76,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🌿</div><div><div style={{color:"#fff",fontWeight:800,fontSize:12}}>{l.title}</div><div style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>● Online</div></div></div><button onClick={onClose} style={{background:"none",border:"none",color:"rgba(255,255,255,0.7)",fontSize:16,cursor:"pointer"}}>✕</button></div><div style={{height:250,overflowY:"auto",padding:"11px 11px 5px",display:"flex",flexDirection:"column",gap:8}}>{msgs.map((m,i)=>(<div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"83%",background:m.role==="user"?"#1B5E3B":"rgba(27,94,59,0.09)",color:m.role==="user"?"#fff":"#1a1a1a",borderRadius:11,padding:"7px 10px",fontSize:12,lineHeight:1.5}}>{m.text}</div></div>))}{loading&&<div style={{display:"flex"}}><div style={{background:"rgba(27,94,59,0.09)",borderRadius:11,padding:"7px 12px",color:"#1B5E3B",fontSize:16}}>···</div></div>}<div ref={botRef}/></div><div style={{padding:"7px 10px 10px",borderTop:"1px solid rgba(27,94,59,0.1)",display:"flex",gap:6}}><input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={l.ph} style={{flex:1,background:"rgba(27,94,59,0.06)",border:"1px solid rgba(27,94,59,0.2)",borderRadius:8,padding:"8px 10px",fontSize:11,outline:"none",color:"#1a1a1a"}}/><button onClick={send} disabled={loading} style={{background:"#1B5E3B",border:"none",borderRadius:8,width:32,color:"#fff",fontSize:14,cursor:"pointer"}}>→</button></div></div>);
-}
-
-// ── NUTRI PLAN IA ─────────────────────────────────────────────────────────────
-function NutriPlan({lang}){
-  const [selGoal,setSelGoal]=useState("");const [selDiet,setSelDiet]=useState("");const [selSymptoms,setSelSymptoms]=useState([]);
-  const [form,setForm]=useState({age:"",weight:""});
-  const [plan,setPlan]=useState(null);const [loading,setLoading]=useState(false);
-  const goals=["💪 Más energía","🌿 Detox y digestión","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","😴 Dormir mejor","✨ Mejorar piel"];
-  const diets=["🥩 Omnívoro","🐟 Pescetariano","🥚 Vegetariano","🌱 Vegano","🌾 Sin gluten"];
-  const symptoms=["Fatiga crónica","Hinchazón","Insomnio","Estrés","Digestión lenta","Piel opaca","Inmunidad baja","Ansiedad"];
-  const generate=async()=>{
-    setLoading(true);
-    try{
-      const prompt=`Eres nutricionista experto en FuXion. Crea plan nutricional personalizado de 7 días en ${lang==="en"?"inglés":lang==="pt"?"portugués":"español"}.
-Objetivo: ${selGoal}, Dieta: ${selDiet}, Síntomas: ${selSymptoms.join(",")||"ninguno"}, Edad: ${form.age||"N/A"}, Peso: ${form.weight||"N/A"}kg
-Responde SOLO JSON:
-{"titulo":"nombre plan","perfil":"descripción 1 oración","productos":[{"nombre":"producto FuXion","beneficio":"por qué","cuando":"horario"}],"dias":[{"dia":"Lunes","desayuno":"","almuerzo":"","cena":"","snack":""}],"tips":["tip1","tip2","tip3"]}
-Usa solo: REXET, LIQUID FIBER, FLORA LIV, NUTRADAY, VITA XTRA T+, XPEED, BIOPRO+ TECT, PROTEIN ACTIVE, NO STRESS, THERMO T3, BALANCE. Exactamente 3 productos y 7 días.`;
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
-      const data=await res.json();
-      const txt=data.content?.map(b=>b.text||"").join("")||"";
-      setPlan(JSON.parse(txt.replace(/```json|```/g,"").trim()));
-    }catch{setPlan({error:true});}
-    finally{setLoading(false);}
-  };
-  if(plan){
-    if(plan.error)return(<div style={{textAlign:"center",padding:20}}><p style={{color:"#e53e3e",fontSize:13}}>Error. Intenta de nuevo.</p><button onClick={()=>setPlan(null)} style={{marginTop:10,background:"#1B5E3B",color:"#fff",border:"none",padding:"9px 18px",borderRadius:9,cursor:"pointer",fontWeight:700}}>Reintentar</button></div>);
-    return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:32}}>🥗</div><h3 style={{fontSize:15,fontWeight:900,color:"#1B5E3B",margin:"6px 0 3px"}}>{plan.titulo}</h3><p style={{fontSize:11,color:"#4a7c5e",fontStyle:"italic"}}>{plan.perfil}</p></div><div style={{marginBottom:12}}><div style={{fontSize:9,fontWeight:800,color:"#1B5E3B",letterSpacing:1.5,marginBottom:6}}>✦ PRODUCTOS RECOMENDADOS</div>{plan.productos?.map((p,i)=>(<div key={i} style={{background:"rgba(27,94,59,0.06)",borderRadius:9,padding:"8px 10px",marginBottom:5,display:"flex",gap:8}}><span style={{fontSize:16}}>🌿</span><div><div style={{fontWeight:800,color:"#1B5E3B",fontSize:11}}>{p.nombre}</div><div style={{fontSize:10,color:"#4a7c5e"}}>{p.beneficio}</div><div style={{fontSize:9,color:"#C9A84C",fontWeight:600}}>⏰ {p.cuando}</div></div></div>))}</div><div style={{marginBottom:12}}><div style={{fontSize:9,fontWeight:800,color:"#1B5E3B",letterSpacing:1.5,marginBottom:6}}>📅 PLAN 7 DÍAS</div><div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:4}}>{plan.dias?.map((d,i)=>(<div key={i} style={{minWidth:120,background:"rgba(255,255,255,0.9)",border:"1px solid rgba(27,94,59,0.12)",borderRadius:9,padding:"8px",flexShrink:0}}><div style={{fontWeight:800,color:"#1B5E3B",fontSize:9,textAlign:"center",background:"rgba(27,94,59,0.08)",borderRadius:5,padding:"2px 0",marginBottom:5}}>{d.dia}</div>{[{k:"desayuno",i:"🌅"},{k:"almuerzo",i:"☀️"},{k:"cena",i:"🌙"},{k:"snack",i:"🍎"}].map(({k,i:ic})=>(<div key={k} style={{fontSize:8,color:"#4a5568",marginBottom:3}}><span>{ic}</span> {d[k]}</div>))}</div>))}</div></div>{plan.tips&&<div style={{marginBottom:14}}>{plan.tips.map((tip,i)=><div key={i} style={{fontSize:10,color:"#2d5a3d",padding:"3px 0",display:"flex",gap:6}}><span style={{color:"#C9A84C"}}>✓</span>{tip}</div>)}</div>}<div style={{display:"flex",gap:7}}><a href={`https://wa.me/${WA}?text=${encodeURIComponent("¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"10px 0",fontWeight:800,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Empezar mi plan</a><button onClick={()=>{setPlan(null);setSelGoal("");setSelDiet("");setSelSymptoms([]);}} style={{flex:1,background:"rgba(27,94,59,0.08)",border:"1px solid rgba(27,94,59,0.2)",color:"#1B5E3B",borderRadius:9,padding:"10px 0",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Nuevo plan</button></div></div>);
-  }
-  return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:16}}><div style={{fontSize:36}}>🥗</div><h3 style={{fontSize:15,fontWeight:900,color:"#1B5E3B",margin:"5px 0 3px"}}>Plan Nutricional IA</h3><p style={{fontSize:11,color:"#4a7c5e"}}>Personalizado · 7 días · Productos FuXion</p></div><div style={{marginBottom:11}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>OBJETIVO</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5}}>{goals.map(g=><button key={g} onClick={()=>setSelGoal(g)} style={{padding:"8px 5px",borderRadius:8,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:selGoal===g?"#1B5E3B":"rgba(27,94,59,0.18)",background:selGoal===g?"#1B5E3B":"rgba(27,94,59,0.04)",color:selGoal===g?"#fff":"#1B5E3B",transition:"all .2s"}}>{g}</button>)}</div></div><div style={{marginBottom:11}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>SÍNTOMAS</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{symptoms.map(s=>{const sel=selSymptoms.includes(s);return(<button key={s} onClick={()=>setSelSymptoms(p=>sel?p.filter(x=>x!==s):[...p,s])} style={{padding:"4px 8px",borderRadius:999,fontWeight:600,fontSize:9,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(27,94,59,0.18)",background:sel?"rgba(201,168,76,0.15)":"transparent",color:sel?"#8B6914":"#1B5E3B",transition:"all .2s"}}>{s}</button>);})}</div></div><div style={{marginBottom:11}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:7}}>DIETA</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{diets.map(d=><button key={d} onClick={()=>setSelDiet(d)} style={{padding:"6px 10px",borderRadius:999,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:selDiet===d?"#1B5E3B":"rgba(27,94,59,0.18)",background:selDiet===d?"#1B5E3B":"transparent",color:selDiet===d?"#fff":"#1B5E3B",transition:"all .2s"}}>{d}</button>)}</div></div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:16}}><div><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",marginBottom:4}}>EDAD (opcional)</div><input value={form.age} onChange={e=>setForm(f=>({...f,age:e.target.value}))} placeholder="32" style={{width:"100%",background:"rgba(27,94,59,0.04)",border:"1.5px solid rgba(27,94,59,0.18)",borderRadius:8,padding:"8px 10px",fontSize:12,outline:"none",boxSizing:"border-box"}}/></div><div><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",marginBottom:4}}>PESO kg (opcional)</div><input value={form.weight} onChange={e=>setForm(f=>({...f,weight:e.target.value}))} placeholder="70" style={{width:"100%",background:"rgba(27,94,59,0.04)",border:"1.5px solid rgba(27,94,59,0.18)",borderRadius:8,padding:"8px 10px",fontSize:12,outline:"none",boxSizing:"border-box"}}/></div></div><button onClick={generate} disabled={!selGoal||!selDiet||loading} style={{width:"100%",background:(!selGoal||!selDiet)?"rgba(27,94,59,0.3)":"linear-gradient(135deg,#1B5E3B,#2d7a50)",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:(!selGoal||!selDiet)?"not-allowed":"pointer"}}>{loading?"🧠 Generando tu plan...":"✨ Generar mi plan con IA →"}</button>{(!selGoal||!selDiet)&&<p style={{fontSize:9,color:"#9ca3af",textAlign:"center",marginTop:5}}>Selecciona objetivo y dieta para continuar</p>}</div>);
-}
-
-// ── SYMPTOM ANALYZER ─────────────────────────────────────────────────────────
-function SymptomAnalyzer({lang}){
-  const [text,setText]=useState("");const [result,setResult]=useState(null);const [loading,setLoading]=useState(false);
-  const examples=["Me siento cansado todo el día aunque duermo bien","Tengo el estómago hinchado después de comer","Me cuesta concentrarme y tengo mucho estrés","Quiero bajar de peso pero no sé por dónde empezar"];
-  const analyze=async()=>{
-    if(!text.trim())return;setLoading(true);
-    try{
-      const prompt=`Experto en nutrición FuXion. Analiza síntomas y responde SOLO JSON en ${lang==="en"?"inglés":lang==="pt"?"portugués":"español"}:
-Síntomas: "${text}"
-{"diagnostico":"análisis 2 oraciones","nivel_urgencia":"bajo|medio|alto","causa_probable":"causa 1 oración","productos":[{"nombre":"producto FuXion","match":90,"razon":"por qué ayuda"}],"habitos":["hábito1","hábito2","hábito3"],"mensaje_motivador":"mensaje empático corto"}
-Usa solo productos FuXion reales. 2-3 productos.`;
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});
-      const data=await res.json();
-      const txt=data.content?.map(b=>b.text||"").join("")||"";
-      setResult(JSON.parse(txt.replace(/```json|```/g,"").trim()));
-    }catch{setResult({error:true});}
-    finally{setLoading(false);}
-  };
-  const urgC={"bajo":"#25D366","medio":"#C9A84C","alto":"#e53e3e"};
-  const urgL={"bajo":"✅ Nivel Bajo","medio":"⚠️ Nivel Medio","alto":"🔴 Nivel Alto"};
-  if(result&&!result.error)return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:12}}><div style={{fontSize:32}}>🔬</div><h3 style={{fontSize:14,fontWeight:900,color:"#1B5E3B",margin:"5px 0 6px"}}>Análisis completado</h3><div style={{display:"inline-flex",alignItems:"center",gap:5,background:`${urgC[result.nivel_urgencia]}18`,border:`1px solid ${urgC[result.nivel_urgencia]}`,borderRadius:999,padding:"3px 10px"}}><span style={{fontSize:10,fontWeight:700,color:urgC[result.nivel_urgencia]}}>{urgL[result.nivel_urgencia]}</span></div></div><div style={{background:"rgba(27,94,59,0.06)",borderRadius:10,padding:"10px 12px",marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",marginBottom:3}}>🧠 DIAGNÓSTICO</div><p style={{fontSize:11,color:"#2d5a3d",lineHeight:1.6}}>{result.diagnostico}</p><p style={{fontSize:10,color:"#4a7c5e",marginTop:4,fontStyle:"italic"}}>📍 {result.causa_probable}</p></div><div style={{marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"#1B5E3B",letterSpacing:1,marginBottom:6}}>🌿 PRODUCTOS COMPATIBLES</div>{result.productos?.map((p,i)=>(<div key={i} style={{background:"rgba(255,255,255,0.9)",border:"1px solid rgba(27,94,59,0.12)",borderRadius:9,padding:"8px 10px",marginBottom:5}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}><span style={{fontWeight:800,color:"#1B5E3B",fontSize:11}}>{p.nombre}</span><span style={{background:"#1B5E3B",color:"#fff",borderRadius:999,padding:"1px 7px",fontSize:9,fontWeight:700}}>{p.match}% match</span></div><div style={{height:3,background:"rgba(27,94,59,0.12)",borderRadius:2,marginBottom:4}}><div style={{height:"100%",width:`${p.match}%`,background:"linear-gradient(90deg,#1B5E3B,#C9A84C)",borderRadius:2}}/></div><p style={{fontSize:10,color:"#4a7c5e"}}>{p.razon}</p></div>))}</div><div style={{background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.22)",borderRadius:9,padding:"9px 11px",marginBottom:12}}><p style={{fontSize:11,color:"#8B6914",fontStyle:"italic"}}>{result.mensaje_motivador}</p></div><div style={{display:"flex",gap:7}}><a href={`https://wa.me/${WA}?text=${encodeURIComponent("¡Hola! Analicé mis síntomas con Power Vita IA y quiero empezar 🌿")}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontWeight:800,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Quiero empezar</a><button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(27,94,59,0.08)",border:"1px solid rgba(27,94,59,0.2)",color:"#1B5E3B",borderRadius:9,padding:"9px 0",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Nuevo análisis</button></div></div>);
-  return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:36}}>🔬</div><h3 style={{fontSize:15,fontWeight:900,color:"#1B5E3B",margin:"5px 0 3px"}}>Analizador de Síntomas IA</h3><p style={{fontSize:11,color:"#4a7c5e"}}>Describe cómo te sientes y la IA recomienda tus productos FuXion ideales</p></div><textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Ej: Me siento cansado todo el día, tengo el estómago hinchado y me cuesta dormir..." rows={3} style={{width:"100%",background:"rgba(27,94,59,0.04)",border:"1.5px solid rgba(27,94,59,0.2)",borderRadius:11,padding:"11px 13px",fontSize:12,outline:"none",resize:"vertical",color:"#1a1a1a",boxSizing:"border-box",marginBottom:9,fontFamily:"inherit"}} onFocus={e=>e.target.style.borderColor="#1B5E3B"} onBlur={e=>e.target.style.borderColor="rgba(27,94,59,0.2)"}/>  <div style={{marginBottom:12}}><div style={{fontSize:9,color:"#4a7c5e",marginBottom:5,fontWeight:600}}>💡 EJEMPLOS:</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{examples.map((e,i)=><button key={i} onClick={()=>setText(e)} style={{fontSize:9,color:"#1B5E3B",background:"rgba(27,94,59,0.06)",border:"1px solid rgba(27,94,59,0.15)",borderRadius:7,padding:"4px 8px",cursor:"pointer",textAlign:"left"}}>{e}</button>)}</div></div><button onClick={analyze} disabled={!text.trim()||loading} style={{width:"100%",background:!text.trim()?"rgba(27,94,59,0.3)":"linear-gradient(135deg,#1B5E3B,#2d7a50)",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:!text.trim()?"not-allowed":"pointer"}}>{loading?"🧠 Analizando tus síntomas...":"🔬 Analizar con IA →"}</button></div>);
-}
-
-// ── ROI PREDICTOR ─────────────────────────────────────────────────────────────
-function ROIPredictor({lang}){
-  const [form,setForm]=useState({country:"",hours:"",contacts:"",experience:""});
-  const [result,setResult]=useState(null);const [loading,setLoading]=useState(false);
-  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
-  const hours=["⏰ 5-10 hrs/sem","⏰ 10-20 hrs/sem","⏰ 20-30 hrs/sem","⏰ +30 hrs/sem"];
-  const contacts=["👥 0-50","👥 50-200","👥 200-500","👥 +500"];
-  const experience=["🌱 Sin experiencia","📊 Algo de exp.","💼 Con experiencia","🏆 Muy exp."];
-  const predict=async()=>{
-    if(!form.country||!form.hours||!form.contacts||!form.experience)return;
-    setLoading(true);
-    try{
-      const prompt=`Experto en negocios FuXion. Proyección realista en ${lang==="en"?"inglés":lang==="pt"?"portugués":"español"}.
-País: ${form.country}, Horas: ${form.hours}, Contactos: ${form.contacts}, Experiencia: ${form.experience}
-Responde SOLO JSON:
-{"mes1":{"min":100,"max":400,"descripcion":"qué lograr"},"mes3":{"min":400,"max":1500,"descripcion":"qué lograr"},"mes6":{"min":1000,"max":4000,"descripcion":"qué lograr"},"mes12":{"min":3000,"max":12000,"descripcion":"qué lograr"},"estrategia":["acción1","acción2","acción3"],"ventaja_pais":"ventaja de ${form.country}","perfil":"perfil 1 oración","potencial":"bajo|medio|alto|muy_alto"}
-Números en USD. Sé realista y motivador.`;
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});
-      const data=await res.json();
-      const txt=data.content?.map(b=>b.text||"").join("")||"";
-      setResult(JSON.parse(txt.replace(/```json|```/g,"").trim()));
-    }catch{setResult({error:true});}
-    finally{setLoading(false);}
-  };
-  const potL={"bajo":"🌱 Potencial Bueno","medio":"🚀 Potencial Alto","alto":"💎 Potencial Muy Alto","muy_alto":"👑 Potencial Excepcional"};
-  if(result&&!result.error)return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:12}}><div style={{fontSize:32}}>💰</div><h3 style={{fontSize:13,fontWeight:900,color:"#fff",margin:"5px 0 6px"}}>{result.perfil}</h3><div style={{display:"inline-flex",alignItems:"center",background:"rgba(201,168,76,0.2)",border:"1px solid rgba(201,168,76,0.4)",borderRadius:999,padding:"3px 12px"}}><span style={{fontSize:10,fontWeight:800,color:"#C9A84C"}}>{potL[result.potencial]||"🚀 Alto Potencial"}</span></div></div><div style={{marginBottom:12}}><div style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)",letterSpacing:1,marginBottom:8}}>📈 PROYECCIÓN USD</div>{[{k:"mes1",l:"1 mes"},{k:"mes3",l:"3 meses"},{k:"mes6",l:"6 meses"},{k:"mes12",l:"12 meses"}].map(({k,l})=>{const d=result[k];if(!d)return null;return(<div key={k} style={{marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}><span style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)"}}>{l}</span><span style={{fontSize:10,fontWeight:900,color:"#C9A84C"}}>${d.min?.toLocaleString()} – ${d.max?.toLocaleString()}</span></div><div style={{height:5,background:"rgba(255,255,255,0.1)",borderRadius:2}}><div style={{height:"100%",width:`${Math.min((d.max/12000)*100,100)}%`,background:"linear-gradient(90deg,#C9A84C,#FFD700)",borderRadius:2}}/></div><p style={{fontSize:9,color:"rgba(255,255,255,0.45)",marginTop:2,fontStyle:"italic"}}>{d.descripcion}</p></div>);})}</div><div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.22)",borderRadius:9,padding:"9px 10px",marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"#C9A84C",marginBottom:3}}>🌍 VENTAJA EN {form.country.toUpperCase()}</div><p style={{fontSize:10,color:"rgba(255,255,255,0.75)",lineHeight:1.5}}>{result.ventaja_pais}</p></div><div style={{marginBottom:12}}>{result.estrategia?.map((s,i)=><div key={i} style={{display:"flex",gap:7,marginBottom:5,alignItems:"flex-start"}}><div style={{width:18,height:18,borderRadius:"50%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:900,flexShrink:0}}>{i+1}</div><span style={{fontSize:10,color:"rgba(255,255,255,0.75)",lineHeight:1.5}}>{s}</span></div>)}</div><div style={{display:"flex",gap:7}}><a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Calculé mi potencial de negocio desde ${form.country} con Power Vita IA 💰 Quiero ser socio FuXion.`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",borderRadius:9,padding:"10px 0",fontWeight:800,fontSize:11,textAlign:"center",textDecoration:"none"}}>👑 Quiero ser socio</a><button onClick={()=>{setResult(null);setForm({country:"",hours:"",contacts:"",experience:""}); }} style={{flex:1,background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.15)",color:"rgba(255,255,255,0.8)",borderRadius:9,padding:"10px 0",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Recalcular</button></div></div>);
-  return(<div style={{padding:"18px 20px"}}><div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:36}}>💰</div><h3 style={{fontSize:15,fontWeight:900,color:"#fff",margin:"5px 0 3px"}}>ROI Predictor IA</h3><p style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}>Proyección de ingresos personalizada con IA real</p></div><div style={{marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)",letterSpacing:1,marginBottom:5}}>PAÍS</div><select value={form.country} onChange={e=>set("country",e.target.value)} style={{width:"100%",background:"rgba(255,255,255,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:9,padding:"9px 11px",color:form.country?"#fff":"rgba(255,255,255,0.4)",fontSize:12,outline:"none",cursor:"pointer",boxSizing:"border-box"}}><option value="">Selecciona tu país...</option>{COUNTRIES.map(c=><option key={c} value={c} style={{color:"#1a1a1a"}}>{c}</option>)}</select></div>{[{label:"HORAS / SEMANA",opts:hours,key:"hours"},{label:"RED DE CONTACTOS",opts:contacts,key:"contacts"},{label:"EXPERIENCIA EN VENTAS",opts:experience,key:"experience"}].map(({label,opts,key})=>(<div key={key} style={{marginBottom:10}}><div style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.6)",letterSpacing:1,marginBottom:5}}>{label}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{opts.map(o=><button key={o} onClick={()=>set(key,o)} style={{padding:"7px 5px",borderRadius:8,fontWeight:600,fontSize:10,cursor:"pointer",border:"1.5px solid",borderColor:form[key]===o?"#C9A84C":"rgba(255,255,255,0.15)",background:form[key]===o?"rgba(201,168,76,0.2)":"rgba(255,255,255,0.06)",color:form[key]===o?"#C9A84C":"rgba(255,255,255,0.65)",transition:"all .2s"}}>{o}</button>)}</div></div>))}<button onClick={predict} disabled={!form.country||!form.hours||!form.contacts||!form.experience||loading} style={{width:"100%",background:(!form.country||!form.hours||!form.contacts||!form.experience)?"rgba(201,168,76,0.3)":"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:"pointer",marginTop:4}}>{loading?"🧠 Calculando tu potencial...":"💰 Calcular mi potencial →"}</button></div>);
 }
 
 // ── APP ───────────────────────────────────────────────────────────────────────
@@ -401,7 +319,6 @@ export default function App(){
 
   return(
     <div style={{fontFamily:"'Segoe UI',system-ui,sans-serif",background:"#F5F0E8",color:"#1a1a1a",overflowX:"hidden"}}>
-      <TrackingPixels/>
 
       {/* NAV */}
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,background:"rgba(245,240,232,0.92)",backdropFilter:"blur(18px)",borderBottom:"1px solid rgba(27,94,59,0.12)",padding:"0 20px",display:"flex",alignItems:"center",justifyContent:"space-between",height:60}}>
@@ -429,7 +346,6 @@ export default function App(){
             <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"13px 26px",borderRadius:13,fontWeight:700,textDecoration:"none",fontSize:14}}>📸 @powervita_uy</a>
           </div>
         </div>
-        {/* Dual cards */}
         <div id="productos" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(265px,1fr))",gap:20,width:"100%",maxWidth:820,position:"relative",zIndex:1}}>
           {[
             {href:FUXION_LINK,icon:"🌿",tag:"HEALTH & WELLNESS",title:"The Clean Label Revolution",body:"Accede a nutrición biotecnológica pura en 37 países.",cta:"Shop Products",bg:"rgba(255,255,255,0.78)",border:"rgba(27,94,59,0.22)",btn:"#1B5E3B",tagC:"#1B5E3B",titleC:"#1B5E3B",bodyC:"#4a7c5e"},
@@ -456,8 +372,6 @@ export default function App(){
           {certDouble.map((c,i)=><span key={i} style={{color:"#C9A84C",fontWeight:700,fontSize:11,letterSpacing:1.5,textTransform:"uppercase",whiteSpace:"nowrap"}}>✦ {c}</span>)}
         </div>
       </div>
-
-
 
       {/* CATÁLOGO */}
       <section id="catalogo" style={{padding:"68px 24px",maxWidth:1100,margin:"0 auto"}}>
@@ -534,42 +448,37 @@ export default function App(){
         </div>
       )}
 
-
-
       {/* IA TOOLS */}
       <section id="negocio" style={{padding:"68px 24px",background:"linear-gradient(160deg,#0a1628,#0d3d24 50%,#0a1628)"}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:44}}>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,rgba(201,168,76,0.2),rgba(201,168,76,0.1))",border:"1px solid rgba(201,168,76,0.5)",borderRadius:999,padding:"6px 18px",marginBottom:16,boxShadow:"0 0 20px rgba(201,168,76,0.15)"}}>
-              <span style={{fontSize:10,fontWeight:800,color:"#FFD700",letterSpacing:2.5,textTransform:"uppercase"}}>✦ Powered by Claude AI ✦</span>
+              <span style={{fontSize:10,fontWeight:800,color:"#FFD700",letterSpacing:2.5,textTransform:"uppercase"}}>✦ Power Vita Tools ✦</span>
             </div>
-            <h2 style={{fontSize:"clamp(1.6rem,4vw,2.6rem)",fontWeight:900,color:"#fff",marginBottom:10,lineHeight:1.15}}>🤖 Inteligencia Artificial<br/><span style={{background:"linear-gradient(135deg,#C9A84C,#FFD700)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>exclusiva para ti</span></h2>
-            <p style={{color:"rgba(255,255,255,0.6)",fontSize:14,maxWidth:520,margin:"0 auto",lineHeight:1.7}}>3 herramientas con IA real que <strong style={{color:"#FFD700"}}>ningún otro distribuidor FuXion</strong> en el mundo tiene.</p>
+            <h2 style={{fontSize:"clamp(1.6rem,4vw,2.6rem)",fontWeight:900,color:"#fff",marginBottom:10,lineHeight:1.15}}>🤖 Herramientas Exclusivas<br/><span style={{background:"linear-gradient(135deg,#C9A84C,#FFD700)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>para ti</span></h2>
+            <p style={{color:"rgba(255,255,255,0.6)",fontSize:14,maxWidth:520,margin:"0 auto",lineHeight:1.7}}>3 herramientas que <strong style={{color:"#FFD700"}}>ningún otro distribuidor FuXion</strong> en el mundo tiene. Usálas gratis.</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:20}}>
             <div style={{background:"rgba(255,255,255,0.96)",border:"1.5px solid rgba(27,94,59,0.2)",borderRadius:22,overflow:"hidden",boxShadow:"0 12px 40px rgba(27,94,59,0.25)"}}>
               <div style={{background:"linear-gradient(135deg,#1B5E3B,#2d7a50)",padding:"14px 18px",display:"flex",alignItems:"center",gap:9}}>
                 <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,0.15)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>🥗</div>
-                <div><div style={{color:"#fff",fontWeight:900,fontSize:13}}>Plan Nutricional IA</div><div style={{color:"rgba(255,255,255,0.6)",fontSize:9}}>7 días personalizado con FuXion</div></div>
-                <div style={{marginLeft:"auto",background:"rgba(201,168,76,0.3)",border:"1px solid #FFD700",borderRadius:999,padding:"2px 8px",fontSize:8,fontWeight:800,color:"#FFD700"}}>AI</div>
+                <div><div style={{color:"#fff",fontWeight:900,fontSize:13}}>Plan Nutricional</div><div style={{color:"rgba(255,255,255,0.6)",fontSize:9}}>7 días personalizado con FuXion</div></div>
               </div>
-              <NutriPlan lang={lang}/>
+              <NutriPlan/>
             </div>
             <div style={{background:"rgba(255,255,255,0.96)",border:"1.5px solid rgba(21,101,192,0.25)",borderRadius:22,overflow:"hidden",boxShadow:"0 12px 40px rgba(21,101,192,0.18)"}}>
               <div style={{background:"linear-gradient(135deg,#1565C0,#1976D2)",padding:"14px 18px",display:"flex",alignItems:"center",gap:9}}>
                 <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,0.15)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>🔬</div>
-                <div><div style={{color:"#fff",fontWeight:900,fontSize:13}}>Analizador de Síntomas IA</div><div style={{color:"rgba(255,255,255,0.6)",fontSize:9}}>Detecta qué productos necesitas</div></div>
-                <div style={{marginLeft:"auto",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.4)",borderRadius:999,padding:"2px 8px",fontSize:8,fontWeight:800,color:"#fff"}}>AI</div>
+                <div><div style={{color:"#fff",fontWeight:900,fontSize:13}}>Analizador de Síntomas</div><div style={{color:"rgba(255,255,255,0.6)",fontSize:9}}>Detecta qué productos necesitas</div></div>
               </div>
-              <SymptomAnalyzer lang={lang}/>
+              <SymptomAnalyzer/>
             </div>
             <div style={{background:"linear-gradient(160deg,#1a2a1a,#0d3d24)",border:"1.5px solid rgba(201,168,76,0.32)",borderRadius:22,overflow:"hidden",boxShadow:"0 12px 40px rgba(201,168,76,0.12)"}}>
               <div style={{background:"linear-gradient(135deg,rgba(201,168,76,0.32),rgba(201,168,76,0.14))",padding:"14px 18px",display:"flex",alignItems:"center",gap:9,borderBottom:"1px solid rgba(201,168,76,0.18)"}}>
                 <div style={{width:36,height:36,borderRadius:10,background:"rgba(201,168,76,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>💰</div>
-                <div><div style={{color:"#FFD700",fontWeight:900,fontSize:13}}>ROI Predictor IA</div><div style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>Proyección de ingresos real</div></div>
-                <div style={{marginLeft:"auto",background:"rgba(201,168,76,0.3)",border:"1px solid #FFD700",borderRadius:999,padding:"2px 8px",fontSize:8,fontWeight:800,color:"#FFD700"}}>AI</div>
+                <div><div style={{color:"#FFD700",fontWeight:900,fontSize:13}}>ROI Predictor</div><div style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>Calculá tu potencial de ingresos</div></div>
               </div>
-              <ROIPredictor lang={lang}/>
+              <ROIPredictor/>
             </div>
           </div>
         </div>
