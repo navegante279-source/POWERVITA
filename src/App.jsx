@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 const FUXION_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson";
 const WA = "59898950206";
-const META_PIXEL_ID = "TU_META_PIXEL_ID";
+const META_PIXEL_ID = "2212676212813152";
 const GOOGLE_TAG_ID = "TU_GOOGLE_TAG_ID";
 
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
@@ -80,7 +80,7 @@ function detectCountry(){
 // ── TRACKING ──────────────────────────────────────────────────────────────────
 function TrackingPixels(){
   useEffect(()=>{
-    if(META_PIXEL_ID!=="TU_META_PIXEL_ID"){
+    if(META_PIXEL_ID!=="2212676212813152"){
       (function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)})(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
       window.fbq('init',META_PIXEL_ID);window.fbq('track','PageView');
     }
@@ -92,7 +92,7 @@ function TrackingPixels(){
   return null;
 }
 function trackEvent(name,params={}){
-  if(window.fbq&&META_PIXEL_ID!=="TU_META_PIXEL_ID")window.fbq('track',name,params);
+  if(window.fbq&&META_PIXEL_ID!=="2212676212813152")window.fbq('track',name,params);
   if(window.gtag&&GOOGLE_TAG_ID!=="TU_GOOGLE_TAG_ID")window.gtag('event',name,params);
 }
 
