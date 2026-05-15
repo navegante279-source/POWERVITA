@@ -142,7 +142,7 @@ function NutriPlan() {
 Objetivo: ${selGoal}, Dieta: ${selDiet}, Síntomas: ${selSymptoms.join(",")||"ninguno"}, Edad: ${form.age||"N/A"}, Peso: ${form.weight||"N/A"}kg
 SOLO JSON: {"titulo":"nombre","perfil":"1 oración","productos":[{"nombre":"producto","beneficio":"por qué","cuando":"horario"}],"dias":[{"dia":"Lunes","desayuno":"","almuerzo":"","cena":"","snack":""}],"tips":["tip1","tip2","tip3"]}
 Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+ TECT,PROTEIN ACTIVE FIT,NO STRESS,THERMO T3,BALANCE. 3 productos, 7 días.`;
-      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:2000, messages:[{role:"user",content:prompt}] }) });
+      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:2000, messages:[{role:"user",content:prompt}] }) });
       const data = await res.json();
       setPlan(JSON.parse(data.content?.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim()));
       trackEvent("Lead", { content_name:"NutriPlan_AI" });
@@ -192,7 +192,7 @@ function SymptomAnalyzer() {
       const prompt = `Experto FuXion. SOLO JSON: Síntomas: "${text}"
 {"diagnostico":"2 oraciones","nivel_urgencia":"bajo|medio|alto","causa_probable":"1 oración","productos":[{"nombre":"producto","match":90,"razon":"por qué"}],"mensaje_motivador":"mensaje corto"}
 2-3 productos FuXion reales.`;
-      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800, messages:[{role:"user",content:prompt}] }) });
+      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:800, messages:[{role:"user",content:prompt}] }) });
       const data = await res.json();
       setResult(JSON.parse(data.content?.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim()));
       trackEvent("Lead", { content_name:"SymptomAnalyzer_AI" });
@@ -237,7 +237,7 @@ function ROIPredictor() {
     try {
       const prompt = `Experto FuXion. País: ${form.country}, Horas: ${form.hours}, Contactos: ${form.contacts}, Experiencia: ${form.experience}
 SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max":1500,"descripcion":""},"mes6":{"min":1000,"max":4000,"descripcion":""},"mes12":{"min":3000,"max":12000,"descripcion":""},"estrategia":["acción1","acción2","acción3"],"ventaja_pais":"ventaja","perfil":"1 oración","potencial":"bajo|medio|alto|muy_alto"}`;
-      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800, messages:[{role:"user",content:prompt}] }) });
+      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:800, messages:[{role:"user",content:prompt}] }) });
       const data = await res.json();
       setResult(JSON.parse(data.content?.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim()));
       trackEvent("Lead", { content_name:"ROIPredictor_AI" });
@@ -281,7 +281,7 @@ function EliteProgram() {
       const prompt = `Experto FuXion. Plan Elite 90 días. Nombre: ${form.name}, País: ${form.country}, Objetivo: ${form.goal}, Síntomas: ${form.symptoms.join(",")||"ninguno"}, Edad: ${form.age||"N/A"}, Peso: ${form.weight||"N/A"}kg
 SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado_esperado":"en 90 días","fases":[{"numero":1,"nombre":"","semanas":"Semanas 1-4","objetivo":"","emoji":"","productos":["p1","p2"],"resultado":""}],"metricas":[{"label":"Productos","valor":"5"},{"label":"Días","valor":"90"},{"label":"Seguimientos","valor":"12"},{"label":"Éxito","valor":"94%"}],"hitos":["sem 2","sem 4","sem 8","sem 12"],"mensaje_final":"mensaje para ${form.name}"}
 3 fases. Productos FuXion reales.`;
-      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:2000, messages:[{role:"user",content:prompt}] }) });
+      const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:2000, messages:[{role:"user",content:prompt}] }) });
       const data = await res.json();
       setPlan(JSON.parse(data.content?.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim()));
       setStep(3); trackEvent("Lead", { content_name:"EliteProgram_AI" });
@@ -405,7 +405,7 @@ function Chat({ open, onClose }) {
     try {
       const sys=`Eres Vita Advisor, asistente IA de Power Vita (distribuidor FuXion Global). Responde en español. Experto en nutrición biotecnológica FuXion y negocio en 37 países. Máx 3 oraciones, amable, usa emojis. Link: ${FUXION_LINK}. WhatsApp: +${WA}.`;
       const history=msgs.concat(um).map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}));
-      const res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,system:sys,messages:history})});
+      const res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:300,system:sys,messages:history})});
       const data=await res.json();
       setMsgs(m=>[...m,{role:"assistant",text:data.content?.map(b=>b.text||"").join("")||"Intenta de nuevo 🌿"}]);
     } catch { setMsgs(m=>[...m,{role:"assistant",text:"Error. Contáctanos por WhatsApp 💬"}]); }
