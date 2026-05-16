@@ -485,6 +485,27 @@ const TRANSLATIONS = {
     contactSub:"Respondemos en minutos. Asesoramiento personalizado para tu país.",
     contactWa:"💬 Escribir por WhatsApp", contactLink:"🛒 Registrarme ahora",
     faqTitle:"Preguntas frecuentes",
+    faqSub:"Todo lo que necesitás saber",
+    faqMoreQ:"💬 Tengo otra pregunta",
+    faqQA:[
+      {q:"¿Los productos FuXion son seguros?",a:"Sí. FuXion cuenta con certificaciones internacionales: GMP, FDA Registered, HACCP y Clean Label. Todos los ingredientes son naturales y sin conservantes artificiales. Son aptos para toda la familia."},
+      {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. Los tiempos varían: Uruguay 24-48hs, Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
+      {q:"¿Qué pasa si no me gustan los productos?",a:"FuXion ofrece garantía de satisfacción. Si los productos no cumplen tus expectativas, te asesoramos para encontrar la combinación correcta o gestionamos una solución."},
+      {q:"¿Puedo comprar solo como cliente o también hacer el negocio?",a:"Las dos opciones están disponibles. Podés registrarte como Cliente Preferente para precios especiales, o como Emprendedor si querés construir un negocio."},
+      {q:"¿Están disponibles todos los productos en mi país?",a:"FuXion opera en 37 países pero el catálogo varía por región. Consultanos por WhatsApp con tu país y te decimos qué productos están disponibles y a qué precio."},
+      {q:"¿Las herramientas de IA tienen algún costo?",a:"No, son 100% gratuitas. El Plan Nutricional, Analizador de Síntomas, ROI Predictor y Elite Program son exclusivos de Power Vita sin costo adicional."},
+    ],
+    statsImpact:"Vidas impactadas en 37 países",
+    statsItems:[["37","Países"],["15K+","Socios"],["98%","Satisfacción"]],
+    leadTitle:"Recibí tu Plan Personalizado",
+    leadSub:"Dejanos tus datos y te enviamos por WhatsApp un plan adaptado a tus objetivos — sin costo.",
+    leadError:"Por favor completá todos los campos.",
+    leadGoals:[{v:"salud",l:"💚 Mejorar mi salud"},{v:"energia",l:"⚡ Más energía"},{v:"peso",l:"⚖️ Control de peso"},{v:"negocio",l:"💼 Negocio global"}],
+    modalSub:"¿Qué te describe mejor? Elegí tu perfil para continuar en FuXion.",
+    modalOpt1:"💚 Quiero los productos", modalOpt1Sub:"Me registro como Cliente Preferente",
+    modalOpt2:"💼 Quiero el negocio", modalOpt2Sub:"Me registro como Emprendedor FuXion",
+    modalCancel:"Cancelar",
+    footerSub:"Distribuidor FuXion Global Autorizado",
     instaBadge:"Instagram · Power Vita",
     instaTitle:"Seguinos en Instagram",
     instaSub:"Recetas, tips y transformaciones reales. Comunidad activa todos los días.",
@@ -525,6 +546,27 @@ const TRANSLATIONS = {
     contactSub:"We respond in minutes. Personalized advice for your country.",
     contactWa:"💬 Write on WhatsApp", contactLink:"🛒 Register now",
     faqTitle:"Frequently asked questions",
+    faqSub:"Everything you need to know",
+    faqMoreQ:"💬 I have another question",
+    faqQA:[
+      {q:"Are FuXion products safe?",a:"Yes. FuXion holds international certifications: GMP, FDA Registered, HACCP and Clean Label. All ingredients are natural with no artificial preservatives, suitable for the whole family."},
+      {q:"How long does delivery take?",a:"FuXion delivers directly in your country. Times vary: Uruguay 24-48h, Argentina and Colombia 2-5 business days, rest of Latin America 3-7 days. We confirm exact timing via WhatsApp."},
+      {q:"What if I don't like the products?",a:"FuXion offers a satisfaction guarantee. If products don't meet your expectations, we advise you to find the right combination or manage a solution."},
+      {q:"Can I buy just as a customer or also do the business?",a:"Both options are available. You can register as a Preferred Customer for special prices, or as an Entrepreneur if you want to build a business."},
+      {q:"Are all products available in my country?",a:"FuXion operates in 37 countries but the catalog varies by region. Message us on WhatsApp with your country and we'll tell you exactly what's available and at what price."},
+      {q:"Do the AI tools have any cost?",a:"No, they're 100% free. The Nutrition Plan, Symptom Analyzer, ROI Predictor and Elite Program are exclusive to Power Vita at no additional cost."},
+    ],
+    statsImpact:"Lives impacted in 37 countries",
+    statsItems:[["37","Countries"],["15K+","Partners"],["98%","Satisfaction"]],
+    leadTitle:"Get your Personalized Plan",
+    leadSub:"Leave your info and we'll send you a custom plan on WhatsApp — free of charge.",
+    leadError:"Please fill in all required fields.",
+    leadGoals:[{v:"salud",l:"💚 Improve my health"},{v:"energia",l:"⚡ More energy"},{v:"peso",l:"⚖️ Weight control"},{v:"negocio",l:"💼 Global business"}],
+    modalSub:"What describes you best? Choose your profile to continue with FuXion.",
+    modalOpt1:"💚 I want the products", modalOpt1Sub:"Register as Preferred Customer",
+    modalOpt2:"💼 I want the business", modalOpt2Sub:"Register as FuXion Entrepreneur",
+    modalCancel:"Cancel",
+    footerSub:"Authorized FuXion Global Distributor",
     instaBadge:"Instagram · Power Vita",
     instaTitle:"Follow us on Instagram",
     instaSub:"Recipes, tips and real transformations. Active community every day.",
@@ -565,6 +607,27 @@ const TRANSLATIONS = {
     contactSub:"Respondemos em minutos. Consultoria personalizada para seu país.",
     contactWa:"💬 Escrever no WhatsApp", contactLink:"🛒 Registrar agora",
     faqTitle:"Perguntas frequentes",
+    faqSub:"Tudo que você precisa saber",
+    faqMoreQ:"💬 Tenho outra dúvida",
+    faqQA:[
+      {q:"Os produtos FuXion são seguros?",a:"Sim. FuXion tem certificações internacionais: GMP, FDA Registered, HACCP e Clean Label. Todos os ingredientes são naturais, sem conservantes artificiais, adequados para toda a família."},
+      {q:"Quanto tempo leva a entrega?",a:"FuXion entrega diretamente no seu país. Os prazos variam: Uruguai 24-48h, Argentina e Colômbia 2-5 dias úteis, resto da América Latina 3-7 dias. Confirmamos o prazo exato pelo WhatsApp."},
+      {q:"E se eu não gostar dos produtos?",a:"FuXion oferece garantia de satisfação. Se os produtos não atenderem suas expectativas, orientamos você a encontrar a combinação certa ou gerenciamos uma solução."},
+      {q:"Posso comprar só como cliente ou também fazer o negócio?",a:"As duas opções estão disponíveis. Você pode se registrar como Cliente Preferencial para preços especiais, ou como Empreendedor se quiser construir um negócio."},
+      {q:"Todos os produtos estão disponíveis no meu país?",a:"FuXion opera em 37 países, mas o catálogo varia por região. Nos envie uma mensagem no WhatsApp com seu país e diremos exatamente o que está disponível e a que preço."},
+      {q:"As ferramentas de IA têm algum custo?",a:"Não, são 100% gratuitas. O Plano Nutricional, Analisador de Sintomas, Preditor de ROI e Elite Program são exclusivos do Power Vita sem custo adicional."},
+    ],
+    statsImpact:"Vidas impactadas em 37 países",
+    statsItems:[["37","Países"],["15K+","Parceiros"],["98%","Satisfação"]],
+    leadTitle:"Receba seu Plano Personalizado",
+    leadSub:"Deixe seus dados e enviamos pelo WhatsApp um plano adaptado aos seus objetivos — sem custo.",
+    leadError:"Por favor preencha todos os campos.",
+    leadGoals:[{v:"salud",l:"💚 Melhorar minha saúde"},{v:"energia",l:"⚡ Mais energia"},{v:"peso",l:"⚖️ Controle de peso"},{v:"negocio",l:"💼 Negócio global"}],
+    modalSub:"O que melhor te descreve? Escolha seu perfil para continuar no FuXion.",
+    modalOpt1:"💚 Quero os produtos", modalOpt1Sub:"Me registro como Cliente Preferencial",
+    modalOpt2:"💼 Quero o negócio", modalOpt2Sub:"Me registro como Empreendedor FuXion",
+    modalCancel:"Cancelar",
+    footerSub:"Distribuidor FuXion Global Autorizado",
     instaBadge:"Instagram · Power Vita",
     instaTitle:"Siga no Instagram",
     instaSub:"Receitas, dicas e transformações reais. Comunidade ativa todos os dias.",
@@ -950,9 +1013,9 @@ export default function App() {
           {/* Stats */}
           <div style={{textAlign:"center",background:"linear-gradient(135deg,rgba(45,106,79,0.06),rgba(201,168,76,0.06))",border:"1px solid rgba(45,106,79,0.1)",borderRadius:18,padding:"32px 20px"}}>
             <div className="pf" style={{fontSize:"clamp(1.8rem,4vw,3rem)",fontWeight:700,color:"#1a2e1a",marginBottom:3}}>+<Counter target={15000}/></div>
-            <div className="int" style={{fontSize:13,color:"#7a9a7a",fontWeight:600,marginBottom:18}}>Vidas impactadas en 37 países</div>
+            <div className="int" style={{fontSize:13,color:"#7a9a7a",fontWeight:600,marginBottom:18}}>{T.statsImpact}</div>
             <div style={{display:"flex",justifyContent:"center",gap:32,flexWrap:"wrap"}}>
-              {[["37","Países"],["15K+","Socios"],["98%","Satisfacción"]].map(([v,l])=>(<div key={l}><div className="pf" style={{fontSize:20,fontWeight:700,color:"#C9A84C"}}>{v}</div><div className="int" style={{fontSize:9,color:"#7a9a7a",fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>{l}</div></div>))}
+              {T.statsItems.map(([v,l])=>(<div key={l}><div className="pf" style={{fontSize:20,fontWeight:700,color:"#C9A84C"}}>{v}</div><div className="int" style={{fontSize:9,color:"#7a9a7a",fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>{l}</div></div>))}
             </div>
           </div>
         </div>
@@ -963,9 +1026,9 @@ export default function App() {
         <div style={{maxWidth:500,margin:"0 auto"}}>
           <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:22,padding:"38px 34px",boxShadow:"0 12px 44px rgba(45,106,79,0.07)",textAlign:"center"}}>
             <div style={{fontSize:38,marginBottom:9}}>🎯</div>
-            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>Recibe tu Plan Personalizado</h2>
-            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>Déjanos tus datos y te enviamos por WhatsApp un plan adaptado a tus objetivos — sin costo.</p>
-            <LeadFormInline/>
+            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>{T.leadTitle}</h2>
+            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>{T.leadSub}</p>
+            <LeadFormInline T={T}/>
           </div>
         </div>
       </section>
@@ -975,20 +1038,13 @@ export default function App() {
         <div style={{maxWidth:720,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:44}}>
             <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.faqTitle}</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>Todo lo que necesitás <em style={{color:"#2d6a4f",fontStyle:"italic"}}>saber</em></h2>
+            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>{T.faqSub.split(" ").slice(0,-1).join(" ")} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.faqSub.split(" ").slice(-1)}</em></h2>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {[
-              {q:"¿Los productos FuXion son seguros?",a:"Sí. FuXion cuenta con certificaciones internacionales: GMP, FDA Registered, HACCP y Clean Label. Todos los ingredientes son naturales y sin conservantes artificiales. Son aptos para toda la familia."},
-              {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. Los tiempos varían: Uruguay 24-48hs, Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
-              {q:"¿Qué pasa si no me gustan los productos?",a:"FuXion ofrece garantía de satisfacción. Si los productos no cumplen tus expectativas, te asesoramos para encontrar la combinación correcta o gestionamos una solución. Consultá los términos en tu país."},
-              {q:"¿Puedo comprar solo como cliente o también hacer el negocio?",a:"Las dos opciones están disponibles. Podés registrarte como Cliente Preferente para acceder a precios especiales, o como Emprendedor si querés construir un negocio. Al hacer click en 'Armar mi pack' te guiamos en el proceso."},
-              {q:"¿Están disponibles todos los productos en mi país?",a:"FuXion opera en 37 países pero el catálogo varía según la región. Consultanos por WhatsApp con tu país y te decimos exactamente qué productos están disponibles y a qué precio."},
-              {q:"¿Las herramientas de IA tienen algún costo?",a:"No, son 100% gratuitas. El Plan Nutricional, Analizador de Síntomas, ROI Predictor y Elite Program son exclusivos de Power Vita sin ningún costo adicional."},
-            ].map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
+            {T.faqQA.map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
           </div>
           <div style={{textAlign:"center",marginTop:36}}>
-            <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")}`} target="_blank" rel="noreferrer" className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>💬 Tengo otra pregunta</a>
+            <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")}`} target="_blank" rel="noreferrer" className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
           </div>
         </div>
       </section>
@@ -1011,7 +1067,7 @@ export default function App() {
           <div style={{width:22,height:22,borderRadius:"50%",background:"rgba(201,168,76,0.28)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>🌿</div>
           <div className="pf" style={{fontSize:18,color:"#C9A84C",letterSpacing:3,fontWeight:700}}>POWER VITA</div>
         </div>
-        <div className="int" style={{color:"rgba(255,255,255,0.32)",fontSize:10,marginBottom:20}}>Distribuidor FuXion Global Autorizado</div>
+        <div className="int" style={{color:"rgba(255,255,255,0.32)",fontSize:10,marginBottom:20}}>{T.footerSub}</div>
         <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
           <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
@@ -1026,18 +1082,18 @@ export default function App() {
           <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:24,padding:"36px 30px",maxWidth:400,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,0.3)"}}>
             <div style={{fontSize:40,marginBottom:12}}>🌿</div>
             <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{packModal}</h3>
-            <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>¿Qué te describe mejor? Elegí tu perfil para continuar en FuXion.</p>
+            <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>{T.modalSub}</p>
             <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
               <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
-                💚 Quiero los productos
-                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>Me registro como Cliente Preferente</div>
+                {T.modalOpt1}
+                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>{T.modalOpt1Sub}</div>
               </a>
               <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
-                💼 Quiero el negocio
-                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:2}}>Me registro como Emprendedor FuXion</div>
+                {T.modalOpt2}
+                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:2}}>{T.modalOpt2Sub}</div>
               </a>
             </div>
-            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>Cancelar</button>
+            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>{T.modalCancel}</button>
           </div>
         </div>
       )}
@@ -1051,13 +1107,13 @@ export default function App() {
 }
 
 // ── LEAD FORM INLINE ──────────────────────────────────────────────────────────
-function LeadFormInline() {
+function LeadFormInline({ T }) {
   const [form,setForm]=useState({name:"",email:"",country:"",goal:""});
   const [sent,setSent]=useState(false); const [err,setErr]=useState("");
-  const goals = [{v:"salud",l:"💚 Mejorar mi salud"},{v:"energia",l:"⚡ Más energía"},{v:"peso",l:"⚖️ Control de peso"},{v:"negocio",l:"💼 Negocio global"}];
+  const goals = T.leadGoals;
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
   const submit = () => {
-    if (!form.name||!form.country||!form.goal) { setErr("Por favor completá todos los campos."); return; }
+    if (!form.name||!form.country||!form.goal) { setErr(T.leadError); return; }
     setErr("");
     const gl = goals.find(g=>g.v===form.goal)?.l||form.goal;
     const msg = encodeURIComponent(`¡Hola! Soy ${form.name} de ${form.country} 🌍\nMe interesa: ${gl}\n${form.email?`Email: ${form.email}\n`:""}Quiero mi plan personalizado con Power Vita 🌿`);
