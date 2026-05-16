@@ -478,7 +478,7 @@ export default function App() {
     popular: ["REXET","VITA XTRA T+","NUTRADAY"]
   } : null);
 
-  const navSections = [["inicio","Inicio"],["catalogo","Catálogo"],["recetario","Recetario"],["precios","Precios"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
+  const navSections = [["inicio","Inicio"],["sistema","Sistema"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
 
   return (
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
@@ -547,7 +547,7 @@ export default function App() {
       </div>
 
       {/* SISTEMA FUXION + PACKS */}
-      <section id="catalogo" style={{padding:"80px 40px",background:"#FAFAF7"}}>
+      <section id="sistema" style={{padding:"80px 40px",background:"#FAFAF7"}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:52}}>
             <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Sistema FuXion</span>
@@ -644,11 +644,41 @@ export default function App() {
               </div>
             </div>
           )}
+
+          {/* SELECTOR DE PAÍS — fusionado */}
+          <div style={{marginTop:52,paddingTop:52,borderTop:"1px solid rgba(45,106,79,0.1)"}}>
+            <div style={{textAlign:"center",marginBottom:28}}>
+              <h3 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.7rem)",fontWeight:700,color:"#1a2e1a",marginBottom:6}}>¿Cuánto cuesta en <em style={{color:"#2d6a4f",fontStyle:"italic"}}>tu país?</em></h3>
+              <p className="int" style={{color:"#7a9a7a",fontSize:13}}>Seleccioná y te mostramos la moneda, el envío y cómo contactarnos.</p>
+            </div>
+            <div style={{maxWidth:460,margin:"0 auto"}}>
+              <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,padding:"22px 24px",boxShadow:"0 6px 24px rgba(45,106,79,0.06)"}}>
+                {detectCountry()&&COUNTRY_DATA[detectCountry()]&&<div style={{display:"flex",alignItems:"center",gap:9,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:10,padding:"8px 11px",marginBottom:11}}><span style={{fontSize:16}}>{COUNTRY_DATA[detectCountry()]?.flag}</span><div style={{flex:1}}><div className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f"}}>📍 Tu ubicación detectada</div><div className="int" style={{fontSize:9,color:"#7a9a7a"}}>Estás en <strong>{detectCountry()}</strong></div></div><div style={{width:6,height:6,borderRadius:"50%",background:"#25D366",animation:"pulse 2s ease-in-out infinite"}}/></div>}
+                <label className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f",letterSpacing:1,display:"block",marginBottom:5}}>SELECCIONÁ TU PAÍS</label>
+                <select value={selectedCountry} onChange={e=>setSelectedCountry(e.target.value)} style={{width:"100%",background:"rgba(45,106,79,0.04)",border:"1.5px solid rgba(45,106,79,0.16)",borderRadius:10,padding:"9px 12px",fontFamily:"'Inter',sans-serif",fontSize:12,outline:"none",cursor:"pointer",color:selectedCountry?"#1a2e1a":"#9ca3af",boxSizing:"border-box",marginBottom:12}}>
+                  <option value="">🌍 Seleccioná tu país...</option>
+                  {COUNTRIES.map(c=><option key={c} value={c}>{COUNTRY_DATA[c]?.flag||"🌐"} {c}</option>)}
+                </select>
+                {selectedCountry&&countryData&&(
+                  <div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:9}}>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💱 MONEDA</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{countryData.currency}</div></div>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>🚚 ENVÍO</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{countryData.shipping}</div></div>
+                    </div>
+                    <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {countryData.note}</p></div>
+                    <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>🔥 MÁS PEDIDOS EN {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
+                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} Ver precios para {selectedCountry} →</a>
+                  </div>
+                )}
+                {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver precios</p></div>}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* RECETARIO */}
-      <section id="recetario" style={{padding:"80px 40px",background:"#F0F4ED"}}>
+      {/* RECETARIO OCULTO */}
+      {false && <section id="recetario" style={{padding:"80px 40px",background:"#F0F4ED"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:44}}>
             <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Power Vita Kitchen</span>
@@ -672,53 +702,7 @@ export default function App() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* MODAL RECETA */}
-      {activeRecipe && (
-        <div onClick={()=>setActiveRecipe(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.52)",backdropFilter:"blur(8px)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:"#FAFAF7",borderRadius:18,padding:26,maxWidth:390,width:"100%",position:"relative"}}>
-            <button onClick={()=>setActiveRecipe(null)} style={{position:"absolute",top:11,right:11,background:"none",border:"none",fontSize:16,cursor:"pointer",color:"#1a2e1a"}}>✕</button>
-            <div style={{fontSize:40,textAlign:"center",marginBottom:7}}>{activeRecipe.img}</div>
-            <h3 className="pf" style={{fontSize:16,fontWeight:700,color:"#1a2e1a",textAlign:"center",marginBottom:2}}>{activeRecipe.name}</h3>
-            <div className="int" style={{textAlign:"center",color:"#C9A84C",fontWeight:700,fontSize:9,marginBottom:11}}>✦ {activeRecipe.product}</div>
-            <ul style={{listStyle:"none",padding:0,margin:"0 0 10px"}}>{activeRecipe.ingredients.map((ing,i)=><li key={i} className="int" style={{fontSize:11,color:"#7a9a7a",padding:"2px 0",display:"flex",gap:6}}><span style={{color:"#C9A84C"}}>·</span>{ing}</li>)}</ul>
-            <div style={{background:"rgba(45,106,79,0.06)",borderRadius:10,padding:"10px 13px",borderLeft:"3px solid #2d6a4f"}}><p className="int" style={{fontSize:12,lineHeight:1.65,color:"#2d5a3d",fontStyle:"italic"}}>{activeRecipe.prep}</p></div>
-          </div>
-        </div>
-      )}
-
-      {/* PRECIOS POR PAÍS */}
-      <section id="precios" style={{padding:"80px 40px",background:"#FAFAF7"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:48}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Precios & Packs</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1,marginBottom:10}}>¿Cuánto cuesta <em style={{color:"#2d6a4f",fontStyle:"italic"}}>empezar?</em></h2>
-            <p className="int" style={{color:"#7a9a7a",fontSize:13,maxWidth:440,margin:"0 auto",lineHeight:1.7}}>Los precios varían según tu país. Seleccioná y te enviamos la info exacta.</p>
-          </div>
-          {/* Selector */}
-          <div style={{maxWidth:460,margin:"0 auto 44px",background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,padding:"22px 24px",boxShadow:"0 6px 24px rgba(45,106,79,0.06)"}}>
-            {detectCountry()&&COUNTRY_DATA[detectCountry()]&&<div style={{display:"flex",alignItems:"center",gap:9,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:10,padding:"8px 11px",marginBottom:11}}><span style={{fontSize:16}}>{COUNTRY_DATA[detectCountry()]?.flag}</span><div style={{flex:1}}><div className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f"}}>📍 Tu ubicación detectada</div><div className="int" style={{fontSize:9,color:"#7a9a7a"}}>Estás en <strong>{detectCountry()}</strong></div></div><div style={{width:6,height:6,borderRadius:"50%",background:"#25D366",animation:"pulse 2s ease-in-out infinite"}}/></div>}
-            <label className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f",letterSpacing:1,display:"block",marginBottom:5}}>SELECCIONÁ TU PAÍS</label>
-            <select value={selectedCountry} onChange={e=>setSelectedCountry(e.target.value)} style={{width:"100%",background:"rgba(45,106,79,0.04)",border:"1.5px solid rgba(45,106,79,0.16)",borderRadius:10,padding:"9px 12px",fontFamily:"'Inter',sans-serif",fontSize:12,outline:"none",cursor:"pointer",color:selectedCountry?"#1a2e1a":"#9ca3af",boxSizing:"border-box",marginBottom:12}}>
-              <option value="">🌍 Seleccioná tu país...</option>
-              {COUNTRIES.map(c=><option key={c} value={c}>{COUNTRY_DATA[c]?.flag||"🌐"} {c}</option>)}
-            </select>
-            {selectedCountry && countryData && (
-              <div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:9}}>
-                  <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💱 MONEDA</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{countryData.currency}</div></div>
-                  <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>🚚 ENVÍO</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{countryData.shipping}</div></div>
-                </div>
-                <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {countryData.note}</p></div>
-                <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>🔥 MÁS PEDIDOS EN {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
-                <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} Ver precios para {selectedCountry} →</a>
-              </div>
-            )}
-            {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver precios</p></div>}
-          </div>
-        </div>
-      </section>
+      </section>}
 
       {/* IA TOOLS */}
       <section id="iatools" style={{padding:"80px 40px",background:"linear-gradient(160deg,#020b18,#041a0e 50%,#020b18)",position:"relative",overflow:"hidden"}}>
