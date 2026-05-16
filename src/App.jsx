@@ -7,15 +7,15 @@ const META_PIXEL_ID = "2212676212813152";
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
 const COUNTRY_DATA = {
-  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío express 24-48hs",       note:"Precios en pesos uruguayos con IVA incluido",              popular:["REXET","VITA XTRA T+","THERMO T3"] },
-  "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["NUTRADAY","NO STRESS","REXET"] },
-  "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["VITA XTRA T+","PROTEIN ACTIVE FIT","FLORA LIV"] },
-  "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["REXET","THERMO T3","NUTRADAY"] },
-  "España":         { flag:"🇪🇸", currency:"EUR", shipping:"Envío en 5-7 días hábiles",   note:"Precios en euros. Envío gratis sobre €50",                  popular:["VITA XTRA T+","NO STRESS","YOUTH ELIXIR HGH"] },
-  "Brasil":         { flag:"🇧🇷", currency:"BRL", shipping:"Frete em 5-7 dias úteis",     note:"Preços em reais. Frete grátis acima de R$150",              popular:["NUTRADAY","BIOPRO+ TECT","REXET"] },
-  "Chile":          { flag:"🇨🇱", currency:"CLP", shipping:"Envío en 2-4 días hábiles",   note:"Precios en pesos chilenos con despacho incluido",           popular:["THERMO T3","VITA XTRA T+","FLORA LIV"] },
-  "Perú":           { flag:"🇵🇪", currency:"PEN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en soles. Contra entrega disponible",               popular:["REXET","NUTRADAY","NO STRESS"] },
-  "Estados Unidos": { flag:"🇺🇸", currency:"USD", shipping:"Shipping in 5-7 business days",note:"Prices in USD. Free shipping over $75",                    popular:["VITA XTRA T+","PROTEIN ACTIVE FIT","BIOPRO+ TECT"] },
+  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío express 24-48hs",       note:"Precios en pesos uruguayos con IVA incluido",              popular:["Prunex Vita","Thermo T3","Reset"],            unavailable:["Pre Sport","Xpeed","Alpha Balance"] },
+  "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["Nutraday","No Stress","Reset"],               unavailable:["Prunex Vita","Xpeed"] },
+  "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["Vita Xtra T+","Protein Active Fit","Flora Liv"],unavailable:["Prunex Vita","Pre Sport"] },
+  "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["Reset","Thermo T3","Nutraday"],               unavailable:["Prunex Vita"] },
+  "España":         { flag:"🇪🇸", currency:"EUR", shipping:"Envío en 5-7 días hábiles",   note:"Precios en euros. Envío gratis sobre €50",                  popular:["Vita Xtra T+","No Stress","Youth Elixir"],    unavailable:["Prunex Vita","Pre Sport"] },
+  "Brasil":         { flag:"🇧🇷", currency:"BRL", shipping:"Frete em 5-7 dias úteis",     note:"Preços em reais. Frete grátis acima de R$150",              popular:["Nutraday","Biopro+ Tect","Reset"],            unavailable:["Prunex Vita"] },
+  "Chile":          { flag:"🇨🇱", currency:"CLP", shipping:"Envío en 2-4 días hábiles",   note:"Precios en pesos chilenos con despacho incluido",           popular:["Thermo T3","Vita Xtra T+","Flora Liv"],       unavailable:["Prunex Vita"] },
+  "Perú":           { flag:"🇵🇪", currency:"PEN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en soles. Contra entrega disponible",               popular:["Reset","Nutraday","No Stress"],               unavailable:[] },
+  "Estados Unidos": { flag:"🇺🇸", currency:"USD", shipping:"Shipping in 5-7 business days",note:"Prices in USD. Free shipping over $75",                    popular:["Vita Xtra T+","Protein Active Fit","Biopro+ Tect"],unavailable:["Prunex Vita"] },
 };
 
 const PRODUCTS = [
@@ -32,6 +32,7 @@ const PRODUCTS = [
   { id:11, name:"Youth Elixir",      line:"Immunity",color:"#1565C0", bg:"#f0f4fb", img:null, emoji:"✨", tag:"Activa tu juventud",     desc:"Fórmula con resveratrol y aminoácidos para retrasar el envejecimiento celular y mejorar el sueño profundo.", benefits:["Anti-envejecimiento celular","Mejora el sueño profundo","Vitalidad juvenil"], ing:"Resveratrol · Aminoácidos · Vitaminas · Extractos premium" },
   { id:12, name:"Pre Sport",         line:"Sport",   color:"#E65100", bg:"#fdf4ef", img:null, emoji:"🏃", tag:"Rendimiento máximo",     desc:"Bebida isotónica con curcumina y creatina que dilata los vasos sanguíneos y da energía explosiva antes del ejercicio.", benefits:["Energía explosiva","Mayor resistencia","Enfoque y concentración"], ing:"Curcumina · Creatina · Aminoácidos · Cafeína natural" },
   { id:13, name:"Thermo T3",         line:"Control", color:"#E65100", bg:"#fdf4ef", img:"https://powervita.vercel.app/thermo.jpg", emoji:"🔥", tag:"Activa tu metabolismo", desc:"Infusión de tres tés y carnitina que acelera la termogénesis para transformar la grasa corporal en energía.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"], ing:"Té verde · Té negro · Té rojo · Carnitina · Jengibre" },
+  { id:14, name:"Prunex Vita",       line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🫐", tag:"Limpieza natural",       desc:"Concentrado de ciruela y prebióticos para regular el tránsito intestinal y limpiar el colon en forma suave y efectiva.", benefits:["Regula el tránsito intestinal","Limpia el colon naturalmente","Reduce la hinchazón"], ing:"Ciruela pasa · Prebióticos · Enzimas digestivas · Magnesio" },
 ];
 
 const RECIPES = [
@@ -528,7 +529,7 @@ export default function App() {
             Biotecnología avanzada en cada producto FuXion. Certificado, natural y con entrega directa en 37 países.
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
-            <button onClick={()=>scrollTo("catalogo")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>Ver productos</button>
+            <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>Ver productos</button>
             <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>💬 WhatsApp</a>
           </div>
           <div style={{display:"flex",gap:40,justifyContent:"center"}}>
@@ -624,10 +625,13 @@ export default function App() {
                 {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"6px 14px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
-                {filtProds.map(p=>(
-                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id?`0 14px 36px ${p.color}18`:"0 2px 10px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id?"translateY(-4px)":"translateY(0)",display:"flex",flexDirection:"column"}}>
-                    <div style={{background:hovCard===p.id?p.color:p.bg,height:120,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
-                      <div style={{position:"absolute",top:8,left:8,background:hovCard===p.id?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
+                {filtProds.map(p=>{
+                  const unavail = selectedCountry && countryData?.unavailable?.includes(p.name);
+                  return (
+                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${unavail?"rgba(0,0,0,0.06)":hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id&&!unavail?`0 14px 36px ${p.color}18`:"0 2px 10px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id&&!unavail?"translateY(-4px)":"translateY(0)",display:"flex",flexDirection:"column",opacity:unavail?0.52:1,position:"relative"}}>
+                    {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:18}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 12px"}}>No disponible en {selectedCountry}</div><a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)}`} target="_blank" rel="noreferrer" style={{marginTop:6,background:"#25D366",color:"#fff",borderRadius:8,padding:"5px 12px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textDecoration:"none"}}>Consultar alternativa</a></div>}
+                    <div style={{background:hovCard===p.id&&!unavail?p.color:p.bg,height:120,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
+                      <div style={{position:"absolute",top:8,left:8,background:hovCard===p.id&&!unavail?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
                       {p.img?<img src={p.img} alt={p.name} style={{maxHeight:100,maxWidth:"85%",objectFit:"contain",filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
                       <div style={{display:p.img?"none":"flex",fontSize:40,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
                     </div>
@@ -640,7 +644,8 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
