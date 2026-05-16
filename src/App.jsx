@@ -459,8 +459,8 @@ export default function App() {
   const recipeLabels = ["Todos","Detox","Energy","Immunity","Protein","Beauty"];
   const filtRecipes = recipeFilter===0 ? RECIPES : RECIPES.filter(r=>r.cat===catKeys[recipeFilter]);
   const countryData = COUNTRY_DATA[selectedCountry] || (selectedCountry ? {
-    flag: "🌍", currency: "USD", shipping: "Envío internacional disponible",
-    note: "Los precios varían según tu país. Te enviamos la cotización exacta por WhatsApp.",
+    flag: "🌍", currency: "USD", shipping: "Entrega express dentro de tu país",
+    note: "FuXion entrega directamente en tu país. Te enviamos la cotización exacta por WhatsApp.",
     popular: ["REXET","VITA XTRA T+","NUTRADAY"]
   } : null);
 
