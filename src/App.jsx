@@ -680,9 +680,9 @@ export default function App() {
       <section id="sistema" style={{padding:"80px 40px",background:"#FAFAF7"}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:52}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Sistema FuXion</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1,marginBottom:12}}>Salud plena en <em style={{color:"#2d6a4f",fontStyle:"italic"}}>3 pasos</em></h2>
-            <p className="int" style={{color:"#7a9a7a",fontSize:13,maxWidth:480,margin:"0 auto",lineHeight:1.7}}>Un sistema progresivo diseñado por biotecnólogos. Cada paso potencia al siguiente.</p>
+            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.sistemaBadge}</span>
+            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1,marginBottom:12}}>{T.sistemaTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.sistemaTitleEm}</em></h2>
+            <p className="int" style={{color:"#7a9a7a",fontSize:13,maxWidth:480,margin:"0 auto",lineHeight:1.7}}>{T.sistemaSub}</p>
           </div>
 
           {/* 3 pasos */}
@@ -696,20 +696,20 @@ export default function App() {
                 <div style={{background:p.bg,padding:"24px 22px 18px",borderBottom:`1px solid ${p.color}12`}}>
                   <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
                     <div style={{width:40,height:40,borderRadius:12,background:p.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{p.icon}</div>
-                    <div><div className="int" style={{fontSize:9,fontWeight:800,color:p.color,letterSpacing:2,textTransform:"uppercase"}}>PASO {p.step}</div><div className="pf" style={{fontSize:15,fontWeight:700,color:"#1a2e1a"}}>{p.title}</div></div>
+                    <div><div className="int" style={{fontSize:9,fontWeight:800,color:p.color,letterSpacing:2,textTransform:"uppercase"}}>{T.stepLabel} {p.step}</div><div className="pf" style={{fontSize:15,fontWeight:700,color:"#1a2e1a"}}>{p.title}</div></div>
                   </div>
                   <div className="int" style={{fontSize:10,fontWeight:700,color:p.color,marginBottom:4}}>{p.sub}</div>
                   <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.6}}>{p.desc}</p>
                 </div>
                 <div style={{padding:"14px 22px 18px",flex:1,display:"flex",flexDirection:"column"}}>
-                  <div className="int" style={{fontSize:9,fontWeight:800,color:"#9ca3af",letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>Productos incluidos</div>
+                  <div className="int" style={{fontSize:9,fontWeight:800,color:"#9ca3af",letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>{T.stepProds}</div>
                   <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:14}}>
                     {p.prods.map(pr=><span key={pr} style={{background:p.color+"10",border:`1px solid ${p.color}22`,borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:600,color:p.color}}>{pr}</span>)}
                     <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                   <div style={{display:"flex",gap:7,marginTop:"auto"}}>
-                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio</a>
-                    <button onClick={()=>{trackEvent("Purchase",{content_name:p.title,content_type:"product",currency:"USD"});setPackModal(p.title);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🛒 Armar mi pack</button>
+                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta1}</a>
+                    <button onClick={()=>{trackEvent("Purchase",{content_name:p.title,content_type:"product",currency:"USD"});setPackModal(p.title);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.stepCta2}</button>
                   </div>
                 </div>
               </div>
@@ -718,8 +718,8 @@ export default function App() {
 
           {/* Packs */}
           <div style={{textAlign:"center",marginBottom:28}}>
-            <h3 className="pf" style={{fontSize:"clamp(1.3rem,2.5vw,1.9rem)",fontWeight:700,color:"#1a2e1a",marginBottom:8}}>Armá tu <em style={{color:"#2d6a4f",fontStyle:"italic"}}>pack</em></h3>
-            <p className="int" style={{color:"#7a9a7a",fontSize:12}}>Combinamos los mejores productos según tu objetivo y tu país</p>
+            <h3 className="pf" style={{fontSize:"clamp(1.3rem,2.5vw,1.9rem)",fontWeight:700,color:"#1a2e1a",marginBottom:8}}>{T.packTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.packTitleEm}</em></h3>
+            <p className="int" style={{color:"#7a9a7a",fontSize:12}}>{T.packSub}</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:20,marginBottom:40}}>
             {[
@@ -735,8 +735,8 @@ export default function App() {
                 <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
                 <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
                 <div style={{display:"flex",gap:8}}>
-                  <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio</a>
-                  <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});setPackModal(pack.name);}} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🛒 Armar mi pack</button>
+                  <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta1}</a>
+                  <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});setPackModal(pack.name);}} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.packCta2}</button>
                 </div>
               </div>
             ))}
@@ -745,7 +745,7 @@ export default function App() {
           {/* Catálogo colapsado */}
           <div style={{textAlign:"center"}}>
             <button onClick={()=>setCatalogOpen(o=>!o)} className="int" style={{background:"none",border:"1.5px solid rgba(45,106,79,0.2)",borderRadius:999,padding:"10px 24px",fontSize:12,fontWeight:600,color:"#2d6a4f",cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(45,106,79,0.05)";}} onMouseLeave={e=>{e.currentTarget.style.background="none";}}>
-              {catalogOpen?"▲ Ocultar catálogo completo":"▼ Ver todos los productos"}
+              {catalogOpen?T.catalogHide:T.catalogShow}
             </button>
           </div>
           {catalogOpen&&(
@@ -758,7 +758,7 @@ export default function App() {
                   const unavail = selectedCountry && countryData?.unavailable?.includes(p.name);
                   return (
                   <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${unavail?"rgba(0,0,0,0.06)":hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id&&!unavail?`0 14px 36px ${p.color}18`:"0 2px 10px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id&&!unavail?"translateY(-4px)":"translateY(0)",display:"flex",flexDirection:"column",opacity:unavail?0.52:1,position:"relative"}}>
-                    {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:18}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 12px"}}>No disponible en {selectedCountry}</div><a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)}`} target="_blank" rel="noreferrer" style={{marginTop:6,background:"#25D366",color:"#fff",borderRadius:8,padding:"5px 12px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textDecoration:"none"}}>Consultar alternativa</a></div>}
+                    {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:18}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 12px"}}>{T.unavailLabel} {selectedCountry}</div><a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)}`} target="_blank" rel="noreferrer" style={{marginTop:6,background:"#25D366",color:"#fff",borderRadius:8,padding:"5px 12px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textDecoration:"none"}}>{T.unavailCta}</a></div>}
                     <div style={{background:hovCard===p.id&&!unavail?p.color:p.bg,height:120,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
                       <div style={{position:"absolute",top:8,left:8,background:hovCard===p.id&&!unavail?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
                       {p.img?<img src={p.img} alt={p.name} style={{maxHeight:100,maxWidth:"85%",objectFit:"contain",filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
@@ -768,8 +768,8 @@ export default function App() {
                       <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a"}}>{p.name}</div>
                       <p className="int" style={{fontSize:10,color:"#7a9a7a",lineHeight:1.5,flex:1}}>{p.desc}</p>
                       <div style={{display:"flex",gap:5,marginTop:6}}>
-                        <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>💬 Precio</a>
-                        <button onClick={()=>{trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"});setPackModal(p.name);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,cursor:"pointer"}}>🛒 Comprar</button>
+                        <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>{T.catalogPriceCta}</a>
+                        <button onClick={()=>{trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"});setPackModal(p.name);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,cursor:"pointer"}}>{T.catalogBuyCta}</button>
                       </div>
                     </div>
                   </div>
@@ -782,29 +782,29 @@ export default function App() {
           {/* SELECTOR DE PAÍS — fusionado */}
           <div style={{marginTop:52,paddingTop:52,borderTop:"1px solid rgba(45,106,79,0.1)"}}>
             <div style={{textAlign:"center",marginBottom:28}}>
-              <h3 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.7rem)",fontWeight:700,color:"#1a2e1a",marginBottom:6}}>¿Cuánto cuesta en <em style={{color:"#2d6a4f",fontStyle:"italic"}}>tu país?</em></h3>
-              <p className="int" style={{color:"#7a9a7a",fontSize:13}}>Seleccioná y te mostramos la moneda, el envío y cómo contactarnos.</p>
+              <h3 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.7rem)",fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{T.countryTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.countryTitleEm}</em></h3>
+              <p className="int" style={{color:"#7a9a7a",fontSize:13}}>{T.countrySub}</p>
             </div>
             <div style={{maxWidth:460,margin:"0 auto"}}>
               <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,padding:"22px 24px",boxShadow:"0 6px 24px rgba(45,106,79,0.06)"}}>
-                {detectCountry()&&COUNTRY_DATA[detectCountry()]&&<div style={{display:"flex",alignItems:"center",gap:9,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:10,padding:"8px 11px",marginBottom:11}}><span style={{fontSize:16}}>{COUNTRY_DATA[detectCountry()]?.flag}</span><div style={{flex:1}}><div className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f"}}>📍 Tu ubicación detectada</div><div className="int" style={{fontSize:9,color:"#7a9a7a"}}>Estás en <strong>{detectCountry()}</strong></div></div><div style={{width:6,height:6,borderRadius:"50%",background:"#25D366",animation:"pulse 2s ease-in-out infinite"}}/></div>}
-                <label className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f",letterSpacing:1,display:"block",marginBottom:5}}>SELECCIONÁ TU PAÍS</label>
+                {detectCountry()&&COUNTRY_DATA[detectCountry()]&&<div style={{display:"flex",alignItems:"center",gap:9,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:10,padding:"8px 11px",marginBottom:11}}><span style={{fontSize:16}}>{COUNTRY_DATA[detectCountry()]?.flag}</span><div style={{flex:1}}><div className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f"}}>{T.countryDetected}</div><div className="int" style={{fontSize:9,color:"#7a9a7a"}}>{T.countryIn} <strong>{detectCountry()}</strong></div></div><div style={{width:6,height:6,borderRadius:"50%",background:"#25D366",animation:"pulse 2s ease-in-out infinite"}}/></div>}
+                <label className="int" style={{fontSize:10,fontWeight:700,color:"#2d6a4f",letterSpacing:1,display:"block",marginBottom:5}}>{T.countryLabel}</label>
                 <select value={selectedCountry} onChange={e=>setSelectedCountry(e.target.value)} style={{width:"100%",background:"rgba(45,106,79,0.04)",border:"1.5px solid rgba(45,106,79,0.16)",borderRadius:10,padding:"9px 12px",fontFamily:"'Inter',sans-serif",fontSize:12,outline:"none",cursor:"pointer",color:selectedCountry?"#1a2e1a":"#9ca3af",boxSizing:"border-box",marginBottom:12}}>
-                  <option value="">🌍 Seleccioná tu país...</option>
+                  <option value="">{T.countryPlaceholder}</option>
                   {COUNTRIES.map(c=><option key={c} value={c}>{COUNTRY_DATA[c]?.flag||"🌐"} {c}</option>)}
                 </select>
                 {selectedCountry&&countryData&&(
                   <div>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:9}}>
-                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💱 MONEDA</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{countryData.currency}</div></div>
-                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>🚚 ENVÍO</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{countryData.shipping}</div></div>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>{T.countryCurrency}</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{countryData.currency}</div></div>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>{T.countryShipping}</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{countryData.shipping}</div></div>
                     </div>
                     <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {countryData.note}</p></div>
-                    <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>🔥 MÁS PEDIDOS EN {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
-                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} Ver precios para {selectedCountry} →</a>
+                    <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>{T.countryPopular} {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
+                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} {T.countryViewPrices} {selectedCountry} →</a>
                   </div>
                 )}
-                {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver precios</p></div>}
+                {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>{T.countryEmpty}</p></div>}
               </div>
             </div>
           </div>
@@ -847,11 +847,11 @@ export default function App() {
           <div style={{textAlign:"center",marginBottom:60}}>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(201,168,76,0.12)",border:"1px solid rgba(201,168,76,0.36)",borderRadius:999,padding:"7px 20px",marginBottom:18}}>
               <span style={{width:6,height:6,borderRadius:"50%",background:"#FFD700",display:"inline-block",animation:"pulse 2s ease-in-out infinite"}}/>
-              <span className="int" style={{fontSize:10,fontWeight:800,color:"#FFD700",letterSpacing:3,textTransform:"uppercase"}}>Powered by Claude AI</span>
+              <span className="int" style={{fontSize:10,fontWeight:800,color:"#FFD700",letterSpacing:3,textTransform:"uppercase"}}>{T.iaBadge}</span>
             </div>
             <h2 className="pf" style={{fontSize:"clamp(1.8rem,4vw,3rem)",fontWeight:700,color:"#fff",marginBottom:14,lineHeight:1.1}}>
-              Herramientas con<br/>
-              <span style={{background:"linear-gradient(135deg,#C9A84C,#FFD700)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontStyle:"italic"}}>Inteligencia Artificial</span>
+              {T.iaTitle1}<br/>
+              <span style={{background:"linear-gradient(135deg,#C9A84C,#FFD700)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontStyle:"italic"}}>{T.iaTitleEm}</span>
             </h2>
             <p className="int" style={{color:"rgba(255,255,255,0.85)",fontSize:14,maxWidth:480,margin:"0 auto",lineHeight:1.8}}>4 herramientas que <span style={{color:"#FFD700",fontWeight:700}}>ningún otro distribuidor FuXion</span> en el mundo tiene. Gratis.</p>
           </div>
@@ -893,8 +893,8 @@ export default function App() {
       <section id="testimonios" style={{padding:"80px 0",background:"#FAFAF7"}}>
         <div style={{maxWidth:1200,margin:"0 auto",padding:"0 40px"}}>
           <div style={{textAlign:"center",marginBottom:48}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Testimonios reales</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>Impacto <em style={{color:"#2d6a4f",fontStyle:"italic"}}>global real</em></h2>
+            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.testimoniosBadge}</span>
+            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>{T.testimoniosTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.testimoniosTitleEm}</em></h2>
           </div>
         </div>
         {/* Marquee fila 1 */}
@@ -974,7 +974,7 @@ export default function App() {
       <section style={{padding:"80px 40px",background:"#F0F4ED"}}>
         <div style={{maxWidth:720,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:44}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Preguntas frecuentes</span>
+            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.faqTitle}</span>
             <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>Todo lo que necesitás <em style={{color:"#2d6a4f",fontStyle:"italic"}}>saber</em></h2>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
@@ -997,10 +997,10 @@ export default function App() {
       <section style={{padding:"60px 40px",background:"#fff"}}>
         <div style={{maxWidth:600,margin:"0 auto",textAlign:"center"}}>
           <div style={{fontSize:36,marginBottom:12}}>📸</div>
-          <h2 className="pf" style={{fontSize:"clamp(1.4rem,3vw,2rem)",fontWeight:700,color:"#1a2e1a",marginBottom:8}}>Seguinos en <em style={{color:"#833ab4",fontStyle:"italic"}}>Instagram</em></h2>
-          <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:28}}>Resultados reales, recetas, tips de salud y novedades FuXion todos los días.</p>
+          <h2 className="pf" style={{fontSize:"clamp(1.4rem,3vw,2rem)",fontWeight:700,color:"#1a2e1a",marginBottom:8}}>{T.instaTitle}</h2>
+          <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:28}}>{T.instaSub}</p>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:10,background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"14px 28px",borderRadius:14,fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 28px rgba(131,58,180,0.3)"}}>
-            📸 @powervita_uy → Ver Instagram
+            📸 @powervita_uy → {T.instaBtn}
           </a>
         </div>
       </section>
