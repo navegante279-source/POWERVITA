@@ -7,15 +7,15 @@ const META_PIXEL_ID = "2212676212813152";
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
 const COUNTRY_DATA = {
-  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío express 24-48hs",       note:"Precios en pesos uruguayos con IVA incluido",              popular:["Prunex Vita","Thermo T3","Reset"],            unavailable:["Pre Sport","Xpeed","Alpha Balance"] },
-  "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["Nutraday","No Stress","Reset"],               unavailable:["Prunex Vita","Xpeed"] },
-  "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["Vita Xtra T+","Protein Active Fit","Flora Liv"],unavailable:["Prunex Vita","Pre Sport"] },
-  "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["Reset","Thermo T3","Nutraday"],               unavailable:["Prunex Vita"] },
-  "España":         { flag:"🇪🇸", currency:"EUR", shipping:"Envío en 5-7 días hábiles",   note:"Precios en euros. Envío gratis sobre €50",                  popular:["Vita Xtra T+","No Stress","Youth Elixir"],    unavailable:["Prunex Vita","Pre Sport"] },
-  "Brasil":         { flag:"🇧🇷", currency:"BRL", shipping:"Frete em 5-7 dias úteis",     note:"Preços em reais. Frete grátis acima de R$150",              popular:["Nutraday","Biopro+ Tect","Reset"],            unavailable:["Prunex Vita"] },
-  "Chile":          { flag:"🇨🇱", currency:"CLP", shipping:"Envío en 2-4 días hábiles",   note:"Precios en pesos chilenos con despacho incluido",           popular:["Thermo T3","Vita Xtra T+","Flora Liv"],       unavailable:["Prunex Vita"] },
+  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío express 24-48hs",       note:"Precios en pesos uruguayos con IVA incluido",              popular:["Prunex","Vita Xtra T+","Thermo T3"],          unavailable:["Pre Sport","Xpeed","Alpha Balance","Reset"] },
+  "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["Nutraday","No Stress","Reset"],               unavailable:["Prunex","Xpeed"] },
+  "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["Vita Xtra T+","Protein Active Fit","Flora Liv"],unavailable:["Prunex","Pre Sport"] },
+  "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["Reset","Thermo T3","Nutraday"],               unavailable:["Prunex"] },
+  "España":         { flag:"🇪🇸", currency:"EUR", shipping:"Envío en 5-7 días hábiles",   note:"Precios en euros. Envío gratis sobre €50",                  popular:["Vita Xtra T+","No Stress","Youth Elixir"],    unavailable:["Prunex","Pre Sport"] },
+  "Brasil":         { flag:"🇧🇷", currency:"BRL", shipping:"Frete em 5-7 dias úteis",     note:"Preços em reais. Frete grátis acima de R$150",              popular:["Nutraday","Biopro+ Tect","Reset"],            unavailable:["Prunex"] },
+  "Chile":          { flag:"🇨🇱", currency:"CLP", shipping:"Envío en 2-4 días hábiles",   note:"Precios en pesos chilenos con despacho incluido",           popular:["Thermo T3","Vita Xtra T+","Flora Liv"],       unavailable:["Prunex"] },
   "Perú":           { flag:"🇵🇪", currency:"PEN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en soles. Contra entrega disponible",               popular:["Reset","Nutraday","No Stress"],               unavailable:[] },
-  "Estados Unidos": { flag:"🇺🇸", currency:"USD", shipping:"Shipping in 5-7 business days",note:"Prices in USD. Free shipping over $75",                    popular:["Vita Xtra T+","Protein Active Fit","Biopro+ Tect"],unavailable:["Prunex Vita"] },
+  "Estados Unidos": { flag:"🇺🇸", currency:"USD", shipping:"Shipping in 5-7 business days",note:"Prices in USD. Free shipping over $75",                    popular:["Vita Xtra T+","Protein Active Fit","Biopro+ Tect"],unavailable:["Prunex"] },
 };
 
 const PRODUCTS = [
@@ -32,7 +32,7 @@ const PRODUCTS = [
   { id:11, name:"Youth Elixir",      line:"Immunity",color:"#1565C0", bg:"#f0f4fb", img:null, emoji:"✨", tag:"Activa tu juventud",     desc:"Fórmula con resveratrol y aminoácidos para retrasar el envejecimiento celular y mejorar el sueño profundo.", benefits:["Anti-envejecimiento celular","Mejora el sueño profundo","Vitalidad juvenil"], ing:"Resveratrol · Aminoácidos · Vitaminas · Extractos premium" },
   { id:12, name:"Pre Sport",         line:"Sport",   color:"#E65100", bg:"#fdf4ef", img:null, emoji:"🏃", tag:"Rendimiento máximo",     desc:"Bebida isotónica con curcumina y creatina que dilata los vasos sanguíneos y da energía explosiva antes del ejercicio.", benefits:["Energía explosiva","Mayor resistencia","Enfoque y concentración"], ing:"Curcumina · Creatina · Aminoácidos · Cafeína natural" },
   { id:13, name:"Thermo T3",         line:"Control", color:"#E65100", bg:"#fdf4ef", img:"https://powervita.vercel.app/thermo.jpg", emoji:"🔥", tag:"Activa tu metabolismo", desc:"Infusión de tres tés y carnitina que acelera la termogénesis para transformar la grasa corporal en energía.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"], ing:"Té verde · Té negro · Té rojo · Carnitina · Jengibre" },
-  { id:14, name:"Prunex Vita",       line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🫐", tag:"Limpieza natural",       desc:"Concentrado de ciruela y prebióticos para regular el tránsito intestinal y limpiar el colon en forma suave y efectiva.", benefits:["Regula el tránsito intestinal","Limpia el colon naturalmente","Reduce la hinchazón"], ing:"Ciruela pasa · Prebióticos · Enzimas digestivas · Magnesio" },
+  { id:14, name:"Prunex",            line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🫐", tag:"Limpieza natural",       desc:"Concentrado de ciruela y prebióticos para regular el tránsito intestinal y limpiar el colon en forma suave y efectiva.", benefits:["Regula el tránsito intestinal","Limpia el colon naturalmente","Reduce la hinchazón"], ing:"Ciruela pasa · Prebióticos · Enzimas digestivas · Magnesio" },
 ];
 
 const RECIPES = [
@@ -448,6 +448,130 @@ function FaqItem({ q, a }) {
   );
 }
 
+// ── TRANSLATIONS ─────────────────────────────────────────────────────────────
+const TRANSLATIONS = {
+  es: {
+    nav:["Inicio","Sistema","IA Tools","Testimonios","Contacto"],
+    navCta:"Empezar →",
+    heroBadge:"FuXion Global · 37 Países",
+    heroTitle1:"Nutrición que", heroTitleEm:"transforma", heroTitle2:"desde adentro.",
+    heroSub:"Biotecnología avanzada en cada producto FuXion. Certificado, natural y con entrega directa en 37 países.",
+    heroCta1:"Ver productos", heroCta2:"💬 WhatsApp",
+    heroStats:[["37","países"],["15K+","socios"],["100%","natural"]],
+    sistemaBadge:"Sistema FuXion",
+    sistemaTitle1:"Salud plena en", sistemaTitleEm:"3 pasos",
+    sistemaSub:"Un sistema progresivo diseñado por biotecnólogos. Cada paso potencia al siguiente.",
+    stepLabel:"PASO", stepProds:"Productos incluidos",
+    stepCta1:"💬 Consultar precio", stepCta2:"🛒 Armar mi pack",
+    packTitle1:"Armá tu", packTitleEm:"pack",
+    packSub:"Combinamos los mejores productos según tu objetivo y tu país",
+    packCta1:"💬 Consultar precio", packCta2:"🛒 Armar mi pack",
+    catalogShow:"▼ Ver todos los productos", catalogHide:"▲ Ocultar catálogo completo",
+    catalogPriceCta:"💬 Precio", catalogBuyCta:"🛒 Comprar",
+    unavailLabel:"No disponible en", unavailCta:"Consultar alternativa",
+    countryTitle1:"¿Cuánto cuesta en", countryTitleEm:"tu país?",
+    countrySub:"Seleccioná y te mostramos la moneda, el envío y cómo contactarnos.",
+    countryLabel:"SELECCIONÁ TU PAÍS", countryPlaceholder:"🌍 Seleccioná tu país...",
+    countryDetected:"📍 Tu ubicación detectada", countryIn:"Estás en",
+    countryCurrency:"💱 MONEDA", countryShipping:"🚚 ENVÍO",
+    countryPopular:"🔥 MÁS PEDIDOS EN", countryViewPrices:"Ver precios para",
+    countryEmpty:"Seleccioná tu país para ver precios",
+    iaBadge:"Herramientas IA · Exclusivo Power Vita",
+    iaTitle1:"Tecnología que", iaTitleEm:"potencia tu salud",
+    testimoniosBadge:"Comunidad Power Vita",
+    testimoniosTitle1:"Lo que dicen", testimoniosTitleEm:"nuestros socios",
+    contactBadge:"Contacto directo",
+    contactTitle1:"Hablemos", contactTitleEm:"hoy mismo",
+    contactSub:"Respondemos en minutos. Asesoramiento personalizado para tu país.",
+    contactWa:"💬 Escribir por WhatsApp", contactLink:"🛒 Registrarme ahora",
+    faqTitle:"Preguntas frecuentes",
+    instaBadge:"Instagram · Power Vita",
+    instaTitle:"Seguinos en Instagram",
+    instaSub:"Recetas, tips y transformaciones reales. Comunidad activa todos los días.",
+    instaBtn:"Ver Instagram →",
+  },
+  en: {
+    nav:["Home","System","AI Tools","Testimonials","Contact"],
+    navCta:"Get started →",
+    heroBadge:"FuXion Global · 37 Countries",
+    heroTitle1:"Nutrition that", heroTitleEm:"transforms", heroTitle2:"from within.",
+    heroSub:"Advanced biotechnology in every FuXion product. Certified, natural and delivered in 37 countries.",
+    heroCta1:"View products", heroCta2:"💬 WhatsApp",
+    heroStats:[["37","countries"],["15K+","partners"],["100%","natural"]],
+    sistemaBadge:"FuXion System",
+    sistemaTitle1:"Full health in", sistemaTitleEm:"3 steps",
+    sistemaSub:"A progressive system designed by biotechnologists. Each step enhances the next.",
+    stepLabel:"STEP", stepProds:"Included products",
+    stepCta1:"💬 Ask for price", stepCta2:"🛒 Build my pack",
+    packTitle1:"Build your", packTitleEm:"pack",
+    packSub:"We combine the best products for your goal and country",
+    packCta1:"💬 Ask for price", packCta2:"🛒 Build my pack",
+    catalogShow:"▼ View full catalog", catalogHide:"▲ Hide catalog",
+    catalogPriceCta:"💬 Price", catalogBuyCta:"🛒 Buy",
+    unavailLabel:"Not available in", unavailCta:"Ask for alternative",
+    countryTitle1:"How much does it cost in", countryTitleEm:"your country?",
+    countrySub:"Select your country to see currency, shipping and how to reach us.",
+    countryLabel:"SELECT YOUR COUNTRY", countryPlaceholder:"🌍 Select your country...",
+    countryDetected:"📍 Your detected location", countryIn:"You are in",
+    countryCurrency:"💱 CURRENCY", countryShipping:"🚚 SHIPPING",
+    countryPopular:"🔥 MOST ORDERED IN", countryViewPrices:"View prices for",
+    countryEmpty:"Select your country to see prices",
+    iaBadge:"AI Tools · Exclusive Power Vita",
+    iaTitle1:"Technology that", iaTitleEm:"boosts your health",
+    testimoniosBadge:"Power Vita Community",
+    testimoniosTitle1:"What our", testimoniosTitleEm:"partners say",
+    contactBadge:"Direct contact",
+    contactTitle1:"Let's talk", contactTitleEm:"today",
+    contactSub:"We respond in minutes. Personalized advice for your country.",
+    contactWa:"💬 Write on WhatsApp", contactLink:"🛒 Register now",
+    faqTitle:"Frequently asked questions",
+    instaBadge:"Instagram · Power Vita",
+    instaTitle:"Follow us on Instagram",
+    instaSub:"Recipes, tips and real transformations. Active community every day.",
+    instaBtn:"View Instagram →",
+  },
+  pt: {
+    nav:["Início","Sistema","IA Tools","Depoimentos","Contato"],
+    navCta:"Começar →",
+    heroBadge:"FuXion Global · 37 Países",
+    heroTitle1:"Nutrição que", heroTitleEm:"transforma", heroTitle2:"por dentro.",
+    heroSub:"Biotecnologia avançada em cada produto FuXion. Certificado, natural e com entrega direta em 37 países.",
+    heroCta1:"Ver produtos", heroCta2:"💬 WhatsApp",
+    heroStats:[["37","países"],["15K+","parceiros"],["100%","natural"]],
+    sistemaBadge:"Sistema FuXion",
+    sistemaTitle1:"Saúde plena em", sistemaTitleEm:"3 passos",
+    sistemaSub:"Um sistema progressivo criado por biotecnólogos. Cada passo potencializa o seguinte.",
+    stepLabel:"PASSO", stepProds:"Produtos incluídos",
+    stepCta1:"💬 Consultar preço", stepCta2:"🛒 Montar meu pack",
+    packTitle1:"Monte seu", packTitleEm:"pack",
+    packSub:"Combinamos os melhores produtos para seu objetivo e país",
+    packCta1:"💬 Consultar preço", packCta2:"🛒 Montar meu pack",
+    catalogShow:"▼ Ver catálogo completo", catalogHide:"▲ Ocultar catálogo",
+    catalogPriceCta:"💬 Preço", catalogBuyCta:"🛒 Comprar",
+    unavailLabel:"Não disponível em", unavailCta:"Consultar alternativa",
+    countryTitle1:"Quanto custa no", countryTitleEm:"seu país?",
+    countrySub:"Selecione e mostramos a moeda, o envio e como falar conosco.",
+    countryLabel:"SELECIONE SEU PAÍS", countryPlaceholder:"🌍 Selecione seu país...",
+    countryDetected:"📍 Sua localização detectada", countryIn:"Você está em",
+    countryCurrency:"💱 MOEDA", countryShipping:"🚚 ENVIO",
+    countryPopular:"🔥 MAIS PEDIDOS EM", countryViewPrices:"Ver preços para",
+    countryEmpty:"Selecione seu país para ver os preços",
+    iaBadge:"Ferramentas IA · Exclusivo Power Vita",
+    iaTitle1:"Tecnologia que", iaTitleEm:"potencializa sua saúde",
+    testimoniosBadge:"Comunidade Power Vita",
+    testimoniosTitle1:"O que dizem", testimoniosTitleEm:"nossos parceiros",
+    contactBadge:"Contato direto",
+    contactTitle1:"Vamos conversar", contactTitleEm:"hoje",
+    contactSub:"Respondemos em minutos. Consultoria personalizada para seu país.",
+    contactWa:"💬 Escrever no WhatsApp", contactLink:"🛒 Registrar agora",
+    faqTitle:"Perguntas frequentes",
+    instaBadge:"Instagram · Power Vita",
+    instaTitle:"Siga no Instagram",
+    instaSub:"Receitas, dicas e transformações reais. Comunidade ativa todos os dias.",
+    instaBtn:"Ver Instagram →",
+  },
+};
+
 // ── APP PRINCIPAL ─────────────────────────────────────────────────────────────
 export default function App() {
   const [scrollY,setScrollY]=useState(0); const [loaded,setLoaded]=useState(false);
@@ -456,6 +580,8 @@ export default function App() {
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
   const [packModal,setPackModal]=useState(null); const [catalogOpen,setCatalogOpen]=useState(false);
+  const [lang,setLang]=useState("es");
+  const T=TRANSLATIONS[lang];
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
@@ -479,7 +605,7 @@ export default function App() {
     popular: ["REXET","VITA XTRA T+","NUTRADAY"]
   } : null);
 
-  const navSections = [["inicio","Inicio"],["sistema","Sistema"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
+  const navSections = ["inicio","sistema","iatools","testimonios","contacto"].map((id,i)=>[id,T.nav[i]]);
 
   return (
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
@@ -510,7 +636,10 @@ export default function App() {
         </div>
         <div style={{display:"flex",gap:4,alignItems:"center",flexWrap:"wrap"}}>
           {navSections.map(([id,n])=><button key={id} onClick={()=>scrollTo(id)} className="int" style={{background:"none",border:"none",color:"#4a6741",fontSize:11,fontWeight:500,cursor:"pointer",padding:"5px 9px",borderRadius:999,opacity:.85}} onMouseEnter={e=>e.target.style.opacity=1} onMouseLeave={e=>e.target.style.opacity=.85}>{n}</button>)}
-          <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"#1a2e1a",color:"#fff",padding:"8px 18px",borderRadius:100,fontSize:12,fontWeight:600,textDecoration:"none",marginLeft:4}}>Empezar →</a>
+          <button onClick={()=>setLang(l=>l==="es"?"en":l==="en"?"pt":"es")} className="int" style={{background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",padding:"6px 12px",borderRadius:999,fontSize:11,fontWeight:700,cursor:"pointer"}}>
+            {lang==="es"?"🌐 ES":lang==="en"?"🌐 EN":"🌐 PT"}
+          </button>
+          <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"#1a2e1a",color:"#fff",padding:"8px 18px",borderRadius:100,fontSize:12,fontWeight:600,textDecoration:"none",marginLeft:4}}>{T.navCta}</a>
         </div>
       </nav>
 
@@ -520,20 +649,20 @@ export default function App() {
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:640}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22}}>
-            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>FuXion Global · 37 Países</span>
+            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.heroBadge}</span>
           </div>
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
-            Nutrición que<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>transforma</em><br/>desde adentro.
+            {T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}
           </h1>
           <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:460,margin:"0 auto 36px",fontWeight:300}}>
-            Biotecnología avanzada en cada producto FuXion. Certificado, natural y con entrega directa en 37 países.
+            {T.heroSub}
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
-            <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>Ver productos</button>
-            <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>💬 WhatsApp</a>
+            <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
+            <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
           </div>
           <div style={{display:"flex",gap:40,justifyContent:"center"}}>
-            {[["37","países"],["15K+","socios"],["100%","natural"]].map(([n,l])=>(
+            {T.heroStats.map(([n,l])=>(
               <div key={l}><div className="pf" style={{fontSize:26,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{n}</div><div className="int" style={{fontSize:10,color:"#7a9a7a",marginTop:3,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>{l}</div></div>
             ))}
           </div>
