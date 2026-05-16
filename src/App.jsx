@@ -517,19 +517,6 @@ export default function App() {
             ))}
           </div>
         </div>
-        {/* Floating cards */}
-        <div style={{position:"absolute",right:60,top:"50%",transform:"translateY(-50%)",display:"flex",flexDirection:"column",gap:12}}>
-          <div style={{background:"#fff",borderRadius:14,padding:"10px 14px",boxShadow:"0 10px 28px rgba(0,0,0,0.08)",animation:"float 5s ease-in-out infinite",minWidth:170}}>
-            <div className="int" style={{fontSize:9,color:"#7a9a7a",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:2}}>Nuevo socio</div>
-            <div className="int" style={{fontSize:11,fontWeight:600,color:"#1a2e1a"}}>🇦🇷 María de Buenos Aires</div>
-            <div className="int" style={{fontSize:10,color:"#aaa"}}>hace 2 minutos</div>
-          </div>
-          <div style={{background:"#fff",borderRadius:14,padding:"10px 14px",boxShadow:"0 10px 28px rgba(0,0,0,0.08)",animation:"float 7s ease-in-out infinite",animationDelay:"1.5s"}}>
-            <div style={{fontSize:13,marginBottom:2}}>⭐⭐⭐⭐⭐</div>
-            <div className="int" style={{fontSize:11,fontWeight:600,color:"#1a2e1a"}}>"Increíble resultado"</div>
-            <div className="int" style={{fontSize:10,color:"#aaa"}}>Elena, España 🇪🇸</div>
-          </div>
-        </div>
       </section>
 
       {/* CERTS */}
