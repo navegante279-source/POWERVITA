@@ -457,7 +457,11 @@ export default function App() {
   const catKeys = ["","Detox","Energy","Immunity","Protein","Beauty"];
   const recipeLabels = ["Todos","Detox","Energy","Immunity","Protein","Beauty"];
   const filtRecipes = recipeFilter===0 ? RECIPES : RECIPES.filter(r=>r.cat===catKeys[recipeFilter]);
-  const countryData = COUNTRY_DATA[selectedCountry];
+  const countryData = COUNTRY_DATA[selectedCountry] || (selectedCountry ? {
+    flag: "🌍", currency: "USD", shipping: "Envío internacional disponible",
+    note: "Los precios varían según tu país. Te enviamos la cotización exacta por WhatsApp.",
+    popular: ["REXET","VITA XTRA T+","NUTRADAY"]
+  } : null);
 
   const navSections = [["inicio","Inicio"],["catalogo","Catálogo"],["recetario","Recetario"],["precios","Precios"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
 
