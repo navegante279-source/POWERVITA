@@ -440,6 +440,7 @@ export default function App() {
   const [activeRecipe,setActiveRecipe]=useState(null); const [prodLine,setProdLine]=useState(0);
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
+  const [packModal,setPackModal]=useState(null); const [catalogOpen,setCatalogOpen]=useState(false);
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
@@ -552,38 +553,100 @@ export default function App() {
         </div>
       </section>
 
-      {/* CATÁLOGO */}
+      {/* SISTEMA FUXION + PACKS */}
       <section id="catalogo" style={{padding:"80px 40px",background:"#FAFAF7"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{marginBottom:44}}>
-            <span className="tag-label int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Catálogo FuXion</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1}}>Productos que <em style={{color:"#2d6a4f",fontStyle:"italic"}}>realmente funcionan</em></h2>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:52}}>
+            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Sistema FuXion</span>
+            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1,marginBottom:12}}>Salud plena en <em style={{color:"#2d6a4f",fontStyle:"italic"}}>3 pasos</em></h2>
+            <p className="int" style={{color:"#7a9a7a",fontSize:13,maxWidth:480,margin:"0 auto",lineHeight:1.7}}>Un sistema progresivo diseñado por biotecnólogos. Cada paso potencia al siguiente.</p>
           </div>
-          <div style={{display:"flex",gap:7,marginBottom:30,flexWrap:"wrap"}}>
-            {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"7px 15px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
-            {filtProds.map(p=>(
-              <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:22,overflow:"hidden",border:`1px solid ${hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id?`0 18px 48px ${p.color}20`:"0 3px 14px rgba(0,0,0,0.05)",transition:"all .3s",transform:hovCard===p.id?"translateY(-5px)":"translateY(0)",cursor:"pointer",display:"flex",flexDirection:"column"}}>
-                <div style={{background:hovCard===p.id?p.color:p.bg,height:165,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
-                  <div style={{position:"absolute",top:10,left:10,background:hovCard===p.id?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 9px",fontFamily:"'Inter',sans-serif",fontSize:8,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase"}}>{p.line}</div>
-                  {p.img ? <img src={p.img} alt={p.name} style={{maxHeight:140,maxWidth:"90%",objectFit:"contain",filter:"drop-shadow(0 5px 14px rgba(0,0,0,0.12))",transition:"transform .35s",transform:hovCard===p.id?"scale(1.06)":"scale(1)"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
-                  <div style={{display:p.img?"none":"flex",fontSize:52,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
+
+          {/* 3 pasos */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:20,marginBottom:56}}>
+            {[
+              {step:"01",icon:"🌿",color:"#2d6a4f",bg:"#f0f7f3",title:"Limpieza & Detox",sub:"Libera tu cuerpo de toxinas",desc:"Prepara tu organismo eliminando lo que bloquea tu salud.",prods:["Reset","Flora Liv","Liquid Fibra","Berry Balance","Alpha Balance"]},
+              {step:"02",icon:"💪",color:"#1565C0",bg:"#f0f4fb",title:"Regeneración Celular",sub:"Proteínas de alta biodisponibilidad",desc:"Reconstruye tus células y eleva tus defensas desde adentro.",prods:["Biopro+ Tect","Biopro+ Fit","Protein Active Fit","Protein Active Sport"]},
+              {step:"03",icon:"⚡",color:"#7B3FA0",bg:"#f5f0f9",title:"Energía & Vitalidad",sub:"Revitalización profunda",desc:"Recuperá tu energía natural y rendí al máximo cada día.",prods:["Vita Xtra T+","Nutraday","On","No Stress"]},
+            ].map((p,i)=>(
+              <div key={i} style={{background:"#fff",border:`1.5px solid ${p.color}18`,borderRadius:22,overflow:"hidden",boxShadow:"0 4px 18px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column"}}>
+                <div style={{background:p.bg,padding:"24px 22px 18px",borderBottom:`1px solid ${p.color}12`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                    <div style={{width:40,height:40,borderRadius:12,background:p.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{p.icon}</div>
+                    <div><div className="int" style={{fontSize:9,fontWeight:800,color:p.color,letterSpacing:2,textTransform:"uppercase"}}>PASO {p.step}</div><div className="pf" style={{fontSize:15,fontWeight:700,color:"#1a2e1a"}}>{p.title}</div></div>
+                  </div>
+                  <div className="int" style={{fontSize:10,fontWeight:700,color:p.color,marginBottom:4}}>{p.sub}</div>
+                  <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.6}}>{p.desc}</p>
                 </div>
-                <div style={{padding:"17px 17px 14px",flex:1,display:"flex",flexDirection:"column",gap:6}}>
-                  <div className="pf" style={{fontSize:14,fontWeight:700,color:"#1a2e1a"}}>{p.name}</div>
-                  <div className="int" style={{fontSize:9,fontWeight:700,color:p.color,letterSpacing:1,textTransform:"uppercase"}}>{p.tag}</div>
-                  <p className="int" style={{fontSize:11,color:"#7a9a7a",lineHeight:1.6}}>{p.desc}</p>
-                  <div>{p.benefits.map((b,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><div style={{width:14,height:14,borderRadius:"50%",background:p.color+"15",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:p.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:10,color:"#4a6a4a"}}>{b}</span></div>)}</div>
-                  <div style={{background:"rgba(45,106,79,0.04)",borderRadius:7,padding:"5px 8px"}}><p className="int" style={{fontSize:9,color:"#7a9a7a",lineHeight:1.5}}>{p.ing}</p></div>
-                  <div style={{display:"flex",gap:6,marginTop:"auto"}}>
-                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"8px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:10,textAlign:"center",textDecoration:"none"}}>💬 Precio</a>
-                    <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"8px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:10,textAlign:"center",textDecoration:"none"}}>🛒 Comprar</a>
+                <div style={{padding:"14px 22px 18px",flex:1}}>
+                  <div className="int" style={{fontSize:9,fontWeight:800,color:"#9ca3af",letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>Productos incluidos</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                    {p.prods.map(pr=><span key={pr} style={{background:p.color+"10",border:`1px solid ${p.color}22`,borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:600,color:p.color}}>{pr}</span>)}
+                    <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Packs */}
+          <div style={{textAlign:"center",marginBottom:28}}>
+            <h3 className="pf" style={{fontSize:"clamp(1.3rem,2.5vw,1.9rem)",fontWeight:700,color:"#1a2e1a",marginBottom:8}}>Armá tu <em style={{color:"#2d6a4f",fontStyle:"italic"}}>pack</em></h3>
+            <p className="int" style={{color:"#7a9a7a",fontSize:12}}>Combinamos los mejores productos según tu objetivo y tu país</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:20,marginBottom:40}}>
+            {[
+              {id:"pack3",name:"Pack 3 Productos",emoji:"🌱",tag:"Para comenzar el sistema",color:"#2d6a4f",badge:null,desc:"Un producto de cada paso: Detox + Proteína + Energía. El inicio ideal para transformar tu salud.",includes:["1 producto Detox","1 producto Proteína","1 producto Energía","Guía de uso personalizada","Soporte por WhatsApp"]},
+              {id:"pack5",name:"Pack 5 Productos",emoji:"👑",tag:"Cobertura completa",color:"#C9A84C",badge:"RECOMENDADO",desc:"Cobertura completa del sistema en los 3 pasos. Resultados visibles desde las primeras semanas.",includes:["2 productos Detox","2 productos Proteína","1 producto Energía","Plan nutricional 30 días","Seguimiento personalizado","Comunidad VIP Power Vita"]},
+            ].map((pack,i)=>(
+              <div key={pack.id} style={{background:"#fff",border:`2px solid ${i===1?pack.color+"40":"rgba(0,0,0,0.06)"}`,borderRadius:22,padding:"26px 22px",position:"relative",boxShadow:i===1?`0 12px 36px ${pack.color}18`:"0 3px 14px rgba(0,0,0,0.04)",transition:"transform .3s,box-shadow .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-5px)";e.currentTarget.style.boxShadow=`0 20px 52px ${pack.color}25`;}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow=i===1?`0 12px 36px ${pack.color}18`:"0 3px 14px rgba(0,0,0,0.04)";}}>
+                {pack.badge&&<div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:pack.color,color:"#fff",borderRadius:999,padding:"3px 14px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>{pack.badge}</div>}
+                <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:12}}>
+                  <div style={{width:48,height:48,borderRadius:14,background:`${pack.color}12`,border:`2px solid ${pack.color}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pack.emoji}</div>
+                  <div><div className="pf" style={{fontSize:16,fontWeight:700,color:"#1a2e1a"}}>{pack.name}</div><div className="int" style={{fontSize:9,fontWeight:700,color:pack.color,letterSpacing:1,textTransform:"uppercase"}}>{pack.tag}</div></div>
+                </div>
+                <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
+                <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
+                <div style={{display:"flex",gap:8}}>
+                  <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio</a>
+                  <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});setPackModal(pack.name);}} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🛒 Armar mi pack</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Catálogo colapsado */}
+          <div style={{textAlign:"center"}}>
+            <button onClick={()=>setCatalogOpen(o=>!o)} className="int" style={{background:"none",border:"1.5px solid rgba(45,106,79,0.2)",borderRadius:999,padding:"10px 24px",fontSize:12,fontWeight:600,color:"#2d6a4f",cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(45,106,79,0.05)";}} onMouseLeave={e=>{e.currentTarget.style.background="none";}}>
+              {catalogOpen?"▲ Ocultar catálogo completo":"▼ Ver todos los productos"}
+            </button>
+          </div>
+          {catalogOpen&&(
+            <div style={{marginTop:32}}>
+              <div style={{display:"flex",gap:7,marginBottom:24,flexWrap:"wrap"}}>
+                {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"6px 14px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
+                {filtProds.map(p=>(
+                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id?`0 14px 36px ${p.color}18`:"0 2px 10px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id?"translateY(-4px)":"translateY(0)",display:"flex",flexDirection:"column"}}>
+                    <div style={{background:hovCard===p.id?p.color:p.bg,height:120,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
+                      <div style={{position:"absolute",top:8,left:8,background:hovCard===p.id?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
+                      {p.img?<img src={p.img} alt={p.name} style={{maxHeight:100,maxWidth:"85%",objectFit:"contain",filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
+                      <div style={{display:p.img?"none":"flex",fontSize:40,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
+                    </div>
+                    <div style={{padding:"13px 14px",flex:1,display:"flex",flexDirection:"column",gap:4}}>
+                      <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a"}}>{p.name}</div>
+                      <p className="int" style={{fontSize:10,color:"#7a9a7a",lineHeight:1.5,flex:1}}>{p.desc}</p>
+                      <div style={{display:"flex",gap:5,marginTop:6}}>
+                        <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>💬 Precio</a>
+                        <button onClick={()=>{trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"});setPackModal(p.name);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,cursor:"pointer"}}>🛒 Comprar</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -656,30 +719,6 @@ export default function App() {
               </div>
             )}
             {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver precios</p></div>}
-          </div>
-          {/* Packs */}
-          <div style={{textAlign:"center",marginBottom:24}}><h3 className="pf" style={{fontSize:"clamp(1.3rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:5}}>Elegí tu <em style={{color:"#2d6a4f",fontStyle:"italic"}}>punto de partida</em></h3><p className="int" style={{color:"#7a9a7a",fontSize:12}}>El precio exacto te lo enviamos por WhatsApp según tu país</p></div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:18}}>
-            {[
-              {id:"s",name:"Starter Pack",emoji:"🌱",tag:"Ideal para comenzar",color:"#2d6a4f",badge:null,includes:["1 producto a elección","Guía de uso en PDF","Soporte por WhatsApp","Plan nutricional básico"]},
-              {id:"t",name:"Transform Kit",emoji:"⚡",tag:"El más popular",color:"#C9A84C",badge:"MÁS POPULAR",includes:["3 productos seleccionados","Plan nutricional 30 días","Seguimiento semanal","Recetario exclusivo"]},
-              {id:"e",name:"Elite Program",emoji:"👑",tag:"Transformación completa",color:"#1565C0",badge:"MEJOR VALOR",includes:["Hasta 5 productos","Plan 90 días con IA","Mentoría personalizada","Comunidad VIP Power Vita"]},
-            ].map((pack,i)=>(
-              <div key={pack.id} style={{background:"#fff",border:`2px solid ${i===1?`${pack.color}35`:"rgba(0,0,0,0.06)"}`,borderRadius:20,padding:"22px 19px",position:"relative",transition:"transform .3s,box-shadow .3s,border-color .3s",transform:i===1?"translateY(-4px)":"translateY(0)",boxShadow:i===1?`0 12px 36px ${pack.color}15`:"0 3px 14px rgba(0,0,0,0.04)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow=`0 20px 52px ${pack.color}20`;e.currentTarget.style.borderColor=pack.color;}} onMouseLeave={e=>{e.currentTarget.style.transform=i===1?"translateY(-4px)":"translateY(0)";e.currentTarget.style.boxShadow=i===1?`0 12px 36px ${pack.color}15`:"0 3px 14px rgba(0,0,0,0.04)";e.currentTarget.style.borderColor=i===1?`${pack.color}35`:"rgba(0,0,0,0.06)";}}>
-                {pack.badge&&<div style={{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:pack.color,color:"#fff",borderRadius:999,padding:"2px 13px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>{pack.badge}</div>}
-                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:11}}><div style={{width:44,height:44,borderRadius:12,background:`${pack.color}12`,border:`2px solid ${pack.color}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{pack.emoji}</div><div><div className="pf" style={{fontSize:14,fontWeight:700,color:"#1a2e1a"}}>{pack.name}</div><div className="int" style={{fontSize:8,fontWeight:700,color:pack.color,letterSpacing:1,textTransform:"uppercase"}}>{pack.tag}</div></div></div>
-                <div style={{marginBottom:14}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}><div style={{width:14,height:14,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:7,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:10,color:"#4a5568"}}>{item}</span></div>)}</div>
-                <div style={{borderTop:"1px solid rgba(0,0,0,0.05)",paddingTop:11}}>
-                  <div className="int" style={{fontSize:9,color:"#9ca3af",marginBottom:7}}>PRECIO EN {selectedCountry?selectedCountry.toUpperCase():"TU PAÍS"}</div>
-                  <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});const msg=encodeURIComponent(`¡Hola! Estoy en ${selectedCountry||"mi país"} y me interesa el ${pack.name} de Power Vita 🌿 ¿Cuál es el precio?`);window.open(`https://wa.me/${WA}?text=${msg}`,"_blank");}} style={{width:"100%",background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer",transition:"all .2s"}}>💬 {pack.name} → Ver precio</button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div style={{textAlign:"center",marginTop:28}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:14,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:12,padding:"10px 20px",flexWrap:"wrap",justifyContent:"center"}}>
-              {[["🔒","Sin compromiso"],["💬","Respuesta en minutos"],["🌍","37 países"],["↩️","Garantía satisfacción"]].map(([ic,lb],i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:5}}>{i>0&&<div style={{width:1,height:13,background:"rgba(45,106,79,0.14)"}}/>}<span style={{fontSize:12}}>{ic}</span><span className="int" style={{fontSize:10,color:"#4a7c5e",fontWeight:600}}>{lb}</span></div>))}
-            </div>
           </div>
         </div>
       </section>
@@ -830,6 +869,28 @@ export default function App() {
         </div>
         <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
       </footer>
+
+      {/* MODAL CLIENTE / EMPRENDEDOR */}
+      {packModal&&(
+        <div onClick={()=>setPackModal(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",backdropFilter:"blur(10px)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:24,padding:"36px 30px",maxWidth:400,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,0.3)"}}>
+            <div style={{fontSize:40,marginBottom:12}}>🌿</div>
+            <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{packModal}</h3>
+            <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>¿Qué te describe mejor? Elegí tu perfil para continuar en FuXion.</p>
+            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
+              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
+                💚 Quiero los productos
+                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>Me registro como Cliente Preferente</div>
+              </a>
+              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
+                💼 Quiero el negocio
+                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:2}}>Me registro como Emprendedor FuXion</div>
+              </a>
+            </div>
+            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>Cancelar</button>
+          </div>
+        </div>
+      )}
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
       <button onClick={()=>setChatOpen(o=>!o)} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
