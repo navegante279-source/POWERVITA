@@ -144,14 +144,15 @@ SOLO JSON: {"titulo":"nombre","perfil":"1 oración","productos":[{"nombre":"prod
 Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+ TECT,PROTEIN ACTIVE FIT,NO STRESS,THERMO T3,BALANCE. 3 productos, 7 días.`;
       const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:2000, messages:[{role:"user",content:prompt}] }) });
       const data = await res.json();
+      if (data.error) throw new Error(JSON.stringify(data.error));
       setPlan(JSON.parse(data.content?.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim()));
       trackEvent("Lead", { content_name:"NutriPlan_AI" });
-    } catch(e) { console.error(e); setPlan({ error:true }); }
+    } catch(e) { console.error("NutriPlan error:", e); setPlan({ error:true, msg: e.message }); }
     finally { setLoading(false); }
   };
   const inp = { width:"100%", background:"rgba(45,106,79,0.04)", border:"1.5px solid rgba(45,106,79,0.18)", borderRadius:10, padding:"9px 11px", fontSize:12, outline:"none", boxSizing:"border-box", fontFamily:"'Inter',sans-serif" };
   if (plan) {
-    if (plan.error) return <div style={{textAlign:"center",padding:20}}><p style={{color:"#e53e3e",fontSize:13}}>Error. Intenta de nuevo.</p><button onClick={()=>setPlan(null)} style={{marginTop:10,background:"#2d6a4f",color:"#fff",border:"none",padding:"8px 16px",borderRadius:8,cursor:"pointer",fontWeight:700}}>Reintentar</button></div>;
+    if (plan.error) return <div style={{textAlign:"center",padding:20}}><p style={{color:"#e53e3e",fontSize:13}}>Error. Intenta de nuevo.</p>{plan.msg&&<p style={{color:"#e53e3e",fontSize:10,marginTop:4,wordBreak:"break-all",maxWidth:260,margin:"4px auto"}}>{plan.msg}</p>}<button onClick={()=>setPlan(null)} style={{marginTop:10,background:"#2d6a4f",color:"#fff",border:"none",padding:"8px 16px",borderRadius:8,cursor:"pointer",fontWeight:700}}>Reintentar</button></div>;
     return (
       <div style={{padding:"20px"}}>
         <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:28}}>🥗</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#1a2e1a",margin:"4px 0 2px"}}>{plan.titulo}</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#7a9a7a",fontStyle:"italic"}}>{plan.perfil}</p></div>
