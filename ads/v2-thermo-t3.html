@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Thermo T3 · Instagram Ad</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; }
+
+  .card {
+    width:1080px; height:1080px; position:relative; overflow:hidden;
+    background:#F5EDD8; font-family:'Inter',sans-serif;
+  }
+
+  .bg-overlay { position:absolute; inset:0; background:radial-gradient(ellipse at 70% 30%, #FFF6E8 0%, #F5EDD8 50%, #EAE0C6 100%); }
+
+  .leaf-tl { position:absolute; top:-30px; left:-20px; font-size:190px; opacity:0.12; transform:rotate(-20deg); }
+  .leaf-tr { position:absolute; top:0; right:-15px; font-size:150px; opacity:0.10; transform:rotate(30deg) scaleX(-1); }
+  .leaf-bl { position:absolute; bottom:-20px; left:20px; font-size:140px; opacity:0.09; transform:rotate(12deg); }
+  .leaf-br { position:absolute; bottom:-10px; right:60px; font-size:130px; opacity:0.10; transform:rotate(-15deg); }
+
+  .content { position:relative; z-index:10; padding:55px 60px; height:100%; display:flex; flex-direction:column; }
+
+  /* Badge */
+  .badge-wrap { display:flex; justify-content:center; margin-bottom:30px; }
+  .badge {
+    background:#1565C0; border-radius:50px; padding:12px 36px;
+    font-size:22px; font-weight:900; color:#fff; letter-spacing:2px; text-transform:uppercase;
+    box-shadow:0 4px 20px rgba(21,101,192,0.35);
+  }
+
+  .main { display:flex; gap:44px; flex:1; align-items:center; }
+
+  .left { flex:1; }
+  .headline { font-family:'Playfair Display',serif; font-size:64px; font-weight:900; color:#1a1a2e; line-height:1.05; margin-bottom:14px; }
+  .headline em { color:#1565C0; font-style:italic; }
+  .tagline { font-size:19px; color:#6b5c3e; font-weight:500; font-style:italic; margin-bottom:30px; }
+
+  .benefits-card { background:#fff; border-radius:20px; padding:28px 32px; box-shadow:0 8px 32px rgba(0,0,0,0.08); }
+  .benefits-title {
+    font-size:16px; font-weight:900; color:#1565C0; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .benefits-title::after { content:''; flex:1; height:2px; background:linear-gradient(90deg,#1565C0,transparent); border-radius:1px; }
+  .benefit { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+  .benefit:last-child { margin-bottom:0; }
+  .check-icon { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565C0,#42A5F5); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .check-icon svg { width:14px; height:14px; fill:none; stroke:#fff; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+  .benefit-text { font-size:19px; font-weight:600; color:#1a1a1a; line-height:1.3; }
+
+  .right { width:380px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .product-img {
+    width:360px; height:380px; border-radius:20px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(21,101,192,0.15); background:#EBF5FF;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .product-img img { width:100%; height:100%; object-fit:contain; }
+
+  .bottom { padding-top:28px; display:flex; align-items:center; justify-content:space-between; }
+
+  .ings { display:flex; gap:28px; }
+  .ing-item { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .ing-circle { width:68px; height:68px; border-radius:50%; border:2px solid rgba(21,101,192,0.2); background:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+  .ing-label { font-size:13px; font-weight:700; color:#4a3728; text-align:center; }
+
+  .cta-col { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+  .cta-btn { background:linear-gradient(135deg,#1565C0,#42A5F5); color:#fff; font-size:20px; font-weight:800; padding:16px 36px; border-radius:50px; box-shadow:0 6px 24px rgba(21,101,192,0.4); display:flex; align-items:center; gap:10px; }
+  .wa-row { display:flex; align-items:center; gap:8px; color:#4a3728; font-size:17px; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bg-overlay"></div>
+  <div class="leaf-tl">🍃</div>
+  <div class="leaf-tr">🌿</div>
+  <div class="leaf-bl">🌱</div>
+  <div class="leaf-br">🍃</div>
+
+  <div class="content">
+    <div class="badge-wrap">
+      <div class="badge">THERMO T3</div>
+    </div>
+
+    <div class="main">
+      <div class="left">
+        <div class="headline">
+          El té que<br><em>derrite</em><br>la grasa
+        </div>
+        <div class="tagline">Té limón · Carnitina · Triple acción termogénica</div>
+
+        <div class="benefits-card">
+          <div class="benefits-title">Beneficios</div>
+          <div class="benefit">
+            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="benefit-text">Activa la termogénesis de forma natural</div>
+          </div>
+          <div class="benefit">
+            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="benefit-text">Quema grasa sin perder músculo</div>
+          </div>
+          <div class="benefit">
+            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="benefit-text">Acelera el metabolismo desde el día 1</div>
+          </div>
+          <div class="benefit">
+            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="benefit-text">Control de peso efectivo y duradero</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="product-img">
+          <img src="https://powervita.vercel.app/thermo.jpg" alt="Thermo T3"
+               onerror="this.parentElement.innerHTML='<div style=\'font-size:100px;text-align:center;\'>🔥<br><span style=\'font-size:18px;color:#1565C0;font-weight:800;\'>THERMO T3</span></div>'"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="ings">
+        <div class="ing-item">
+          <div class="ing-circle">🍵</div>
+          <div class="ing-label">Té Verde</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-circle">🫖</div>
+          <div class="ing-label">Té Rojo</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-circle">💊</div>
+          <div class="ing-label">L-Carnitina</div>
+        </div>
+      </div>
+
+      <div class="cta-col">
+        <div class="cta-btn">Quiero saber más 🍃</div>
+        <div class="wa-row">📱 +598 98 950 206</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
