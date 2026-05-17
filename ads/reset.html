@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reset · Power Vita</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; font-family:'Inter',sans-serif; }
+
+  .card { width:1080px; height:1080px; position:relative; overflow:hidden; background:#F0FDF4; }
+
+  /* Top half dark */
+  .top-half { position:absolute; top:0; left:0; right:0; height:520px; background:linear-gradient(135deg,#1a2e1a 0%,#2d6a4f 100%); }
+  .top-half-deco { position:absolute; top:0; left:0; right:0; height:520px; overflow:hidden; }
+  .circle-deco1 { position:absolute; top:-120px; right:-120px; width:400px; height:400px; border-radius:50%; background:rgba(82,183,136,0.15); }
+  .circle-deco2 { position:absolute; bottom:-80px; left:-80px; width:300px; height:300px; border-radius:50%; background:rgba(82,183,136,0.1); }
+
+  /* Separator wave */
+  .wave-sep { position:absolute; top:480px; left:0; right:0; height:80px; z-index:5; }
+  .wave-sep svg { width:100%; height:80px; }
+
+  .content { position:relative; z-index:10; padding:60px 70px; height:100%; display:flex; flex-direction:column; }
+
+  /* Top section */
+  .top-content { color:#fff; margin-bottom:auto; }
+
+  .badges-row { display:flex; gap:12px; margin-bottom:36px; }
+  .badge-main { background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25); border-radius:50px; padding:9px 20px; font-size:13px; font-weight:800; color:#fff; letter-spacing:1.5px; text-transform:uppercase; }
+  .badge-new { background:#C9A84C; border-radius:50px; padding:9px 20px; font-size:13px; font-weight:800; color:#fff; letter-spacing:1px; }
+
+  .big-headline { font-family:'Playfair Display',serif; font-size:88px; font-weight:900; color:#fff; line-height:0.95; margin-bottom:14px; }
+  .big-headline em { color:#C9A84C; font-style:italic; }
+
+  .claim { font-size:26px; color:rgba(255,255,255,0.75); font-weight:500; font-style:italic; margin-bottom:36px; max-width:600px; }
+
+  /* Stats row */
+  .stats { display:flex; gap:0; }
+  .stat { text-align:center; padding:0 32px; border-right:1px solid rgba(255,255,255,0.12); }
+  .stat:first-child { padding-left:0; }
+  .stat:last-child { border-right:none; }
+  .stat-num { font-size:42px; font-weight:900; color:#C9A84C; }
+  .stat-label { font-size:13px; color:rgba(255,255,255,0.6); font-weight:600; margin-top:2px; }
+
+  /* Bottom section */
+  .bottom-content { margin-top:auto; padding-top:60px; }
+
+  .benefits-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:36px; }
+  .benefit-item { display:flex; align-items:center; gap:12px; }
+  .benefit-check { width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg,#2d6a4f,#52b788); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .check-mark { font-size:16px; }
+  .benefit-text { font-size:19px; font-weight:600; color:#1a2e1a; }
+
+  /* Bottom row */
+  .bottom-row { display:flex; align-items:center; justify-content:space-between; padding-top:24px; border-top:2px solid #E8F5E9; }
+  .ings { display:flex; gap:10px; flex-wrap:wrap; }
+  .ing { background:#E8F5E9; border-radius:50px; padding:8px 16px; display:flex; align-items:center; gap:7px; }
+  .ing-emoji { font-size:15px; }
+  .ing-text { font-size:13px; font-weight:700; color:#2d6a4f; }
+
+  .cta-group { display:flex; flex-direction:column; align-items:flex-end; gap:9px; }
+  .cta-btn { background:linear-gradient(135deg,#1a2e1a,#2d6a4f); color:#fff; font-size:18px; font-weight:800; padding:15px 32px; border-radius:50px; box-shadow:0 6px 24px rgba(45,106,79,0.3); }
+  .wa { display:flex; align-items:center; gap:7px; color:#9ca3af; font-size:14px; font-weight:700; }
+  .wa::before { content:''; width:8px; height:8px; border-radius:50%; background:#25D366; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top-half"></div>
+  <div class="top-half-deco">
+    <div class="circle-deco1"></div>
+    <div class="circle-deco2"></div>
+  </div>
+
+  <div class="wave-sep">
+    <svg viewBox="0 0 1080 80" preserveAspectRatio="none">
+      <path d="M0,40 C200,80 400,0 600,40 C800,80 900,20 1080,40 L1080,80 L0,80 Z" fill="#F0FDF4"/>
+    </svg>
+  </div>
+
+  <div class="content">
+    <div class="top-content">
+      <div class="badges-row">
+        <div class="badge-main">🌿 FuXion · Detox Premium</div>
+        <div class="badge-new">✦ Bebida Efervescente</div>
+      </div>
+
+      <div class="big-headline">
+        Re<em>set</em><br>total
+      </div>
+
+      <div class="claim">
+        La bebida que reinicia tu cuerpo después de cualquier exceso
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num">🌵</div>
+          <div class="stat-label">Tuna Roja</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">🌿</div>
+          <div class="stat-label">Alcachofa</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">🍋</div>
+          <div class="stat-label">Hierba Luisa</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">💊</div>
+          <div class="stat-label">Zinc</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-content">
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-check"><span class="check-mark">✓</span></div>
+          <div class="benefit-text">Desintoxica el hígado</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><span class="check-mark">✓</span></div>
+          <div class="benefit-text">Elimina toxinas rápido</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><span class="check-mark">✓</span></div>
+          <div class="benefit-text">Reactiva el metabolismo</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><span class="check-mark">✓</span></div>
+          <div class="benefit-text">Ideal después de excesos</div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="ings">
+          <div class="ing"><span class="ing-emoji">🌵</span><span class="ing-text">Tuna roja</span></div>
+          <div class="ing"><span class="ing-emoji">🌿</span><span class="ing-text">Alcachofa</span></div>
+          <div class="ing"><span class="ing-emoji">🍋</span><span class="ing-text">Hierba luisa</span></div>
+          <div class="ing"><span class="ing-emoji">🌱</span><span class="ing-text">Clorofila</span></div>
+        </div>
+        <div class="cta-group">
+          <div class="cta-btn">Quiero saber más 🌿</div>
+          <div class="wa">+598 98 950 206</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

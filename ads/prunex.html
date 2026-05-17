@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Prunex · Power Vita</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; font-family:'Inter',sans-serif; }
+
+  .card { width:1080px; height:1080px; position:relative; overflow:hidden; background:#F7FAF6; }
+
+  /* Decorative arch */
+  .arch {
+    position:absolute; top:-80px; left:50%; transform:translateX(-50%);
+    width:900px; height:600px;
+    border-radius:50%; background:linear-gradient(180deg, #2d6a4f 0%, #1a3d2e 100%);
+  }
+
+  /* Leaf decos */
+  .leaf1 { position:absolute; top:20px; left:30px; font-size:90px; opacity:0.15; transform:rotate(-25deg); }
+  .leaf2 { position:absolute; top:60px; right:40px; font-size:70px; opacity:0.12; transform:rotate(20deg); }
+  .leaf3 { position:absolute; bottom:100px; left:20px; font-size:80px; opacity:0.1; transform:rotate(15deg); }
+
+  .content { position:relative; z-index:10; padding:55px 70px; height:100%; display:flex; flex-direction:column; align-items:center; }
+
+  /* Top badge */
+  .badge {
+    background:#C9A84C; border-radius:50px; padding:10px 32px;
+    font-size:17px; font-weight:900; color:#fff; letter-spacing:2.5px; text-transform:uppercase;
+    margin-bottom:24px; box-shadow:0 4px 20px rgba(201,168,76,0.4);
+  }
+
+  /* Hero text */
+  .hero-text { text-align:center; margin-bottom:32px; }
+  .hero-pre { font-size:30px; font-weight:700; color:rgba(255,255,255,0.85); margin-bottom:6px; }
+  .hero-main { font-family:'Playfair Display',serif; font-size:72px; font-weight:900; color:#fff; line-height:1.05; }
+  .hero-main em { color:#C9A84C; font-style:italic; }
+  .hero-sub { font-size:24px; color:rgba(255,255,255,0.75); font-weight:500; margin-top:8px; font-style:italic; }
+
+  /* White card */
+  .white-card {
+    background:#fff; border-radius:28px; padding:44px 50px; width:100%;
+    box-shadow:0 20px 60px rgba(45,106,79,0.12); margin-top:auto;
+    display:flex; gap:50px;
+  }
+
+  /* Left: benefits */
+  .benefits-col { flex:1; }
+  .benefits-title {
+    font-size:14px; font-weight:800; color:#2d6a4f; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:8px;
+  }
+  .benefits-title::after { content:''; flex:1; height:2px; background:linear-gradient(90deg,#2d6a4f,transparent); }
+  .benefits { display:flex; flex-direction:column; gap:15px; }
+  .benefit { display:flex; align-items:center; gap:12px; }
+  .check { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#2d6a4f,#52b788); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .check-mark { font-size:13px; color:#fff; }
+  .benefit-text { font-size:18px; font-weight:600; color:#1a2e1a; }
+
+  /* Right: ingredients + CTA */
+  .right-col { display:flex; flex-direction:column; justify-content:space-between; min-width:280px; }
+  .ings-title { font-size:13px; font-weight:800; color:#9ca3af; letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; }
+  .ings { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .ing-chip { background:#F0F7F3; border:1.5px solid rgba(45,106,79,0.15); border-radius:50px; padding:6px 14px; font-size:13px; font-weight:700; color:#2d6a4f; }
+  .cta-btn {
+    background:linear-gradient(135deg,#1a2e1a,#2d6a4f); color:#fff;
+    font-size:18px; font-weight:800; padding:16px 28px; border-radius:50px;
+    text-align:center; box-shadow:0 8px 24px rgba(45,106,79,0.3);
+  }
+  .wa { display:flex; align-items:center; gap:8px; color:#9ca3af; font-size:14px; font-weight:700; margin-top:10px; }
+  .wa::before { content:''; width:8px; height:8px; border-radius:50%; background:#25D366; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="arch"></div>
+  <div class="leaf1">🌿</div>
+  <div class="leaf2">🍃</div>
+  <div class="leaf3">🌱</div>
+
+  <div class="content">
+    <div class="badge">PRUNEX · Detox Intestinal</div>
+
+    <div class="hero-text">
+      <div class="hero-pre">La limpieza natural que</div>
+      <div class="hero-main">tu colon <em>necesita</em></div>
+      <div class="hero-sub">Concentrado de ciruela · Prebióticos · Enzimas</div>
+    </div>
+
+    <div class="white-card">
+      <div class="benefits-col">
+        <div class="benefits-title">Beneficios</div>
+        <div class="benefits">
+          <div class="benefit">
+            <div class="check"><span class="check-mark">✓</span></div>
+            <div class="benefit-text">Regula el tránsito intestinal</div>
+          </div>
+          <div class="benefit">
+            <div class="check"><span class="check-mark">✓</span></div>
+            <div class="benefit-text">Limpia el colon naturalmente</div>
+          </div>
+          <div class="benefit">
+            <div class="check"><span class="check-mark">✓</span></div>
+            <div class="benefit-text">Reduce la hinchazón abdominal</div>
+          </div>
+          <div class="benefit">
+            <div class="check"><span class="check-mark">✓</span></div>
+            <div class="benefit-text">Sensación de ligereza desde el día 1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div>
+          <div class="ings-title">Ingredientes clave</div>
+          <div class="ings">
+            <div class="ing-chip">🫐 Ciruela pasa</div>
+            <div class="ing-chip">🦠 Prebióticos</div>
+            <div class="ing-chip">⚗️ Enzimas</div>
+            <div class="ing-chip">💊 Magnesio</div>
+          </div>
+        </div>
+        <div>
+          <div class="cta-btn">Quiero saber más 🌿</div>
+          <div class="wa">+598 98 950 206</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

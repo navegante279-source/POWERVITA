@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Thermo T3 · Power Vita</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; font-family:'Inter',sans-serif; }
+
+  .card {
+    width:1080px; height:1080px; position:relative; overflow:hidden;
+    background:#FEFAF5;
+  }
+
+  /* Warm gradient bg */
+  .bg-grad { position:absolute; inset:0; background:linear-gradient(160deg, #FFF8F0 0%, #FFF1DC 50%, #FFE8C4 100%); }
+
+  /* Diagonal accent */
+  .diagonal {
+    position:absolute; right:0; top:0; width:460px; height:1080px;
+    background:linear-gradient(160deg, #E65100 0%, #FF7043 100%);
+    clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  .diagonal-inner {
+    position:absolute; right:0; top:0; width:430px; height:1080px;
+    background:linear-gradient(160deg, #BF360C 0%, #E65100 100%);
+    clip-path: polygon(22% 0, 100% 0, 100% 100%, 4% 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+    padding-right:50px; padding-left:80px;
+  }
+
+  .fire-emoji { font-size:160px; filter:drop-shadow(0 0 30px rgba(255,112,0,0.6)); }
+  .product-box {
+    background:rgba(0,0,0,0.2); border:2px solid rgba(255,255,255,0.15); border-radius:20px;
+    padding:20px 28px; text-align:center; backdrop-filter:blur(10px);
+  }
+  .product-box-name { font-size:28px; font-weight:900; color:#fff; letter-spacing:2px; }
+  .product-box-sub { font-size:13px; color:rgba(255,255,255,0.75); font-weight:600; margin-top:4px; }
+
+  /* Left content */
+  .content { position:absolute; left:0; top:0; width:640px; height:1080px; padding:65px 55px; display:flex; flex-direction:column; }
+
+  /* Badge */
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:#E65100; border-radius:50px; padding:8px 20px;
+    width:fit-content; margin-bottom:30px;
+  }
+  .badge-text { font-size:13px; font-weight:800; color:#fff; letter-spacing:1.5px; text-transform:uppercase; }
+
+  .headline { font-family:'Playfair Display',serif; font-size:68px; font-weight:900; color:#1a1a1a; line-height:1.05; margin-bottom:12px; }
+  .headline em { color:#E65100; font-style:italic; }
+  .sub-headline { font-size:22px; color:#666; font-weight:500; margin-bottom:38px; font-style:italic; }
+
+  /* Divider */
+  .divider { width:80px; height:4px; background:linear-gradient(90deg,#E65100,#FF7043); border-radius:2px; margin-bottom:36px; }
+
+  /* Benefits */
+  .benefits-title { font-size:14px; font-weight:800; color:#E65100; letter-spacing:2px; text-transform:uppercase; margin-bottom:20px; }
+  .benefits { display:flex; flex-direction:column; gap:14px; margin-bottom:40px; }
+  .benefit { display:flex; align-items:center; gap:14px; }
+  .check { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#E65100,#FF7043); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .check svg { width:16px; height:16px; fill:none; stroke:#fff; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+  .benefit-text { font-size:20px; font-weight:600; color:#333; }
+
+  /* Teas */
+  .teas-row { display:flex; gap:14px; margin-bottom:auto; }
+  .tea-chip { background:#fff; border:1.5px solid rgba(230,81,0,0.2); border-radius:50px; padding:8px 18px; display:flex; align-items:center; gap:8px; }
+  .tea-emoji { font-size:16px; }
+  .tea-label { font-size:14px; font-weight:700; color:#E65100; }
+
+  /* Bottom */
+  .bottom { display:flex; align-items:center; justify-content:space-between; padding-top:30px; border-top:1px solid rgba(0,0,0,0.08); }
+  .brand { display:flex; flex-direction:column; gap:2px; }
+  .brand-name { font-size:13px; font-weight:800; color:#1a1a1a; letter-spacing:2px; }
+  .brand-sub { font-size:11px; color:#999; font-weight:600; }
+  .cta-btn {
+    background:linear-gradient(135deg, #E65100, #FF7043);
+    color:#fff; font-size:18px; font-weight:800; padding:14px 32px;
+    border-radius:50px; box-shadow:0 6px 24px rgba(230,81,0,0.35);
+  }
+  .wa { display:flex; align-items:center; gap:6px; color:#666; font-size:15px; font-weight:700; }
+  .wa::before { content:''; width:9px; height:9px; border-radius:50%; background:#25D366; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bg-grad"></div>
+  <div class="diagonal"></div>
+  <div class="diagonal-inner">
+    <div class="fire-emoji">🔥</div>
+    <div class="product-box">
+      <div class="product-box-name">THERMO T3</div>
+      <div class="product-box-sub">Triple acción quema-grasa</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="badge">
+      <span class="badge-text">FuXion · Control de Peso</span>
+    </div>
+
+    <div class="headline">
+      Activa tu<br><em>quemador</em><br>natural
+    </div>
+    <div class="sub-headline">La infusión que transforma grasa en energía</div>
+
+    <div class="divider"></div>
+
+    <div class="benefits-title">¿Por qué funciona?</div>
+    <div class="benefits">
+      <div class="benefit">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">Activa la termogénesis natural</div>
+      </div>
+      <div class="benefit">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">Quema grasa sin perder músculo</div>
+      </div>
+      <div class="benefit">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">Control de peso efectivo y duradero</div>
+      </div>
+      <div class="benefit">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">Carnitina + 3 tés de origen natural</div>
+      </div>
+    </div>
+
+    <div class="teas-row">
+      <div class="tea-chip"><span class="tea-emoji">🍵</span><span class="tea-label">Té Verde</span></div>
+      <div class="tea-chip"><span class="tea-emoji">🫖</span><span class="tea-label">Té Negro</span></div>
+      <div class="tea-chip"><span class="tea-emoji">🍶</span><span class="tea-label">Té Rojo</span></div>
+      <div class="tea-chip"><span class="tea-emoji">💊</span><span class="tea-label">Carnitina</span></div>
+    </div>
+
+    <div class="bottom">
+      <div class="brand">
+        <div class="brand-name">POWER VITA</div>
+        <div class="brand-sub">Distribuidor FuXion Autorizado</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+        <div class="cta-btn">Quiero saber más 🔥</div>
+        <div class="wa">+598 98 950 206</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
