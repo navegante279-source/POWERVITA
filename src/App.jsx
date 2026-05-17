@@ -137,6 +137,7 @@ function Counter({ target, duration=2000 }) {
 
 // ── NUTRI PLAN IA ─────────────────────────────────────────────────────────────
 function NutriPlan() {
+  const T = useContext(LangCtx);
   const [selGoal,setSelGoal]=useState(""); const [selDiet,setSelDiet]=useState(""); const [selSymptoms,setSelSymptoms]=useState([]);
   const [form,setForm]=useState({age:"",weight:""}); const [plan,setPlan]=useState(null); const [loading,setLoading]=useState(false);
   const goals = ["💪 Más energía","🌿 Detox y digestión","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","😴 Dormir mejor","✨ Mejorar piel"];
@@ -160,7 +161,7 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
   };
   const inp = { width:"100%", background:"rgba(45,106,79,0.04)", border:"1.5px solid rgba(45,106,79,0.18)", borderRadius:10, padding:"9px 11px", fontSize:12, outline:"none", boxSizing:"border-box", fontFamily:"'Inter',sans-serif" };
   if (plan) {
-    if (plan.error) return <div style={{textAlign:"center",padding:20}}><div style={{fontSize:32,marginBottom:8}}>🌿</div><p style={{color:"#e53e3e",fontSize:13,fontWeight:600,marginBottom:4}}>No pudimos generar tu plan.</p><p style={{color:"#7a9a7a",fontSize:12,marginBottom:16}}>Revisá tu conexión e intentá de nuevo.</p><button onClick={()=>setPlan(null)} style={{background:"#2d6a4f",color:"#fff",border:"none",padding:"10px 20px",borderRadius:10,cursor:"pointer",fontWeight:700,fontSize:13}}>🔄 Reintentar</button></div>;
+    if (plan.error) return <div style={{textAlign:"center",padding:20}}><div style={{fontSize:32,marginBottom:8}}>🌿</div><p style={{color:"#e53e3e",fontSize:13,fontWeight:600,marginBottom:4}}>{T.nutriErrTitle}</p><p style={{color:"#7a9a7a",fontSize:12,marginBottom:16}}>{T.nutriErrSub}</p><button onClick={()=>setPlan(null)} style={{background:"#2d6a4f",color:"#fff",border:"none",padding:"10px 20px",borderRadius:10,cursor:"pointer",fontWeight:700,fontSize:13}}>🔄 Reintentar</button></div>;
     return (
       <div style={{padding:"20px"}}>
         <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:28}}>🥗</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#1a2e1a",margin:"4px 0 2px"}}>{plan.titulo}</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#7a9a7a",fontStyle:"italic"}}>{plan.perfil}</p></div>
@@ -168,8 +169,8 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
         <div style={{marginBottom:10}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:800,color:"#2d6a4f",letterSpacing:1.5,marginBottom:5}}>📅 7 DÍAS</div><div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:3}}>{plan.dias?.map((d,i)=><div key={i} style={{minWidth:95,background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:8,padding:"6px",flexShrink:0}}><div style={{fontFamily:"'Inter',sans-serif",fontWeight:700,color:"#2d6a4f",fontSize:11,textAlign:"center",background:"rgba(45,106,79,0.07)",borderRadius:4,padding:"1px 0",marginBottom:3}}>{d.dia}</div>{[{k:"desayuno",i:"🌅"},{k:"almuerzo",i:"☀️"},{k:"cena",i:"🌙"},{k:"snack",i:"🍎"}].map(({k,i:ic})=><div key={k} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#4a5568",marginBottom:2}}>{ic} {d[k]}</div>)}</div>)}</div></div>
         {plan.tips && <div style={{marginBottom:12}}>{plan.tips.map((t,i)=><div key={i} style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#2d5a3d",padding:"2px 0",display:"flex",gap:5}}><span style={{color:"#C9A84C"}}>✓</span>{t}</div>)}</div>}
         <div style={{display:"flex",gap:7}}>
-          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Empezar</a>
-          <button onClick={()=>setPlan(null)} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Nuevo</button>
+          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
+          <button onClick={()=>setPlan(null)} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.nutriNew}</button>
         </div>
       </div>
     );
@@ -177,15 +178,15 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
   return (
     <div style={{padding:"20px"}}>
       <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:28}}>🥗</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#1a2e1a",margin:"4px 0 2px"}}>Plan Nutricional IA</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#7a9a7a"}}>Personalizado · 7 días · FuXion</p></div>
-      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>OBJETIVO</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{goals.map(g=><button key={g} onClick={()=>setSelGoal(g)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:selGoal===g?"#2d6a4f":"rgba(45,106,79,0.15)",background:selGoal===g?"#2d6a4f":"transparent",color:selGoal===g?"#fff":"#2d6a4f",transition:"all .2s"}}>{g}</button>)}</div></div>
-      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>SÍNTOMAS</div><div style={{display:"flex",flexWrap:"wrap",gap:3}}>{symptoms.map(s=>{const sel=selSymptoms.includes(s);return <button key={s} onClick={()=>setSelSymptoms(p=>sel?p.filter(x=>x!==s):[...p,s])} style={{padding:"3px 7px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(45,106,79,0.15)",background:sel?"rgba(201,168,76,0.12)":"transparent",color:sel?"#8B6914":"#2d6a4f",transition:"all .2s"}}>{s}</button>;})}</div></div>
-      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>DIETA</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{diets.map(d=><button key={d} onClick={()=>setSelDiet(d)} style={{padding:"4px 9px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:selDiet===d?"#2d6a4f":"rgba(45,106,79,0.15)",background:selDiet===d?"#2d6a4f":"transparent",color:selDiet===d?"#fff":"#2d6a4f",transition:"all .2s"}}>{d}</button>)}</div></div>
+      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>{T.nutriObj}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{goals.map(g=><button key={g} onClick={()=>setSelGoal(g)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:selGoal===g?"#2d6a4f":"rgba(45,106,79,0.15)",background:selGoal===g?"#2d6a4f":"transparent",color:selGoal===g?"#fff":"#2d6a4f",transition:"all .2s"}}>{g}</button>)}</div></div>
+      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>{T.nutriSym}</div><div style={{display:"flex",flexWrap:"wrap",gap:3}}>{symptoms.map(s=>{const sel=selSymptoms.includes(s);return <button key={s} onClick={()=>setSelSymptoms(p=>sel?p.filter(x=>x!==s):[...p,s])} style={{padding:"3px 7px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(45,106,79,0.15)",background:sel?"rgba(201,168,76,0.12)":"transparent",color:sel?"#8B6914":"#2d6a4f",transition:"all .2s"}}>{s}</button>;})}</div></div>
+      <div style={{marginBottom:9}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",letterSpacing:1,marginBottom:5}}>{T.nutriDiet}</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{diets.map(d=><button key={d} onClick={()=>setSelDiet(d)} style={{padding:"4px 9px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:selDiet===d?"#2d6a4f":"rgba(45,106,79,0.15)",background:selDiet===d?"#2d6a4f":"transparent",color:selDiet===d?"#fff":"#2d6a4f",transition:"all .2s"}}>{d}</button>)}</div></div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:14}}>
-        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",marginBottom:3}}>EDAD</div><input value={form.age} onChange={e=>setForm(f=>({...f,age:e.target.value}))} placeholder="32" style={inp}/></div>
-        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",marginBottom:3}}>PESO kg</div><input value={form.weight} onChange={e=>setForm(f=>({...f,weight:e.target.value}))} placeholder="70" style={inp}/></div>
+        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",marginBottom:3}}>{T.nutriAge}</div><input value={form.age} onChange={e=>setForm(f=>({...f,age:e.target.value}))} placeholder="32" style={inp}/></div>
+        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#2d6a4f",marginBottom:3}}>{T.nutriWeight}</div><input value={form.weight} onChange={e=>setForm(f=>({...f,weight:e.target.value}))} placeholder="70" style={inp}/></div>
       </div>
       <button onClick={generate} disabled={!selGoal||!selDiet||loading} style={{width:"100%",background:(!selGoal||!selDiet)?"rgba(45,106,79,0.25)":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:(!selGoal||!selDiet)?"not-allowed":"pointer"}}>
-        {loading?"🧠 Generando con IA...":"✨ Generar mi plan con IA →"}
+        {loading?T.nutriLoading:T.nutriGen}
       </button>
     </div>
   );
@@ -193,8 +194,9 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
 
 // ── SYMPTOM ANALYZER ─────────────────────────────────────────────────────────
 function SymptomAnalyzer() {
+  const T = useContext(LangCtx);
   const [text,setText]=useState(""); const [result,setResult]=useState(null); const [loading,setLoading]=useState(false);
-  const examples = ["Me siento cansado todo el día","Tengo el estómago hinchado","Mucho estrés y no puedo dormir","Quiero bajar de peso"];
+  const examples = T.symptomExamples;
   const analyze = async () => {
     if (!text.trim()) return; setLoading(true);
     try {
@@ -209,7 +211,7 @@ function SymptomAnalyzer() {
     finally { setLoading(false); }
   };
   const urgC = { bajo:"#25D366", medio:"#C9A84C", alto:"#e53e3e" };
-  const urgL = { bajo:"✅ Nivel Bajo", medio:"⚠️ Nivel Medio", alto:"🔴 Nivel Alto" };
+  const urgL = { bajo:T.symptomUrgBajo, medio:T.symptomUrgMedio, alto:T.symptomUrgAlto };
   if (result && !result.error) return (
     <div style={{padding:"20px"}}>
       <div style={{textAlign:"center",marginBottom:10}}><div style={{fontSize:26}}>🔬</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:13,fontWeight:700,color:"#1a2e1a",margin:"4px 0 5px"}}>Análisis completado</h3><div style={{display:"inline-flex",alignItems:"center",background:`${urgC[result.nivel_urgencia]}15`,border:`1px solid ${urgC[result.nivel_urgencia]}`,borderRadius:999,padding:"2px 10px"}}><span style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:urgC[result.nivel_urgencia]}}>{urgL[result.nivel_urgencia]}</span></div></div>
@@ -217,18 +219,18 @@ function SymptomAnalyzer() {
       <div style={{marginBottom:8}}>{result.productos?.map((p,i)=><div key={i} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:9,padding:"7px 9px",marginBottom:4}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,color:"#1a2e1a",fontSize:11}}>{p.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",background:"#2d6a4f",color:"#fff",borderRadius:999,padding:"1px 6px",fontSize:11,fontWeight:700}}>{p.match}%</span></div><div style={{height:3,background:"rgba(45,106,79,0.1)",borderRadius:2,marginBottom:3}}><div style={{height:"100%",width:`${p.match}%`,background:"linear-gradient(90deg,#2d6a4f,#C9A84C)",borderRadius:2}}/></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{p.razon}</p></div>)}</div>
       <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"8px 10px",marginBottom:10}}><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,color:"#8B6914",fontStyle:"italic"}}>{result.mensaje_motivador}</p></div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Empezar</a>
-        <button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Nuevo</button>
+        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
+        <button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.symptomNew}</button>
       </div>
     </div>
   );
   return (
     <div style={{padding:"20px"}}>
       <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:28}}>🔬</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#1a2e1a",margin:"4px 0 2px"}}>Analizador de Síntomas IA</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#7a9a7a"}}>Describí cómo te sentís · IA recomienda</p></div>
-      <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Ej: Me siento cansado, tengo el estómago hinchado..." rows={3} style={{width:"100%",background:"rgba(45,106,79,0.04)",border:"1.5px solid rgba(45,106,79,0.18)",borderRadius:10,padding:"9px 11px",fontFamily:"'Inter',sans-serif",fontSize:11,outline:"none",resize:"none",color:"#1a2e1a",boxSizing:"border-box",marginBottom:7}} onFocus={e=>e.target.style.borderColor="#2d6a4f"} onBlur={e=>e.target.style.borderColor="rgba(45,106,79,0.18)"}/>
+      <textarea value={text} onChange={e=>setText(e.target.value)} placeholder={T.symptomPlaceholder} rows={3} style={{width:"100%",background:"rgba(45,106,79,0.04)",border:"1.5px solid rgba(45,106,79,0.18)",borderRadius:10,padding:"9px 11px",fontFamily:"'Inter',sans-serif",fontSize:11,outline:"none",resize:"none",color:"#1a2e1a",boxSizing:"border-box",marginBottom:7}} onFocus={e=>e.target.style.borderColor="#2d6a4f"} onBlur={e=>e.target.style.borderColor="rgba(45,106,79,0.18)"}/>
       <div style={{marginBottom:10}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a",marginBottom:4,fontWeight:600}}>💡 EJEMPLOS:</div><div style={{display:"flex",flexWrap:"wrap",gap:3}}>{examples.map((e,i)=><button key={i} onClick={()=>setText(e)} style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#2d6a4f",background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.13)",borderRadius:6,padding:"3px 7px",cursor:"pointer"}}>{e}</button>)}</div></div>
       <button onClick={analyze} disabled={!text.trim()||loading} style={{width:"100%",background:!text.trim()?"rgba(45,106,79,0.25)":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:!text.trim()?"not-allowed":"pointer"}}>
-        {loading?"🧠 Analizando...":"🔬 Analizar con IA →"}
+        {loading?T.symptomLoading:T.symptomAnalyze}
       </button>
     </div>
   );
@@ -236,11 +238,12 @@ function SymptomAnalyzer() {
 
 // ── ROI PREDICTOR ─────────────────────────────────────────────────────────────
 function ROIPredictor() {
+  const T = useContext(LangCtx);
   const [form,setForm]=useState({country:"",hours:"",contacts:"",experience:""}); const [result,setResult]=useState(null); const [loading,setLoading]=useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
-  const hours = ["⏰ 5-10 hrs/sem","⏰ 10-20 hrs/sem","⏰ 20-30 hrs/sem","⏰ +30 hrs/sem"];
-  const contacts = ["👥 0-50","👥 50-200","👥 200-500","👥 +500"];
-  const experience = ["🌱 Sin experiencia","📊 Algo de exp.","💼 Con experiencia","🏆 Muy exp."];
+  const hours = T.roiHours;
+  const contacts = T.roiContacts;
+  const experience = T.roiExp;
   const predict = async () => {
     if (!form.country||!form.hours||!form.contacts||!form.experience) return; setLoading(true);
     try {
@@ -253,11 +256,11 @@ SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max
     } catch(e) { console.error(e); setResult({ error:true }); }
     finally { setLoading(false); }
   };
-  const potL = { bajo:"🌱 Potencial Bueno", medio:"🚀 Potencial Alto", alto:"💎 Potencial Muy Alto", muy_alto:"👑 Potencial Excepcional" };
+  const potL = { bajo:T.roiPotBajo, medio:T.roiPotMedio, alto:T.roiPotAlto, muy_alto:T.roiPotMuyAlto };
   if (result && !result.error) return (
     <div style={{padding:"20px"}}>
       <div style={{textAlign:"center",marginBottom:10}}><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontWeight:700,color:"#fff",margin:"4px 0 5px"}}>{result.perfil}</h3><div style={{display:"inline-flex",background:"rgba(201,168,76,0.18)",border:"1px solid rgba(201,168,76,0.4)",borderRadius:999,padding:"3px 10px"}}><span style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:800,color:"#C9A84C"}}>{potL[result.potencial]}</span></div></div>
-      <div style={{marginBottom:9}}>{[{k:"mes1",l:"1 mes"},{k:"mes3",l:"3 meses"},{k:"mes6",l:"6 meses"},{k:"mes12",l:"12 meses"}].map(({k,l})=>{const d=result[k];if(!d)return null;return(<div key={k} style={{marginBottom:6}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:1}}><span style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)"}}>{l}</span><span style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:900,color:"#C9A84C"}}>${d.min?.toLocaleString()} – ${d.max?.toLocaleString()}</span></div><div style={{height:4,background:"rgba(255,255,255,0.08)",borderRadius:2}}><div style={{height:"100%",width:`${Math.min((d.max/12000)*100,100)}%`,background:"linear-gradient(90deg,#C9A84C,#FFD700)",borderRadius:2}}/></div></div>);})}</div>
+      <div style={{marginBottom:9}}>{[...T.roiMonths].map(({k,l})=>{const d=result[k];if(!d)return null;return(<div key={k} style={{marginBottom:6}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:1}}><span style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)"}}>{l}</span><span style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:900,color:"#C9A84C"}}>${d.min?.toLocaleString()} – ${d.max?.toLocaleString()}</span></div><div style={{height:4,background:"rgba(255,255,255,0.08)",borderRadius:2}}><div style={{height:"100%",width:`${Math.min((d.max/12000)*100,100)}%`,background:"linear-gradient(90deg,#C9A84C,#FFD700)",borderRadius:2}}/></div></div>);})}</div>
       <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"7px 9px",marginBottom:8}}><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{result.ventaja_pais}</p></div>
       <div style={{marginBottom:9}}>{result.estrategia?.map((s,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:4}}><div style={{width:15,height:15,borderRadius:"50%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:900,flexShrink:0,color:"#1a1a1a"}}>{i+1}</div><span style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{s}</span></div>)}</div>
       <div style={{display:"flex",gap:7}}>
@@ -269,10 +272,10 @@ SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max
   return (
     <div style={{padding:"20px"}}>
       <div style={{textAlign:"center",marginBottom:14}}><div style={{fontSize:28}}>💰</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#FFD700",margin:"4px 0 2px"}}>ROI Predictor IA</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"rgba(255,255,255,0.88)"}}>Proyección de ingresos con IA real</p></div>
-      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)",marginBottom:4}}>PAÍS</div><select value={form.country} onChange={e=>set("country",e.target.value)} style={{width:"100%",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(201,168,76,0.22)",borderRadius:9,padding:"8px 10px",fontFamily:"'Inter',sans-serif",color:form.country?"#fff":"rgba(255,255,255,0.35)",fontSize:11,outline:"none",cursor:"pointer",boxSizing:"border-box"}}><option value="">Seleccioná tu país...</option>{COUNTRIES.map(c=><option key={c} value={c} style={{color:"#1a1a1a"}}>{c}</option>)}</select></div>
-      {[{label:"HORAS / SEMANA",opts:hours,key:"hours"},{label:"RED DE CONTACTOS",opts:contacts,key:"contacts"},{label:"EXPERIENCIA",opts:experience,key:"experience"}].map(({label,opts,key})=><div key={key} style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)",marginBottom:4}}>{label}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{opts.map(o=><button key={o} onClick={()=>set(key,o)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:form[key]===o?"#C9A84C":"rgba(255,255,255,0.1)",background:form[key]===o?"rgba(201,168,76,0.18)":"rgba(255,255,255,0.04)",color:form[key]===o?"#C9A84C":"rgba(255,255,255,0.85)",transition:"all .2s"}}>{o}</button>)}</div></div>)}
+      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)",marginBottom:4}}>{T.eliteCountry}</div><select value={form.country} onChange={e=>set("country",e.target.value)} style={{width:"100%",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(201,168,76,0.22)",borderRadius:9,padding:"8px 10px",fontFamily:"'Inter',sans-serif",color:form.country?"#fff":"rgba(255,255,255,0.35)",fontSize:11,outline:"none",cursor:"pointer",boxSizing:"border-box"}}><option value="">Seleccioná tu país...</option>{COUNTRIES.map(c=><option key={c} value={c} style={{color:"#1a1a1a"}}>{c}</option>)}</select></div>
+      {[{label:T.roiHoursLabel,opts:hours,key:"hours"},{label:T.roiContactsLabel,opts:contacts,key:"contacts"},{label:T.roiExpLabel,opts:experience,key:"experience"}].map(({label,opts,key})=><div key={key} style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.9)",marginBottom:4}}>{label}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{opts.map(o=><button key={o} onClick={()=>set(key,o)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer",border:"1.5px solid",borderColor:form[key]===o?"#C9A84C":"rgba(255,255,255,0.1)",background:form[key]===o?"rgba(201,168,76,0.18)":"rgba(255,255,255,0.04)",color:form[key]===o?"#C9A84C":"rgba(255,255,255,0.85)",transition:"all .2s"}}>{o}</button>)}</div></div>)}
       <button onClick={predict} disabled={!form.country||!form.hours||!form.contacts||!form.experience||loading} style={{width:"100%",background:(!form.country||!form.hours||!form.contacts||!form.experience)?"rgba(201,168,76,0.25)":"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer",marginTop:4}}>
-        {loading?"🧠 Calculando...":"💰 Calcular mi potencial →"}
+        {loading?T.roiLoading:T.roiCalc}
       </button>
     </div>
   );
@@ -280,10 +283,11 @@ SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max
 
 // ── ELITE PROGRAM ─────────────────────────────────────────────────────────────
 function EliteProgram() {
+  const T = useContext(LangCtx);
   const [step,setStep]=useState(1); const [form,setForm]=useState({name:"",country:"",goal:"",symptoms:[],age:"",weight:""}); const [plan,setPlan]=useState(null);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
-  const goals = ["💪 Ganar masa muscular","🌿 Detox profundo","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","⚡ Más energía","✨ Anti-envejecimiento"];
-  const symptoms = ["Fatiga","Sobrepeso","Digestión lenta","Estrés","Insomnio","Piel opaca","Inmunidad baja","Dolores musculares"];
+  const goals = T.eliteGoals;
+  const symptoms = T.eliteSymList;
   const generate = async () => {
     if (!form.name||!form.country||!form.goal) return; setStep(2);
     try {
@@ -304,14 +308,14 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
   const inp = { width:"100%", background:"rgba(255,255,255,0.07)", border:"1.5px solid rgba(201,168,76,0.22)", borderRadius:9, padding:"8px 10px", fontSize:11, outline:"none", color:"#fff", boxSizing:"border-box", fontFamily:"'Inter',sans-serif" };
   if (step===1) return (
     <div style={{padding:"20px"}}>
-      <div style={{textAlign:"center",marginBottom:12}}><div style={{fontSize:28}}>👑</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#FFD700",marginBottom:2}}>Elite Program</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"rgba(255,255,255,0.85)"}}>La IA genera tu protocolo de 90 días</p></div>
-      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>NOMBRE</div><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="¿Cómo te llamás?" style={inp} onFocus={e=>e.target.style.borderColor="#C9A84C"} onBlur={e=>e.target.style.borderColor="rgba(201,168,76,0.22)"}/></div>
+      <div style={{textAlign:"center",marginBottom:12}}><div style={{fontSize:28}}>👑</div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:14,fontWeight:700,color:"#FFD700",marginBottom:2}}>{T.eliteTitle}</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"rgba(255,255,255,0.85)"}}>{T.eliteSub}</p></div>
+      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>{T.eliteName}</div><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder={T.eliteNamePh} style={inp} onFocus={e=>e.target.style.borderColor="#C9A84C"} onBlur={e=>e.target.style.borderColor="rgba(201,168,76,0.22)"}/></div>
       <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>PAÍS</div><select value={form.country} onChange={e=>set("country",e.target.value)} style={{...inp,cursor:"pointer",color:form.country?"#fff":"rgba(255,255,255,0.35)"}}><option value="">Seleccioná tu país...</option>{COUNTRIES.map(c=><option key={c} value={c} style={{color:"#1a1a1a"}}>{c}</option>)}</select></div>
-      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:4}}>OBJETIVO</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{goals.map(g=><button key={g} onClick={()=>set("goal",g)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:form.goal===g?"#C9A84C":"rgba(255,255,255,0.1)",background:form.goal===g?"rgba(201,168,76,0.18)":"rgba(255,255,255,0.04)",color:form.goal===g?"#FFD700":"rgba(255,255,255,0.82)",transition:"all .2s"}}>{g}</button>)}</div></div>
-      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:4}}>SÍNTOMAS</div><div style={{display:"flex",flexWrap:"wrap",gap:3}}>{symptoms.map(s=>{const sel=form.symptoms.includes(s);return <button key={s} onClick={()=>set("symptoms",sel?form.symptoms.filter(x=>x!==s):[...form.symptoms,s])} style={{padding:"2px 6px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(255,255,255,0.1)",background:sel?"rgba(201,168,76,0.15)":"transparent",color:sel?"#C9A84C":"rgba(255,255,255,0.78)",transition:"all .2s"}}>{s}</button>;})}</div></div>
+      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:4}}>{T.eliteGoal}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>{goals.map(g=><button key={g} onClick={()=>set("goal",g)} style={{padding:"6px 4px",borderRadius:7,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:form.goal===g?"#C9A84C":"rgba(255,255,255,0.1)",background:form.goal===g?"rgba(201,168,76,0.18)":"rgba(255,255,255,0.04)",color:form.goal===g?"#FFD700":"rgba(255,255,255,0.82)",transition:"all .2s"}}>{g}</button>)}</div></div>
+      <div style={{marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:4}}>{T.eliteSymptoms}</div><div style={{display:"flex",flexWrap:"wrap",gap:3}}>{symptoms.map(s=>{const sel=form.symptoms.includes(s);return <button key={s} onClick={()=>set("symptoms",sel?form.symptoms.filter(x=>x!==s):[...form.symptoms,s])} style={{padding:"2px 6px",borderRadius:999,fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:11,cursor:"pointer",border:"1.5px solid",borderColor:sel?"#C9A84C":"rgba(255,255,255,0.1)",background:sel?"rgba(201,168,76,0.15)":"transparent",color:sel?"#C9A84C":"rgba(255,255,255,0.78)",transition:"all .2s"}}>{s}</button>;})}</div></div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:12}}>
-        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>EDAD</div><input value={form.age} onChange={e=>set("age",e.target.value)} placeholder="32" style={inp}/></div>
-        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>PESO kg</div><input value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="70" style={inp}/></div>
+        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>{T.eliteAge}</div><input value={form.age} onChange={e=>set("age",e.target.value)} placeholder="32" style={inp}/></div>
+        <div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.88)",marginBottom:3}}>{T.eliteWeight}</div><input value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="70" style={inp}/></div>
       </div>
       <button onClick={generate} disabled={!form.name||!form.country||!form.goal} style={{width:"100%",background:(!form.name||!form.country||!form.goal)?"rgba(201,168,76,0.22)":"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:(!form.name||!form.country||!form.goal)?"not-allowed":"pointer"}}>
         👑 Generar mi Plan Elite 90 días →
@@ -331,11 +335,11 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
       <div style={{textAlign:"center",marginBottom:10}}><div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(201,168,76,0.14)",border:"1px solid rgba(201,168,76,0.28)",borderRadius:999,padding:"3px 9px",marginBottom:5}}><span style={{width:5,height:5,borderRadius:"50%",background:"#FFD700",display:"inline-block"}}/><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:800,color:"#C9A84C",letterSpacing:1.5}}>PLAN GENERADO CON IA ✓</span></div><h3 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:"#FFD700",marginBottom:1}}>{plan.titulo}</h3><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.92)",fontStyle:"italic"}}>{plan.tagline}</p></div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:4,marginBottom:10}}>{plan.metricas?.map((m,i)=><div key={i} style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.14)",borderRadius:8,padding:"6px 3px",textAlign:"center"}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:13,fontWeight:700,color:"#FFD700",lineHeight:1}}>{m.valor}</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"rgba(255,255,255,0.95)",marginTop:2,lineHeight:1.2}}>{m.label}</div></div>)}</div>
       <div style={{background:"rgba(45,106,79,0.14)",border:"1px solid rgba(45,106,79,0.28)",borderRadius:9,padding:"7px 10px",marginBottom:8}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:700,color:"#52b788",marginBottom:2}}>🎯 RESULTADO EN 90 DÍAS</div><p style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{plan.resultado_esperado}</p></div>
-      <div style={{marginBottom:10}}>{plan.fases?.map((fase,i)=><div key={i} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"8px 10px",marginBottom:4,display:"flex",gap:8}}><div style={{width:30,height:30,borderRadius:8,background:"rgba(201,168,76,0.18)",border:"1px solid rgba(201,168,76,0.28)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0}}>{fase.emoji}</div><div style={{flex:1}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:1}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontWeight:700,color:"#fff"}}>Fase {fase.numero}: {fase.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#C9A84C",fontWeight:700}}>{fase.semanas}</span></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:3}}>{fase.objetivo}</p><div style={{display:"flex",gap:3,flexWrap:"wrap"}}>{fase.productos?.map(p=><span key={p} style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#C9A84C",background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.18)",borderRadius:4,padding:"1px 5px"}}>{p}</span>)}</div></div></div>)}</div>
+      <div style={{marginBottom:10}}>{plan.fases?.map((fase,i)=><div key={i} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"8px 10px",marginBottom:4,display:"flex",gap:8}}><div style={{width:30,height:30,borderRadius:8,background:"rgba(201,168,76,0.18)",border:"1px solid rgba(201,168,76,0.28)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0}}>{fase.emoji}</div><div style={{flex:1}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:1}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontWeight:700,color:"#fff"}}>{T.eliteFase} {fase.numero}: {fase.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#C9A84C",fontWeight:700}}>{fase.semanas}</span></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:3}}>{fase.objetivo}</p><div style={{display:"flex",gap:3,flexWrap:"wrap"}}>{fase.productos?.map(p=><span key={p} style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#C9A84C",background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.18)",borderRadius:4,padding:"1px 5px"}}>{p}</span>)}</div></div></div>)}</div>
       <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.22)",borderRadius:10,padding:"8px 11px",marginBottom:12}}><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,color:"#FFD700",fontStyle:"italic",lineHeight:1.6}}>"{plan.mensaje_final}"</p></div>
       <div style={{display:"flex",flexDirection:"column",gap:6}}>
-        <button onClick={()=>{trackEvent("Purchase",{content_name:"Elite Program 90 días",content_type:"product",currency:"USD"});openWA();}} style={{width:"100%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer"}}>👑 Quiero este plan · Ver precio en {form.country} →</button>
-        <div style={{display:"flex",gap:6}}><button onClick={()=>{setStep(1);setPlan(null);}} style={{flex:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.92)",borderRadius:9,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:10,cursor:"pointer"}}>🔄 Nuevo</button><button onClick={()=>{const txt=`${plan.titulo}\nFase 1: ${plan.fases?.[0]?.nombre}\nFase 2: ${plan.fases?.[1]?.nombre}\nFase 3: ${plan.fases?.[2]?.nombre}`;navigator.clipboard?.writeText(txt);}} style={{flex:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.92)",borderRadius:9,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:10,cursor:"pointer"}}>📋 Copiar</button></div>
+        <button onClick={()=>{trackEvent("Purchase",{content_name:"Elite Program 90 días",content_type:"product",currency:"USD"});openWA();}} style={{width:"100%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",border:"none",borderRadius:10,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer"}}>{T.eliteWantPlan} {form.country} →</button>
+        <div style={{display:"flex",gap:6}}><button onClick={()=>{setStep(1);setPlan(null);}} style={{flex:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.92)",borderRadius:9,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:10,cursor:"pointer"}}>{T.eliteNew}</button><button onClick={()=>{const txt=`${plan.titulo}\nFase 1: ${plan.fases?.[0]?.nombre}\nFase 2: ${plan.fases?.[1]?.nombre}\nFase 3: ${plan.fases?.[2]?.nombre}`;navigator.clipboard?.writeText(txt);}} style={{flex:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.92)",borderRadius:9,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:10,cursor:"pointer"}}>{T.eliteCopy}</button></div>
       </div>
     </div>
   );
@@ -344,6 +348,7 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
 
 // ── CONTADOR TIEMPO REAL ──────────────────────────────────────────────────────
 function ContadorTiempoReal() {
+  const T = useContext(LangCtx);
   const NAMES = [{name:"María G.",country:"Uruguay",flag:"🇺🇾",product:"Transform Kit"},{name:"Carlos R.",country:"Argentina",flag:"🇦🇷",product:"Elite Program"},{name:"Laura M.",country:"Colombia",flag:"🇨🇴",product:"REXET"},{name:"Diego F.",country:"México",flag:"🇲🇽",product:"Starter Pack"},{name:"Ana P.",country:"España",flag:"🇪🇸",product:"THERMO T3"},{name:"Pedro L.",country:"Brasil",flag:"🇧🇷",product:"Transform Kit"},{name:"Sofía V.",country:"Chile",flag:"🇨🇱",product:"Elite Program"},{name:"James W.",country:"USA",flag:"🇺🇸",product:"BIOPRO+ TECT"}];
   const [count,setCount]=useState(0); const [joins,setJoins]=useState([]);
   const getBase = () => { const h=new Date().getHours(); if(h<6)return 8; if(h<9)return 22; if(h<12)return 47; if(h<15)return 74; if(h<18)return 93; if(h<21)return 78; return 41; };
@@ -362,17 +367,18 @@ function ContadorTiempoReal() {
         <div style={{display:"flex",alignItems:"center",gap:5,background:"rgba(37,211,102,0.14)",border:"1px solid rgba(37,211,102,0.28)",borderRadius:999,padding:"3px 9px"}}><div style={{width:5,height:5,borderRadius:"50%",background:"#25D366",animation:"pulse 1.5s ease-in-out infinite"}}/><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366"}}>EN VIVO</span></div>
       </div>
       <div style={{padding:"14px 16px 10px",borderBottom:"1px solid rgba(45,106,79,0.06)"}}>
-        <div style={{display:"flex",alignItems:"flex-end",gap:10,marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:44,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{count}</div><div style={{paddingBottom:5,fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#2d6a4f",lineHeight:1.3}}>personas se unieron<br/>en las últimas 24hs</div></div>
+        <div style={{display:"flex",alignItems:"flex-end",gap:10,marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:44,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{count}</div><div style={{paddingBottom:5,fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#2d6a4f",lineHeight:1.3}}>{T.counterJoined}</div></div>
         <div style={{marginBottom:7}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af",marginBottom:3,fontWeight:600}}>ACTIVIDAD HOY POR HORA</div><div style={{display:"flex",gap:2,alignItems:"flex-end",height:24}}>{bars.map((v,i)=>{const isNow=i===h,isPast=i<h;return(<div key={i} style={{flex:1,background:isNow?"#2d6a4f":isPast?"rgba(45,106,79,0.32)":"rgba(45,106,79,0.08)",borderRadius:"2px 2px 0 0",height:`${(v/106)*100}%`,position:"relative"}}>{isNow&&<div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:"#2d6a4f",color:"#fff",borderRadius:3,padding:"1px 3px",fontFamily:"'Inter',sans-serif",fontSize:6,whiteSpace:"nowrap"}}>ahora</div>}</div>);})}</div><div style={{display:"flex",justifyContent:"space-between",marginTop:2}}>{["00:00","12:00","23:00"].map(t=><span key={t} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>{t}</span>)}</div></div>
-        <div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#4a7c5e",fontWeight:600}}>{h>=9&&h<21?"🟢 Alta actividad ahora":"🔵 Actividad normal"}</div>
+        <div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#4a7c5e",fontWeight:600}}>{h>=9&&h<21?T.counterHighActivity:T.counterNormalActivity}</div>
       </div>
-      <div style={{padding:"9px 14px"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",letterSpacing:1,marginBottom:6}}>ÚLTIMAS INCORPORACIONES</div>{joins.map((j,i)=><div key={j.id} style={{display:"flex",alignItems:"center",gap:9,padding:"4px 0",borderBottom:i<joins.length-1?"1px solid rgba(45,106,79,0.05)":"none"}}><div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#E8F0E9,#2d6a4f)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{j.flag}</div><div style={{flex:1}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#1a2e1a"}}>{j.name} <span style={{color:"#9ca3af",fontWeight:400}}>de {j.country}</span></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>Se unió con <span style={{color:"#2d6a4f",fontWeight:700}}>{j.product}</span></div></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af"}}>hace {j.mins}min</div></div>)}</div>
+      <div style={{padding:"9px 14px"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",letterSpacing:1,marginBottom:6}}>ÚLTIMAS INCORPORACIONES</div>{joins.map((j,i)=><div key={j.id} style={{display:"flex",alignItems:"center",gap:9,padding:"4px 0",borderBottom:i<joins.length-1?"1px solid rgba(45,106,79,0.05)":"none"}}><div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#E8F0E9,#2d6a4f)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{j.flag}</div><div style={{flex:1}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#1a2e1a"}}>{j.name} <span style={{color:"#9ca3af",fontWeight:400}}>{T.counterFrom} {j.country}</span></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{T.counterJoinedWith} <span style={{color:"#2d6a4f",fontWeight:700}}>{j.product}</span></div></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af"}}>{j.mins}{T.counterMins}</div></div>)}</div>
     </div>
   );
 }
 
 // ── ANTES / DESPUÉS ───────────────────────────────────────────────────────────
 function AntesDespues() {
+  const T = useContext(LangCtx);
   const [active,setActive]=useState(0); const [showAfter,setShowAfter]=useState(false);
   useEffect(()=>{setShowAfter(false);},[active]);
   const c=BEFORE_AFTER[active]; const metrics=Object.keys(c.before); const color=PACK_COLOR[c.pack]||"#2d6a4f";
@@ -391,13 +397,13 @@ function AntesDespues() {
           <div style={{flex:1}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:13,fontWeight:700,color:"#1a2e1a",marginBottom:1}}>{c.name}, {c.age} años</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#9ca3af",marginBottom:3}}>{c.country} {c.flag} · {c.goal}</div><div style={{display:"flex",gap:4}}><div style={{background:`${color}10`,border:`1px solid ${color}25`,borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color}}>{c.pack}</div><div style={{background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:600,color:"#4a7c5e"}}>⏱ {c.days} días</div></div></div>
         </div>
         <div style={{display:"flex",background:"rgba(45,106,79,0.05)",borderRadius:10,padding:3,marginBottom:10,gap:3}}>
-          {[false,true].map(isAfter=><button key={String(isAfter)} onClick={()=>setShowAfter(isAfter)} style={{flex:1,padding:"6px 0",borderRadius:8,border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,transition:"all .25s",background:showAfter===isAfter?(isAfter?color:"#e53e3e"):"transparent",color:showAfter===isAfter?"#fff":"#9ca3af"}}>{isAfter?"✨ Después":"📸 Antes"}</button>)}
+          {[false,true].map(isAfter=><button key={String(isAfter)} onClick={()=>setShowAfter(isAfter)} style={{flex:1,padding:"6px 0",borderRadius:8,border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,transition:"all .25s",background:showAfter===isAfter?(isAfter?color:"#e53e3e"):"transparent",color:showAfter===isAfter?"#fff":"#9ca3af"}}>{isAfter?T.antesAfter:T.antesBefore}</button>)}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginBottom:9}}>
           {metrics.map(key=>{const val=showAfter?c.after[key]:c.before[key];return(<div key={key} style={{background:showAfter?`${color}07`:"rgba(229,57,53,0.04)",border:`1px solid ${showAfter?color+"18":"rgba(229,57,53,0.1)"}`,borderRadius:8,padding:"7px 9px",transition:"all .3s"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",marginBottom:2}}>{key}</div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:showAfter?color:"#e53e3e"}}>{val}</div>{showAfter&&<div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366",marginTop:1}}>{c.diff[key]}</div>}</div>);})}
         </div>
         <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 9px",marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:16,color:"#C9A84C",lineHeight:0.8,marginBottom:3}}>"</div><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.6}}>{c.quote}</p></div>
-        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`)} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>💬 Quiero resultados como {c.name.split(" ")[0]} →</a>
+        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`)} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
       </div>
     </div>
   );
@@ -405,7 +411,8 @@ function AntesDespues() {
 
 // ── CHAT ──────────────────────────────────────────────────────────────────────
 function Chat({ open, onClose }) {
-  const [msgs,setMsgs]=useState([{role:"assistant",text:"¡Hola! Soy tu Vita Advisor 🌿 ¿En qué puedo ayudarte?"}]);
+  const T = useContext(LangCtx);
+  const [msgs,setMsgs]=useState([]);
   const [inp,setInp]=useState(""); const [loading,setLoading]=useState(false); const botRef=useRef();
   useEffect(()=>{botRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
   const send = async () => {
@@ -417,7 +424,7 @@ function Chat({ open, onClose }) {
       const res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:300,system:sys,messages:history})});
       const data=await res.json();
       setMsgs(m=>[...m,{role:"assistant",text:data.content?.map(b=>b.text||"").join("")||"Intenta de nuevo 🌿"}]);
-    } catch { setMsgs(m=>[...m,{role:"assistant",text:"Error. Contáctanos por WhatsApp 💬"}]); }
+    } catch { setMsgs(m=>[...m,{role:"assistant",text:T.chatError}]); }
     finally { setLoading(false); }
   };
   if (!open) return null;
@@ -428,12 +435,12 @@ function Chat({ open, onClose }) {
         <button onClick={onClose} style={{background:"none",border:"none",color:"rgba(255,255,255,0.85)",fontSize:15,cursor:"pointer"}}>✕</button>
       </div>
       <div style={{height:240,overflowY:"auto",padding:"10px 10px 4px",display:"flex",flexDirection:"column",gap:7}}>
-        {msgs.map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"82%",background:m.role==="user"?"#1a2e1a":"rgba(45,106,79,0.08)",color:m.role==="user"?"#fff":"#1a2e1a",borderRadius:10,padding:"6px 9px",fontFamily:"'Inter',sans-serif",fontSize:11,lineHeight:1.5}}>{m.text}</div></div>)}
+        {(msgs.length===0?[{role:"assistant",text:T?.chatGreeting||""}]:msgs).map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"82%",background:m.role==="user"?"#1a2e1a":"rgba(45,106,79,0.08)",color:m.role==="user"?"#fff":"#1a2e1a",borderRadius:10,padding:"6px 9px",fontFamily:"'Inter',sans-serif",fontSize:11,lineHeight:1.5}}>{m.text}</div></div>)}
         {loading&&<div style={{display:"flex"}}><div style={{background:"rgba(45,106,79,0.08)",borderRadius:10,padding:"6px 11px",color:"#2d6a4f",fontSize:15}}>···</div></div>}
         <div ref={botRef}/>
       </div>
       <div style={{padding:"6px 9px 9px",borderTop:"1px solid rgba(45,106,79,0.09)",display:"flex",gap:5}}>
-        <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Pregúntame sobre salud o negocio..." style={{flex:1,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:7,padding:"7px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,outline:"none",color:"#1a2e1a"}}/>
+        <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={T.chatPlaceholder} style={{flex:1,background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:7,padding:"7px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,outline:"none",color:"#1a2e1a"}}/>
         <button onClick={send} disabled={loading} style={{background:"#1a2e1a",border:"none",borderRadius:7,width:30,color:"#fff",fontSize:13,cursor:"pointer"}}>→</button>
       </div>
     </div>
@@ -522,49 +529,49 @@ const TRANSLATIONS = {
     nutriGoals:["💪 Más energía","🌿 Detox y digestión","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","😴 Dormir mejor","✨ Mejorar piel"],
     nutriDiets:["🥩 Omnívoro","🐟 Pescetariano","🥚 Vegetariano","🌱 Vegano","🌾 Sin gluten"],
     nutriSymptoms:["Fatiga crónica","Hinchazón","Insomnio","Estrés","Digestión lenta","Piel opaca","Inmunidad baja","Ansiedad"],
-    nutriTitle:"Plan Nutricional IA", nutriSub:"Personalizado · 7 días · FuXion",
+    nutriTitle:T.nutriTitle, nutriSub:T.nutriSub,
     nutriObj:"OBJETIVO", nutriSym:"SÍNTOMAS", nutriDiet:"DIETA", nutriAge:"EDAD", nutriWeight:"PESO kg",
-    nutriProds:"✦ PRODUCTOS", nutriDays:"📅 7 DÍAS",
+    nutriProds:T.nutriProds, nutriDays:T.nutriDays,
     nutriGen:"✨ Generar mi plan con IA →", nutriLoading:"🧠 Generando con IA...",
     nutriStart:"💬 Empezar", nutriNew:"🔄 Nuevo",
-    nutriErrTitle:"No pudimos generar tu plan.", nutriErrSub:"Revisá tu conexión e intentá de nuevo.", nutriRetry:"🔄 Reintentar",
-    symptomTitle:"Analizador de Síntomas IA", symptomSub:"Describí cómo te sentís · IA recomienda",
+    nutriErrTitle:"No pudimos generar tu plan.", nutriErrSub:"Revisá tu conexión e intentá de nuevo.", nutriRetry:T.nutriRetry,
+    symptomTitle:T.symptomTitle, symptomSub:T.symptomSub,
     symptomPlaceholder:"Ej: Me siento cansado, tengo el estómago hinchado...",
     symptomExamples:["Me siento cansado todo el día","Tengo el estómago hinchado","Mucho estrés y no puedo dormir","Quiero bajar de peso"],
-    symptomExLabel:"💡 EJEMPLOS:", symptomAnalyze:"🔬 Analizar con IA →", symptomLoading:"🧠 Analizando...",
-    symptomDone:"Análisis completado", symptomDiag:"🧠 DIAGNÓSTICO",
+    symptomExLabel:T.symptomExLabel, symptomAnalyze:"🔬 Analizar con IA →", symptomLoading:"🧠 Analizando...",
+    symptomDone:T.symptomDone, symptomDiag:T.symptomDiag,
     symptomUrgBajo:"✅ Nivel Bajo", symptomUrgMedio:"⚠️ Nivel Medio", symptomUrgAlto:"🔴 Nivel Alto",
     symptomStart:"💬 Empezar", symptomNew:"🔄 Nuevo",
-    roiTitle:"ROI Predictor IA", roiSub:"Proyección de ingresos con IA real",
+    roiTitle:T.roiTitle, roiSub:T.roiSub,
     roiCountry:"PAÍS", roiHoursLabel:"HORAS / SEMANA", roiContactsLabel:"RED DE CONTACTOS", roiExpLabel:"EXPERIENCIA",
     roiHours:["⏰ 5-10 hrs/sem","⏰ 10-20 hrs/sem","⏰ 20-30 hrs/sem","⏰ +30 hrs/sem"],
     roiContacts:["👥 0-50","👥 50-200","👥 200-500","👥 +500"],
     roiExp:["🌱 Sin experiencia","📊 Algo de exp.","💼 Con experiencia","🏆 Muy exp."],
     roiCalc:"💰 Calcular mi potencial →", roiLoading:"🧠 Calculando...",
-    roiPlaceholder:"Seleccioná tu país...",
+    roiPlaceholder:T.roiPlaceholder,
     roiMonths:[{k:"mes1",l:"1 mes"},{k:"mes3",l:"3 meses"},{k:"mes6",l:"6 meses"},{k:"mes12",l:"12 meses"}],
     roiPotBajo:"🌱 Potencial Bueno", roiPotMedio:"🚀 Potencial Alto", roiPotAlto:"💎 Potencial Muy Alto", roiPotMuyAlto:"👑 Potencial Excepcional",
-    roiPartner:"👑 Quiero ser socio", roiRecalc:"🔄 Recalcular",
-    eliteTitle:"Elite Program", eliteSub:"La IA genera tu protocolo de 90 días",
+    roiPartner:T.roiPartner, roiRecalc:T.roiRecalc,
+    eliteTitle:"Elite Program", eliteSub:T.eliteSub,
     eliteName:"NOMBRE", eliteCountry:"PAÍS", eliteGoal:"OBJETIVO", eliteSymptoms:"SÍNTOMAS", eliteAge:"EDAD", eliteWeight:"PESO kg",
-    eliteNamePh:"¿Cómo te llamás?", eliteCountryPh:"Seleccioná tu país...",
+    eliteNamePh:"¿Cómo te llamás?", eliteCountryPh:T.eliteCountryPh,
     eliteGoals:["💪 Ganar masa muscular","🌿 Detox profundo","⚖️ Bajar de peso","🛡️ Reforzar inmunidad","⚡ Más energía","✨ Anti-envejecimiento"],
     eliteSymList:["Fatiga","Sobrepeso","Digestión lenta","Estrés","Insomnio","Piel opaca","Inmunidad baja","Dolores musculares"],
-    eliteGen:"👑 Generar mi Plan Elite 90 días →",
-    eliteLoading:"Diseñando tu protocolo...", eliteLoadingSub:"Claude AI analiza tu perfil y construye tu plan único de 90 días",
-    eliteGenerated:"PLAN GENERADO CON IA ✓", eliteResult:"🎯 RESULTADO EN 90 DÍAS",
+    eliteGen:T.eliteGen,
+    eliteLoading:T.eliteLoading, eliteLoadingSub:T.eliteLoadingSub,
+    eliteGenerated:T.eliteGenerated, eliteResult:T.eliteResult,
     eliteFase:"Fase", eliteWantPlan:"👑 Quiero este plan · Ver precio en",
     eliteNew:"🔄 Nuevo", eliteCopy:"📋 Copiar",
-    counterTitle:"Actividad en tiempo real", counterSub:"Últimas 24 horas · Global", counterLive:"EN VIVO",
+    counterTitle:T.counterTitle, counterSub:T.counterSub, counterLive:T.counterLive,
     counterJoined:"personas se unieron en las últimas 24hs",
-    counterActivity:"ACTIVIDAD HOY POR HORA", counterNow:"ahora",
-    counterRecent:"ÚLTIMAS INCORPORACIONES", counterFrom:"de", counterJoinedWith:"Se unió con", counterMins:"min",
+    counterActivity:T.counterActivity, counterNow:T.counterNow,
+    counterRecent:T.counterRecent, counterFrom:"de", counterJoinedWith:"Se unió con", counterMins:"min",
     counterHighActivity:"🟢 Alta actividad ahora", counterNormalActivity:"🔵 Actividad normal",
-    antesTitle:"Transformaciones reales", antesSub:"Casos verificados",
+    antesTitle:T.antesTitle, antesSub:T.antesSub,
     antesAfter:"✨ Después", antesBefore:"📸 Antes",
     antesWant:"💬 Quiero resultados como",
     chatGreeting:"¡Hola! Soy tu Vita Advisor 🌿 ¿En qué puedo ayudarte?",
-    chatTitle:"Vita Advisor IA", chatOnline:"● Online",
+    chatTitle:T.chatTitle, chatOnline:T.chatOnline,
     chatPlaceholder:"Pregúntame sobre salud o negocio...",
     chatError:"Error. Contáctanos por WhatsApp 💬",
     leadFormName:"NOMBRE *", leadFormEmail:"EMAIL", leadFormEmailOpt:"(opcional)",
@@ -788,6 +795,7 @@ export default function App() {
   const navSections = ["inicio","sistema","iatools","testimonios","contacto"].map((id,i)=>[id,T.nav[i]]);
 
   return (
+    <LangCtx.Provider value={T}>
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
       <TrackingPixels/>
       <style>{`
@@ -1220,6 +1228,7 @@ export default function App() {
         {chatOpen?"✕":"🌿"}
       </button>
     </div>
+    </LangCtx.Provider>
   );
 }
 
