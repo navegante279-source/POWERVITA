@@ -1278,6 +1278,7 @@ export default function App() {
       )}
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
+      <a href={waLink} target="_blank" rel="noreferrer" title="WhatsApp" style={{position:"fixed",bottom:80,right:20,zIndex:249,width:48,height:48,borderRadius:"50%",background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,boxShadow:"0 7px 20px rgba(37,211,102,0.42)",textDecoration:"none"}}>💬</a>
       <button onClick={()=>setChatOpen(o=>!o)} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
