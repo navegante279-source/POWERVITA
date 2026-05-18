@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Bot WhatsApp — sesión y datos sensibles
+bot/.wwebjs_auth/
+bot/.wwebjs_cache/
+bot/.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
