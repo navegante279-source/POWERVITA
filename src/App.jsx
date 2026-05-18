@@ -59,12 +59,12 @@ const TESTIMONIALS = [
 ];
 
 const BEFORE_AFTER = [
-  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"78 kg",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"70 kg",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"-8 kg",Energía:"+85%",Digestión:"+90%",Sueño:"+70%"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
-  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"82 kg",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"86 kg",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"+4kg músculo",Energía:"+120%",Digestión:"+95%",Rendimiento:"+110%"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
-  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"65 kg",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"63 kg",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"-2 kg",Energía:"+70%",Digestión:"+95%",Piel:"+85%"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
+  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"Con sobrepeso",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"Peso saludable",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"Notable mejora",Energía:"Muy mejorada",Digestión:"Muy mejorada",Sueño:"Mucho mejor"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
+  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"Sin tono muscular",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"Masa muscular ganada",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"Masa muscular↑",Energía:"Muy mejorada",Digestión:"Excelente",Rendimiento:"Alto nivel"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
+  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"Hinchazón frecuente",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"Sin hinchazón",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"Visible mejora",Energía:"Mejorada",Digestión:"Muy mejorada",Piel:"Radiante"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
 ];
 
-const SOCIAL_PROOF = ["🇲🇽 Carlos de México acaba de unirse","🇨🇴 Laura de Colombia compró Energy+","🇧🇷 Pedro de Brasil se registró","🇦🇷 Sofía compró Detox Kit","🇪🇸 Elena de España se unió","🇨🇱 Diego compró Immuno Shield","🇺🇸 James se convirtió en Partner","🇺🇾 Marcos de Uruguay se registró"];
+
 const PACK_COLOR = { "Starter Pack":"#2d6a4f", "Transform Kit":"#C9A84C", "Elite Program":"#1565C0" };
 const CERTS = ["Clean Label","FDA Registered","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","+15,000 Socios","Ingredientes Naturales","Sin Conservantes"];
 const LINE_COLORS = { Detox:"#2d6a4f", Energy:"#7B3FA0", Protein:"#1565C0", Immunity:"#1565C0", Sport:"#E65100", Control:"#E65100" };
@@ -88,22 +88,6 @@ function waHref(phone, text) {
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
 }
 
-
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-function Toast() {
-  const [vis, setVis] = useState(false);
-  const [msg, setMsg] = useState("");
-  useEffect(() => {
-    const show = () => { setMsg(SOCIAL_PROOF[Math.floor(Math.random()*SOCIAL_PROOF.length)]); setVis(true); setTimeout(() => setVis(false), 3500); };
-    const id = setInterval(show, 7000); setTimeout(show, 2500); return () => clearInterval(id);
-  }, []);
-  return (
-    <div style={{ position:"fixed", bottom:90, left:16, zIndex:200, transform:vis?"translateY(0)":"translateY(130px)", opacity:vis?1:0, transition:"all .5s cubic-bezier(.34,1.56,.64,1)", background:"rgba(255,255,255,0.96)", backdropFilter:"blur(16px)", border:"1px solid rgba(45,106,79,0.18)", borderRadius:12, padding:"9px 14px", display:"flex", alignItems:"center", gap:9, boxShadow:"0 8px 28px rgba(45,106,79,0.14)", maxWidth:230 }}>
-      <div style={{ width:7, height:7, borderRadius:"50%", background:"#25D366", flexShrink:0 }}/>
-      <span style={{ fontFamily:"'Inter',sans-serif", fontSize:11, fontWeight:600, color:"#1a2e1a", lineHeight:1.3 }}>{msg}</span>
-    </div>
-  );
-}
 
 // ── INITIALS AVATAR ───────────────────────────────────────────────────────────
 function Avatar({ name, color="#2d6a4f", size=52 }) {
