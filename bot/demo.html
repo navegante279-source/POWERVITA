@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POWERVITA Bot — Demo WhatsApp</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111b21; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+  h1 { color: #e9edef; font-size: 18px; margin-bottom: 6px; text-align: center; }
+  .subtitle { color: #8696a0; font-size: 13px; margin-bottom: 24px; text-align: center; }
+
+  .scenarios { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+  .scenario-btn {
+    padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer;
+    font-size: 12px; font-weight: 600; transition: all .2s;
+    background: #202c33; color: #8696a0; border: 1px solid #2a3942;
+  }
+  .scenario-btn.active { background: #00a884; color: #fff; border-color: #00a884; }
+  .scenario-btn:hover { background: #2a3942; color: #e9edef; }
+
+  .phone-wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+
+  .phone {
+    width: 360px; background: #0b141a; border-radius: 36px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7); border: 8px solid #1a1a2e;
+  }
+  .phone-bar {
+    background: #202c33; padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2d6a4f, #52b788); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .contact-info { flex: 1; }
+  .contact-name { color: #e9edef; font-size: 15px; font-weight: 600; }
+  .contact-status { color: #00a884; font-size: 11px; }
+
+  .chat-area {
+    height: 500px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px;
+    background: #0b141a url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23182229' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-thumb { background: #2a3942; border-radius: 2px; }
+
+  .msg-row { display: flex; width: 100%; }
+  .msg-row.bot { justify-content: flex-start; }
+  .msg-row.user { justify-content: flex-end; }
+
+  .bubble {
+    max-width: 78%; padding: 8px 12px 6px; border-radius: 8px;
+    font-size: 13px; line-height: 1.5; position: relative; word-break: break-word;
+  }
+  .bubble.bot { background: #202c33; color: #e9edef; border-radius: 0 8px 8px 8px; }
+  .bubble.user { background: #005c4b; color: #e9edef; border-radius: 8px 0 8px 8px; }
+  .bubble.typing { display: flex; align-items: center; gap: 4px; padding: 12px 16px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #8696a0; animation: bounce .9s infinite; }
+  .dot:nth-child(2) { animation-delay: .15s; }
+  .dot:nth-child(3) { animation-delay: .30s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(1)} 40%{transform:scale(1.4)} }
+
+  .msg-time { font-size: 10px; color: #667781; text-align: right; margin-top: 2px; }
+  .bubble b { color: #e9edef; }
+  .bubble i { color: #8696a0; }
+  .bubble .highlight { color: #00a884; font-weight: 600; }
+
+  .input-bar { background: #202c33; padding: 10px 12px; display: flex; gap: 8px; align-items: center; }
+  .input-field { flex: 1; background: #2a3942; border: none; border-radius: 24px; padding: 10px 16px; color: #e9edef; font-size: 14px; outline: none; }
+  .input-field::placeholder { color: #8696a0; }
+  .send-btn { width: 40px; height: 40px; border-radius: 50%; background: #00a884; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background .2s; flex-shrink: 0; }
+  .send-btn:hover { background: #02be9d; }
+
+  .info-panel {
+    width: 300px; background: #202c33; border-radius: 16px; padding: 20px;
+    border: 1px solid #2a3942;
+  }
+  .info-panel h3 { color: #e9edef; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .flow-step {
+    background: #2a3942; border-radius: 10px; padding: 12px; margin-bottom: 8px;
+    border-left: 3px solid #00a884;
+  }
+  .flow-step.inactive { border-left-color: #2a3942; opacity: 0.5; }
+  .flow-step .step-title { color: #e9edef; font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .flow-step .step-desc { color: #8696a0; font-size: 11px; }
+  .flow-step .step-num { color: #00a884; font-weight: 800; font-size: 13px; }
+
+  .quick-btns { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px 12px 0; }
+  .quick-btn { background: #2a3942; color: #00a884; border: 1px solid #3d5260; border-radius: 16px; padding: 5px 12px; font-size: 12px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+  .quick-btn:hover { background: #00a884; color: #fff; }
+
+  .legend { color: #8696a0; font-size: 11px; margin-top: 12px; line-height: 1.6; }
+  .legend span { color: #00a884; }
+</style>
+</head>
+<body>
+
+<h1>🌿 POWERVITA FuXion Bot</h1>
+<p class="subtitle">Simulación interactiva — así ve el cliente la conversación</p>
+
+<div class="scenarios">
+  <button class="scenario-btn active" onclick="loadScenario('menu')">📋 Menú inicial</button>
+  <button class="scenario-btn" onclick="loadScenario('sintomas')">🔬 Análisis síntomas</button>
+  <button class="scenario-btn" onclick="loadScenario('producto')">📦 Consulta producto</button>
+  <button class="scenario-btn" onclick="loadScenario('negocio')">💰 Info negocio</button>
+  <button class="scenario-btn" onclick="loadScenario('lead')">👋 Captura de lead</button>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone">
+    <div class="phone-bar">
+      <div class="avatar">🌿</div>
+      <div class="contact-info">
+        <div class="contact-name">Vita Advisor IA</div>
+        <div class="contact-status">● En línea</div>
+      </div>
+    </div>
+    <div class="quick-btns" id="quickBtns"></div>
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-bar">
+      <input class="input-field" id="userInput" placeholder="Escribe un mensaje..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="send-btn" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <h3>⚙️ Flujo del Bot</h3>
+    <div id="flowSteps">
+      <div class="flow-step" id="step-recibe">
+        <div class="step-title"><span class="step-num">1.</span> Recibe mensaje</div>
+        <div class="step-desc">whatsapp-web.js detecta el mensaje entrante</div>
+      </div>
+      <div class="flow-step inactive" id="step-analiza">
+        <div class="step-title"><span class="step-num">2.</span> Analiza intención</div>
+        <div class="step-desc">Detecta si es menú, síntoma, producto, negocio o chat libre</div>
+      </div>
+      <div class="flow-step inactive" id="step-claude">
+        <div class="step-title"><span class="step-num">3.</span> Consulta Claude IA</div>
+        <div class="step-desc">Si necesita IA, llama a la API de Anthropic con el contexto FuXion</div>
+      </div>
+      <div class="flow-step inactive" id="step-responde">
+        <div class="step-title"><span class="step-num">4.</span> Responde al cliente</div>
+        <div class="step-desc">Envía la respuesta formateada para WhatsApp</div>
+      </div>
+      <div class="flow-step inactive" id="step-lead">
+        <div class="step-title"><span class="step-num">5.</span> Notifica leads</div>
+        <div class="step-desc">Si captura un lead, te avisa a vos por WhatsApp</div>
+      </div>
+    </div>
+    <div class="legend">
+      <span>Verde</span> = paso activo<br>
+      La IA solo se consulta cuando es necesario (síntomas, planes, ROI, chat libre).
+      El menú y catálogo son respuestas pre-programadas (más rápido y sin costo de API).
+    </div>
+  </div>
+</div>
+
+<script>
+const SCENARIOS = {
+  menu: {
+    quick: ["Hola 👋", "1", "2", "3", "4", "5"],
+    messages: [
+      { role:"bot", text:`🌿 *POWERVITA FuXion* — Vita Advisor IA\n\nHola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?\n\n1️⃣  Ver catálogo de productos\n2️⃣  Analizar mis síntomas (IA te recomienda)\n3️⃣  Plan nutricional personalizado\n4️⃣  Info sobre el negocio / ROI\n5️⃣  Hablar con un asesor humano\n\nRespondé el *número* o escribime directamente tu consulta. 💬` }
+    ]
+  },
+  sintomas: {
+    quick: ["me siento cansada y con mala digestión", "quiero bajar de peso", "tengo mucho estrés"],
+    messages: [
+      { role:"user", text:"2" },
+      { role:"bot", text:`🔬 *Analizador de Síntomas IA*\n\nContame cómo te sentís. Podés describir:\n• Síntomas físicos (cansancio, inflamación, peso, etc.)\n• Tu objetivo de salud\n• Tu estilo de vida\n\nEscribilo con tus palabras y la IA te recomendará los productos ideales. 👇` },
+      { role:"user", text:"me siento muy cansada, con panza inflada y no puedo bajar de peso" },
+      { role:"typing" },
+      { role:"bot", text:`🔬 *Análisis completado*\n\n*Diagnóstico:* Tus síntomas apuntan a un metabolismo lento combinado con desequilibrio en la microbiota intestinal.\n\n✅ *Productos recomendados:*\n\n🌿 *Reset* — Activa la depuración hepática y reactiva tu metabolismo. Ideal como primer paso.\n\n🫧 *Flora Liv* — Regenera tu microbiota. La panza inflada mejora notablemente en 10-14 días.\n\n🔥 *Thermo T3* — Acelera la termogénesis para transformar grasa en energía de forma natural.\n\n💪 _Combinados forman el Transform Kit, el más elegido para tu objetivo._\n\n¿Querés que te arme un plan de 60 días con estos productos? ✨` }
+    ]
+  },
+  producto: {
+    quick: ["Vita Xtra T+", "Thermo T3", "No Stress", "Reset"],
+    messages: [
+      { role:"user", text:"Vita Xtra T+" },
+      { role:"bot", text:`🌟 *Vita Xtra T+*\n_Línea Energy — Elimina la fatiga_\n\n📝 Energizante concentrado con guayusa, ginseng y micelio de cordyceps para eliminar la fatiga física y mental.\n\n✅ *Beneficios:*\n• Energía sostenida todo el día\n• Alto poder antioxidante\n• Elimina fatiga física y mental\n\n🌱 *Ingredientes:*\nGuayusa · Ginseng · Cordyceps · Açaí · Maca\n\n¿Querés saber si este producto es ideal para vos? Escribime tus síntomas o consultá con nuestro asesor. 💬` }
+    ]
+  },
+  negocio: {
+    quick: ["quiero saber del negocio", "¿cuánto se gana?", "¿cómo me registro?"],
+    messages: [
+      { role:"user", text:"4" },
+      { role:"bot", text:`💰 *Oportunidad de Negocio FuXion*\n\n¿Desde qué país te interesa emprender? Escribí tu país y te genero una proyección de ingresos personalizada con IA. 🌎\n\n_(Ej: Argentina, México, Colombia, España...)_` },
+      { role:"user", text:"Argentina" },
+      { role:"typing" },
+      { role:"bot", text:`💰 *Proyección de Ingresos — Argentina*\n\n*Modelo:* Distribución directa FuXion. Sin jefe, sin horarios, desde cualquier lugar.\n\n📈 *Ingresos estimados:*\n\n🌱 *Mes 1-3:* $200–$500 USD\n_Base de clientes inicial, aprendiendo el sistema_\n\n⚡ *Mes 4-6:* $600–$1,500 USD\n_Equipo en formación, ventas recurrentes_\n\n🚀 *Mes 7-12:* $2,000–$6,000+ USD\n_Red consolidada en múltiples países_\n\n✅ *3 ventajas clave:*\n1. Productos en 37 países — tu mercado es global\n2. Sin inversión inicial mínima obligatoria\n3. Soporte y capacitación constante del equipo\n\n👇 Para registrarte y empezar:\nhttps://ifuxion.com/andresvarela/enrollment/chooseperson\n\n¿Querés que un asesor te explique el plan de compensación completo? 📞` }
+    ]
+  },
+  lead: {
+    quick: ["5", "quiero hablar con un asesor", "me interesa"],
+    messages: [
+      { role:"user", text:"5" },
+      { role:"bot", text:`👋 ¡Con gusto te conectamos con un asesor!\n\nPrimero necesito algunos datos rápidos para que el asesor pueda ayudarte mejor.\n\n📝 ¿Cuál es tu nombre?` },
+      { role:"user", text:"María González" },
+      { role:"bot", text:"🌎 ¿Desde qué país nos escribís?" },
+      { role:"user", text:"Colombia" },
+      { role:"bot", text:`🎯 ¿Qué te interesa más?\n1. Mejorar mi salud\n2. Perder peso\n3. Más energía\n4. El negocio FuXion\n\nRespondé el número o describilo con tus palabras.` },
+      { role:"user", text:"2" },
+      { role:"bot", text:"📱 ¿Cuál es tu número de teléfono? (para que un asesor se contacte contigo)" },
+      { role:"user", text:"+57 300 123 4567" },
+      { role:"bot", text:`✅ ¡Perfecto, María!\n\nRecibimos tus datos. Un asesor de POWERVITA se va a contactar contigo muy pronto. 🌿\n\nMientras tanto, podés explorar nuestro catálogo en:\n👉 https://powervita.vercel.app\n\n🌿 *POWERVITA FuXion* — Vita Advisor IA\n\n¿En qué más puedo ayudarte?\n1️⃣ Ver catálogo · 2️⃣ Síntomas · 3️⃣ Plan nutricional` },
+      { role:"notify", text:`🔔 *[Notificación a vos — el dueño]*\n\n👤 María González\n🌎 Colombia\n🎯 Perder peso\n📱 +57 300 123 4567\n\n_Lead captado por Vita Advisor Bot_ 🌿` }
+    ]
+  }
+};
+
+let currentScenario = 'menu';
+let msgQueue = [];
+let isPlaying = false;
+
+function loadScenario(name) {
+  currentScenario = name;
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const chatArea = document.getElementById('chatArea');
+  chatArea.innerHTML = '';
+  msgQueue = [];
+  isPlaying = false;
+
+  resetFlow();
+
+  const sc = SCENARIOS[name];
+
+  // Quick reply buttons
+  const qb = document.getElementById('quickBtns');
+  qb.innerHTML = sc.quick.map(q => `<button class="quick-btn" onclick="sendQuick('${q.replace(/'/g,"\\'")}')">💬 ${q}</button>`).join('');
+
+  // Play messages with delays
+  playMessages(sc.messages, 0);
+}
+
+function playMessages(messages, index) {
+  if (index >= messages.length) return;
+  const m = messages[index];
+
+  if (m.role === 'typing') {
+    addTyping();
+    setTimeout(() => {
+      removeTyping();
+      playMessages(messages, index + 1);
+    }, 2000);
+    return;
+  }
+
+  if (m.role === 'notify') {
+    setTimeout(() => {
+      addNotify(m.text);
+      playMessages(messages, index + 1);
+    }, 600);
+    return;
+  }
+
+  setTimeout(() => {
+    addMsg(m.role, m.text);
+    activateFlow(m.role, index, messages.length);
+    playMessages(messages, index + 1);
+  }, index === 0 ? 400 : 800);
+}
+
+function addMsg(role, text) {
+  const chatArea = document.getElementById('chatArea');
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = `bubble ${role}`;
+  bubble.innerHTML = formatMsg(text) + `<div class="msg-time">${getTime()}</div>`;
+  row.appendChild(bubble);
+  chatArea.appendChild(row);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function addTyping() {
+  const chatArea = document.getElementById('chatArea');
+  const row = document.createElement('div');
+  row.className = 'msg-row bot';
+  row.id = 'typingIndicator';
+  row.innerHTML = `<div class="bubble bot typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  chatArea.appendChild(row);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  activateFlow('typing');
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function addNotify(text) {
+  const chatArea = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.style.cssText = 'background:#005c4b;border:1px solid #00a884;border-radius:10px;padding:10px 14px;margin:8px 4px;font-size:11px;color:#e9edef;line-height:1.6;';
+  div.innerHTML = `<div style="color:#00a884;font-weight:700;font-size:10px;margin-bottom:4px;">📲 NOTIFICACIÓN AUTOMÁTICA → Tu WhatsApp</div>` + formatMsg(text);
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  activateFlow('lead_notify');
+}
+
+function formatMsg(text) {
+  return text
+    .replace(/\*([^*]+)\*/g, '<b>$1</b>')
+    .replace(/_([^_]+)_/g, '<i>$1</i>')
+    .replace(/\n/g, '<br>');
+}
+
+function getTime() {
+  const now = new Date();
+  return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+
+function sendQuick(text) {
+  addMsg('user', text);
+  document.getElementById('userInput').value = '';
+}
+
+function sendMsg() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMsg('user', text);
+  input.value = '';
+
+  // Simulate bot thinking
+  setTimeout(() => addTyping(), 300);
+  setTimeout(() => {
+    removeTyping();
+    addMsg('bot', '¡Entendido! En el bot real, Claude IA analiza tu mensaje y responde con el contexto completo de FuXion. 🌿\n\nProbá los botones de escenario arriba para ver ejemplos reales de conversación.');
+  }, 2000);
+}
+
+function resetFlow() {
+  ['step-recibe','step-analiza','step-claude','step-responde','step-lead'].forEach(id => {
+    document.getElementById(id).classList.add('inactive');
+  });
+  document.getElementById('step-recibe').classList.remove('inactive');
+}
+
+function activateFlow(role, index, total) {
+  const steps = ['step-recibe','step-analiza','step-claude','step-responde','step-lead'];
+
+  if (role === 'typing') {
+    steps.slice(0,3).forEach(id => document.getElementById(id).classList.remove('inactive'));
+  } else if (role === 'bot') {
+    steps.slice(0,4).forEach(id => document.getElementById(id).classList.remove('inactive'));
+  } else if (role === 'lead_notify') {
+    steps.forEach(id => document.getElementById(id).classList.remove('inactive'));
+  } else if (role === 'user') {
+    resetFlow();
+    setTimeout(() => document.getElementById('step-analiza').classList.remove('inactive'), 300);
+  }
+}
+
+// Load default scenario
+setTimeout(() => loadScenario('menu'), 100);
+</script>
+</body>
+</html>
