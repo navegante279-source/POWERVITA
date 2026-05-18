@@ -13,23 +13,9 @@
  */
 
 // ---------------------------------------------------------------------------
-// Lazy client initializers
+// Lazy client getters (dynamic import to support ES module tree-shaking)
 // ---------------------------------------------------------------------------
 
-let _supabase = null;
-function getSupabase() {
-  if (!_supabase) {
-    const { createClient } = await_import_supabase();
-    _supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY
-    );
-  }
-  return _supabase;
-}
-
-// We can't use top-level await in a lazy function — use a sync factory pattern.
-// We import at first use via a module-level promise cache instead.
 let _supabaseClientPromise = null;
 function getSupabaseClient() {
   if (!_supabaseClientPromise) {
