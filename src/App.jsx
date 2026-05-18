@@ -88,14 +88,6 @@ function waHref(phone, text) {
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
 }
 
-// ── META PIXEL ────────────────────────────────────────────────────────────────
-function TrackingPixels() {
-  useEffect(() => {
-    (function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)})(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
-    window.fbq("init", META_PIXEL_ID); window.fbq("track", "PageView");
-  }, []);
-  return null;
-}
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
 function Toast() {
@@ -851,7 +843,6 @@ export default function App() {
   return (
     <LangCtx.Provider value={T}>
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
-      <TrackingPixels/>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
