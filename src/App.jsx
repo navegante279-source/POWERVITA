@@ -145,7 +145,7 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
         <div style={{marginBottom:10}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:800,color:"#2d6a4f",letterSpacing:1.5,marginBottom:5}}>📅 7 DÍAS</div><div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:3}}>{plan.dias?.map((d,i)=><div key={i} style={{minWidth:95,background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:8,padding:"6px",flexShrink:0}}><div style={{fontFamily:"'Inter',sans-serif",fontWeight:700,color:"#2d6a4f",fontSize:11,textAlign:"center",background:"rgba(45,106,79,0.07)",borderRadius:4,padding:"1px 0",marginBottom:3}}>{d.dia}</div>{[{k:"desayuno",i:"🌅"},{k:"almuerzo",i:"☀️"},{k:"cena",i:"🌙"},{k:"snack",i:"🍎"}].map(({k,i:ic})=><div key={k} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#4a5568",marginBottom:2}}>{ic} {d[k]}</div>)}</div>)}</div></div>
         {plan.tips && <div style={{marginBottom:12}}>{plan.tips.map((t,i)=><div key={i} style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#2d5a3d",padding:"2px 0",display:"flex",gap:5}}><span style={{color:"#C9A84C"}}>✓</span>{t}</div>)}</div>}
         <div style={{display:"flex",gap:7}}>
-          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
+          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"NutriPlan_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
           <button onClick={()=>setPlan(null)} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.nutriNew}</button>
         </div>
       </div>
@@ -195,7 +195,7 @@ function SymptomAnalyzer() {
       <div style={{marginBottom:8}}>{result.productos?.map((p,i)=><div key={i} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:9,padding:"7px 9px",marginBottom:4}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,color:"#1a2e1a",fontSize:11}}>{p.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",background:"#2d6a4f",color:"#fff",borderRadius:999,padding:"1px 6px",fontSize:11,fontWeight:700}}>{p.match}%</span></div><div style={{height:3,background:"rgba(45,106,79,0.1)",borderRadius:2,marginBottom:3}}><div style={{height:"100%",width:`${p.match}%`,background:"linear-gradient(90deg,#2d6a4f,#C9A84C)",borderRadius:2}}/></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{p.razon}</p></div>)}</div>
       <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"8px 10px",marginBottom:10}}><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,color:"#8B6914",fontStyle:"italic"}}>{result.mensaje_motivador}</p></div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
+        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Symptom_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
         <button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.symptomNew}</button>
       </div>
     </div>
@@ -240,7 +240,7 @@ SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max
       <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"7px 9px",marginBottom:8}}><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{result.ventaja_pais}</p></div>
       <div style={{marginBottom:9}}>{result.estrategia?.map((s,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:4}}><div style={{width:15,height:15,borderRadius:"50%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:900,flexShrink:0,color:"#1a1a1a"}}>{i+1}</div><span style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{s}</span></div>)}</div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, `¡Hola! Calculé mi potencial desde ${form.country} con Power Vita IA 💰 Quiero ser socio.`)} target="_blank" rel="noreferrer" style={{flex:1,background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>👑 Quiero ser socio</a>
+        <a href={waHref(WA, `¡Hola! Calculé mi potencial desde ${form.country} con Power Vita IA 💰 Quiero ser socio.`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"ROI_Socio_WA"})} style={{flex:1,background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>👑 Quiero ser socio</a>
         <button onClick={()=>{setResult(null);setForm({country:"",hours:"",contacts:"",experience:""}); }} style={{flex:1,background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",color:"rgba(255,255,255,0.95)",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Recalcular</button>
       </div>
     </div>
@@ -379,7 +379,7 @@ function AntesDespues() {
           {metrics.map(key=>{const val=showAfter?c.after[key]:c.before[key];return(<div key={key} style={{background:showAfter?`${color}07`:"rgba(229,57,53,0.04)",border:`1px solid ${showAfter?color+"18":"rgba(229,57,53,0.1)"}`,borderRadius:8,padding:"7px 9px",transition:"all .3s"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",marginBottom:2}}>{key}</div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:showAfter?color:"#e53e3e"}}>{val}</div>{showAfter&&<div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366",marginTop:1}}>{c.diff[key]}</div>}</div>);})}
         </div>
         <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 9px",marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:16,color:"#C9A84C",lineHeight:0.8,marginBottom:3}}>"</div><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.6}}>{c.quote}</p></div>
-        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`)} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
+        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"AntesDespues_WA"})} style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
       </div>
     </div>
   );
@@ -856,7 +856,7 @@ export default function App() {
           <button onClick={()=>setLang(l=>l==="es"?"en":l==="en"?"pt":"es")} className="int" style={{background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",padding:"6px 12px",borderRadius:999,fontSize:11,fontWeight:700,cursor:"pointer"}}>
             {lang==="es"?"🌐 ES":lang==="en"?"🌐 EN":"🌐 PT"}
           </button>
-          <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"#1a2e1a",color:"#fff",padding:"8px 18px",borderRadius:100,fontSize:12,fontWeight:600,textDecoration:"none",marginLeft:4}}>{T.navCta}</a>
+          <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Nav_CTA"})} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"8px 18px",borderRadius:100,fontSize:12,fontWeight:600,textDecoration:"none",marginLeft:4}}>{T.navCta}</a>
         </div>
       </nav>
 
@@ -876,7 +876,7 @@ export default function App() {
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
             <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
-            <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
+            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
           </div>
           <div style={{display:"flex",gap:40,justifyContent:"center"}}>
             {T.heroStats.map(([n,l])=>(
@@ -925,7 +925,7 @@ export default function App() {
                     <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                   <div style={{display:"flex",gap:7,marginTop:"auto"}}>
-                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta1}</a>
+                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta1}</a>
                     <button onClick={()=>{trackEvent("Purchase",{content_name:p.title,content_type:"product",currency:"USD"});setPackModal(p.title);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.stepCta2}</button>
                   </div>
                 </div>
@@ -952,7 +952,7 @@ export default function App() {
                 <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
                 <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
                 <div style={{display:"flex",gap:8}}>
-                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta1}</a>
+                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta1}</a>
                   <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});setPackModal(pack.name);}} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.packCta2}</button>
                 </div>
               </div>
@@ -985,7 +985,7 @@ export default function App() {
                       <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a"}}>{p.name}</div>
                       <p className="int" style={{fontSize:10,color:"#7a9a7a",lineHeight:1.5,flex:1}}>{p.desc}</p>
                       <div style={{display:"flex",gap:5,marginTop:6}}>
-                        <a href={waHref(WA, `Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>{T.catalogPriceCta}</a>
+                        <a href={waHref(WA, `Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${p.name}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>{T.catalogPriceCta}</a>
                         <button onClick={()=>{trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"});setPackModal(p.name);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,cursor:"pointer"}}>{T.catalogBuyCta}</button>
                       </div>
                     </div>
@@ -1198,7 +1198,7 @@ export default function App() {
             {T.faqQA.map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
           </div>
           <div style={{textAlign:"center",marginTop:36}}>
-            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")} target="_blank" rel="noreferrer" className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
+            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FAQ_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
           </div>
         </div>
       </section>
@@ -1223,7 +1223,7 @@ export default function App() {
         </div>
         <div className="int" style={{color:"rgba(255,255,255,0.32)",fontSize:10,marginBottom:20}}>{T.footerSub}</div>
         <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
-          <a href={waLink} target="_blank" rel="noreferrer" className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
+          <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Footer_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
           <a href={FUXION_LINK} target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>🌐 FuXion Store</a>
         </div>
@@ -1238,11 +1238,11 @@ export default function App() {
             <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{packModal}</h3>
             <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>{T.modalSub}</p>
             <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
-              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
+              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>{trackEvent("InitiateCheckout",{content_name:"Modal_Cliente"});setPackModal(null);}} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
                 {T.modalOpt1}
                 <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>{T.modalOpt1Sub}</div>
               </a>
-              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
+              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>{trackEvent("InitiateCheckout",{content_name:"Modal_Emprendedor"});setPackModal(null);}} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
                 {T.modalOpt2}
                 <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:2}}>{T.modalOpt2Sub}</div>
               </a>
@@ -1253,8 +1253,8 @@ export default function App() {
       )}
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
-      <a href={waLink} target="_blank" rel="noreferrer" title="WhatsApp" style={{position:"fixed",bottom:80,right:20,zIndex:249,width:48,height:48,borderRadius:"50%",background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,boxShadow:"0 7px 20px rgba(37,211,102,0.42)",textDecoration:"none"}}>💬</a>
-      <button onClick={()=>setChatOpen(o=>!o)} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
+      <a href={waLink} target="_blank" rel="noreferrer" title="WhatsApp" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Bubble"})} style={{position:"fixed",bottom:80,right:20,zIndex:249,width:48,height:48,borderRadius:"50%",background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,boxShadow:"0 7px 20px rgba(37,211,102,0.42)",textDecoration:"none"}}>💬</a>
+      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
     </div>
