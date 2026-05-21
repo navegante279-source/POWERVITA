@@ -818,7 +818,7 @@ export default function App() {
   const [selCountry]=useState(detectCountry); const [prodLine,setProdLine]=useState(0);
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
-  const [modalProduct,setModalProduct]=useState(null); const [catalogOpen,setCatalogOpen]=useState(false);
+  const [modalProduct,setModalProduct]=useState(null); const [catalogOpen,setCatalogOpen]=useState(true);
   const [lang,setLang]=useState("es");
   const T=TRANSLATIONS[lang];
 
