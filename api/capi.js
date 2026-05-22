@@ -22,10 +22,13 @@ export default async function handler(req, res) {
   const normalized = phone.replace(/\D/g, "");
   const hashed = crypto.createHash("sha256").update(normalized).digest("hex");
 
+  const eventId = `Purchase_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
+
   const payload = {
     data: [{
       event_name: "Purchase",
       event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
       action_source: "other",
       user_data: { ph: [hashed] },
       custom_data: {
