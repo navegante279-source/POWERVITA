@@ -42,6 +42,7 @@ export default async function handler(req, res) {
       },
     }],
     access_token: process.env.META_CAPI_TOKEN,
+    test_event_code: "TEST90705",
   };
 
   try {
