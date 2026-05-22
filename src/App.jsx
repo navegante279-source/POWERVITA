@@ -103,7 +103,8 @@ function detectCountry() {
   if (tz.includes("Santiago"))   return "Chile";
   return "";
 }
-function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p); }
+function eventId(name) { return `${name}_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; }
+function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p, { eventID: eventId(n) }); }
 function waHref(phone, text) {
   const msg = encodeURIComponent(text);
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"")
