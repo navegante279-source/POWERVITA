@@ -9,8 +9,10 @@ export default async function handler(req, res) {
 
   const { phone, product, country, password } = req.body || {};
 
-  if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD)
-    return res.status(401).json({ error: "Contraseña incorrecta" });
+  if (!process.env.ADMIN_PASSWORD)
+    return res.status(401).json({ error: "ADMIN_PASSWORD no está configurada en Vercel. Agregala en Settings → Environment Variables y redeployá." });
+  if (password !== process.env.ADMIN_PASSWORD)
+    return res.status(401).json({ error: "Contraseña incorrecta. Verificá que coincida exactamente con ADMIN_PASSWORD en Vercel." });
 
   if (!phone || !product)
     return res.status(400).json({ error: "Teléfono y producto son obligatorios" });
