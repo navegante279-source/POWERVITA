@@ -822,6 +822,8 @@ export default function App() {
   const [modalProduct,setModalProduct]=useState(null); const [catalogOpen,setCatalogOpen]=useState(true);
   const [lang,setLang]=useState("es");
   const T=TRANSLATIONS[lang];
+  const adVariant = new URLSearchParams(window.location.search).get('v') || '';
+  const isHinchazion = adVariant === 'hinchazion';
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
@@ -848,7 +850,6 @@ export default function App() {
     <LangCtx.Provider value={T}>
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
         html{scroll-behavior:smooth}
         .pf{font-family:'Playfair Display',Georgia,serif}
@@ -886,13 +887,13 @@ export default function App() {
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:640}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22}}>
-            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.heroBadge}</span>
+            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}</span>
           </div>
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
-            {T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}
+            {isHinchazion ? <>¿Sufrís de <em style={{fontStyle:"italic",color:"#2d6a4f"}}>hinchazón</em> o pesadez después de comer?</> : <>{T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}</>}
           </h1>
           <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:460,margin:"0 auto 36px",fontWeight:300}}>
-            {T.heroSub}
+            {isHinchazion ? "No es lo que comés — es lo que tu cuerpo no puede procesar. FuXion tiene la solución natural certificada en 37 países." : T.heroSub}
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
             <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
@@ -961,8 +962,7 @@ export default function App() {
                     <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                   <div style={{display:"flex",gap:7,marginTop:"auto"}}>
-                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta1}</a>
-                    <a href={waHref(WA, `Hola! Me interesa el ${p.title} de Power Vita FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Pack_${p.title}`})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta2}</a>
+                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                   </div>
                 </div>
               </div>
@@ -988,8 +988,7 @@ export default function App() {
                 <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
                 <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
                 <div style={{display:"flex",gap:8}}>
-                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta1}</a>
-                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Pack_${pack.name}`})} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta2}</a>
+                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                 </div>
               </div>
             ))}
@@ -1014,7 +1013,7 @@ export default function App() {
                     {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:16}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 10px"}}>{T.unavailLabel} {selectedCountry}</div><a href={waHref(WA, `Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{marginTop:5,background:"#25D366",color:"#fff",borderRadius:7,padding:"4px 10px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:8,textDecoration:"none"}}>{T.unavailCta}</a></div>}
                     <div style={{background:p.bg,height:100,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
                       <div style={{position:"absolute",top:7,left:7,background:p.color,color:"#fff",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
-                      {p.img?<img src={p.img} alt={p.name} style={{maxHeight:84,maxWidth:"80%",objectFit:"contain",filter:"drop-shadow(0 3px 8px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
+                      {p.img?<img src={p.img} alt={p.name} loading="lazy" style={{maxHeight:84,maxWidth:"80%",objectFit:"contain",filter:"drop-shadow(0 3px 8px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
                       <div style={{display:p.img?"none":"flex",fontSize:36,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
                     </div>
                     <div style={{padding:"10px 11px 11px",flex:1,display:"flex",flexDirection:"column",gap:3}}>
@@ -1057,6 +1056,18 @@ export default function App() {
                 {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>{T.countryEmpty}</p></div>}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LEAD FORM */}
+      <section style={{padding:"60px 40px",background:"#F0F4ED"}}>
+        <div style={{maxWidth:500,margin:"0 auto"}}>
+          <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:22,padding:"38px 34px",boxShadow:"0 12px 44px rgba(45,106,79,0.07)",textAlign:"center"}}>
+            <div style={{fontSize:38,marginBottom:9}}>🎯</div>
+            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>{T.leadTitle}</h2>
+            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>{T.leadSub}</p>
+            <LeadFormInline T={T}/>
           </div>
         </div>
       </section>
@@ -1165,18 +1176,6 @@ export default function App() {
             <div style={{display:"flex",justifyContent:"center",gap:32,flexWrap:"wrap"}}>
               {T.statsItems.map(([v,l])=>(<div key={l}><div className="pf" style={{fontSize:20,fontWeight:700,color:"#C9A84C"}}>{v}</div><div className="int" style={{fontSize:9,color:"#7a9a7a",fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>{l}</div></div>))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* LEAD FORM */}
-      <section style={{padding:"80px 40px",background:"#F0F4ED"}}>
-        <div style={{maxWidth:500,margin:"0 auto"}}>
-          <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:22,padding:"38px 34px",boxShadow:"0 12px 44px rgba(45,106,79,0.07)",textAlign:"center"}}>
-            <div style={{fontSize:38,marginBottom:9}}>🎯</div>
-            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>{T.leadTitle}</h2>
-            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>{T.leadSub}</p>
-            <LeadFormInline T={T}/>
           </div>
         </div>
       </section>
