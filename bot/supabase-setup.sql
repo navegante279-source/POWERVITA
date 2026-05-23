@@ -27,7 +27,19 @@ CREATE TABLE IF NOT EXISTS leads (
 );
 
 -- Índices para consultas rápidas
-CREATE INDEX IF NOT EXISTS idx_leads_country ON leads(country);
-CREATE INDEX IF NOT EXISTS idx_leads_status  ON leads(status);
-CREATE INDEX IF NOT EXISTS idx_leads_updated ON leads(updated_at);
-CREATE INDEX IF NOT EXISTS idx_conv_updated  ON conversations(updated_at);
+CREATE INDEX IF NOT EXISTS idx_leads_country   ON leads(country);
+CREATE INDEX IF NOT EXISTS idx_leads_status    ON leads(status);
+CREATE INDEX IF NOT EXISTS idx_leads_updated   ON leads(updated_at);
+CREATE INDEX IF NOT EXISTS idx_leads_objective ON leads(last_objective);
+CREATE INDEX IF NOT EXISTS idx_conv_updated    ON conversations(updated_at);
+
+-- status posibles en leads:
+-- 'new'              → primer mensaje
+-- 'active'           → conversando
+-- 'followup_1'       → recibió seguimiento 24h
+-- 'followup_2'       → recibió seguimiento 2 días
+-- 'cold'             → recibió los 3 seguimientos, sin respuesta
+-- 'transferred'      → pasado a Andrés (quiere precio/comprar)
+-- 'distributor_lead' → interesado en el negocio
+-- 'opted_out'        → pidió no recibir más mensajes
+-- 'purchased'        → compró (se marca manualmente)

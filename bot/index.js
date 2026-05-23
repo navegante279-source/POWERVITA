@@ -73,6 +73,54 @@ const STOP_REPLIES = {
   de: "Verstanden 😊 Wir werden Ihnen keine Nachrichten mehr senden. Falls Sie sich melden möchten, schreiben Sie uns. Einen schönen Tag! 🌿",
 };
 
+// ── RATE LIMITING (máx 5 mensajes por minuto por usuario) ────
+const rateLimitMap = new Map(); // phone → [timestamps]
+
+function isRateLimited(phone) {
+  const now = Date.now();
+  const window = 60_000; // 1 minuto
+  const limit = 5;
+  const timestamps = (rateLimitMap.get(phone) || []).filter(t => now - t < window);
+  timestamps.push(now);
+  rateLimitMap.set(phone, timestamps);
+  return timestamps.length > limit;
+}
+
+// Limpiar el mapa cada 5 minutos para no acumular memoria
+setInterval(() => rateLimitMap.clear(), 5 * 60_000);
+
+// ── MESSAGE DEDUPLICATION ─────────────────────────────────────
+const processedMessages = new Set(); // message IDs ya procesados
+
+function isDuplicate(msgId) {
+  if (processedMessages.has(msgId)) return true;
+  processedMessages.add(msgId);
+  // Limpiar IDs viejos después de 10 minutos
+  setTimeout(() => processedMessages.delete(msgId), 10 * 60_000);
+  return false;
+}
+
+// ── DISTRIBUTOR DETECTION ─────────────────────────────────────
+const DISTRIBUTOR_KEYWORDS = [
+  // Español
+  "distribuidor", "distribuidora", "vender", "vendo", "negocio", "negocio propio",
+  "ganar dinero", "trabajo", "ingresos", "socio", "socia", "red", "multinivel",
+  "emprender", "empresa", "comisión", "comision", "unirme", "unirte", "equipo",
+  "cómo funciona el negocio", "como funciona el negocio", "quiero vender",
+  "ser distribuidor", "oportunidad de negocio",
+  // Portugués
+  "distribuidor", "vender", "negócio", "ganhar dinheiro", "renda", "parceiro",
+  "empreender", "comissão", "quero vender",
+  // Inglés
+  "distributor", "sell", "business", "earn money", "income", "partner",
+  "join", "opportunity", "network", "commission", "entrepreneur",
+];
+
+function isDistributorInquiry(text) {
+  const normalized = text.toLowerCase();
+  return DISTRIBUTOR_KEYWORDS.some(kw => normalized.includes(kw));
+}
+
 // ── WEBHOOK SIGNATURE VERIFICATION ───────────────────────────
 function verifyMetaSignature(req) {
   if (!WEBHOOK_APP_SECRET) return true; // Skip if secret not configured
@@ -339,6 +387,12 @@ async function handleMessage(phone, text, contactName) {
   try {
     const conv = await getConversation(phone);
 
+    // Rate limit check
+    if (isRateLimited(phone)) {
+      console.warn(`⚡ Rate limited: ${phone}`);
+      return;
+    }
+
     // If already transferred to owner, stay silent
     if (conv?.transferred) return;
 
@@ -384,6 +438,33 @@ async function handleMessage(phone, text, contactName) {
         lang: countryInfo.lang,
         status: "transferred",
       });
+      return;
+    }
+
+    // Distributor detection — transfer immediately with context
+    if (isDistributorInquiry(text) && history.length < 4) {
+      const lang = countryInfo.lang || "es";
+      const distMsgs = {
+        es: `¡Qué buena decisión! 🌟 FuXion es una de las oportunidades de negocio de mayor crecimiento en ${countryInfo.country}.\nTe conecto ahora con ${OWNER_NAME} para que te cuente todo sobre el plan de negocio, los ingresos y cómo empezar 💼`,
+        pt: `Que ótima decisão! 🌟 FuXion é uma das oportunidades de negócio com maior crescimento em ${countryInfo.country}.\nVou te conectar com ${OWNER_NAME} para te contar tudo sobre o plano de negócios 💼`,
+        en: `Great choice! 🌟 FuXion is one of the fastest-growing business opportunities in ${countryInfo.country}.\nLet me connect you with ${OWNER_NAME} to tell you all about the business plan and how to get started 💼`,
+        fr: `Excellent choix! 🌟 FuXion est l'une des opportunités commerciales à la croissance la plus rapide en ${countryInfo.country}.\nJe vous mets en contact avec ${OWNER_NAME} 💼`,
+        it: `Ottima scelta! 🌟 FuXion è una delle opportunità di business in più rapida crescita in ${countryInfo.country}.\nTi metto in contatto con ${OWNER_NAME} 💼`,
+        de: `Tolle Entscheidung! 🌟 FuXion ist eine der am schnellsten wachsenden Geschäftsmöglichkeiten in ${countryInfo.country}.\nIch verbinde Sie jetzt mit ${OWNER_NAME} 💼`,
+      };
+      const msg = distMsgs[lang] || distMsgs.es;
+      await sendWAMessage(phone, msg);
+      const summary = `INTERESADO EN NEGOCIO/DISTRIBUCIÓN\nMensaje: "${text}"\nPaís: ${countryInfo.country}`;
+      await notifyOwner(phone, contactName, summary);
+      await saveConversation(phone, { transferred: true, history, retries });
+      await saveLead(phone, {
+        name: contactName,
+        country: countryInfo.country,
+        lang: countryInfo.lang,
+        status: "distributor_lead",
+        last_objective: "distributor",
+      });
+      console.log(`💼 Distributor lead transferred: ${phone}`);
       return;
     }
 
@@ -555,6 +636,10 @@ app.post("/webhook", async (req, res) => {
 
         for (const msg of messages) {
           if (msg.type !== "text") continue;
+          if (isDuplicate(msg.id)) {
+            console.log(`⏭️ Duplicate message ignored: ${msg.id}`);
+            continue;
+          }
           const phone = msg.from;
           const text = msg.text.body;
           const name = contacts?.[0]?.profile?.name || "";
