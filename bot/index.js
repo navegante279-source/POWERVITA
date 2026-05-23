@@ -381,39 +381,82 @@ async function handleMessage(phone, text, contactName) {
   }
 }
 
-// ── 24H FOLLOW-UP ─────────────────────────────────────────────
+// ── SEGUIMIENTO INTELIGENTE (3 etapas) ───────────────────────
+// Etapa 1: 24hs  → recordatorio suave
+// Etapa 2: 2 días → mensaje de valor + urgencia
+// Etapa 3: 5 días → último intento, puerta abierta
+
+const FOLLOWUP_STAGES = [
+  {
+    stage: 0,
+    hoursAfter: 24,
+    statusRequired: "active",
+    nextStatus: "followup_1",
+    msgs: {
+      es: (name, agent, owner) => `¡Hola${name ? ` ${name}` : ""}! 👋 Soy ${agent} del equipo PowerVita. Solo quería saber si pudiste ver la información que te compartí 😊 Cualquier duda que tengas, estoy aquí para ayudarte. ¡Tu bienestar no puede esperar! 💪`,
+      pt: (name, agent) => `Olá${name ? ` ${name}` : ""}! 👋 Sou ${agent} do time PowerVita. Só queria saber se conseguiu ver as informações 😊 Qualquer dúvida, estou aqui! 💪`,
+      en: (name, agent) => `Hey${name ? ` ${name}` : ""}! 👋 I'm ${agent} from PowerVita. Just checking if you had a chance to look at what I shared 😊 I'm here if you have any questions! 💪`,
+      fr: (name, agent) => `Bonjour${name ? ` ${name}` : ""}! 👋 Je suis ${agent} de PowerVita. Je voulais juste savoir si vous avez pu consulter les infos 😊 Je suis là pour vous aider! 💪`,
+      it: (name, agent) => `Ciao${name ? ` ${name}` : ""}! 👋 Sono ${agent} di PowerVita. Volevo solo controllare se hai visto le informazioni 😊 Sono qui per aiutarti! 💪`,
+      de: (name, agent) => `Hallo${name ? ` ${name}` : ""}! 👋 Ich bin ${agent} von PowerVita. Ich wollte nur fragen, ob Sie die Informationen gesehen haben 😊 Ich helfe Ihnen gerne! 💪`,
+    },
+  },
+  {
+    stage: 1,
+    hoursAfter: 48,
+    statusRequired: "followup_1",
+    nextStatus: "followup_2",
+    msgs: {
+      es: (name, agent, owner, country) => `¡Hola${name ? ` ${name}` : ""}! Soy ${agent} otra vez 😊\nQuiero contarte algo: muchas personas en ${country} que empezaron con FuXion este mes ya están notando cambios en su energía y digestión en menos de 2 semanas 🌿\nEl protocolo que te recomendé está diseñado exactamente para lo que me contaste. ¿Te cuento más o te paso directo con ${owner} para que te dé el precio?`,
+      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""}! Sou ${agent} novamente 😊\nMuitas pessoas em ${country} que começaram com FuXion já estão sentindo a diferença em menos de 2 semanas 🌿\nO protocolo que recomendei é perfeito para o que você me contou. Quer que eu te passe para ${owner} para o preço?`,
+      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""}! It's ${agent} again 😊\nMany people in ${country} who started FuXion this month are already feeling the difference in under 2 weeks 🌿\nThe protocol I recommended is designed exactly for your situation. Want me to connect you with ${owner} for the price?`,
+      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""}! C'est ${agent} encore 😊\nBeaucoup de personnes en ${country} qui ont commencé FuXion ce mois-ci voient déjà des résultats en moins de 2 semaines 🌿\nVoulez-vous que je vous mette en contact avec ${owner} pour le prix?`,
+      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""}! Sono ${agent} di nuovo 😊\nMolte persone in ${country} che hanno iniziato FuXion stanno già notando la differenza in meno di 2 settimane 🌿\nVuoi che ti metta in contatto con ${owner} per il prezzo?`,
+      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""}! Hier ist ${agent} nochmal 😊\nViele Menschen in ${country} die diesen Monat mit FuXion begonnen haben, spüren bereits den Unterschied in weniger als 2 Wochen 🌿\nSoll ich Sie mit ${owner} für den Preis verbinden?`,
+    },
+  },
+  {
+    stage: 2,
+    hoursAfter: 120,
+    statusRequired: "followup_2",
+    nextStatus: "cold",
+    msgs: {
+      es: (name, agent) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte para no molestarte.\nEntiendo que quizás no es el momento ideal, y está perfecto. Cuando estés lista, acá vamos a estar 🌿\nSolo recordarte que el catálogo completo de FuXion está en ${LANDING_URL} para que lo veas cuando quieras. ¡Que tengas un excelente día! ✨`,
+      pt: (name, agent) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nEntendo que talvez não seja o momento certo, tudo bem. Quando estiver pronta, estaremos aqui 🌿\n¡Tenha um ótimo dia! ✨`,
+      en: (name, agent) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me, I don't want to bother you.\nI understand if the timing isn't right, and that's perfectly okay. Whenever you're ready, we'll be here 🌿\nHave a wonderful day! ✨`,
+      fr: (name, agent) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nJe comprends si ce n'est pas le bon moment, c'est tout à fait normal. Quand vous serez prêt(e), nous serons là 🌿 Bonne journée! ✨`,
+      it: (name, agent) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nCapisco se non è il momento giusto, va benissimo. Quando sei pronto/a, saremo qui 🌿 Buona giornata! ✨`,
+      de: (name, agent) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nIch verstehe, wenn es gerade nicht der richtige Zeitpunkt ist. Wenn Sie bereit sind, sind wir hier 🌿 Einen schönen Tag! ✨`,
+    },
+  },
+];
+
 async function runFollowUps() {
   try {
-    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { data: leads, error } = await supabase
-      .from("leads")
-      .select("*")
-      .eq("status", "active")
-      .lt("updated_at", cutoff);
+    for (const stage of FOLLOWUP_STAGES) {
+      const cutoff = new Date(Date.now() - stage.hoursAfter * 60 * 60 * 1000).toISOString();
+      const { data: leads, error } = await supabase
+        .from("leads")
+        .select("*")
+        .eq("status", stage.statusRequired)
+        .lt("updated_at", cutoff);
 
-    if (error) { console.error("Follow-up query error:", error.message); return; }
-    if (!leads?.length) return;
+      if (error) { console.error(`Follow-up stage ${stage.stage} error:`, error.message); continue; }
+      if (!leads?.length) continue;
 
-    for (const lead of leads) {
-      const conv = await getConversation(lead.phone);
-      if (!conv || conv.transferred || conv.purchased) continue;
+      for (const lead of leads) {
+        const conv = await getConversation(lead.phone);
+        if (!conv || conv.transferred || conv.purchased) continue;
 
-      const agentName = getAgentName(lead.phone);
-      const msgs = {
-        pt: `Olá de novo! 👋 Sou ${agentName} do time PowerVita. Só passando para ver se conseguiu revisar as informações 😊 Se quiser saber o preço para o seu país, posso te conectar com ${OWNER_NAME} agora mesmo. Estou aqui! 💪`,
-        en: `Hi again! 👋 I'm ${agentName} from the PowerVita team. Just checking in — if you'd like to know the price for your country, I can connect you with ${OWNER_NAME} right now. I'm here to help! 💪`,
-        fr: `Bonjour encore! 👋 Je suis ${agentName} de l'équipe PowerVita. Si vous souhaitez connaître le prix pour votre pays, je peux vous mettre en contact avec ${OWNER_NAME} maintenant 😊 💪`,
-        it: `Ciao di nuovo! 👋 Sono ${agentName} del team PowerVita. Se vuoi sapere il prezzo per il tuo paese, posso metterti in contatto con ${OWNER_NAME} adesso 😊 💪`,
-        de: `Hallo nochmal! 👋 Ich bin ${agentName} vom PowerVita-Team. Falls Sie den Preis für Ihr Land wissen möchten, verbinde ich Sie jetzt gerne mit ${OWNER_NAME} 😊 💪`,
-        es: `¡Hola de nuevo! 👋 Soy ${agentName} del equipo PowerVita. Solo quería saber si pudiste revisar lo que te compartí 😊 Si querés saber el precio para tu país, te conecto con ${OWNER_NAME} ahora mismo. ¡Estoy aquí! 💪`,
-      };
+        const agentName = getAgentName(lead.phone);
+        const lang = lead.lang || "es";
+        const msgFn = stage.msgs[lang] || stage.msgs.es;
+        const msg = msgFn(lead.name, agentName, OWNER_NAME, lead.country || "tu país");
 
-      const lang = lead.lang || "es";
-      const msg = msgs[lang] || msgs.es;
-
-      await sendWAMessage(lead.phone, msg);
-      await saveLead(lead.phone, { status: "followed_up" });
-      console.log(`📩 Follow-up sent to ${lead.phone}`);
+        await sendWAMessage(lead.phone, msg);
+        await saveLead(lead.phone, { status: stage.nextStatus });
+        console.log(`📩 Follow-up stage ${stage.stage + 1} sent to ${lead.phone}`);
+      }
     }
   } catch (err) {
     console.error("Follow-up error:", err.message);
