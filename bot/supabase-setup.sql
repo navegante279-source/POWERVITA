@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS conversations (
   history         JSONB    DEFAULT '[]',
   transferred     BOOLEAN  DEFAULT FALSE,
   purchased       BOOLEAN  DEFAULT FALSE,
+  opted_out       BOOLEAN  DEFAULT FALSE,
   retries         INTEGER  DEFAULT 0,
   last_message_at TIMESTAMPTZ,
   updated_at      TIMESTAMPTZ DEFAULT NOW()

@@ -8,9 +8,10 @@
 import express from "express";
 import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
+import crypto from "crypto";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 
 // ── ENVIRONMENT ───────────────────────────────────────────────
 const {
@@ -26,6 +27,7 @@ const {
   FUXION_BUY_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson",
   BUSINESS_HOURS_START = "9",
   BUSINESS_HOURS_END = "22",
+  WEBHOOK_APP_SECRET,
   PORT = 3000,
 } = process.env;
 
@@ -39,6 +41,48 @@ const AGENT_NAMES = ["Valeria", "Luna", "Sofía"];
 function getAgentName(phone) {
   const sum = [...phone].reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return AGENT_NAMES[sum % AGENT_NAMES.length];
+}
+
+// ── STOP / OPT-OUT DETECTION ─────────────────────────────────
+const STOP_KEYWORDS = [
+  // Español
+  "stop", "para", "parar", "basta", "detener", "cancelar", "salir",
+  "no quiero mensajes", "no me escribas", "no me contactes", "déjame",
+  "dejame", "no más", "no mas", "quitar", "darme de baja", "baja",
+  // Portugués
+  "sair", "parar", "cancelar", "remover", "não quero", "nao quero",
+  "pare", "não me mande", "nao me mande",
+  // Inglés
+  "unsubscribe", "remove", "quit", "leave me alone", "dont contact",
+  "don't contact", "opt out", "optout", "no more messages",
+  // Francés / Italiano / Alemán
+  "arrêt", "arreter", "désabonner", "basta", "fermare", "stopp", "abmelden",
+];
+
+function isStopMessage(text) {
+  const normalized = text.toLowerCase().trim();
+  return STOP_KEYWORDS.some((kw) => normalized.includes(kw));
+}
+
+const STOP_REPLIES = {
+  es: "Entendido 😊 No te enviaremos más mensajes. Si en algún momento querés retomar, escríbenos y con gusto te atendemos. ¡Que tengas un excelente día! 🌿",
+  pt: "Entendido 😊 Não enviaremos mais mensagens. Se quiser retomar, é só nos escrever. Tenha um ótimo dia! 🌿",
+  en: "Got it 😊 We won't send you any more messages. If you ever want to reconnect, just write to us. Have a great day! 🌿",
+  fr: "Compris 😊 Nous ne vous enverrons plus de messages. Si vous souhaitez reprendre contact, écrivez-nous. Bonne journée! 🌿",
+  it: "Capito 😊 Non ti invieremo altri messaggi. Se vuoi riprendere, scrivici pure. Buona giornata! 🌿",
+  de: "Verstanden 😊 Wir werden Ihnen keine Nachrichten mehr senden. Falls Sie sich melden möchten, schreiben Sie uns. Einen schönen Tag! 🌿",
+};
+
+// ── WEBHOOK SIGNATURE VERIFICATION ───────────────────────────
+function verifyMetaSignature(req) {
+  if (!WEBHOOK_APP_SECRET) return true; // Skip if secret not configured
+  const signature = req.headers["x-hub-signature-256"];
+  if (!signature) return false;
+  const expected = "sha256=" + crypto
+    .createHmac("sha256", WEBHOOK_APP_SECRET)
+    .update(req.rawBody)
+    .digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 }
 
 // ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
@@ -298,6 +342,20 @@ async function handleMessage(phone, text, contactName) {
     // If already transferred to owner, stay silent
     if (conv?.transferred) return;
 
+    // STOP / opt-out detection (before anything else)
+    if (isStopMessage(text)) {
+      const lang = detectCountry(phone).lang || "es";
+      const reply = STOP_REPLIES[lang] || STOP_REPLIES.es;
+      await sendWAMessage(phone, reply);
+      await saveConversation(phone, { opted_out: true, history: conv?.history || [] });
+      await saveLead(phone, { status: "opted_out" });
+      console.log(`🚫 Opt-out: ${phone}`);
+      return;
+    }
+
+    // If already opted out, stay silent
+    if (conv?.opted_out) return;
+
     const agentName = getAgentName(phone);
     const countryInfo = detectCountry(phone);
     let history = conv?.history || [];
@@ -446,7 +504,7 @@ async function runFollowUps() {
 
       for (const lead of leads) {
         const conv = await getConversation(lead.phone);
-        if (!conv || conv.transferred || conv.purchased) continue;
+        if (!conv || conv.transferred || conv.purchased || conv.opted_out) continue;
 
         const agentName = getAgentName(lead.phone);
         const lang = lead.lang || "es";
@@ -478,6 +536,12 @@ app.get("/webhook", (req, res) => {
 
 // Incoming messages
 app.post("/webhook", async (req, res) => {
+  // Verify the request is genuinely from Meta
+  if (!verifyMetaSignature(req)) {
+    console.warn("⚠️ Invalid webhook signature — request rejected");
+    return res.sendStatus(403);
+  }
+
   res.sendStatus(200); // Respond to Meta immediately
 
   try {
