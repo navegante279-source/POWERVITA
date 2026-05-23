@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).end();
 
-  const { phone, product, country, password } = req.body || {};
+  const { phone, product, country, price, currency, password } = req.body || {};
 
   if (!process.env.ADMIN_PASSWORD)
     return res.status(401).json({ error: "ADMIN_PASSWORD no está configurada en Vercel. Agregala en Settings → Environment Variables y redeployá." });
@@ -32,13 +32,15 @@ export default async function handler(req, res) {
       event_time: Math.floor(Date.now() / 1000),
       event_id: eventId,
       action_source: "other",
-      user_data: { ph: [hashed] },
+      user_data: {
+        ph: [hashed],
+        ...(country && { country: [crypto.createHash("sha256").update(country.toLowerCase()).digest("hex")] }),
+      },
       custom_data: {
         content_name: product,
         content_type: "product",
-        currency: "USD",
-        value: 1,
-        ...(country && { country }),
+        currency: currency || "USD",
+        value: price || 0,
       },
     }],
     access_token: process.env.META_CAPI_TOKEN,

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
   <title>Power Vita · Admin</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -108,6 +109,22 @@
     <option>El Salvador</option><option>Nicaragua</option><option>Otro</option>
   </select>
 
+  <label>Precio cobrado</label>
+  <input type="number" id="price" placeholder="Ej: 3500" min="0" step="any"/>
+
+  <label>Moneda</label>
+  <select id="currency">
+    <option value="ARS">ARS — Peso argentino</option>
+    <option value="COP">COP — Peso colombiano</option>
+    <option value="UYU">UYU — Peso uruguayo</option>
+    <option value="USD">USD — Dólar</option>
+    <option value="MXN">MXN — Peso mexicano</option>
+    <option value="CLP">CLP — Peso chileno</option>
+    <option value="PEN">PEN — Sol peruano</option>
+    <option value="BRL">BRL — Real brasileño</option>
+    <option value="EUR">EUR — Euro</option>
+  </select>
+
   <button class="btn" id="submitBtn" onclick="submit()">✅ Marcar como Cliente</button>
   <div class="msg" id="mainMsg"></div>
 
@@ -145,14 +162,16 @@
   }
 
   async function submit() {
-    const phone   = document.getElementById("phone").value.trim();
-    const product = document.getElementById("product").value;
-    const country = document.getElementById("country").value;
+    const phone    = document.getElementById("phone").value.trim();
+    const product  = document.getElementById("product").value;
+    const country  = document.getElementById("country").value;
+    const price    = parseFloat(document.getElementById("price").value) || 0;
+    const currency = document.getElementById("currency").value;
     const password = localStorage.getItem(STORAGE_KEY);
     const btn = document.getElementById("submitBtn");
 
-    if (!phone || !product) {
-      showMsg("mainMsg", "⚠️ Teléfono y producto son obligatorios", "err");
+    if (!phone || !product || !price) {
+      showMsg("mainMsg", "⚠️ Teléfono, producto y precio son obligatorios", "err");
       return;
     }
 
@@ -164,7 +183,7 @@
       const res = await fetch("/api/capi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, product, country, password }),
+        body: JSON.stringify({ phone, product, country, price, currency, password }),
       });
       const data = await res.json();
 
@@ -181,12 +200,13 @@
       showMsg("mainMsg", "✅ Cliente registrado en Meta CAPI correctamente", "ok");
 
       // Add to session history
-      history.unshift({ phone: phone.slice(-4), product, country, time: new Date().toLocaleTimeString("es", {hour:"2-digit",minute:"2-digit"}) });
+      history.unshift({ phone: phone.slice(-4), product, country, price, currency, time: new Date().toLocaleTimeString("es", {hour:"2-digit",minute:"2-digit"}) });
       renderHistory();
 
       // Reset fields
       document.getElementById("phone").value = "";
       document.getElementById("product").value = "";
+      document.getElementById("price").value = "";
 
     } catch (e) {
       showMsg("mainMsg", "❌ Error de red: " + e.message, "err");
@@ -204,7 +224,7 @@
       <div class="hist-item">
         <div>
           <div class="hist-name">···${h.phone}</div>
-          <div class="hist-prod">${h.product}${h.country ? " · " + h.country : ""}</div>
+          <div class="hist-prod">${h.product}${h.country ? " · " + h.country : ""}${h.price ? " · " + h.currency + " " + h.price.toLocaleString() : ""}</div>
         </div>
         <div class="hist-time">${h.time}</div>
       </div>
