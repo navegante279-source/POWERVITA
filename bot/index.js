@@ -23,6 +23,7 @@ const {
   OWNER_PHONE = "59898950206",
   OWNER_NAME = "Andrés",
   LANDING_URL = "https://powervita.vercel.app/",
+  FUXION_BUY_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson",
   BUSINESS_HOURS_START = "9",
   BUSINESS_HOURS_END = "22",
   PORT = 3000,
@@ -38,6 +39,23 @@ const AGENT_NAMES = ["Valeria", "Luna", "Sofía"];
 function getAgentName(phone) {
   const sum = [...phone].reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return AGENT_NAMES[sum % AGENT_NAMES.length];
+}
+
+// ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
+const COUNTRY_UNAVAILABLE = {
+  "Uruguay":        ["Pre Sport", "Xpeed", "Alpha Balance", "Rexet"],
+  "Argentina":      ["Prunex 1", "Xpeed"],
+  "Colombia":       ["Prunex 1", "Pre Sport"],
+  "México":         ["Prunex 1"],
+  "España":         ["Prunex 1", "Pre Sport"],
+  "Brasil":         ["Prunex 1"],
+  "Chile":          ["Prunex 1"],
+  "Perú":           [],
+  "Estados Unidos": ["Prunex 1"],
+};
+
+function getUnavailableProducts(country) {
+  return COUNTRY_UNAVAILABLE[country] || [];
 }
 
 // ── COUNTRY DETECTION BY PHONE PREFIX ────────────────────────
@@ -119,32 +137,38 @@ function buildSystemPrompt(phone, agentName, countryInfo) {
   const { country, lang } = countryInfo;
   const langInstruction = LANG_INSTRUCTIONS[lang] || "Respond in the same language the client uses.";
   const inHours = isBusinessHours();
+  const unavailable = getUnavailableProducts(country);
+  const unavailableText = unavailable.length
+    ? `PRODUCTOS NO DISPONIBLES EN ${country.toUpperCase()}: ${unavailable.join(", ")} — NUNCA los recomiendes a este cliente.`
+    : `Todos los productos están disponibles en ${country}.`;
 
   return `Eres ${agentName}, asesora de bienestar del equipo PowerVita FuXion. Nunca menciones proactivamente que eres IA o bot.
 
 IDIOMA: ${langInstruction}
 PAÍS DEL CLIENTE: ${country}
-HORARIO LABORAL ACTIVO: ${inHours ? "SÍ" : "NO — menciona que ${OWNER_NAME} atiende de 9am a 10pm"}
+HORARIO LABORAL ACTIVO: ${inHours ? "SÍ" : `NO — si el cliente pide precio o quiere comprar, indica que ${OWNER_NAME} atiende de 9am a 10pm`}
+
+${unavailableText}
 
 TU MISIÓN:
-Identificar el objetivo de salud del cliente → recomendar el pack FuXion ideal (3 o 5 productos) → dirigir a ${LANDING_URL} para ver precios y comprar.
+Identificar el objetivo de salud del cliente → recomendar el pack FuXion ideal (3 o 5 productos disponibles en su país) → conseguir que contacte a ${OWNER_NAME} para el precio y la compra.
 
 ESTILO: Cálida, cercana, como una amiga que entiende de salud y bienestar. Máximo 3 párrafos por respuesta. Emojis con moderación.
 
 REGLAS CRÍTICAS:
-- NUNCA menciones precios (varían por país y se actualizan en la web)
-- SIEMPRE dirige a ${LANDING_URL} para precios y pedidos
-- Si preguntan si eres bot/IA/real: responde cálidamente que eres parte del equipo y añade [TRANSFER_NEEDED] al final
+- NUNCA menciones precios (varían por país, los maneja ${OWNER_NAME} directamente)
+- La landing ${LANDING_URL} muestra el catálogo de productos, NO los precios
+- Para precio y compra: siempre decir "Andrés te da el precio para ${country} ahora mismo" y añadir [TRANSFER_NEEDED]
+- Si preguntan si eres bot/IA/real: responde cálidamente que eres parte del equipo y añade [TRANSFER_NEEDED]
 - Si piden hablar con una persona: responde que los conectas y añade [TRANSFER_NEEDED]
 - Si no entiendes el mensaje 2 veces seguidas: añade [TRANSFER_NEEDED]
-- Si ${!inHours}: menciona el horario de atención (9am-10pm) para atención de ${OWNER_NAME}
 
-FLUJO IDEAL (guía la conversación por estos pasos):
+FLUJO IDEAL:
 1. BIENVENIDA: Saludo cálido + mención breve de privacidad + pregunta sobre su objetivo principal
 2. PROFUNDIZAR: 1-2 preguntas específicas según el objetivo detectado
-3. RECOMENDACIÓN: Pack personalizado con beneficio específico para su situación
-4. CTA: Dirigir a ${LANDING_URL} + prueba social ("muchas personas en ${country} ya ven resultados")
-5. CIERRE: Preguntar si tiene dudas, dejar la puerta abierta
+3. RECOMENDACIÓN: Pack personalizado (solo productos disponibles en ${country}) con beneficio específico
+4. CTA: "¿Querés que te pase el precio para ${country}? Te conecto con Andrés ahora" → [TRANSFER_NEEDED]
+5. Prueba social: "Muchas personas en ${country} ya están viendo resultados con este pack 💪"
 
 CATÁLOGO FUXION:
 🌿 DETOX/DIGESTIÓN: Prunex 1 (tránsito intestinal), Flora Liv (probióticos), Liquid Fibra (fibra soluble), Alpha Balance (pH alcalino), Rexet (desintox hígado), Berry Balance (tracto urinario)
@@ -375,12 +399,12 @@ async function runFollowUps() {
 
       const agentName = getAgentName(lead.phone);
       const msgs = {
-        pt: `Olá de novo! 👋 Sou ${agentName} do time PowerVita. Só passando para ver se conseguiu revisar as informações. Lembre-se: estou aqui para ajudar! 💪\n\n👉 ${LANDING_URL}`,
-        en: `Hi again! 👋 I'm ${agentName} from the PowerVita team. Just checking if you had a chance to review what I shared. I'm here to help whenever you're ready 💪\n\n👉 ${LANDING_URL}`,
-        fr: `Bonjour encore! 👋 Je suis ${agentName} de l'équipe PowerVita. Je voulais juste voir si vous avez pu consulter les informations. Je suis là pour vous aider 💪\n\n👉 ${LANDING_URL}`,
-        it: `Ciao di nuovo! 👋 Sono ${agentName} del team PowerVita. Volevo solo controllare se hai avuto modo di rivedere le informazioni. Sono qui per aiutarti 💪\n\n👉 ${LANDING_URL}`,
-        de: `Hallo nochmal! 👋 Ich bin ${agentName} vom PowerVita-Team. Ich wollte nur nachsehen, ob Sie die Informationen durchgesehen haben. Ich helfe Ihnen gerne! 💪\n\n👉 ${LANDING_URL}`,
-        es: `¡Hola de nuevo! 👋 Soy ${agentName} del equipo PowerVita. Solo quería saber si pudiste ver la información que te compartí. Recuerda que estoy aquí para ayudarte 💪\n\n👉 ${LANDING_URL}`,
+        pt: `Olá de novo! 👋 Sou ${agentName} do time PowerVita. Só passando para ver se conseguiu revisar as informações 😊 Se quiser saber o preço para o seu país, posso te conectar com ${OWNER_NAME} agora mesmo. Estou aqui! 💪`,
+        en: `Hi again! 👋 I'm ${agentName} from the PowerVita team. Just checking in — if you'd like to know the price for your country, I can connect you with ${OWNER_NAME} right now. I'm here to help! 💪`,
+        fr: `Bonjour encore! 👋 Je suis ${agentName} de l'équipe PowerVita. Si vous souhaitez connaître le prix pour votre pays, je peux vous mettre en contact avec ${OWNER_NAME} maintenant 😊 💪`,
+        it: `Ciao di nuovo! 👋 Sono ${agentName} del team PowerVita. Se vuoi sapere il prezzo per il tuo paese, posso metterti in contatto con ${OWNER_NAME} adesso 😊 💪`,
+        de: `Hallo nochmal! 👋 Ich bin ${agentName} vom PowerVita-Team. Falls Sie den Preis für Ihr Land wissen möchten, verbinde ich Sie jetzt gerne mit ${OWNER_NAME} 😊 💪`,
+        es: `¡Hola de nuevo! 👋 Soy ${agentName} del equipo PowerVita. Solo quería saber si pudiste revisar lo que te compartí 😊 Si querés saber el precio para tu país, te conecto con ${OWNER_NAME} ahora mismo. ¡Estoy aquí! 💪`,
       };
 
       const lang = lead.lang || "es";
