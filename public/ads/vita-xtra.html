@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vita Xtra T+ · Power Vita</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; font-family:'Inter',sans-serif; background:#0d0d1a; }
+
+  .card {
+    width:1080px; height:1080px; position:relative; overflow:hidden;
+    background: linear-gradient(145deg, #1a0533 0%, #2d0a5e 40%, #1a0533 100%);
+  }
+
+  /* Decorative circles */
+  .orb1 { position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(139,71,255,0.35) 0%, transparent 70%); top:-100px; right:-100px; }
+  .orb2 { position:absolute; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%); bottom:-50px; left:-100px; }
+  .orb3 { position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(139,71,255,0.2) 0%, transparent 70%); bottom:200px; right:50px; }
+
+  /* Grid lines deco */
+  .grid { position:absolute; inset:0; background-image: linear-gradient(rgba(139,71,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(139,71,255,0.06) 1px, transparent 1px); background-size:60px 60px; }
+
+  .content { position:relative; z-index:10; padding:60px; height:100%; display:flex; flex-direction:column; }
+
+  /* Badge */
+  .badge {
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(139,71,255,0.2); border:1.5px solid rgba(139,71,255,0.5);
+    border-radius:50px; padding:10px 22px; width:fit-content; margin-bottom:28px;
+  }
+  .badge-dot { width:9px; height:9px; border-radius:50%; background:#8B47FF; box-shadow:0 0 12px #8B47FF; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .badge-text { font-size:15px; font-weight:700; color:#c084fc; letter-spacing:2px; text-transform:uppercase; }
+
+  /* Product name */
+  .product-name {
+    font-family:'Playfair Display',serif; font-size:82px; font-weight:900;
+    line-height:1; color:#fff; margin-bottom:6px;
+    text-shadow: 0 0 60px rgba(139,71,255,0.4);
+  }
+  .product-name span { color:#C9A84C; }
+
+  .tagline { font-size:26px; font-weight:600; color:rgba(255,255,255,0.65); margin-bottom:40px; font-style:italic; }
+
+  /* Main claim */
+  .claim { font-family:'Playfair Display',serif; font-size:46px; font-weight:700; color:#fff; line-height:1.25; margin-bottom:44px; max-width:580px; }
+  .claim em { color:#C9A84C; font-style:italic; }
+
+  /* Benefits */
+  .benefits { display:flex; flex-direction:column; gap:16px; margin-bottom:44px; }
+  .benefit {
+    display:flex; align-items:center; gap:16px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(139,71,255,0.2);
+    border-radius:14px; padding:14px 20px;
+  }
+  .benefit-icon { width:36px; height:36px; border-radius:10px; background:rgba(139,71,255,0.25); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .benefit-text { font-size:20px; font-weight:600; color:rgba(255,255,255,0.9); }
+
+  /* Bottom bar */
+  .bottom { margin-top:auto; display:flex; align-items:center; justify-content:space-between; }
+
+  .ingredients { display:flex; gap:20px; }
+  .ing-item { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .ing-icon { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(139,71,255,0.25); display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .ing-label { font-size:11px; color:rgba(255,255,255,0.5); font-weight:600; text-align:center; }
+
+  .cta-block { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+  .cta-btn {
+    background:linear-gradient(135deg, #8B47FF, #C9A84C);
+    color:#fff; font-size:20px; font-weight:800; padding:16px 36px;
+    border-radius:50px; letter-spacing:0.5px;
+    box-shadow: 0 8px 32px rgba(139,71,255,0.4);
+  }
+  .wa { display:flex; align-items:center; gap:8px; color:rgba(255,255,255,0.55); font-size:16px; font-weight:600; }
+  .wa-dot { width:10px; height:10px; border-radius:50%; background:#25D366; }
+
+  /* Floating product visual */
+  .product-visual {
+    position:absolute; right:60px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:0;
+  }
+  .product-emoji { font-size:180px; filter:drop-shadow(0 0 40px rgba(139,71,255,0.5)); }
+  .product-glow { width:200px; height:40px; background:radial-gradient(ellipse, rgba(139,71,255,0.4) 0%, transparent 70%); margin-top:-10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+  <div class="orb3"></div>
+  <div class="grid"></div>
+
+  <div class="product-visual">
+    <div class="product-emoji">⚡</div>
+    <div class="product-glow"></div>
+  </div>
+
+  <div class="content">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">FuXion · Energía Biotecnológica</span>
+    </div>
+
+    <div class="product-name">VITA<span>XTRA</span> T+</div>
+    <div class="tagline">La energía que tu cuerpo merece</div>
+
+    <div class="claim">
+      Olvídate del<br><em>cansancio crónico</em><br>para siempre
+    </div>
+
+    <div class="benefits">
+      <div class="benefit">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-text">Energía sostenida durante todo el día</div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">🧠</div>
+        <div class="benefit-text">Elimina la fatiga física y mental</div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">🌿</div>
+        <div class="benefit-text">Alto poder antioxidante · 100% natural</div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="ingredients">
+        <div class="ing-item">
+          <div class="ing-icon">🍃</div>
+          <div class="ing-label">Guayusa</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-icon">🌱</div>
+          <div class="ing-label">Ginseng</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-icon">🍄</div>
+          <div class="ing-label">Cordyceps</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-icon">🫐</div>
+          <div class="ing-label">Açaí</div>
+        </div>
+        <div class="ing-item">
+          <div class="ing-icon">🌾</div>
+          <div class="ing-label">Maca</div>
+        </div>
+      </div>
+
+      <div class="cta-block">
+        <div class="cta-btn">Quiero saber más ⚡</div>
+        <div class="wa">
+          <div class="wa-dot"></div>
+          +598 98 950 206
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
