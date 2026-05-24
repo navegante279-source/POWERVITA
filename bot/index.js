@@ -678,6 +678,30 @@ app.get("/health", (_req, res) =>
   res.json({ status: "ok", ts: new Date().toISOString(), bot: "PowerVita FuXion Bot" })
 );
 
+// One-time phone registration helper (protected by VERIFY_TOKEN)
+app.get("/admin/register-phone", async (req, res) => {
+  if (req.query.token !== VERIFY_TOKEN) return res.sendStatus(403);
+  const pin = req.query.pin || "000000";
+  try {
+    const r = await fetch(
+      `https://graph.facebook.com/v20.0/${WHATSAPP_PHONE_ID}/register`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messaging_product: "whatsapp", pin }),
+      }
+    );
+    const data = await r.json();
+    console.log("📱 Phone registration result:", JSON.stringify(data));
+    res.json({ status: r.status, data });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
 // ── SERVER START ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 PowerVita Bot running on port ${PORT}`);
