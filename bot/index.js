@@ -678,8 +678,6 @@ app.get("/health", (_req, res) =>
   res.json({ status: "ok", ts: new Date().toISOString(), bot: "PowerVita FuXion Bot" })
 );
 
-});
-
 // ── SERVER START ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 PowerVita Bot running on port ${PORT}`);
