@@ -702,6 +702,29 @@ app.get("/admin/register-phone", async (req, res) => {
   }
 });
 
+// Subscribe WABA to app webhooks
+app.get("/admin/subscribe-waba", async (req, res) => {
+  if (req.query.token !== VERIFY_TOKEN) return res.sendStatus(403);
+  const WABA_ID = "1307240770834785";
+  try {
+    const r = await fetch(
+      `https://graph.facebook.com/v20.0/${WABA_ID}/subscribed_apps`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await r.json();
+    console.log("🔔 WABA subscription result:", JSON.stringify(data));
+    res.json({ status: r.status, data });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
 // ── SERVER START ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 PowerVita Bot running on port ${PORT}`);
