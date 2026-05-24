@@ -9,7 +9,10 @@ import express from "express";
 import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import crypto from "crypto";
-import { WebSocket } from "ws";
+import ws from "ws";
+
+// Node.js 18 doesn't have native WebSocket — polyfill before Supabase init
+if (!globalThis.WebSocket) globalThis.WebSocket = ws.WebSocket ?? ws;
 
 const app = express();
 app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
@@ -33,9 +36,7 @@ const {
 } = process.env;
 
 // ── CLIENTS ───────────────────────────────────────────────────
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-  realtime: { transport: WebSocket },
-});
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
 
 // ── AGENT NAME ROTATION ───────────────────────────────────────
