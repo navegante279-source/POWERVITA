@@ -702,6 +702,22 @@ app.get("/admin/register-phone", async (req, res) => {
   }
 });
 
+// Check WABA subscription status
+app.get("/admin/check-waba", async (req, res) => {
+  if (req.query.token !== VERIFY_TOKEN) return res.sendStatus(403);
+  const WABA_ID = "1307240770834785";
+  try {
+    const r = await fetch(
+      `https://graph.facebook.com/v20.0/${WABA_ID}/subscribed_apps`,
+      { headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}` } }
+    );
+    const data = await r.json();
+    res.json({ status: r.status, data });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
 // Subscribe WABA to app webhooks
 app.get("/admin/subscribe-waba", async (req, res) => {
   if (req.query.token !== VERIFY_TOKEN) return res.sendStatus(403);
