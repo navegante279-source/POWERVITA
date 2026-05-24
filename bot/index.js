@@ -639,14 +639,30 @@ app.post("/webhook", async (req, res) => {
         if (!messages?.length) continue;
 
         for (const msg of messages) {
-          if (msg.type !== "text") continue;
           if (isDuplicate(msg.id)) {
             console.log(`⏭️ Duplicate message ignored: ${msg.id}`);
             continue;
           }
           const phone = msg.from;
-          const text = msg.text.body;
           const name = contacts?.[0]?.profile?.name || "";
+
+          if (msg.type === "audio" || msg.type === "voice") {
+            const countryInfo = detectCountry(phone);
+            const audioReplies = {
+              es: "¡Hola! 😊 Parece que el audio no se escuchó bien. ¿Podrías escribirme tu consulta? Así te ayudo mejor 📝",
+              pt: "Olá! 😊 Parece que o áudio não ficou bom. Você poderia me escrever sua dúvida? Assim consigo te ajudar melhor 📝",
+              en: "Hey! 😊 It seems the audio didn't come through clearly. Could you write your question? That way I can help you better 📝",
+              fr: "Bonjour! 😊 Il semble que l'audio n'est pas passé. Pourriez-vous écrire votre question? Je pourrai mieux vous aider 📝",
+              it: "Ciao! 😊 Sembra che l'audio non sia arrivato bene. Potresti scrivere la tua domanda? Così riesco ad aiutarti meglio 📝",
+              de: "Hallo! 😊 Es scheint, dass die Sprachnachricht nicht angekommen ist. Könnten Sie Ihre Frage schreiben? So kann ich Ihnen besser helfen 📝",
+            };
+            const reply = audioReplies[countryInfo.lang] || audioReplies.es;
+            sendWAMessage(phone, reply);
+            continue;
+          }
+
+          if (msg.type !== "text") continue;
+          const text = msg.text.body;
           console.log(`📨 [${phone}] ${name}: ${text}`);
           handleMessage(phone, text, name); // async, no await
         }
