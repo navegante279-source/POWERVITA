@@ -31,6 +31,28 @@
     .hist-prod{color:#2d6a4f;font-size:11px}
     .hist-time{color:#9ca3af;font-size:10px}
     .logout{display:block;text-align:center;margin-top:14px;font-size:11px;color:#9ca3af;cursor:pointer;text-decoration:underline}
+    .tabs{display:flex;gap:8px;margin-bottom:20px}
+    .tab{flex:1;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid rgba(45,106,79,0.2);background:#fff;color:#2d6a4f;text-align:center;transition:.2s}
+    .tab.active{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
+    .panel{display:none}.panel.active{display:block}
+    .leads-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .leads-count{font-size:11px;color:#7a9a7a;font-weight:700}
+    .refresh-btn{font-size:11px;color:#2d6a4f;cursor:pointer;font-weight:700;text-decoration:underline;background:none;border:none}
+    .lead-card{background:rgba(45,106,79,0.04);border:1px solid rgba(45,106,79,0.12);border-radius:12px;padding:12px;margin-bottom:8px}
+    .lead-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+    .lead-name{font-size:13px;font-weight:700;color:#1a2e1a}
+    .lead-phone{font-size:11px;color:#7a9a7a}
+    .lead-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px}
+    .badge-active{background:rgba(45,106,79,0.12);color:#2d6a4f}
+    .badge-transferred{background:rgba(201,168,76,0.15);color:#9a7420}
+    .badge-opted_out{background:rgba(229,57,53,0.08);color:#c0392b}
+    .badge-distributor_lead{background:rgba(99,102,241,0.1);color:#4338ca}
+    .lead-meta{font-size:11px;color:#9ca3af}
+    .lead-time{font-size:10px;color:#c0c0c0;margin-top:4px}
+    .no-leads{text-align:center;padding:32px;color:#9ca3af;font-size:13px}
+    .filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+    .filter-chip{font-size:10px;font-weight:700;padding:4px 10px;border-radius:50px;cursor:pointer;border:1.5px solid rgba(45,106,79,0.2);background:#fff;color:#7a9a7a;transition:.2s}
+    .filter-chip.on{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
   </style>
 </head>
 <body>
@@ -50,13 +72,36 @@
   <div class="msg" id="loginMsg"></div>
 </div>
 
-<div class="card" id="mainCard" style="display:none">
+<div class="card" id="mainCard" style="display:none;max-width:480px">
   <div class="logo">
     <div class="logo-dot">🌿</div>
     <div class="logo-text">POWER VITA</div>
   </div>
-  <h2>Registrar Cliente</h2>
-  <p class="sub">Marca una venta cerrada → se envía a Meta CAPI</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('leads')">📋 Leads</div>
+    <div class="tab" onclick="switchTab('venta')">✅ Registrar Venta</div>
+  </div>
+
+  <!-- LEADS PANEL -->
+  <div class="panel active" id="panelLeads">
+    <div class="leads-header">
+      <div class="leads-count" id="leadsCount">Cargando…</div>
+      <button class="refresh-btn" onclick="loadLeads()">↻ Actualizar</button>
+    </div>
+    <div class="filter-row">
+      <div class="filter-chip on" data-filter="all" onclick="setFilter('all',this)">Todos</div>
+      <div class="filter-chip" data-filter="active" onclick="setFilter('active',this)">Activos</div>
+      <div class="filter-chip" data-filter="transferred" onclick="setFilter('transferred',this)">Transferidos</div>
+      <div class="filter-chip" data-filter="distributor_lead" onclick="setFilter('distributor_lead',this)">Distribuidores</div>
+    </div>
+    <div id="leadsList"><div class="no-leads">Cargando leads…</div></div>
+  </div>
+
+  <!-- VENTA PANEL -->
+  <div class="panel" id="panelVenta">
+    <h2>Registrar Cliente</h2>
+    <p class="sub" style="margin-bottom:16px">Marca una venta cerrada → se envía a Meta CAPI</p>
 
   <label>Teléfono (con código de país)</label>
   <input type="tel" id="phone" placeholder="598912345678" inputmode="numeric"/>
@@ -132,6 +177,8 @@
     <div class="history-title">Últimos registros (esta sesión)</div>
     <div id="historyList"></div>
   </div>
+
+  </div><!-- end panelVenta -->
 
   <span class="logout" onclick="logout()">Cerrar sesión</span>
 </div>
@@ -231,12 +278,105 @@
     `).join("");
   }
 
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='leads')||(i===1&&tab==='venta')));
+    document.getElementById('panelLeads').classList.toggle('active', tab==='leads');
+    document.getElementById('panelVenta').classList.toggle('active', tab==='venta');
+  }
+
+  // Leads
+  let allLeads = [];
+  let activeFilter = 'all';
+
+  function setFilter(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    renderLeads();
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60) return 'hace un momento';
+    if (diff < 3600) return `hace ${Math.floor(diff/60)} min`;
+    if (diff < 86400) return `hace ${Math.floor(diff/3600)} hs`;
+    return `hace ${Math.floor(diff/86400)} días`;
+  }
+
+  function badgeClass(status) {
+    const map = { active:'badge-active', transferred:'badge-transferred', opted_out:'badge-opted_out', distributor_lead:'badge-distributor_lead', followup_1:'badge-active', followup_2:'badge-active' };
+    return map[status] || 'badge-active';
+  }
+
+  function badgeLabel(l) {
+    if (l.opted_out) return '🚫 Dado de baja';
+    if (l.status === 'distributor_lead') return '💼 Distribuidor';
+    if (l.transferred) return '🔔 Transferido';
+    if (l.status === 'followup_1') return '📩 Seguimiento 1';
+    if (l.status === 'followup_2') return '📩 Seguimiento 2';
+    return '💬 Activo';
+  }
+
+  function renderLeads() {
+    const filtered = activeFilter === 'all' ? allLeads :
+      activeFilter === 'transferred' ? allLeads.filter(l => l.transferred && !l.opted_out) :
+      activeFilter === 'distributor_lead' ? allLeads.filter(l => l.status === 'distributor_lead') :
+      allLeads.filter(l => l.status === activeFilter);
+
+    document.getElementById('leadsCount').textContent = `${filtered.length} de ${allLeads.length} leads`;
+
+    if (!filtered.length) {
+      document.getElementById('leadsList').innerHTML = '<div class="no-leads">Sin leads en esta categoría</div>';
+      return;
+    }
+
+    document.getElementById('leadsList').innerHTML = filtered.map(l => `
+      <div class="lead-card">
+        <div class="lead-top">
+          <div>
+            <div class="lead-name">${l.name || 'Sin nombre'}</div>
+            <div class="lead-phone">${l.phone} · ${l.country || '—'}</div>
+          </div>
+          <div class="lead-badge ${badgeClass(l.transferred ? 'transferred' : l.status)}">${badgeLabel(l)}</div>
+        </div>
+        <div class="lead-meta">${l.last_objective ? '🎯 ' + l.last_objective : ''}</div>
+        <div class="lead-time">${timeAgo(l.last_message_at || l.updated_at)}</div>
+      </div>
+    `).join('');
+  }
+
+  async function loadLeads() {
+    const pw = localStorage.getItem(STORAGE_KEY);
+    if (!pw) return;
+    document.getElementById('leadsCount').textContent = 'Cargando…';
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+      if (res.status === 401) { logout(); return; }
+      if (data.ok && data.leads) {
+        allLeads = data.leads;
+        renderLeads();
+      } else {
+        document.getElementById('leadsCount').textContent = 'Error: ' + (data.error || 'intenta de nuevo');
+      }
+    } catch(e) {
+      document.getElementById('leadsCount').textContent = 'Error de red';
+    }
+  }
+
   // Auto-login if password saved
   window.onload = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       document.getElementById("loginCard").style.display = "none";
       document.getElementById("mainCard").style.display = "block";
+      loadLeads();
     }
   };
 </script>
