@@ -389,9 +389,7 @@ async function saveLead(phone, updates) {
 // ── MAIN MESSAGE HANDLER ──────────────────────────────────────
 async function handleMessage(phone, text, contactName) {
   try {
-    console.log(`🔄 handleMessage start: ${phone}`);
     const conv = await getConversation(phone);
-    console.log(`📋 conv loaded: ${JSON.stringify(conv ? {transferred: conv.transferred, opted_out: conv.opted_out} : null)}`);
 
     // Rate limit check
     if (isRateLimited(phone)) {
@@ -475,11 +473,9 @@ async function handleMessage(phone, text, contactName) {
     }
 
     // Get AI response
-    console.log(`🤖 Calling Claude for ${phone}...`);
     let aiResponse;
     try {
       aiResponse = await getAIResponse(phone, text, history, agentName, countryInfo);
-      console.log(`🤖 Claude responded (${aiResponse.length} chars)`);
     } catch (err) {
       console.error("AI error:", err.message);
       aiResponse = `¡Hola! Soy ${agentName} del equipo PowerVita 😊 Tuve un pequeño inconveniente técnico. ${OWNER_NAME} te contactará muy pronto. ¡Disculpa!`;
@@ -511,9 +507,7 @@ async function handleMessage(phone, text, contactName) {
     });
 
     // Send response
-    console.log(`📤 Sending WA message to ${phone}...`);
     await sendWAMessage(phone, cleanResponse);
-    console.log(`📤 WA message sent to ${phone}`);
 
     // Notify owner if needed
     if (needsTransfer) {
