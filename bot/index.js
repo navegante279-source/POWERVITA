@@ -48,24 +48,26 @@ function getAgentName(phone) {
 }
 
 // ── STOP / OPT-OUT DETECTION ─────────────────────────────────
-const STOP_KEYWORDS = [
-  // Español
-  "stop", "para", "parar", "basta", "detener", "cancelar", "salir",
-  "no quiero mensajes", "no me escribas", "no me contactes", "déjame",
-  "dejame", "no más", "no mas", "quitar", "darme de baja", "baja",
-  // Portugués
-  "sair", "parar", "cancelar", "remover", "não quero", "nao quero",
-  "pare", "não me mande", "nao me mande",
-  // Inglés
-  "unsubscribe", "remove", "quit", "leave me alone", "dont contact",
-  "don't contact", "opt out", "optout", "no more messages",
-  // Francés / Italiano / Alemán
-  "arrêt", "arreter", "désabonner", "basta", "fermare", "stopp", "abmelden",
+// Phrases that must match as whole words or exact phrases only
+const STOP_PHRASES = [
+  "no quiero mensajes", "no me escribas", "no me contactes",
+  "darme de baja", "no más mensajes", "no mas mensajes",
+  "não quero mensajes", "nao quero", "não me mande", "nao me mande",
+  "leave me alone", "dont contact me", "don't contact me",
+  "opt out", "optout", "no more messages", "unsubscribe",
+];
+// Single words that must match the entire message (or be very short messages)
+const STOP_WORDS = [
+  "stop", "parar", "detener", "cancelar suscripcion",
+  "sair", "pare", "stopp", "abmelden", "fermare",
 ];
 
 function isStopMessage(text) {
   const normalized = text.toLowerCase().trim();
-  return STOP_KEYWORDS.some((kw) => normalized.includes(kw));
+  if (STOP_PHRASES.some((ph) => normalized.includes(ph))) return true;
+  // Single-word stop: only if the entire message is that word (± punctuation)
+  const bare = normalized.replace(/[^a-záéíóúñüàâçèêëîïôùûü]/g, " ").trim();
+  return STOP_WORDS.some((w) => bare === w || bare === w + " ");
 }
 
 const STOP_REPLIES = {
