@@ -971,7 +971,7 @@ export default function App() {
             <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,fontSize:15,color:"#1a2e1a",marginBottom:4}}>Quiero los productos</div>
             <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#7a9a7a",lineHeight:1.5}}>Mejorar mi salud y bienestar con FuXion</div>
           </button>
-          <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Seg_Negocio"})} style={{background:"#1a2e1a",border:"2px solid #1a2e1a",borderRadius:18,padding:"22px 16px",cursor:"pointer",textAlign:"center",textDecoration:"none",transition:"all .25s",display:"block",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#2d6a4f";e.currentTarget.style.borderColor="#2d6a4f";}} onMouseLeave={e=>{e.currentTarget.style.background="#1a2e1a";e.currentTarget.style.borderColor="#1a2e1a";}}>
+          <a href={waHref(WA,`Hola! Me interesa el negocio FuXion. ¿Podés contarme cómo funciona?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Seg_Negocio"})} style={{background:"#1a2e1a",border:"2px solid #1a2e1a",borderRadius:18,padding:"22px 16px",cursor:"pointer",textAlign:"center",textDecoration:"none",transition:"all .25s",display:"block",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#2d6a4f";e.currentTarget.style.borderColor="#2d6a4f";}} onMouseLeave={e=>{e.currentTarget.style.background="#1a2e1a";e.currentTarget.style.borderColor="#1a2e1a";}}>
             <div style={{fontSize:32,marginBottom:8}}>💼</div>
             <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,fontSize:15,color:"#fff",marginBottom:4}}>Quiero el negocio</div>
             <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"rgba(255,255,255,0.7)",lineHeight:1.5}}>Ser Emprendedor FuXion y generar ingresos</div>
@@ -1274,7 +1274,6 @@ export default function App() {
         <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
           <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Footer_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
-          <a href={FUXION_LINK} target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>🌐 FuXion Store</a>
         </div>
         <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
       </footer>
