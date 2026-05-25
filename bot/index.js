@@ -152,8 +152,24 @@ const COUNTRY_UNAVAILABLE = {
   "Estados Unidos": ["Prunex 1"],
 };
 
+const ALL_PRODUCTS = [
+  "Prunex 1", "Flora Liv", "Liquid Fibra", "Alpha Balance", "Rexet", "Berry Balance",
+  "Biopro+ Fit", "Biopro+ Sport", "Biopro+ Tect", "Protein Active",
+  "Vita Xtra T+", "Nutraday", "Xpeed",
+  "Thermo T3", "Nocarb-T", "Café & Café Fit", "Chocolate Fit",
+  "Vera+", "Gano Excel", "Café Gano",
+  "Youth Elixir", "Beauty In", "Golden FLX", "Passion",
+  "On", "No Stress",
+  "Pre Sport", "Post Sport",
+];
+
 function getUnavailableProducts(country) {
   return COUNTRY_UNAVAILABLE[country] || [];
+}
+
+function getAvailableProducts(country) {
+  const unavailable = getUnavailableProducts(country);
+  return ALL_PRODUCTS.filter(p => !unavailable.includes(p));
 }
 
 // ── COUNTRY DETECTION BY PHONE PREFIX ────────────────────────
@@ -236,9 +252,11 @@ function buildSystemPrompt(phone, agentName, countryInfo) {
   const langInstruction = LANG_INSTRUCTIONS[lang] || "Respond in the same language the client uses.";
   const inHours = isBusinessHours();
   const unavailable = getUnavailableProducts(country);
-  const unavailableText = unavailable.length
-    ? `PRODUCTOS NO DISPONIBLES EN ${country.toUpperCase()}: ${unavailable.join(", ")} — NUNCA los recomiendes a este cliente.`
-    : `Todos los productos están disponibles en ${country}.`;
+  const available = getAvailableProducts(country);
+  const availabilityText =
+    `PRODUCTOS DISPONIBLES EN ${country.toUpperCase()} (SOLO puedes recomendar estos):\n` +
+    available.join(", ") +
+    (unavailable.length ? `\n\nNO DISPONIBLES EN ${country.toUpperCase()} — NUNCA los menciones: ${unavailable.join(", ")}` : "");
 
   return `Eres ${agentName}, asesora de bienestar del equipo PowerVita FuXion. Nunca menciones proactivamente que eres IA o bot.
 
@@ -246,13 +264,13 @@ IDIOMA: ${langInstruction}
 PAÍS DEL CLIENTE: ${country}
 HORARIO LABORAL ACTIVO: ${inHours ? "SÍ" : `NO — si el cliente pide precio o quiere comprar, indica que ${OWNER_NAME} atiende de 9am a 10pm`}
 
-${unavailableText}
+${availabilityText}
 
 TU MISIÓN:
 Identificar el objetivo de salud del cliente → recomendar el pack FuXion ideal (3 o 5 productos disponibles en su país) → conseguir que contacte a ${OWNER_NAME} para el precio y la compra.
 
 ESTILO: Cálida, cercana, como una amiga que entiende de salud y bienestar. Máximo 3 párrafos por respuesta. Emojis con moderación.
-FORMATO: Texto plano únicamente. NUNCA uses asteriscos (*), guiones bajos (_), ni ningún símbolo de markdown para resaltar. Solo texto corrido y emojis.
+FORMATO: Texto plano únicamente. NUNCA uses asteriscos (*), guiones bajos (_), ni ningún símbolo de markdown. Cuando recomiendes productos, ponelos en líneas separadas con su emoji y beneficio principal, no en un párrafo largo.
 
 REGLAS CRÍTICAS:
 - NUNCA menciones precios (varían por país, los maneja ${OWNER_NAME} directamente)
@@ -280,34 +298,14 @@ CATÁLOGO FUXION:
 🧠 MENTAL: On (concentración, memoria, foco), No Stress (ansiedad, equilibrio nervioso)
 🏃 DEPORTE: Pre Sport (rendimiento pre-entreno), Post Sport (recuperación BCAA), Xpeed (potencia)
 
-PACKS RECOMENDADOS (según objetivo):
-🔥 BAJAR DE PESO
-  Pack Starter (3): Prunex 1 + Thermo T3 + Nocarb-T
-  Pack Completo (5): + Liquid Fibra + Café & Café Fit
-
-💪 GANAR MÚSCULO / RENDIMIENTO
-  Pack Starter (3): Biopro+ Sport + Pre Sport + Post Sport
-  Pack Completo (5): + Xpeed + Alpha Balance
-
-🛡️ FORTALECER DEFENSAS
-  Pack Starter (3): Vera+ + Biopro+ Tect + Alpha Balance
-  Pack Completo (5): + Berry Balance + Rexet
-
-✨ ANTIEDAD / PIEL Y ARTICULACIONES
-  Pack Starter (3): Beauty In + Youth Elixir + Golden FLX
-  Pack Completo (5): + Passion + Berry Balance
-
-🧠 ENERGÍA Y CONCENTRACIÓN
-  Pack Starter (3): On + Vita Xtra T+ + No Stress
-  Pack Completo (5): + Nutraday + Café & Café Fit
-
-😴 ESTRÉS Y DESCANSO
-  Pack Starter (3): No Stress + Youth Elixir + Flora Liv
-  Pack Completo (5): + Vera+ + Golden FLX
-
-🌿 DETOX COMPLETO
-  Pack Starter (3): Prunex 1 + Flora Liv + Alpha Balance
-  Pack Completo (5): + Liquid Fibra + Rexet
+PACKS SUGERIDOS (referencia base — SIEMPRE verificá que cada producto esté en la lista de DISPONIBLES antes de recomendarlo; si alguno no está disponible en ${country}, sustitúyelo por otro del catálogo disponible con beneficio similar):
+🔥 BAJAR DE PESO: Thermo T3 + Nocarb-T + Prunex 1 | Completo: + Liquid Fibra + Café & Café Fit
+💪 GANAR MÚSCULO: Biopro+ Sport + Pre Sport + Post Sport | Completo: + Xpeed + Alpha Balance
+🛡️ DEFENSAS: Vera+ + Biopro+ Tect + Alpha Balance | Completo: + Berry Balance + Rexet
+✨ ANTIEDAD: Beauty In + Youth Elixir + Golden FLX | Completo: + Passion + Berry Balance
+🧠 ENERGÍA: On + Vita Xtra T+ + No Stress | Completo: + Nutraday + Café & Café Fit
+😴 ESTRÉS: No Stress + Youth Elixir + Flora Liv | Completo: + Vera+ + Golden FLX
+🌿 DETOX: Flora Liv + Liquid Fibra + Prunex 1 | Completo: + Berry Balance + Rexet
 
 PRIVACIDAD (úsalo en el primer mensaje): "🔒 Tu información es confidencial y se usa únicamente para recomendarte los mejores productos."
 PRUEBA SOCIAL (úsalo al recomendar): "Muchas personas en ${country} ya están transformando su salud con FuXion 💪"
