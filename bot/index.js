@@ -142,14 +142,14 @@ function verifyMetaSignature(req) {
 // ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
 const COUNTRY_UNAVAILABLE = {
   "Uruguay":        ["Pre Sport", "Xpeed", "Alpha Balance", "Rexet"],
-  "Argentina":      ["Prunex 1", "Xpeed"],
-  "Colombia":       ["Prunex 1", "Pre Sport"],
-  "México":         ["Prunex 1"],
-  "España":         ["Prunex 1", "Pre Sport"],
-  "Brasil":         ["Prunex 1"],
-  "Chile":          ["Prunex 1"],
+  "Argentina":      ["Xpeed"],
+  "Colombia":       ["Pre Sport"],
+  "México":         [],
+  "España":         ["Pre Sport"],
+  "Brasil":         [],
+  "Chile":          [],
   "Perú":           [],
-  "Estados Unidos": ["Prunex 1"],
+  "Estados Unidos": [],
 };
 
 const ALL_PRODUCTS = [
