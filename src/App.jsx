@@ -925,11 +925,9 @@ export default function App() {
       <section id="inicio" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"160px 40px 70px",background:"linear-gradient(160deg,#FAFAF7 0%,#F0F4ED 55%,#E8F0E9 100%)",position:"relative",overflow:"hidden",textAlign:"center"}}>
         <div style={{position:"absolute",top:-70,right:-70,width:380,height:380,borderRadius:"50%",background:"radial-gradient(circle,rgba(45,106,79,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
-        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:660}}>
-          {/* Urgency social proof */}
-          <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(230,81,0,0.08)",border:"1px solid rgba(230,81,0,0.22)",borderRadius:999,padding:"5px 16px",marginBottom:12}}>
-            <span style={{width:6,height:6,borderRadius:"50%",background:"#E65100",animation:"pulse 1.2s ease-in-out infinite",display:"inline-block"}}/>
-            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:2,textTransform:"uppercase"}}>347 personas lo compraron este mes en AR y COL</span>
+        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:640}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22}}>
+            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}</span>
           </div>
 
           <div style={{display:"flex",justifyContent:"center",marginBottom:22}}>
@@ -941,21 +939,12 @@ export default function App() {
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
             {isHinchazion ? <>¿Sufrís de <em style={{fontStyle:"italic",color:"#2d6a4f"}}>hinchazón</em> o pesadez después de comer?</> : <>{T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}</>}
           </h1>
-          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:480,margin:"0 auto 28px",fontWeight:300}}>
+          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:460,margin:"0 auto 36px",fontWeight:300}}>
             {isHinchazion ? "No es lo que comés — es lo que tu cuerpo no puede procesar. FuXion tiene la solución natural certificada en 37 países." : T.heroSub}
           </p>
-
-          {/* CTAs directos a WhatsApp */}
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:18}}>
-            <a
-              href={waHref(WA, `Hola! Vi la oferta en la web y quiero hacer mi primer pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)}
-              target="_blank" rel="noreferrer"
-              onClick={()=>trackEvent("InitiateCheckout",{content_name:"Hero_PrimerPedido"})}
-              className="int"
-              style={{background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",padding:"15px 32px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 28px rgba(45,106,79,0.35)"}}>
-              Quiero hacer mi pedido →
-            </a>
-            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Hero_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"15px 28px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none"}}>💬 WhatsApp</a>
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
+            <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
+            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
           </div>
 
           <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:40,flexWrap:"wrap"}}>
@@ -974,34 +963,19 @@ export default function App() {
         </div>
       </section>
 
-      {/* PRODUCTOS ESTRELLA — visible de inmediato */}
-      <section style={{padding:"60px 40px 40px",background:"#fff",borderBottom:"1px solid rgba(45,106,79,0.07)"}}>
-        <div style={{maxWidth:960,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:28}}>
-            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:3,textTransform:"uppercase"}}>⭐ LOS MAS VENDIDOS · AR + COL</span>
-            <div className="int" style={{fontSize:12,color:"#9ca3af",marginTop:4}}>Hacé tu pedido ahora mismo por WhatsApp</div>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:20}}>
-            {[
-              {name:"Vita Xtra T+",emoji:"🌟",color:"#7B3FA0",bg:"linear-gradient(135deg,#f5f0f9,#ede7f6)",badge:"MAS PEDIDO",tagline:"Energía · Foco · Vitalidad",desc:"Elimina la fatiga con guayusa, ginseng y cordyceps. Energía sostenida todo el día.",bullets:["⚡ Sin fatiga desde el día 7","🧠 Foco mental sostenido","🌱 100% natural"],waMsg:`Hola! Quiero el Vita Xtra T+ 🌟 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"VitaXtraT_Hero"},
-              {name:"Thermo T3",emoji:"🔥",color:"#E65100",bg:"linear-gradient(135deg,#fdf4ef,#fff3e0)",badge:"BAJAR DE PESO",tagline:"Termogénico · Quema grasa",desc:"3 tés con carnitina que transforma la grasa en energía desde la primera semana.",bullets:["🔥 Metabolismo en 72hs","⚖️ Sin rebote","🍃 Té verde · Carnitina"],waMsg:`Hola! Quiero el Thermo T3 🔥 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"ThermoT3_Hero"},
-              {name:"Rexet",emoji:"🌿",color:"#2d6a4f",bg:"linear-gradient(135deg,#f0f7f3,#e8f5e9)",badge:"DETOX ESENCIAL",tagline:"Detox · Hígado · Digestión",desc:"Efervescente con tuna roja y alcachofa. Desintoxica el hígado desde el primer uso.",bullets:["🫀 Detox hepático en 48hs","💧 Elimina toxinas","⭐ #1 en Argentina"],waMsg:`Hola! Quiero el Rexet 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"Rexet_Hero"},
-            ].map((p)=>(
-              <div key={p.name} style={{background:p.bg,borderRadius:20,padding:"28px 22px",textAlign:"center",border:`2px solid ${p.color}18`,position:"relative"}}>
-                <div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:`linear-gradient(135deg,${p.color},${p.color}cc)`,color:"#fff",borderRadius:999,padding:"3px 14px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>{p.badge}</div>
-                <div style={{fontSize:52,marginBottom:8}}>{p.emoji}</div>
-                <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:3}}>{p.name}</h3>
-                <div className="int" style={{fontSize:10,fontWeight:700,color:p.color,marginBottom:10,letterSpacing:1,textTransform:"uppercase"}}>{p.tagline}</div>
-                <p className="int" style={{fontSize:12,color:"#4a5568",lineHeight:1.65,marginBottom:14}}>{p.desc}</p>
-                <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:18}}>
-                  {p.bullets.map((b,i)=><div key={i} style={{background:"rgba(255,255,255,0.6)",borderRadius:7,padding:"5px 10px",fontFamily:"'Inter',sans-serif",fontSize:11,color:"#1a2e1a",textAlign:"left"}}>{b}</div>)}
-                </div>
-                <a href={waHref(WA,p.waMsg)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("InitiateCheckout",{content_name:p.event,content_type:"product"})} style={{display:"block",background:`linear-gradient(135deg,${p.color},${p.color}dd)`,color:"#fff",borderRadius:11,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:`0 6px 20px ${p.color}40`}}>
-                  💬 Ver precio → WhatsApp
-                </a>
-              </div>
-            ))}
-          </div>
+      {/* SEGMENTATION CARDS */}
+      <section style={{padding:"32px 20px",background:"#F0F4ED"}}>
+        <div style={{maxWidth:640,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+          <button onClick={()=>scrollTo("sistema")} style={{background:"#fff",border:"2px solid rgba(45,106,79,0.18)",borderRadius:18,padding:"22px 16px",cursor:"pointer",textAlign:"center",transition:"all .25s",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#2d6a4f";e.currentTarget.style.boxShadow="0 8px 24px rgba(45,106,79,0.15)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(45,106,79,0.18)";e.currentTarget.style.boxShadow="none";}}>
+            <div style={{fontSize:32,marginBottom:8}}>🌿</div>
+            <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,fontSize:15,color:"#1a2e1a",marginBottom:4}}>Quiero los productos</div>
+            <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#7a9a7a",lineHeight:1.5}}>Mejorar mi salud y bienestar con FuXion</div>
+          </button>
+          <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Seg_Negocio"})} style={{background:"#1a2e1a",border:"2px solid #1a2e1a",borderRadius:18,padding:"22px 16px",cursor:"pointer",textAlign:"center",textDecoration:"none",transition:"all .25s",display:"block",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#2d6a4f";e.currentTarget.style.borderColor="#2d6a4f";}} onMouseLeave={e=>{e.currentTarget.style.background="#1a2e1a";e.currentTarget.style.borderColor="#1a2e1a";}}>
+            <div style={{fontSize:32,marginBottom:8}}>💼</div>
+            <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,fontSize:15,color:"#fff",marginBottom:4}}>Quiero el negocio</div>
+            <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"rgba(255,255,255,0.7)",lineHeight:1.5}}>Ser Emprendedor FuXion y generar ingresos</div>
+          </a>
         </div>
       </section>
 

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Power Vita · Admin</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:#f0f4ed;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px}
+    .card{background:#fff;border-radius:20px;padding:24px 20px;width:100%;max-width:400px;box-shadow:0 4px 24px rgba(26,46,26,0.10)}
+    .logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;justify-content:center}
+    .logo-dot{width:28px;height:28px;border-radius:50%;background:#2d6a4f;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .logo-text{font-weight:800;font-size:16px;color:#1a2e1a;letter-spacing:2px}
+    h2{font-size:15px;font-weight:700;color:#1a2e1a;margin-bottom:4px;text-align:center}
+    .sub{font-size:11px;color:#7a9a7a;text-align:center;margin-bottom:20px}
+    label{display:block;font-size:10px;font-weight:700;color:#2d6a4f;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;margin-top:12px}
+    input,select{width:100%;background:rgba(45,106,79,0.04);border:1.5px solid rgba(45,106,79,0.18);border-radius:10px;padding:11px 13px;font-size:14px;outline:none;color:#1a2e1a;transition:border .2s;-webkit-appearance:none;appearance:none}
+    input:focus,select:focus{border-color:#2d6a4f}
+    .btn{width:100%;margin-top:20px;background:linear-gradient(135deg,#1a2e1a,#2d6a4f);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;letter-spacing:.5px}
+    .btn:active{opacity:.85}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .msg{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;display:none}
+    .msg.ok{background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.3);color:#1a6634;display:block}
+    .msg.err{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.25);color:#c0392b;display:block}
+    .lock{margin-bottom:16px}
+    .history{margin-top:20px;border-top:1px solid rgba(45,106,79,0.1);padding-top:16px}
+    .history-title{font-size:10px;font-weight:700;color:#7a9a7a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+    .hist-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(45,106,79,0.04);border-radius:8px;margin-bottom:6px;font-size:12px}
+    .hist-name{font-weight:700;color:#1a2e1a}
+    .hist-prod{color:#2d6a4f;font-size:11px}
+    .hist-time{color:#9ca3af;font-size:10px}
+    .logout{display:block;text-align:center;margin-top:14px;font-size:11px;color:#9ca3af;cursor:pointer;text-decoration:underline}
+    .tabs{display:flex;gap:8px;margin-bottom:20px}
+    .tab{flex:1;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid rgba(45,106,79,0.2);background:#fff;color:#2d6a4f;text-align:center;transition:.2s}
+    .tab.active{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
+    .panel{display:none}.panel.active{display:block}
+    .leads-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .leads-count{font-size:11px;color:#7a9a7a;font-weight:700}
+    .refresh-btn{font-size:11px;color:#2d6a4f;cursor:pointer;font-weight:700;text-decoration:underline;background:none;border:none}
+    .lead-card{background:rgba(45,106,79,0.04);border:1px solid rgba(45,106,79,0.12);border-radius:12px;padding:12px;margin-bottom:8px}
+    .lead-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+    .lead-name{font-size:13px;font-weight:700;color:#1a2e1a}
+    .lead-phone{font-size:11px;color:#7a9a7a}
+    .lead-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px}
+    .badge-active{background:rgba(45,106,79,0.12);color:#2d6a4f}
+    .badge-transferred{background:rgba(201,168,76,0.15);color:#9a7420}
+    .badge-opted_out{background:rgba(229,57,53,0.08);color:#c0392b}
+    .badge-distributor_lead{background:rgba(99,102,241,0.1);color:#4338ca}
+    .lead-meta{font-size:11px;color:#9ca3af}
+    .lead-time{font-size:10px;color:#c0c0c0;margin-top:4px}
+    .no-leads{text-align:center;padding:32px;color:#9ca3af;font-size:13px}
+    .filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+    .filter-chip{font-size:10px;font-weight:700;padding:4px 10px;border-radius:50px;cursor:pointer;border:1.5px solid rgba(45,106,79,0.2);background:#fff;color:#7a9a7a;transition:.2s}
+    .filter-chip.on{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
+  </style>
+</head>
+<body>
+
+<div class="card" id="loginCard">
+  <div class="logo">
+    <div class="logo-dot">🌿</div>
+    <div class="logo-text">POWER VITA</div>
+  </div>
+  <h2>Panel de Administración</h2>
+  <p class="sub">Solo para uso interno</p>
+  <div class="lock">
+    <label>Contraseña</label>
+    <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"/>
+  </div>
+  <button class="btn" onclick="login()">Ingresar →</button>
+  <div class="msg" id="loginMsg"></div>
+</div>
+
+<div class="card" id="mainCard" style="display:none;max-width:480px">
+  <div class="logo">
+    <div class="logo-dot">🌿</div>
+    <div class="logo-text">POWER VITA</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('leads')">📋 Leads</div>
+    <div class="tab" onclick="switchTab('venta')">✅ Registrar Venta</div>
+  </div>
+
+  <!-- LEADS PANEL -->
+  <div class="panel active" id="panelLeads">
+    <div class="leads-header">
+      <div class="leads-count" id="leadsCount">Cargando…</div>
+      <button class="refresh-btn" onclick="loadLeads()">↻ Actualizar</button>
+    </div>
+    <div class="filter-row">
+      <div class="filter-chip on" data-filter="all" onclick="setFilter('all',this)">Todos</div>
+      <div class="filter-chip" data-filter="active" onclick="setFilter('active',this)">Activos</div>
+      <div class="filter-chip" data-filter="transferred" onclick="setFilter('transferred',this)">Transferidos</div>
+      <div class="filter-chip" data-filter="distributor_lead" onclick="setFilter('distributor_lead',this)">Distribuidores</div>
+    </div>
+    <div id="leadsList"><div class="no-leads">Cargando leads…</div></div>
+  </div>
+
+  <!-- VENTA PANEL -->
+  <div class="panel" id="panelVenta">
+    <h2>Registrar Cliente</h2>
+    <p class="sub" style="margin-bottom:16px">Marca una venta cerrada → se envía a Meta CAPI</p>
+
+  <label>Teléfono (con código de país)</label>
+  <input type="tel" id="phone" placeholder="598912345678" inputmode="numeric"/>
+
+  <label>Producto</label>
+  <select id="product">
+    <option value="">Seleccioná un producto…</option>
+    <optgroup label="— Detox">
+      <option>Rexet</option><option>Liquid Fiber</option><option>Flora Liv</option>
+      <option>Prunex1</option><option>Alpha Balance</option><option>Berry Balance</option>
+    </optgroup>
+    <optgroup label="— Proteína">
+      <option>Biopro+ Tect</option><option>Protein Active</option>
+    </optgroup>
+    <optgroup label="— Energía">
+      <option>Nutraday</option><option>Vita Xtra T+</option><option>Vitaenergia</option>
+      <option>Xpeed</option><option>Xpeed Citrus Power</option><option>Passion</option>
+    </optgroup>
+    <optgroup label="— Inmunidad">
+      <option>Vera+</option><option>Gano+ T</option><option>Gano+ Cappuccino</option>
+      <option>Café Ganomax</option><option>Probal</option><option>Youth Elixir</option>
+      <option>Golden FLX</option><option>Beauty-In</option>
+    </optgroup>
+    <optgroup label="— Control Peso">
+      <option>Thermo T3</option><option>Nocarb-T</option><option>Chocolate Fit</option>
+      <option>Café &amp; Café Fit</option><option>Café Fit Cappuccino</option>
+      <option>Biopro+ Fit</option><option>Protein Active Fit</option><option>Protein Xoup</option>
+    </optgroup>
+    <optgroup label="— Mental">
+      <option>On</option><option>No Stress</option>
+    </optgroup>
+    <optgroup label="— Sport">
+      <option>Pre Sport</option><option>Xtra Mile</option><option>Post Sport</option>
+      <option>Biopro+ Sport</option><option>Protein Active Sport</option>
+    </optgroup>
+    <optgroup label="— Packs">
+      <option>Starter Pack</option><option>Transform Kit</option><option>Elite Program</option>
+    </optgroup>
+  </select>
+
+  <label>País</label>
+  <select id="country">
+    <option value="">Seleccioná el país…</option>
+    <option>Uruguay</option><option>Argentina</option><option>Colombia</option>
+    <option>México</option><option>Perú</option><option>Chile</option>
+    <option>Brasil</option><option>España</option><option>Estados Unidos</option>
+    <option>Ecuador</option><option>Bolivia</option><option>Paraguay</option>
+    <option>Venezuela</option><option>República Dominicana</option><option>Panamá</option>
+    <option>Costa Rica</option><option>Guatemala</option><option>Honduras</option>
+    <option>El Salvador</option><option>Nicaragua</option><option>Otro</option>
+  </select>
+
+  <label>Precio cobrado</label>
+  <input type="number" id="price" placeholder="Ej: 3500" min="0" step="any"/>
+
+  <label>Moneda</label>
+  <select id="currency">
+    <option value="ARS">ARS — Peso argentino</option>
+    <option value="COP">COP — Peso colombiano</option>
+    <option value="UYU">UYU — Peso uruguayo</option>
+    <option value="USD">USD — Dólar</option>
+    <option value="MXN">MXN — Peso mexicano</option>
+    <option value="CLP">CLP — Peso chileno</option>
+    <option value="PEN">PEN — Sol peruano</option>
+    <option value="BRL">BRL — Real brasileño</option>
+    <option value="EUR">EUR — Euro</option>
+  </select>
+
+  <button class="btn" id="submitBtn" onclick="submit()">✅ Marcar como Cliente</button>
+  <div class="msg" id="mainMsg"></div>
+
+  <div class="history" id="historySection" style="display:none">
+    <div class="history-title">Últimos registros (esta sesión)</div>
+    <div id="historyList"></div>
+  </div>
+
+  </div><!-- end panelVenta -->
+
+  <span class="logout" onclick="logout()">Cerrar sesión</span>
+</div>
+
+<script>
+  const STORAGE_KEY = "pv_admin_pw";
+  const history = [];
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = "msg " + type;
+  }
+
+  function login() {
+    const pw = document.getElementById("pwInput").value;
+    if (!pw) return;
+    localStorage.setItem(STORAGE_KEY, pw);
+    document.getElementById("loginCard").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+  }
+
+  function logout() {
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById("mainCard").style.display = "none";
+    document.getElementById("loginCard").style.display = "block";
+    document.getElementById("pwInput").value = "";
+  }
+
+  async function submit() {
+    const phone    = document.getElementById("phone").value.trim();
+    const product  = document.getElementById("product").value;
+    const country  = document.getElementById("country").value;
+    const price    = parseFloat(document.getElementById("price").value) || 0;
+    const currency = document.getElementById("currency").value;
+    const password = localStorage.getItem(STORAGE_KEY);
+    const btn = document.getElementById("submitBtn");
+
+    if (!phone || !product || !price) {
+      showMsg("mainMsg", "⚠️ Teléfono, producto y precio son obligatorios", "err");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    document.getElementById("mainMsg").className = "msg";
+
+    try {
+      const res = await fetch("/api/capi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, product, country, price, currency, password }),
+      });
+      const data = await res.json();
+
+      if (res.status === 401) {
+        showMsg("mainMsg", "❌ Contraseña incorrecta. Cerrando sesión…", "err");
+        setTimeout(logout, 1500);
+        return;
+      }
+      if (!res.ok || !data.ok) {
+        showMsg("mainMsg", "❌ Error: " + (data.error || "intenta de nuevo"), "err");
+        return;
+      }
+
+      showMsg("mainMsg", "✅ Cliente registrado en Meta CAPI correctamente", "ok");
+
+      // Add to session history
+      history.unshift({ phone: phone.slice(-4), product, country, price, currency, time: new Date().toLocaleTimeString("es", {hour:"2-digit",minute:"2-digit"}) });
+      renderHistory();
+
+      // Reset fields
+      document.getElementById("phone").value = "";
+      document.getElementById("product").value = "";
+      document.getElementById("price").value = "";
+
+    } catch (e) {
+      showMsg("mainMsg", "❌ Error de red: " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "✅ Marcar como Cliente";
+    }
+  }
+
+  function renderHistory() {
+    const section = document.getElementById("historySection");
+    const list = document.getElementById("historyList");
+    section.style.display = "block";
+    list.innerHTML = history.slice(0, 5).map(h => `
+      <div class="hist-item">
+        <div>
+          <div class="hist-name">···${h.phone}</div>
+          <div class="hist-prod">${h.product}${h.country ? " · " + h.country : ""}${h.price ? " · " + h.currency + " " + h.price.toLocaleString() : ""}</div>
+        </div>
+        <div class="hist-time">${h.time}</div>
+      </div>
+    `).join("");
+  }
+
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='leads')||(i===1&&tab==='venta')));
+    document.getElementById('panelLeads').classList.toggle('active', tab==='leads');
+    document.getElementById('panelVenta').classList.toggle('active', tab==='venta');
+  }
+
+  // Leads
+  let allLeads = [];
+  let activeFilter = 'all';
+
+  function setFilter(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    renderLeads();
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60) return 'hace un momento';
+    if (diff < 3600) return `hace ${Math.floor(diff/60)} min`;
+    if (diff < 86400) return `hace ${Math.floor(diff/3600)} hs`;
+    return `hace ${Math.floor(diff/86400)} días`;
+  }
+
+  function badgeClass(status) {
+    const map = { active:'badge-active', transferred:'badge-transferred', opted_out:'badge-opted_out', distributor_lead:'badge-distributor_lead', followup_1:'badge-active', followup_2:'badge-active' };
+    return map[status] || 'badge-active';
+  }
+
+  function badgeLabel(l) {
+    if (l.opted_out) return '🚫 Dado de baja';
+    if (l.status === 'distributor_lead') return '💼 Distribuidor';
+    if (l.transferred) return '🔔 Transferido';
+    if (l.status === 'followup_1') return '📩 Seguimiento 1';
+    if (l.status === 'followup_2') return '📩 Seguimiento 2';
+    return '💬 Activo';
+  }
+
+  function renderLeads() {
+    const filtered = activeFilter === 'all' ? allLeads :
+      activeFilter === 'transferred' ? allLeads.filter(l => l.transferred && !l.opted_out) :
+      activeFilter === 'distributor_lead' ? allLeads.filter(l => l.status === 'distributor_lead') :
+      allLeads.filter(l => l.status === activeFilter);
+
+    document.getElementById('leadsCount').textContent = `${filtered.length} de ${allLeads.length} leads`;
+
+    if (!filtered.length) {
+      document.getElementById('leadsList').innerHTML = '<div class="no-leads">Sin leads en esta categoría</div>';
+      return;
+    }
+
+    document.getElementById('leadsList').innerHTML = filtered.map(l => `
+      <div class="lead-card">
+        <div class="lead-top">
+          <div>
+            <div class="lead-name">${l.name || 'Sin nombre'}</div>
+            <div class="lead-phone">${l.phone} · ${l.country || '—'}</div>
+          </div>
+          <div class="lead-badge ${badgeClass(l.transferred ? 'transferred' : l.status)}">${badgeLabel(l)}</div>
+        </div>
+        <div class="lead-meta">${l.last_objective ? '🎯 ' + l.last_objective : ''}</div>
+        <div class="lead-time">${timeAgo(l.last_message_at || l.updated_at)}</div>
+      </div>
+    `).join('');
+  }
+
+  async function loadLeads() {
+    const pw = localStorage.getItem(STORAGE_KEY);
+    if (!pw) return;
+    document.getElementById('leadsCount').textContent = 'Cargando…';
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+      if (res.status === 401) { logout(); return; }
+      if (data.ok && data.leads) {
+        allLeads = data.leads;
+        renderLeads();
+      } else {
+        document.getElementById('leadsCount').textContent = 'Error: ' + (data.error || 'intenta de nuevo');
+      }
+    } catch(e) {
+      document.getElementById('leadsCount').textContent = 'Error de red';
+    }
+  }
+
+  // Auto-login if password saved
+  window.onload = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("mainCard").style.display = "block";
+      loadLeads();
+    }
+  };
+</script>
+</body>
+</html>
