@@ -19,20 +19,43 @@ const COUNTRY_DATA = {
 };
 
 const PRODUCTS = [
-  { id:1,  name:"Reset",             line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"https://powervita.vercel.app/rexet.jpg",   emoji:"🌿", tag:"Reinicia tu cuerpo",     desc:"Bebida efervescente que desintoxica y protege el hígado frente al exceso de alcohol o comidas grasosas.", benefits:["Desintoxica el hígado","Elimina toxinas","Reactiva el metabolismo"], ing:"Tuna roja · Alcachofa · Hierba luisa · Clorofila · Zinc" },
-  { id:2,  name:"Liquid Fibra",      line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🍋", tag:"Digestión puntual",     desc:"Fibra prebiótica soluble que regula el ritmo digestivo y reduce la absorción de grasas.", benefits:["Regula la digestión","Nutre la flora intestinal","Reduce absorción de grasas"], ing:"Inulina · Oligofructuosa · Raíz de achicoria" },
-  { id:3,  name:"Flora Liv",         line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🫧", tag:"Protege desde adentro",  desc:"Miles de millones de bacterias probióticas vivas para regenerar la microbiota y frenar la acidez.", benefits:["Regenera la microbiota","Optimiza la digestión","Frena la acidez"], ing:"Cultivos probióticos · Fibra prebiótica · Granadilla · Aguaymanto" },
-  { id:4,  name:"Alpha Balance",     line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🥬", tag:"Cuerpo alcalino",        desc:"Concentrado verde con clorofila, alfalfa y espirulina para alcalinizar la sangre y eliminar metales pesados.", benefits:["Alcaliniza el organismo","Purifica la sangre","Elimina metales pesados"], ing:"Clorofila · Alfalfa · Espirulina · Chlorella · Pasto de trigo" },
-  { id:5,  name:"Nutraday",          line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:null, emoji:"⚡", tag:"Vitalidad familiar",     desc:"Bebida multivitamínica con moringa, camu camu y quinua germinada. Ideal para toda la familia.", benefits:["12 vitaminas + 5 minerales","Fortalece las defensas","Desarrollo integral"], ing:"Moringa · Guayaba · Camu Camu · Açaí · Quinua germinada" },
-  { id:6,  name:"Vita Xtra T+",     line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"https://powervita.vercel.app/vitaxtra.jpg", emoji:"🌟", tag:"Elimina la fatiga",  desc:"Energizante concentrado con guayusa, ginseng y micelio de cordyceps para eliminar la fatiga física y mental.", benefits:["Energía sostenida todo el día","Alto poder antioxidante","Elimina fatiga física y mental"], ing:"Guayusa · Ginseng · Cordyceps · Açaí · Maca" },
-  { id:7,  name:"Xpeed",             line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:null, emoji:"🚀", tag:"Energía inmediata",      desc:"Bebida gasificada energizante lista para consumir, diseñada para elevar el estado de alerta físico inmediato.", benefits:["Energía inmediata","Eleva el estado de alerta","Sin caídas de energía"], ing:"Maca · Guaraná · Taurina vegetal · Vitamina C" },
-  { id:8,  name:"Biopro+ Tect",     line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:null, emoji:"🛡️", tag:"Activa tus defensas",    desc:"Proteína animal con bioferrina (patente láctea) formulada para elevar defensas inmunitarias en toda la familia.", benefits:["Eleva defensas inmunitarias","Regeneración celular","Fortalece huesos"], ing:"Bioferrina · Colostrum® · Aminoácidos esenciales · DHA" },
-  { id:9,  name:"Protein Active Fit",line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:"https://powervita.vercel.app/protein.jpg", emoji:"💪", tag:"Nutrición vegetal", desc:"Proteína 100% vegetal de quinua germinada y arroz. Sin lactosa ni alérgenos. Controla el apetito y la grasa.", benefits:["100% vegetal y sin lactosa","Acelera pérdida de grasa","Mantiene el músculo firme"], ing:"Quinua germinada · Arroz integral · Algas · DHA" },
-  { id:10, name:"No Stress",         line:"Immunity",color:"#1565C0", bg:"#f0f4fb", img:null, emoji:"🧘", tag:"Equilibrio mental",      desc:"Té herbal relajante con ashwagandha y manzanilla que apaga el estrés y relaja la mente sin inducir sueño diurno.", benefits:["Reduce el estrés","Calma la irritabilidad","Claridad mental sin somnolencia"], ing:"Ashwagandha · Manzanilla · Vitaminas B · Minerales" },
-  { id:11, name:"Youth Elixir",      line:"Immunity",color:"#1565C0", bg:"#f0f4fb", img:null, emoji:"✨", tag:"Activa tu juventud",     desc:"Fórmula con resveratrol y aminoácidos para retrasar el envejecimiento celular y mejorar el sueño profundo.", benefits:["Anti-envejecimiento celular","Mejora el sueño profundo","Vitalidad juvenil"], ing:"Resveratrol · Aminoácidos · Vitaminas · Extractos premium" },
-  { id:12, name:"Pre Sport",         line:"Sport",   color:"#E65100", bg:"#fdf4ef", img:null, emoji:"🏃", tag:"Rendimiento máximo",     desc:"Bebida isotónica con curcumina y creatina que dilata los vasos sanguíneos y da energía explosiva antes del ejercicio.", benefits:["Energía explosiva","Mayor resistencia","Enfoque y concentración"], ing:"Curcumina · Creatina · Aminoácidos · Cafeína natural" },
-  { id:13, name:"Thermo T3",         line:"Control", color:"#E65100", bg:"#fdf4ef", img:"https://powervita.vercel.app/thermo.jpg", emoji:"🔥", tag:"Activa tu metabolismo", desc:"Infusión de tres tés y carnitina que acelera la termogénesis para transformar la grasa corporal en energía.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"], ing:"Té verde · Té negro · Té rojo · Carnitina · Jengibre" },
-  { id:14, name:"Prunex",            line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:null, emoji:"🫐", tag:"Limpieza natural",       desc:"Concentrado de ciruela y prebióticos para regular el tránsito intestinal y limpiar el colon en forma suave y efectiva.", benefits:["Regula el tránsito intestinal","Limpia el colon naturalmente","Reduce la hinchazón"], ing:"Ciruela pasa · Prebióticos · Enzimas digestivas · Magnesio" },
+  { id:1,  name:"Rexet",              line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-rexet.jpg",            emoji:"🌿", tag:"Reinicia tu cuerpo",             desc:"Bebida efervescente que desintoxica y protege el hígado frente al exceso de alcohol o comidas grasosas.", benefits:["Desintoxica el hígado","Elimina toxinas","Reactiva el metabolismo"],                               ing:"Tuna roja · Alcachofa · Hierba luisa · Clorofila · Zinc" },
+  { id:2,  name:"Liquid Fiber",       line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-liquid-fiber.jpg",                                                emoji:"🍋", tag:"Digestión puntual",               desc:"Fibra prebiótica soluble que regula el ritmo digestivo y reduce la absorción de grasas.", benefits:["Regula la digestión","Nutre la flora intestinal","Reduce absorción de grasas"],                              ing:"Inulina · Oligofructuosa · Raíz de achicoria" },
+  { id:3,  name:"Flora Liv",          line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-flora-liv.jpg",                                                emoji:"🫧", tag:"Protege desde adentro",           desc:"Bacterias probióticas vivas para regenerar la microbiota, mantener las defensas y prevenir trastornos digestivos.", benefits:["Regenera la microbiota","Mantiene defensas activas","Previene trastornos digestivos"],           ing:"Cultivos probióticos · Fibra prebiótica · Granadilla · Aguaymanto" },
+  { id:4,  name:"Prunex1",            line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-prunex1.jpg",                                                emoji:"🫐", tag:"Limpieza natural",                desc:"Té herbal de fibras solubles que libera el tránsito intestinal lento y reduce la hinchazón abdominal.", benefits:["Regula el tránsito intestinal","Reduce la hinchazón","Elimina desechos perjudiciales"],              ing:"Psyllium · Inulina · Mucílago de linaza · Guindón · Anís estrella" },
+  { id:5,  name:"Alpha Balance",      line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-alpha-balance.jpg",                                                emoji:"🥬", tag:"Cuerpo alcalino",                 desc:"Bebida alcalinizante con vegetales verdes ricos en clorofila que equilibra el pH y elimina toxinas del organismo.", benefits:["Alcaliniza el organismo","Equilibra el pH","Elimina residuos tóxicos"],                       ing:"Alfalfa · Espirulina · Chlorella · Pasto de trigo · Espinaca · Jengibre" },
+  { id:6,  name:"Berry Balance",      line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-berry-balance.jpg",                                                emoji:"🫒", tag:"Protege el tracto urinario",      desc:"Concentrado de antioxidantes de berries que protege el sistema urinario, previene molestias y evita la retención de líquidos.", benefits:["Protege el tracto urinario","Evita retención de líquidos","Equilibra el pH urinario"], ing:"Cranberry · Berries tropicales · Probióticos · Antocianina · Calcio orgánico" },
+  { id:7,  name:"Biopro+ Tect",       line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:"/prod-biopro-tect.jpg",                                                emoji:"🛡️", tag:"Activa tus defensas",            desc:"Batido con Bioprotein+ Colostrum® patentado que activa el sistema de defensas y regenera las células.", benefits:["Eleva defensas inmunitarias","Regeneración celular","Fortalece huesos"],                             ing:"Bioprotein+ Colostrum® · Bioferrín® · Aminoácidos · Calcio lácteo · DHA" },
+  { id:8,  name:"Protein Active",     line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:"/prod-protein-active.jpg",                                                emoji:"💪", tag:"Nutrición vegetal avanzada",      desc:"Proteína 100% vegetal de quinua germinada y arroz integral que regenera tejidos y reduce el daño oxidativo.", benefits:["100% vegetal y sin lactosa","Regenera tejidos","Reduce daño oxidativo"],                         ing:"Quinua germinada · Arroz integral · Arveja · Algas · DHA · Aceite de coco" },
+  { id:9,  name:"Nutraday",           line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-nutraday.jpg",                                                emoji:"⚡", tag:"Vitalidad familiar",              desc:"Refresco multivitamínico con moringa, camu camu y quinua germinada ideal para toda la familia.", benefits:["12 vitaminas + 5 minerales","Fortalece las defensas","Desarrollo físico y mental"],                    ing:"Moringa · Guayaba · Camu Camu · Açaí · Quinua germinada" },
+  { id:10, name:"Vita Xtra T+",       line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-vita-xtra-t.jpg",          emoji:"🌟", tag:"Elimina la fatiga",              desc:"Energizante con guayusa, ginseng y cordyceps que elimina la fatiga física y mental y reduce la oxidación celular.", benefits:["Energía sostenida todo el día","Alto poder antioxidante","Elimina fatiga física y mental"], ing:"Guayusa · Té verde · Açaí · Goji berry · Cordyceps · Maca · Ginseng" },
+  { id:11, name:"Vitaenergia",        line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-vitaenergia.jpg",                                                emoji:"🔥", tag:"Energía y vitalidad",              desc:"Bebida multivitamínica con antocianina de maíz morado y açaí que disipa la fatiga y refuerza el sistema inmune.", benefits:["Disipa la fatiga","Mejora asimilación de proteínas","Refuerza el sistema inmune"],         ing:"Aminoácidos · Vitaminas · Antocianina maíz morado · Açaí · Camu camu · Luteína" },
+  { id:12, name:"Xpeed",              line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-xpeed.jpg",                                                emoji:"🚀", tag:"Energía inmediata",               desc:"Bebida energizante natural gasificada con mix ancestral de maca, guaraná y teína. Sin azúcar, lista para consumir.", benefits:["Energía inmediata","Contrarresta la fatiga","Efecto sparkling natural"],                        ing:"Maca · Guaraná · Teína · Taurina · Vitamina C · Vitamina B5" },
+  { id:13, name:"Xpeed Citrus Power", line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-xpeed-citrus.jpg",                                                emoji:"🍋", tag:"Energía sabor cítrico",           desc:"Versión sin azúcar de Xpeed con sabor a limón y el mismo mix energético ancestral para vivir al máximo.", benefits:["Sin azúcar","Energía natural sostenida","Sabor limón refrescante"],                              ing:"Maca · Guaraná · Teína · Taurina · Vitamina C · Vitamina B5" },
+  { id:14, name:"Vera+",              line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-vera-plus.jpg",                                                emoji:"🛡️", tag:"Defensas inteligentes",           desc:"Aloe vera, beta glucanos y extracto de hoja de oliva que fortalecen el sistema inmune y reducen el daño oxidativo.", benefits:["Mantiene defensas activas","Reduce deterioro celular","Fortalece el sistema inmune"],     ing:"Aloe vera · Beta glucanos · N-acetilcisteína · Extracto hoja de oliva · Amalaki" },
+  { id:15, name:"Gano+ T",            line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-gano-t.jpg",                                                emoji:"🍵", tag:"Optimiza tu protección",          desc:"Té de Ganoderma Lucidum y té blanco que modula el sistema inmunológico y neutraliza radicales libres.", benefits:["Mantiene defensas activas","Modula el sistema inmune","Neutraliza radicales libres"],             ing:"Ganoderma Lucidum · Extracto de té blanco · Vitamina C y D" },
+  { id:16, name:"Gano+ Cappuccino",   line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-gano-cappuccino.jpg",                                                emoji:"☕", tag:"Cappuccino inmunoprotector",      desc:"Café cappuccino con Ganoderma Lucidum, el hongo milenario del secreto de la longevidad asiática.", benefits:["Antioxidante celular","Modula las defensas naturales","Reduce daño oxidativo"],                     ing:"Ganoderma Lucidum · Quillay · Micronutrientes" },
+  { id:17, name:"Café Ganomax",       line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-cafe-ganomax.jpg",                                                emoji:"☕", tag:"Café premium inmunológico",       desc:"Café gourmet colombiano con Ganoderma Lucidum y Uña de Gato amazónica para reforzar y regular el sistema inmune.", benefits:["Refuerza el sistema inmune","Reduce daño oxidativo","Mantiene la vitalidad"],          ing:"Café tostado · Ganoderma Lucidum · Uña de gato" },
+  { id:18, name:"Thermo T3",          line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-thermo-t3.jpg",            emoji:"🔥", tag:"Activa tu metabolismo",          desc:"Mix de tres tés con L-Carnitina y Garcinia Cambogia que transforma la grasa en energía y reduce medidas corporales.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"],          ing:"Té verde · Té negro · Té rojo · Carnitina · Garcinia Cambogia · Café verde" },
+  { id:19, name:"Nocarb-T",           line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-nocarb-t.jpg",                                                emoji:"🌾", tag:"Carbohidratos bajo control",      desc:"Fórmula de fibras solubles, cromo y té verde que reduce la elevación de glucosa tras las comidas y controla el peso.", benefits:["Controla los carbohidratos","Mantiene niveles de glucosa","Reduce acumulación de grasa"], ing:"Fibra de yacón · Acacia · Inulina · Pectina de manzana · Canela · Té verde · Cromo" },
+  { id:20, name:"Chocolate Fit",      line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-chocolate-fit.jpg",                                                emoji:"🍫", tag:"Mantente en forma deliciosamente", desc:"Bebida vegetal de cacao puro amazónico con CLA que acelera el metabolismo, reduce medidas y calma la ansiedad.", benefits:["Reduce medidas corporales","Calma la ansiedad por comer","Acelera el metabolismo"],           ing:"Cacao puro amazónico · Proteína vegetal · Café verde · CLA · Cromo orgánico" },
+  { id:21, name:"Café & Café Fit",    line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-cafe-fit.jpg",                                                emoji:"☕", tag:"Café sin perder la línea",         desc:"Café gourmet enriquecido con extracto de café verde que apoya el control de peso y reduce el apetito.", benefits:["Apoya control de peso","Reduce sensación de apetito","Reduce cansancio y fatiga"],               ing:"Café tostado liofilizado · Extracto de café verde" },
+  { id:22, name:"Café Fit Cappuccino",line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-cafe-fit-cappuccino.jpg",                                                emoji:"☕", tag:"Cappuccino sin culpa",            desc:"Cappuccino gourmet bajo en calorías con café verde Svetol® para controlar el peso sin renunciar al placer.", benefits:["Bajo en calorías","Controla peso y medidas","Reduce el apetito"],                              ing:"Café tostado · Café verde Svetol® · Leche descremada · Crema para café" },
+  { id:23, name:"Biopro+ Fit",        line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-biopro-fit.jpg",                                                emoji:"⚖️", tag:"Nutrición y reduce medidas",      desc:"Batido proteico con Prolibra® clínicamente probado que acelera el metabolismo de la grasa y tonifica el músculo.", benefits:["Acelera metabolismo de grasa","Tonifica la masa muscular","Reduce sensación de apetito"],  ing:"Bioprotein+ Colostrum® · Prolibra® · Aminoácidos · Tamarindo Malabar · DHA" },
+  { id:24, name:"Protein Active Fit", line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-protein-active-fit.jpg",           emoji:"💪", tag:"Proteína vegetal fit",           desc:"Proteína 100% vegetal con L-Carnitina y Tamarindo Malabar para controlar el peso, tonificar y reducir medidas.", benefits:["100% vegetal y sin lactosa","Controla peso y medidas","Tonifica los músculos"],              ing:"Quinua germinada · Arveja · Arroz integral · L-Carnitina · Cromo · Zinc orgánico" },
+  { id:25, name:"Protein Xoup",       line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-protein-xoup.jpg",                                                emoji:"🍲", tag:"Sopas proteicas fit",              desc:"Sopas instantáneas de proteína vegetal con Slendesta® que aumenta la saciedad y CLA que previene acumulación de grasa.", benefits:["Alta saciedad con Slendesta®","Previene acumulación de grasa","Nutrición muscular activa"], ing:"Bioprotein Active® · Slendesta® · CLA · Hierro · Zinc · Magnesio" },
+  { id:26, name:"Probal",             line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-probal.jpg",                                                emoji:"🌸", tag:"Salud femenina integral",         desc:"Té herbal con aguaje y ashwagandha que controla las molestias del período y balancea la menopausia.", benefits:["Refuerza la salud femenina","Controla molestias del período","Balance durante la menopausia"],    ing:"Aguaje · Dong Quai · Orégano · Triptófano · Magnesio · Camu-camu · Luteína" },
+  { id:27, name:"Passion",            line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-passion.jpg",                                                emoji:"🔆", tag:"Incrementa tu vigor",             desc:"Aminoácidos, jalea real, maca y ginseng que mejoran el vigor, la vitalidad y la energía de manera natural.", benefits:["Mejora la vitalidad","Incrementa la energía","Vigoriza el cuerpo"],                              ing:"Aminoácidos · Jalea real · Maca · Ginseng · Zinc orgánico" },
+  { id:28, name:"Youth Elixir",       line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-youth-elixir.jpg",                                                emoji:"✨", tag:"Activa tu juventud",              desc:"Resveratrol de uva y súper frutas que reducen radicales libres, mejoran el sueño y previenen el envejecimiento prematuro.", benefits:["Anti-envejecimiento celular","Mejora el sueño profundo","Mayor elasticidad de piel"],     ing:"Resveratrol · Aminoácidos · Optiberry® · Blueberries · Sauco · Amalaki" },
+  { id:29, name:"Golden FLX",         line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-golden-flx.jpg",                                                emoji:"🌿", tag:"Flexibilidad articular",          desc:"Té de cúrcuma orgánica con jengibre y leche de coco que previene molestias articulares y mejora la movilidad.", benefits:["Previene molestias articulares","Mejora flexibilidad y movilidad","Controla procesos oxidativos"], ing:"Cúrcuma · Jengibre · Cardamomo · Leche de coco · Pimienta negra · Canela" },
+  { id:30, name:"Beauty-In",          line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-beauty-in.jpg",                                                emoji:"💆", tag:"Belleza desde adentro",           desc:"Péptidos de colágeno bioactivo 4x más potentes que el colágeno convencional para piel firme, cabello y uñas fuertes.", benefits:["Piel más firme y elástica","Fortalece cabello y uñas","Previene envejecimiento prematuro"], ing:"Péptidos colágeno bioactivo · Coenzima Q10 · Biotina natural · Vitaminas C y E · Zinc" },
+  { id:31, name:"On",                 line:"Mental",  color:"#E53935", bg:"#fff0f0", img:"/prod-on.jpg",                                                emoji:"🧠", tag:"Mente activa y alerta",           desc:"GABA, yerba mate y DHA que activan la mente, mejoran la función cognitiva y mantienen el enfoque sin causar somnolencia.", benefits:["Mente activa y alerta","Mejora función cognitiva","Nutre el cerebro"],                     ing:"GABA · Taurina · Yerba mate · Açaí · Camu camu · Vitaminas B · DHA · ARA" },
+  { id:32, name:"No Stress",          line:"Mental",  color:"#E53935", bg:"#fff0f0", img:"/prod-no-stress.jpg",                                                emoji:"🧘", tag:"Equilibrio mental",               desc:"Aminoácidos esenciales con ashwagandha que reducen el estrés y mejoran la concentración sin causar somnolencia.", benefits:["Reduce el estrés y ansiedad","Mantiene concentración y enfoque","Mejora la relajación"],     ing:"L-Teanina · Glicina · Triptófano · Ashwagandha · Amalaki · Magnesio · Vitaminas B" },
+  { id:33, name:"Pre Sport",          line:"Sport",   color:"#546E7A", bg:"#f0f4f5", img:"/prod-pre-sport.jpg",                                                emoji:"🏃", tag:"Prepara tu cuerpo",               desc:"Electrolitos y aminoácidos que mejoran el rendimiento, aumentan la resistencia y reducen la fatiga pre-entrenamiento.", benefits:["Energía explosiva pre-entreno","Mayor resistencia y vasodilatación","Hidratación con electrolitos"], ing:"Citrulina de sandía · β-Alanina · L-Creatina nitrato · Mix isotónico · Hierba mate" },
+  { id:34, name:"Xtra Mile",          line:"Sport",   color:"#546E7A", bg:"#f0f4f5", img:"/prod-xtra-mile.jpg",                                                emoji:"🚴", tag:"Energía sostenida",               desc:"Palatinose® de bajo índice glucémico y agua de coco amazónico para energía balanceada y sostenida durante el ejercicio.", benefits:["Energía sostenida durante ejercicio","Hidratación eficiente","Reduce la fatiga"],        ing:"Palatinose® · Agua de coco amazónico · Sal de Maras · Mix de electrolitos · Zinc · Cromo" },
+  { id:35, name:"Post Sport",         line:"Sport",   color:"#546E7A", bg:"#f0f4f5", img:"/prod-post-sport.jpg",                                                emoji:"🏋️", tag:"Recuperación muscular",           desc:"BCAAs, glutamina y agua de coco que reparan y fortalecen las fibras musculares después del entrenamiento intenso.", benefits:["Repara fibras musculares","Repone electrolitos naturalmente","Neutraliza el catabolismo"],  ing:"BCAAs · Glutamina · Acerola · Granada · Agua de coco" },
+  { id:36, name:"Biopro+ Sport",      line:"Sport",   color:"#546E7A", bg:"#f0f4f5", img:"/prod-biopro-sport.jpg",                                                emoji:"💪", tag:"Músculos tonificados",            desc:"Batido proteico con Actinos® patentado que incrementa el flujo sanguíneo, genera masa muscular magra y mejora la recuperación.", benefits:["Genera masa muscular magra","Incrementa flujo sanguíneo","Mejora recuperación y oxigenación"], ing:"Bioprotein+ Colostrum® · Actinos® · Aminoácidos · Calcio lácteo · DHA" },
+  { id:37, name:"Protein Active Sport",line:"Sport",  color:"#546E7A", bg:"#f0f4f5", img:"/prod-protein-active-sport.jpg",                                                emoji:"🌱", tag:"Proteína vegetal deportiva",      desc:"Proteína 100% vegetal germinada con BCAAs y L-Glutamina para desarrollo muscular saludable y recuperación post-ejercicio.", benefits:["100% vegetal para deportistas","Recuperación muscular acelerada","Genera masa muscular magra"], ing:"Quinua germinada · Arveja · Arroz germinado · Algas · L-Glutamina · BCAAs" },
 ];
 
 const RECIPES = [
@@ -67,7 +90,7 @@ const BEFORE_AFTER = [
 
 const PACK_COLOR = { "Starter Pack":"#2d6a4f", "Transform Kit":"#C9A84C", "Elite Program":"#1565C0" };
 const CERTS = ["Clean Label","FDA Registered","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","+15,000 Socios","Ingredientes Naturales","Sin Conservantes"];
-const LINE_COLORS = { Detox:"#2d6a4f", Energy:"#7B3FA0", Protein:"#1565C0", Immunity:"#1565C0", Sport:"#E65100", Control:"#E65100" };
+const LINE_COLORS = { Detox:"#2d6a4f", Energy:"#7B3FA0", Protein:"#1565C0", Immunity:"#00897B", Sport:"#546E7A", Control:"#E65100", Mental:"#E53935" };
 
 function detectCountry() {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
@@ -80,7 +103,8 @@ function detectCountry() {
   if (tz.includes("Santiago"))   return "Chile";
   return "";
 }
-function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p); }
+function eventId(name) { return `${name}_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; }
+function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p, { eventID: eventId(n) }); }
 function waHref(phone, text) {
   const msg = encodeURIComponent(text);
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"")
@@ -88,7 +112,6 @@ function waHref(phone, text) {
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
 }
 
-// ── COUNTDOWN (reset diario a medianoche) ─────────────────────────────────────
 function useCountdown() {
   const [t, setT] = useState({h:0,m:0,s:0});
   useEffect(() => {
@@ -103,7 +126,6 @@ function useCountdown() {
   return t;
 }
 
-// ── ANNOUNCEMENT BAR ─────────────────────────────────────────────────────────
 function AnnouncementBar({ country }) {
   const t = useCountdown();
   const pad = n => String(n).padStart(2,'0');
@@ -185,7 +207,7 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
         <div style={{marginBottom:10}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:800,color:"#2d6a4f",letterSpacing:1.5,marginBottom:5}}>📅 7 DÍAS</div><div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:3}}>{plan.dias?.map((d,i)=><div key={i} style={{minWidth:95,background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:8,padding:"6px",flexShrink:0}}><div style={{fontFamily:"'Inter',sans-serif",fontWeight:700,color:"#2d6a4f",fontSize:11,textAlign:"center",background:"rgba(45,106,79,0.07)",borderRadius:4,padding:"1px 0",marginBottom:3}}>{d.dia}</div>{[{k:"desayuno",i:"🌅"},{k:"almuerzo",i:"☀️"},{k:"cena",i:"🌙"},{k:"snack",i:"🍎"}].map(({k,i:ic})=><div key={k} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#4a5568",marginBottom:2}}>{ic} {d[k]}</div>)}</div>)}</div></div>
         {plan.tips && <div style={{marginBottom:12}}>{plan.tips.map((t,i)=><div key={i} style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#2d5a3d",padding:"2px 0",display:"flex",gap:5}}><span style={{color:"#C9A84C"}}>✓</span>{t}</div>)}</div>}
         <div style={{display:"flex",gap:7}}>
-          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"NutriPlan_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
+          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"NutriPlan_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
           <button onClick={()=>setPlan(null)} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.nutriNew}</button>
         </div>
       </div>
@@ -235,7 +257,7 @@ function SymptomAnalyzer() {
       <div style={{marginBottom:8}}>{result.productos?.map((p,i)=><div key={i} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:9,padding:"7px 9px",marginBottom:4}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,color:"#1a2e1a",fontSize:11}}>{p.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",background:"#2d6a4f",color:"#fff",borderRadius:999,padding:"1px 6px",fontSize:11,fontWeight:700}}>{p.match}%</span></div><div style={{height:3,background:"rgba(45,106,79,0.1)",borderRadius:2,marginBottom:3}}><div style={{height:"100%",width:`${p.match}%`,background:"linear-gradient(90deg,#2d6a4f,#C9A84C)",borderRadius:2}}/></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{p.razon}</p></div>)}</div>
       <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"8px 10px",marginBottom:10}}><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,color:"#8B6914",fontStyle:"italic"}}>{result.mensaje_motivador}</p></div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Symptom_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
+        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Symptom_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
         <button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.symptomNew}</button>
       </div>
     </div>
@@ -832,13 +854,14 @@ const TRANSLATIONS = {
 // ── APP PRINCIPAL ─────────────────────────────────────────────────────────────
 export default function App() {
   const [scrollY,setScrollY]=useState(0); const [loaded,setLoaded]=useState(false);
-  const [selCountry]=useState(detectCountry); const [recipeFilter,setRecipeFilter]=useState(0);
-  const [activeRecipe,setActiveRecipe]=useState(null); const [prodLine,setProdLine]=useState(0);
+  const [selCountry]=useState(detectCountry); const [prodLine,setProdLine]=useState(0);
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
-  const [packModal,setPackModal]=useState(null); const [catalogOpen,setCatalogOpen]=useState(false);
+  const [modalProduct,setModalProduct]=useState(null); const [catalogOpen,setCatalogOpen]=useState(true);
   const [lang,setLang]=useState("es");
   const T=TRANSLATIONS[lang];
+  const adVariant = new URLSearchParams(window.location.search).get('v') || '';
+  const isHinchazion = adVariant === 'hinchazion';
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
@@ -850,12 +873,9 @@ export default function App() {
   const certDouble = [...CERTS,...CERTS];
   const testDouble = [...TESTIMONIALS,...TESTIMONIALS];
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
-  const lineKeys = ["","Detox","Energy","Protein","Immunity","Sport","Control"];
-  const lineLabels = ["Todos","Detox","Energy","Protein","Immunity","Sport","Control"];
+  const lineKeys   = ["","Detox","Protein","Energy","Immunity","Control","Mental","Sport"];
+  const lineLabels = ["Todos","Detox","Proteína","Energía","Inmunidad","Control Peso","Mental","Sport"];
   const filtProds = prodLine===0 ? PRODUCTS : PRODUCTS.filter(p=>p.line===lineKeys[prodLine]);
-  const catKeys = ["","Detox","Energy","Immunity","Protein","Beauty"];
-  const recipeLabels = ["Todos","Detox","Energy","Immunity","Protein","Beauty"];
-  const filtRecipes = recipeFilter===0 ? RECIPES : RECIPES.filter(r=>r.cat===catKeys[recipeFilter]);
   const countryData = COUNTRY_DATA[selectedCountry] || (selectedCountry ? {
     flag: "🌍", currency: "USD", shipping: "Entrega express dentro de tu país",
     note: "FuXion entrega directamente en tu país. Te enviamos la cotización exacta por WhatsApp.",
@@ -868,7 +888,6 @@ export default function App() {
     <LangCtx.Provider value={T}>
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
         html{scroll-behavior:smooth}
         .pf{font-family:'Playfair Display',Georgia,serif}
@@ -888,7 +907,7 @@ export default function App() {
       <AnnouncementBar country={selectedCountry||detectCountry()||""}/>
 
       {/* NAV */}
-      <nav style={{position:"fixed",top:40,left:0,right:0,zIndex:100,padding:"0 40px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:scrollY>30?"rgba(250,250,247,0.95)":"transparent",backdropFilter:scrollY>30?"blur(20px)":"none",borderBottom:scrollY>30?"1px solid rgba(26,46,26,0.08)":"none",transition:"all 0.4s ease"}}>
+      <nav style={{position:"fixed",top:40,left:0,right:0,zIndex:100,padding:"0 40px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:scrollY>40?"rgba(250,250,247,0.95)":"transparent",backdropFilter:scrollY>40?"blur(20px)":"none",borderBottom:scrollY>40?"1px solid rgba(26,46,26,0.08)":"none",transition:"all 0.4s ease"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>scrollTo("inicio")}>
           <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13}}>🌿</div>
           <span className="pf" style={{fontWeight:700,fontSize:17,color:"#1a2e1a",letterSpacing:-0.5}}>Power Vita</span>
@@ -906,26 +925,28 @@ export default function App() {
       <section id="inicio" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"160px 40px 70px",background:"linear-gradient(160deg,#FAFAF7 0%,#F0F4ED 55%,#E8F0E9 100%)",position:"relative",overflow:"hidden",textAlign:"center"}}>
         <div style={{position:"absolute",top:-70,right:-70,width:380,height:380,borderRadius:"50%",background:"radial-gradient(circle,rgba(45,106,79,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
-        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:680}}>
-          {/* Urgency badge */}
-          <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(230,81,0,0.08)",border:"1px solid rgba(230,81,0,0.25)",borderRadius:999,padding:"5px 16px",marginBottom:14}}>
+        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:660}}>
+          {/* Urgency social proof */}
+          <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(230,81,0,0.08)",border:"1px solid rgba(230,81,0,0.22)",borderRadius:999,padding:"5px 16px",marginBottom:12}}>
             <span style={{width:6,height:6,borderRadius:"50%",background:"#E65100",animation:"pulse 1.2s ease-in-out infinite",display:"inline-block"}}/>
             <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:2,textTransform:"uppercase"}}>347 personas lo compraron este mes en AR y COL</span>
           </div>
 
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22,marginLeft:8}}>
-            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.heroBadge}</span>
+          <div style={{display:"flex",justifyContent:"center",marginBottom:22}}>
+            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px"}}>
+              <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}</span>
+            </div>
           </div>
 
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
-            {T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}
+            {isHinchazion ? <>¿Sufrís de <em style={{fontStyle:"italic",color:"#2d6a4f"}}>hinchazón</em> o pesadez después de comer?</> : <>{T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}</>}
           </h1>
-          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:480,margin:"0 auto 32px",fontWeight:300}}>
-            {T.heroSub}
+          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:480,margin:"0 auto 28px",fontWeight:300}}>
+            {isHinchazion ? "No es lo que comés — es lo que tu cuerpo no puede procesar. FuXion tiene la solución natural certificada en 37 países." : T.heroSub}
           </p>
 
-          {/* CTAs principales */}
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:24}}>
+          {/* CTAs directos a WhatsApp */}
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:18}}>
             <a
               href={waHref(WA, `Hola! Vi la oferta en la web y quiero hacer mi primer pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)}
               target="_blank" rel="noreferrer"
@@ -937,9 +958,8 @@ export default function App() {
             <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Hero_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"15px 28px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none"}}>💬 WhatsApp</a>
           </div>
 
-          {/* Mini urgency */}
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:40}}>
-            <span className="int" style={{fontSize:11,color:"#9ca3af"}}>⚡ Respondemos en menos de 10 minutos</span>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:40,flexWrap:"wrap"}}>
+            <span className="int" style={{fontSize:11,color:"#9ca3af"}}>⚡ Respondemos en &lt;10 minutos</span>
             <span style={{color:"#e0e0e0"}}>·</span>
             <span className="int" style={{fontSize:11,color:"#9ca3af"}}>🔒 Pago seguro</span>
             <span style={{color:"#e0e0e0"}}>·</span>
@@ -954,81 +974,33 @@ export default function App() {
         </div>
       </section>
 
-      {/* PRODUCTO ESTRELLA — Vita Xtra T+ */}
-      <section style={{padding:"60px 40px",background:"#fff",borderBottom:"1px solid rgba(45,106,79,0.07)"}}>
-        <div style={{maxWidth:900,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:10}}>
-            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:3,textTransform:"uppercase"}}>⭐ PRODUCTO MAS VENDIDO · AR + COL</span>
+      {/* PRODUCTOS ESTRELLA — visible de inmediato */}
+      <section style={{padding:"60px 40px 40px",background:"#fff",borderBottom:"1px solid rgba(45,106,79,0.07)"}}>
+        <div style={{maxWidth:960,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:28}}>
+            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:3,textTransform:"uppercase"}}>⭐ LOS MAS VENDIDOS · AR + COL</span>
+            <div className="int" style={{fontSize:12,color:"#9ca3af",marginTop:4}}>Hacé tu pedido ahora mismo por WhatsApp</div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:28,alignItems:"center"}}>
-            {/* Producto */}
-            <div style={{background:"linear-gradient(135deg,#f5f0f9,#ede7f6)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(123,63,160,0.15)",position:"relative"}}>
-              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#7B3FA0,#9d4edd)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>MAS PEDIDO ESTE MES</div>
-              <div style={{fontSize:64,marginBottom:12}}>🌟</div>
-              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Vita Xtra T+</h2>
-              <div className="int" style={{fontSize:11,fontWeight:700,color:"#7B3FA0",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Energía · Foco · Vitalidad</div>
-              <p className="int" style={{fontSize:13,color:"#5a5a7a",lineHeight:1.7,marginBottom:18}}>Elimina la fatiga física y mental con guayusa, ginseng y micelio de cordyceps. <strong>Energía sostenida todo el día sin caídas.</strong></p>
-              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
-                {["⚡ Elimina fatiga crónica en 7 días","🧠 Foco mental todo el día","🌱 100% natural, sin estimulantes dañinos","🌍 Disponible en AR, COL y 35 países más"].map((b,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(123,63,160,0.05)",borderRadius:8,padding:"6px 10px"}}>
-                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
-                  </div>
-                ))}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:20}}>
+            {[
+              {name:"Vita Xtra T+",emoji:"🌟",color:"#7B3FA0",bg:"linear-gradient(135deg,#f5f0f9,#ede7f6)",badge:"MAS PEDIDO",tagline:"Energía · Foco · Vitalidad",desc:"Elimina la fatiga con guayusa, ginseng y cordyceps. Energía sostenida todo el día.",bullets:["⚡ Sin fatiga desde el día 7","🧠 Foco mental sostenido","🌱 100% natural"],waMsg:`Hola! Quiero el Vita Xtra T+ 🌟 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"VitaXtraT_Hero"},
+              {name:"Thermo T3",emoji:"🔥",color:"#E65100",bg:"linear-gradient(135deg,#fdf4ef,#fff3e0)",badge:"BAJAR DE PESO",tagline:"Termogénico · Quema grasa",desc:"3 tés con carnitina que transforma la grasa en energía desde la primera semana.",bullets:["🔥 Metabolismo en 72hs","⚖️ Sin rebote","🍃 Té verde · Carnitina"],waMsg:`Hola! Quiero el Thermo T3 🔥 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"ThermoT3_Hero"},
+              {name:"Rexet",emoji:"🌿",color:"#2d6a4f",bg:"linear-gradient(135deg,#f0f7f3,#e8f5e9)",badge:"DETOX ESENCIAL",tagline:"Detox · Hígado · Digestión",desc:"Efervescente con tuna roja y alcachofa. Desintoxica el hígado desde el primer uso.",bullets:["🫀 Detox hepático en 48hs","💧 Elimina toxinas","⭐ #1 en Argentina"],waMsg:`Hola! Quiero el Rexet 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta?`,event:"Rexet_Hero"},
+            ].map((p)=>(
+              <div key={p.name} style={{background:p.bg,borderRadius:20,padding:"28px 22px",textAlign:"center",border:`2px solid ${p.color}18`,position:"relative"}}>
+                <div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:`linear-gradient(135deg,${p.color},${p.color}cc)`,color:"#fff",borderRadius:999,padding:"3px 14px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>{p.badge}</div>
+                <div style={{fontSize:52,marginBottom:8}}>{p.emoji}</div>
+                <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:3}}>{p.name}</h3>
+                <div className="int" style={{fontSize:10,fontWeight:700,color:p.color,marginBottom:10,letterSpacing:1,textTransform:"uppercase"}}>{p.tagline}</div>
+                <p className="int" style={{fontSize:12,color:"#4a5568",lineHeight:1.65,marginBottom:14}}>{p.desc}</p>
+                <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:18}}>
+                  {p.bullets.map((b,i)=><div key={i} style={{background:"rgba(255,255,255,0.6)",borderRadius:7,padding:"5px 10px",fontFamily:"'Inter',sans-serif",fontSize:11,color:"#1a2e1a",textAlign:"left"}}>{b}</div>)}
+                </div>
+                <a href={waHref(WA,p.waMsg)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("InitiateCheckout",{content_name:p.event,content_type:"product"})} style={{display:"block",background:`linear-gradient(135deg,${p.color},${p.color}dd)`,color:"#fff",borderRadius:11,padding:"12px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:`0 6px 20px ${p.color}40`}}>
+                  💬 Ver precio → WhatsApp
+                </a>
               </div>
-              <a
-                href={waHref(WA, `Hola! Quiero el Vita Xtra T+ 🌟 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
-                target="_blank" rel="noreferrer"
-                onClick={()=>trackEvent("InitiateCheckout",{content_name:"VitaXtraT_Hero",content_type:"product"})}
-                style={{display:"block",background:"linear-gradient(135deg,#7B3FA0,#9d4edd)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(123,63,160,0.35)"}}>
-                💬 Quiero el Vita Xtra T+ → ver precio
-              </a>
-            </div>
-
-            {/* Segunda opcion: Thermo T3 */}
-            <div style={{background:"linear-gradient(135deg,#fdf4ef,#fff3e0)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(230,81,0,0.12)",position:"relative"}}>
-              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#E65100,#ff7043)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>BAJAR DE PESO</div>
-              <div style={{fontSize:64,marginBottom:12}}>🔥</div>
-              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Thermo T3</h2>
-              <div className="int" style={{fontSize:11,fontWeight:700,color:"#E65100",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Termogénico · Quema grasa · Control de peso</div>
-              <p className="int" style={{fontSize:13,color:"#5a5a5a",lineHeight:1.7,marginBottom:18}}>Infusión de 3 tés con carnitina que activa la termogénesis y <strong>transforma la grasa en energía</strong> desde la primera semana.</p>
-              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
-                {["🔥 Activa el metabolismo en 72hs","⚖️ Control de peso sin rebote","🍃 Té verde · Té negro · Carnitina","📦 Cómodo en sachet, fácil de tomar"].map((b,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(230,81,0,0.05)",borderRadius:8,padding:"6px 10px"}}>
-                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
-                  </div>
-                ))}
-              </div>
-              <a
-                href={waHref(WA, `Hola! Quiero el Thermo T3 🔥 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
-                target="_blank" rel="noreferrer"
-                onClick={()=>trackEvent("InitiateCheckout",{content_name:"ThermoT3_Hero",content_type:"product"})}
-                style={{display:"block",background:"linear-gradient(135deg,#E65100,#ff7043)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(230,81,0,0.3)"}}>
-                💬 Quiero el Thermo T3 → ver precio
-              </a>
-            </div>
-
-            {/* Tercer producto: Reset */}
-            <div style={{background:"linear-gradient(135deg,#f0f7f3,#e8f5e9)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(45,106,79,0.12)",position:"relative"}}>
-              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#2d6a4f,#52b788)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>DETOX ESENCIAL</div>
-              <div style={{fontSize:64,marginBottom:12}}>🌿</div>
-              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Reset</h2>
-              <div className="int" style={{fontSize:11,fontWeight:700,color:"#2d6a4f",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Detox · Hígado · Digestión</div>
-              <p className="int" style={{fontSize:13,color:"#3a5a3a",lineHeight:1.7,marginBottom:18}}>Bebida efervescente con tuna roja y alcachofa que <strong>desintoxica el hígado y reactiva el metabolismo</strong> desde el primer uso.</p>
-              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
-                {["🫀 Desintoxica el hígado en 48hs","💧 Elimina toxinas acumuladas","🌿 Tuna roja · Alcachofa · Clorofila","⭐ #1 más pedido en Argentina"].map((b,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.05)",borderRadius:8,padding:"6px 10px"}}>
-                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
-                  </div>
-                ))}
-              </div>
-              <a
-                href={waHref(WA, `Hola! Quiero el Reset 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
-                target="_blank" rel="noreferrer"
-                onClick={()=>trackEvent("InitiateCheckout",{content_name:"Reset_Hero",content_type:"product"})}
-                style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#52b788)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(45,106,79,0.3)"}}>
-                💬 Quiero el Reset → ver precio
-              </a>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1072,8 +1044,7 @@ export default function App() {
                     <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                   <div style={{display:"flex",gap:7,marginTop:"auto"}}>
-                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.stepCta1}</a>
-                    <button onClick={()=>{trackEvent("Purchase",{content_name:p.title,content_type:"product",currency:"USD"});setPackModal(p.title);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.stepCta2}</button>
+                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                   </div>
                 </div>
               </div>
@@ -1099,8 +1070,7 @@ export default function App() {
                 <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
                 <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
                 <div style={{display:"flex",gap:8}}>
-                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.packCta1}</a>
-                  <button onClick={()=>{trackEvent("Purchase",{content_name:pack.name,content_type:"product",currency:"USD"});setPackModal(pack.name);}} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",border:"none",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.packCta2}</button>
+                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                 </div>
               </div>
             ))}
@@ -1117,24 +1087,21 @@ export default function App() {
               <div style={{display:"flex",gap:7,marginBottom:24,flexWrap:"wrap"}}>
                 {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"6px 14px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:14}}>
                 {filtProds.map(p=>{
                   const unavail = selectedCountry && countryData?.unavailable?.includes(p.name);
                   return (
-                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${unavail?"rgba(0,0,0,0.06)":hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id&&!unavail?`0 14px 36px ${p.color}18`:"0 2px 10px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id&&!unavail?"translateY(-4px)":"translateY(0)",display:"flex",flexDirection:"column",opacity:unavail?0.52:1,position:"relative"}}>
-                    {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:18}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 12px"}}>{T.unavailLabel} {selectedCountry}</div><a href={waHref(WA, `Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)} target="_blank" rel="noreferrer" style={{marginTop:6,background:"#25D366",color:"#fff",borderRadius:8,padding:"5px 12px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textDecoration:"none"}}>{T.unavailCta}</a></div>}
-                    <div style={{background:hovCard===p.id&&!unavail?p.color:p.bg,height:120,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"background .3s"}}>
-                      <div style={{position:"absolute",top:8,left:8,background:hovCard===p.id&&!unavail?"rgba(255,255,255,0.22)":p.color,color:"#fff",borderRadius:999,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
-                      {p.img?<img src={p.img} alt={p.name} style={{maxHeight:100,maxWidth:"85%",objectFit:"contain",filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
-                      <div style={{display:p.img?"none":"flex",fontSize:40,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
+                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} onClick={()=>{if(!unavail){setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}}} style={{background:"#fff",borderRadius:16,overflow:"hidden",border:`1px solid ${unavail?"rgba(0,0,0,0.06)":hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id&&!unavail?`0 10px 28px ${p.color}18`:"0 2px 8px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id&&!unavail?"translateY(-3px)":"translateY(0)",display:"flex",flexDirection:"column",opacity:unavail?0.52:1,position:"relative",cursor:unavail?"default":"pointer"}}>
+                    {unavail&&<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.72)",borderRadius:16}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#9ca3af",textAlign:"center",padding:"0 10px"}}>{T.unavailLabel} {selectedCountry}</div><a href={waHref(WA, `Hola! ¿Hay alguna alternativa a ${p.name} disponible en ${selectedCountry}? 🌿`)} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{marginTop:5,background:"#25D366",color:"#fff",borderRadius:7,padding:"4px 10px",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:8,textDecoration:"none"}}>{T.unavailCta}</a></div>}
+                    <div style={{background:p.bg,height:100,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+                      <div style={{position:"absolute",top:7,left:7,background:p.color,color:"#fff",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
+                      {p.img?<img src={p.img} alt={p.name} loading="lazy" style={{maxHeight:84,maxWidth:"80%",objectFit:"contain",filter:"drop-shadow(0 3px 8px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
+                      <div style={{display:p.img?"none":"flex",fontSize:36,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
                     </div>
-                    <div style={{padding:"13px 14px",flex:1,display:"flex",flexDirection:"column",gap:4}}>
-                      <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a"}}>{p.name}</div>
-                      <p className="int" style={{fontSize:10,color:"#7a9a7a",lineHeight:1.5,flex:1}}>{p.desc}</p>
-                      <div style={{display:"flex",gap:5,marginTop:6}}>
-                        <a href={waHref(WA, `Hola! Me interesa ${p.name} de FuXion. ¿Precio en mi país? 🌿`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${p.name}_Precio`})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,textAlign:"center",textDecoration:"none"}}>{T.catalogPriceCta}</a>
-                        <button onClick={()=>{trackEvent("Purchase",{content_name:p.name,content_type:"product",currency:"USD"});setPackModal(p.name);}} style={{flex:1,background:p.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:9,cursor:"pointer"}}>{T.catalogBuyCta}</button>
-                      </div>
+                    <div style={{padding:"10px 11px 11px",flex:1,display:"flex",flexDirection:"column",gap:3}}>
+                      <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{p.name}</div>
+                      <p className="int" style={{fontSize:9,color:p.color,fontStyle:"italic",lineHeight:1.4}}>{p.tag}</p>
+                      <button onClick={e=>{e.stopPropagation();if(!unavail){setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}}} style={{marginTop:"auto",width:"100%",background:"transparent",border:`1.5px solid ${p.color}`,borderRadius:7,padding:"6px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:9,color:p.color,cursor:unavail?"default":"pointer",transition:"all .2s"}} onMouseEnter={e=>{if(!unavail){e.currentTarget.style.background=p.color;e.currentTarget.style.color="#fff";}}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=p.color;}}>Ver más →</button>
                     </div>
                   </div>
                   );
@@ -1175,32 +1142,17 @@ export default function App() {
         </div>
       </section>
 
-      {/* RECETARIO OCULTO */}
-      {false && <section id="recetario" style={{padding:"80px 40px",background:"#F0F4ED"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:44}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Power Vita Kitchen</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",lineHeight:1.1}}>Recetas que <em style={{color:"#2d6a4f",fontStyle:"italic"}}>nutren y deleitan</em></h2>
-          </div>
-          <div style={{display:"flex",gap:7,justifyContent:"center",marginBottom:28,flexWrap:"wrap"}}>
-            {recipeLabels.map((f,i)=><button key={i} onClick={()=>setRecipeFilter(i)} className="int" style={{padding:"7px 16px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:recipeFilter===i?"#1a2e1a":"rgba(26,46,26,0.14)",background:recipeFilter===i?"#1a2e1a":"transparent",color:recipeFilter===i?"#fff":"#1a2e1a",transition:"all .2s"}}>{f}</button>)}
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(215px,1fr))",gap:14}}>
-            {filtRecipes.map(r=>(
-              <div key={r.id} style={{background:"#fff",borderRadius:18,overflow:"hidden",transition:"transform .25s,box-shadow .25s",cursor:"pointer"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(201,168,76,0.2)";}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="none";}}>
-                <div style={{background:"linear-gradient(135deg,#F0F4ED,#E0EBE0)",height:88,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{r.img}</div>
-                <div style={{padding:"12px 13px"}}>
-                  <div className="int" style={{fontSize:8,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:3,color:r.cat==="Detox"?"#2d6a4f":r.cat==="Energy"?"#7B3FA0":r.cat==="Immunity"?"#1565C0":r.cat==="Protein"?"#1565C0":"#C2185B"}}>{r.cat}</div>
-                  <h3 className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a",marginBottom:3}}>{r.name}</h3>
-                  <div className="int" style={{fontSize:9,color:"#C9A84C",fontWeight:700,marginBottom:6}}>✦ {r.product}</div>
-                  <ul style={{listStyle:"none",padding:0,margin:"0 0 9px"}}>{r.ingredients.slice(0,4).map((ing,i)=><li key={i} className="int" style={{fontSize:9,color:"#7a9a7a",padding:"1px 0",display:"flex",gap:4}}><span style={{color:"#2d6a4f"}}>·</span>{ing}</li>)}{r.ingredients.length>4&&<li className="int" style={{fontSize:8,color:"#C9A84C"}}>+{r.ingredients.length-4} más...</li>}</ul>
-                  <button onClick={()=>setActiveRecipe(r)} style={{width:"100%",background:"#1a2e1a",color:"#fff",border:"none",borderRadius:8,padding:"7px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:9,cursor:"pointer"}}>Ver Preparación →</button>
-                </div>
-              </div>
-            ))}
+      {/* LEAD FORM */}
+      <section style={{padding:"60px 40px",background:"#F0F4ED"}}>
+        <div style={{maxWidth:500,margin:"0 auto"}}>
+          <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:22,padding:"38px 34px",boxShadow:"0 12px 44px rgba(45,106,79,0.07)",textAlign:"center"}}>
+            <div style={{fontSize:38,marginBottom:9}}>🎯</div>
+            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>{T.leadTitle}</h2>
+            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>{T.leadSub}</p>
+            <LeadFormInline T={T}/>
           </div>
         </div>
-      </section>}
+      </section>
 
       {/* IA TOOLS */}
       <section id="iatools" style={{padding:"80px 40px",background:"linear-gradient(160deg,#020b18,#041a0e 50%,#020b18)",position:"relative",overflow:"hidden"}}>
@@ -1217,7 +1169,7 @@ export default function App() {
               {T.iaTitle1}<br/>
               <span style={{background:"linear-gradient(135deg,#C9A84C,#FFD700)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontStyle:"italic"}}>{T.iaTitleEm}</span>
             </h2>
-            <p className="int" style={{color:"rgba(255,255,255,0.85)",fontSize:14,maxWidth:480,margin:"0 auto",lineHeight:1.8}}>4 herramientas que <span style={{color:"#FFD700",fontWeight:700}}>ningún otro distribuidor FuXion</span> en el mundo tiene. Gratis.</p>
+            <p className="int" style={{color:"rgba(255,255,255,0.85)",fontSize:14,maxWidth:480,margin:"0 auto",lineHeight:1.8}}>2 herramientas que <span style={{color:"#FFD700",fontWeight:700}}>ningún otro distribuidor FuXion</span> en el mundo tiene. Gratis.</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:22}}>
             {/* NutriPlan */}
@@ -1231,18 +1183,6 @@ export default function App() {
               <div style={{height:2,background:"linear-gradient(90deg,transparent,#1565C0,#42a5f5,#1565C0,transparent)"}}/>
               <div style={{padding:"15px 17px 10px",display:"flex",alignItems:"center",gap:10,borderBottom:"1px solid rgba(21,101,192,0.14)"}}><div style={{width:38,height:38,borderRadius:10,background:"rgba(21,101,192,0.28)",border:"1px solid rgba(66,165,245,0.36)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>🔬</div><div style={{flex:1}}><div className="pf" style={{color:"#fff",fontWeight:700,fontSize:12,marginBottom:1}}>Analizador de Síntomas</div><div className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:9}}>Diagnóstico · Productos ideales</div></div><div style={{background:"rgba(66,165,245,0.18)",border:"1px solid rgba(66,165,245,0.45)",borderRadius:7,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,color:"#42a5f5"}}>AI ✦</div></div>
               <SymptomAnalyzer/>
-            </div>
-            {/* ROI Predictor */}
-            <div style={{background:"rgba(18,12,3,0.88)",backdropFilter:"blur(20px)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:24,overflow:"hidden",boxShadow:"0 24px 52px rgba(0,0,0,0.45)",transition:"transform .3s,box-shadow .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-8px)";e.currentTarget.style.boxShadow="0 36px 72px rgba(0,0,0,0.55),0 0 100px rgba(201,168,76,0.15)";}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 24px 52px rgba(0,0,0,0.45)";}}>
-              <div style={{height:2,background:"linear-gradient(90deg,transparent,#C9A84C,#FFD700,#C9A84C,transparent)"}}/>
-              <div style={{padding:"15px 17px 10px",display:"flex",alignItems:"center",gap:10,borderBottom:"1px solid rgba(201,168,76,0.14)"}}><div style={{width:38,height:38,borderRadius:10,background:"rgba(201,168,76,0.28)",border:"1px solid rgba(255,215,0,0.36)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>💰</div><div style={{flex:1}}><div className="pf" style={{color:"#FFD700",fontWeight:700,fontSize:12,marginBottom:1}}>ROI Predictor IA</div><div className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:9}}>Proyección · Ingresos reales</div></div><div style={{background:"rgba(255,215,0,0.13)",border:"1px solid rgba(255,215,0,0.45)",borderRadius:7,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,color:"#FFD700"}}>AI ✦</div></div>
-              <ROIPredictor/>
-            </div>
-            {/* Elite Program */}
-            <div style={{background:"rgba(10,5,1,0.9)",backdropFilter:"blur(20px)",border:"1px solid rgba(201,168,76,0.45)",borderRadius:24,overflow:"hidden",boxShadow:"0 24px 52px rgba(0,0,0,0.5),0 0 70px rgba(201,168,76,0.07)",transition:"transform .3s,box-shadow .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-8px)";e.currentTarget.style.boxShadow="0 36px 72px rgba(0,0,0,0.6),0 0 120px rgba(201,168,76,0.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 24px 52px rgba(0,0,0,0.5),0 0 70px rgba(201,168,76,0.07)";}}>
-              <div style={{height:3,background:"linear-gradient(90deg,transparent,#C9A84C,#FFD700,#FFD700,#C9A84C,transparent)"}}/>
-              <div style={{padding:"15px 17px 10px",display:"flex",alignItems:"center",gap:10,borderBottom:"1px solid rgba(201,168,76,0.18)"}}><div style={{width:38,height:38,borderRadius:10,background:"rgba(201,168,76,0.36)",border:"1px solid rgba(255,215,0,0.48)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>👑</div><div style={{flex:1}}><div className="pf" style={{color:"#FFD700",fontWeight:700,fontSize:12,marginBottom:1}}>Elite Program 90 días</div><div className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:9}}>Plan completo · IA genera tu protocolo</div></div><div style={{background:"rgba(255,215,0,0.13)",border:"1px solid rgba(255,215,0,0.55)",borderRadius:7,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,color:"#FFD700"}}>AI ✦</div></div>
-              <EliteProgram/>
             </div>
           </div>
           <div style={{textAlign:"center",marginTop:40}}>
@@ -1322,18 +1262,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* LEAD FORM */}
-      <section style={{padding:"80px 40px",background:"#F0F4ED"}}>
-        <div style={{maxWidth:500,margin:"0 auto"}}>
-          <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:22,padding:"38px 34px",boxShadow:"0 12px 44px rgba(45,106,79,0.07)",textAlign:"center"}}>
-            <div style={{fontSize:38,marginBottom:9}}>🎯</div>
-            <h2 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.8rem)",fontWeight:700,color:"#1a2e1a",marginBottom:7}}>{T.leadTitle}</h2>
-            <p className="int" style={{color:"#7a9a7a",fontSize:13,lineHeight:1.7,marginBottom:24}}>{T.leadSub}</p>
-            <LeadFormInline T={T}/>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section style={{padding:"80px 40px",background:"#F0F4ED"}}>
         <div style={{maxWidth:720,margin:"0 auto"}}>
@@ -1345,7 +1273,7 @@ export default function App() {
             {T.faqQA.map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
           </div>
           <div style={{textAlign:"center",marginTop:36}}>
-            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FAQ_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
+            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"FAQ_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
           </div>
         </div>
       </section>
@@ -1377,55 +1305,52 @@ export default function App() {
         <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
       </footer>
 
-      {/* MODAL DE COMPRA — WhatsApp directo */}
-      {packModal&&(
-        <div onClick={()=>setPackModal(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",backdropFilter:"blur(12px)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:24,padding:"36px 30px",maxWidth:400,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,0.3)"}}>
-            <div style={{fontSize:40,marginBottom:8}}>🛒</div>
-            <h3 className="pf" style={{fontSize:19,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>{packModal}</h3>
-            <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.6,marginBottom:8}}>
-              {selectedCountry ? `Entrega en ${selectedCountry} · Pago por WhatsApp` : "Consultá precio y envío por WhatsApp en segundos"}
-            </p>
-            {/* Urgency */}
-            <div style={{background:"rgba(230,81,0,0.07)",border:"1px solid rgba(230,81,0,0.2)",borderRadius:10,padding:"7px 14px",marginBottom:22,display:"inline-flex",alignItems:"center",gap:6}}>
-              <span style={{width:6,height:6,borderRadius:"50%",background:"#E65100",animation:"pulse 1.2s ease-in-out infinite",display:"inline-block"}}/>
-              <span className="int" style={{fontSize:11,color:"#E65100",fontWeight:700}}>Oferta válida solo hoy · Respondemos en &lt;10 min</span>
+      {/* MODAL DETALLE PRODUCTO */}
+      {modalProduct&&(
+        <div onClick={()=>setModalProduct(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",backdropFilter:"blur(12px)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,maxWidth:420,width:"100%",boxShadow:"0 32px 80px rgba(0,0,0,0.35)",overflow:"hidden",maxHeight:"90vh",overflowY:"auto"}}>
+            <div style={{height:8,background:modalProduct.color}}/>
+            <div style={{background:modalProduct.bg,padding:"22px 22px 16px",display:"flex",flexDirection:"column",alignItems:"center",position:"relative"}}>
+              <button onClick={()=>setModalProduct(null)} style={{position:"absolute",top:12,right:14,background:"rgba(0,0,0,0.07)",border:"none",borderRadius:"50%",width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"#555"}}>✕</button>
+              {modalProduct.img
+                ? <img src={modalProduct.img} alt={modalProduct.name} style={{height:90,objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,0.14))",marginBottom:10}}/>
+                : <div style={{fontSize:60,marginBottom:10,lineHeight:1}}>{modalProduct.emoji}</div>}
+              <div style={{background:modalProduct.color,color:"#fff",borderRadius:999,padding:"2px 10px",fontFamily:"'Inter',sans-serif",fontSize:8,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",marginBottom:5}}>{modalProduct.line}</div>
+              <p className="int" style={{fontSize:10,color:modalProduct.color,fontStyle:"italic",marginBottom:4}}>{modalProduct.tag}</p>
+              <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",textAlign:"center",lineHeight:1.2}}>{modalProduct.name}</h3>
             </div>
-            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:14}}>
-              <a
-                href={waHref(WA, `¡Hola! Quiero comprar: ${packModal} 🛒\nEstoy en: ${selectedCountry||"mi país"}\n¿Cuánto cuesta y cómo pago?`)}
-                target="_blank" rel="noreferrer"
-                onClick={()=>{trackEvent("Purchase",{content_name:packModal,content_type:"product"});setPackModal(null);}}
-                style={{display:"block",background:"linear-gradient(135deg,#25D366,#128C7E)",color:"#fff",borderRadius:12,padding:"16px 20px",fontFamily:"'Inter',sans-serif",fontWeight:800,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
-                💬 Quiero este producto → WhatsApp
-                <div style={{fontSize:10,fontWeight:400,opacity:0.9,marginTop:2}}>Precio + envío + forma de pago</div>
-              </a>
-              <a
-                href={waHref(WA, `¡Hola! Me interesa ser distribuidor y vender: ${packModal} 💼\nEstoy en: ${selectedCountry||"mi país"}\n¿Cómo funciona el negocio?`)}
-                target="_blank" rel="noreferrer"
-                onClick={()=>{trackEvent("Lead",{content_name:`${packModal}_Negocio`});setPackModal(null);}}
-                style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"12px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textDecoration:"none"}}>
-                💼 Quiero ser distribuidor
-                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:1}}>Precio especial + ingresos</div>
-              </a>
+            <div style={{padding:"18px 22px 22px"}}>
+              <p className="int" style={{fontSize:13,color:"#4a5568",lineHeight:1.6,marginBottom:14}}>{modalProduct.desc}</p>
+              <hr style={{border:"none",borderTop:"1px solid rgba(0,0,0,0.07)",marginBottom:14}}/>
+              <div style={{marginBottom:12}}>
+                <div className="int" style={{fontSize:10,fontWeight:800,color:modalProduct.color,letterSpacing:1.5,marginBottom:8}}>✦ POR QUÉ FUNCIONA</div>
+                {modalProduct.benefits.map((b,i)=><div key={i} style={{display:"flex",gap:7,marginBottom:5,alignItems:"flex-start"}}><span style={{color:modalProduct.color,fontWeight:700,fontSize:12,lineHeight:1.4}}>✓</span><span className="int" style={{fontSize:12,color:"#4a5568",lineHeight:1.4}}>{b}</span></div>)}
+              </div>
+              <div style={{marginBottom:14}}>
+                <div className="int" style={{fontSize:10,fontWeight:800,color:"#7a9a7a",letterSpacing:1.5,marginBottom:5}}>🌿 INGREDIENTES CLAVE</div>
+                <p className="int" style={{fontSize:11,color:"#9ca3af",fontStyle:"italic",lineHeight:1.5}}>{modalProduct.ing}</p>
+              </div>
+              <hr style={{border:"none",borderTop:"1px solid rgba(0,0,0,0.07)",marginBottom:14}}/>
+              <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                <a href={waHref(WA, `Hola! Me interesa ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${modalProduct.name}_Precio`})} style={{display:"block",width:"100%",background:"#25D366",color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>💬 Consultar precio en mi país</a>
+                <a href={waHref(WA, `Hola! Quiero comprar ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cómo lo pido?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Purchase",{content_name:modalProduct.name,content_type:"product",content_ids:[String(modalProduct.id)],currency:"USD",value:1})} style={{display:"block",width:"100%",background:modalProduct.color,color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>🛒 Lo quiero · ¿Cómo lo pido?</a>
+              </div>
+              <p className="int" style={{fontSize:10,color:"#9ca3af",textAlign:"center",marginTop:9}}>Entrega disponible en +20 países de Latinoamérica 🌍</p>
             </div>
-            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>Cancelar</button>
           </div>
         </div>
       )}
 
-      <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
-
-      {/* Botón flotante WhatsApp — prominente con texto */}
-      <a
-        href={waHref(WA, `Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)}
-        target="_blank" rel="noreferrer"
-        onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})}
-        style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}>
-        <span style={{fontSize:18}}>💬</span> Hacer pedido
+      {/* STICKY MOBILE CTA */}
+      <style>{`.sticky-wa-bar{display:flex}@media(min-width:640px){.sticky-wa-bar{display:none!important}}@media(max-width:639px){footer{padding-bottom:72px!important}}`}</style>
+      <a href={waHref(WA,"Hola! Quiero más info sobre Power Vita FuXion 🌿 Soy de [tu país].")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
+        <span style={{fontSize:18}}>💬</span>
+        <span>Consultar ahora · Respondemos al instante</span>
       </a>
 
-      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:16,zIndex:250,width:52,height:52,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:20,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
+      <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
+      <a href={waHref(WA,`Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})} style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}><span style={{fontSize:18}}>💬</span> Hacer pedido</a>
+      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
     </div>
