@@ -88,6 +88,46 @@ function waHref(phone, text) {
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
 }
 
+// ── COUNTDOWN (reset diario a medianoche) ─────────────────────────────────────
+function useCountdown() {
+  const [t, setT] = useState({h:0,m:0,s:0});
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const end = new Date(now); end.setHours(24,0,0,0);
+      const d = end - now;
+      setT({ h:Math.floor(d/3600000), m:Math.floor((d%3600000)/60000), s:Math.floor((d%60000)/1000) });
+    };
+    tick(); const id = setInterval(tick, 1000); return () => clearInterval(id);
+  }, []);
+  return t;
+}
+
+// ── ANNOUNCEMENT BAR ─────────────────────────────────────────────────────────
+function AnnouncementBar({ country }) {
+  const t = useCountdown();
+  const pad = n => String(n).padStart(2,'0');
+  const loc = country === "Argentina" ? "🇦🇷 Envío gratis a Argentina"
+            : country === "Colombia"  ? "🇨🇴 Envío gratis a Colombia"
+            : country === "Uruguay"   ? "🇺🇾 Envío express 24-48hs"
+            : "🚚 Envío gratis en tu primer pedido";
+  return (
+    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:200,background:"linear-gradient(90deg,#1a2e1a,#2d6a4f,#1a2e1a)",padding:"9px 20px",display:"flex",alignItems:"center",justifyContent:"center",gap:16,flexWrap:"wrap"}}>
+      <span className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:11,fontWeight:700}}>🔥 OFERTA HOY · {loc} · Termina en:</span>
+      <div style={{display:"flex",gap:4,alignItems:"center"}}>
+        {[{v:t.h,l:"hs"},{v:t.m,l:"min"},{v:t.s,l:"seg"}].map(({v,l},i)=>(
+          <span key={i} style={{display:"flex",alignItems:"center",gap:3}}>
+            <span className="int" style={{background:"rgba(255,255,255,0.15)",color:"#fff",borderRadius:5,padding:"2px 7px",fontSize:12,fontWeight:800,minWidth:28,textAlign:"center"}}>{pad(v)}</span>
+            <span className="int" style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>{l}</span>
+            {i<2&&<span style={{color:"#C9A84C",fontWeight:800,fontSize:12,marginLeft:2}}>:</span>}
+          </span>
+        ))}
+      </div>
+      <span className="int" style={{color:"#C9A84C",fontSize:10,fontWeight:800,letterSpacing:1}}>↑ PRECIO ESPECIAL SOLO HOY</span>
+    </div>
+  );
+}
+
 
 // ── INITIALS AVATAR ───────────────────────────────────────────────────────────
 function Avatar({ name, color="#2d6a4f", size=52 }) {
@@ -845,8 +885,10 @@ export default function App() {
         ::-webkit-scrollbar-thumb{background:#2d6a4f;border-radius:3px}
       `}</style>
 
+      <AnnouncementBar country={selectedCountry||detectCountry()||""}/>
+
       {/* NAV */}
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,padding:"0 40px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:scrollY>30?"rgba(250,250,247,0.95)":"transparent",backdropFilter:scrollY>30?"blur(20px)":"none",borderBottom:scrollY>30?"1px solid rgba(26,46,26,0.08)":"none",transition:"all 0.4s ease"}}>
+      <nav style={{position:"fixed",top:40,left:0,right:0,zIndex:100,padding:"0 40px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:scrollY>30?"rgba(250,250,247,0.95)":"transparent",backdropFilter:scrollY>30?"blur(20px)":"none",borderBottom:scrollY>30?"1px solid rgba(26,46,26,0.08)":"none",transition:"all 0.4s ease"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>scrollTo("inicio")}>
           <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13}}>🌿</div>
           <span className="pf" style={{fontWeight:700,fontSize:17,color:"#1a2e1a",letterSpacing:-0.5}}>Power Vita</span>
@@ -861,27 +903,132 @@ export default function App() {
       </nav>
 
       {/* HERO */}
-      <section id="inicio" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 70px",background:"linear-gradient(160deg,#FAFAF7 0%,#F0F4ED 55%,#E8F0E9 100%)",position:"relative",overflow:"hidden",textAlign:"center"}}>
+      <section id="inicio" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"160px 40px 70px",background:"linear-gradient(160deg,#FAFAF7 0%,#F0F4ED 55%,#E8F0E9 100%)",position:"relative",overflow:"hidden",textAlign:"center"}}>
         <div style={{position:"absolute",top:-70,right:-70,width:380,height:380,borderRadius:"50%",background:"radial-gradient(circle,rgba(45,106,79,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
-        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:640}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22}}>
+        <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:680}}>
+          {/* Urgency badge */}
+          <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(230,81,0,0.08)",border:"1px solid rgba(230,81,0,0.25)",borderRadius:999,padding:"5px 16px",marginBottom:14}}>
+            <span style={{width:6,height:6,borderRadius:"50%",background:"#E65100",animation:"pulse 1.2s ease-in-out infinite",display:"inline-block"}}/>
+            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:2,textTransform:"uppercase"}}>347 personas lo compraron este mes en AR y COL</span>
+          </div>
+
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22,marginLeft:8}}>
             <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.heroBadge}</span>
           </div>
+
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
             {T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}
           </h1>
-          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:460,margin:"0 auto 36px",fontWeight:300}}>
+          <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:480,margin:"0 auto 32px",fontWeight:300}}>
             {T.heroSub}
           </p>
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
-            <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
-            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
+
+          {/* CTAs principales */}
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:24}}>
+            <a
+              href={waHref(WA, `Hola! Vi la oferta en la web y quiero hacer mi primer pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)}
+              target="_blank" rel="noreferrer"
+              onClick={()=>trackEvent("InitiateCheckout",{content_name:"Hero_PrimerPedido"})}
+              className="int"
+              style={{background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",padding:"15px 32px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 28px rgba(45,106,79,0.35)"}}>
+              Quiero hacer mi pedido →
+            </a>
+            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Hero_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"15px 28px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none"}}>💬 WhatsApp</a>
           </div>
+
+          {/* Mini urgency */}
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:40}}>
+            <span className="int" style={{fontSize:11,color:"#9ca3af"}}>⚡ Respondemos en menos de 10 minutos</span>
+            <span style={{color:"#e0e0e0"}}>·</span>
+            <span className="int" style={{fontSize:11,color:"#9ca3af"}}>🔒 Pago seguro</span>
+            <span style={{color:"#e0e0e0"}}>·</span>
+            <span className="int" style={{fontSize:11,color:"#9ca3af"}}>✅ GMP Certified</span>
+          </div>
+
           <div style={{display:"flex",gap:40,justifyContent:"center"}}>
             {T.heroStats.map(([n,l])=>(
               <div key={l}><div className="pf" style={{fontSize:26,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{n}</div><div className="int" style={{fontSize:10,color:"#7a9a7a",marginTop:3,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>{l}</div></div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUCTO ESTRELLA — Vita Xtra T+ */}
+      <section style={{padding:"60px 40px",background:"#fff",borderBottom:"1px solid rgba(45,106,79,0.07)"}}>
+        <div style={{maxWidth:900,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:10}}>
+            <span className="int" style={{fontSize:10,fontWeight:800,color:"#E65100",letterSpacing:3,textTransform:"uppercase"}}>⭐ PRODUCTO MAS VENDIDO · AR + COL</span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:28,alignItems:"center"}}>
+            {/* Producto */}
+            <div style={{background:"linear-gradient(135deg,#f5f0f9,#ede7f6)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(123,63,160,0.15)",position:"relative"}}>
+              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#7B3FA0,#9d4edd)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>MAS PEDIDO ESTE MES</div>
+              <div style={{fontSize:64,marginBottom:12}}>🌟</div>
+              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Vita Xtra T+</h2>
+              <div className="int" style={{fontSize:11,fontWeight:700,color:"#7B3FA0",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Energía · Foco · Vitalidad</div>
+              <p className="int" style={{fontSize:13,color:"#5a5a7a",lineHeight:1.7,marginBottom:18}}>Elimina la fatiga física y mental con guayusa, ginseng y micelio de cordyceps. <strong>Energía sostenida todo el día sin caídas.</strong></p>
+              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
+                {["⚡ Elimina fatiga crónica en 7 días","🧠 Foco mental todo el día","🌱 100% natural, sin estimulantes dañinos","🌍 Disponible en AR, COL y 35 países más"].map((b,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(123,63,160,0.05)",borderRadius:8,padding:"6px 10px"}}>
+                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href={waHref(WA, `Hola! Quiero el Vita Xtra T+ 🌟 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
+                target="_blank" rel="noreferrer"
+                onClick={()=>trackEvent("InitiateCheckout",{content_name:"VitaXtraT_Hero",content_type:"product"})}
+                style={{display:"block",background:"linear-gradient(135deg,#7B3FA0,#9d4edd)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(123,63,160,0.35)"}}>
+                💬 Quiero el Vita Xtra T+ → ver precio
+              </a>
+            </div>
+
+            {/* Segunda opcion: Thermo T3 */}
+            <div style={{background:"linear-gradient(135deg,#fdf4ef,#fff3e0)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(230,81,0,0.12)",position:"relative"}}>
+              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#E65100,#ff7043)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>BAJAR DE PESO</div>
+              <div style={{fontSize:64,marginBottom:12}}>🔥</div>
+              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Thermo T3</h2>
+              <div className="int" style={{fontSize:11,fontWeight:700,color:"#E65100",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Termogénico · Quema grasa · Control de peso</div>
+              <p className="int" style={{fontSize:13,color:"#5a5a5a",lineHeight:1.7,marginBottom:18}}>Infusión de 3 tés con carnitina que activa la termogénesis y <strong>transforma la grasa en energía</strong> desde la primera semana.</p>
+              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
+                {["🔥 Activa el metabolismo en 72hs","⚖️ Control de peso sin rebote","🍃 Té verde · Té negro · Carnitina","📦 Cómodo en sachet, fácil de tomar"].map((b,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(230,81,0,0.05)",borderRadius:8,padding:"6px 10px"}}>
+                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href={waHref(WA, `Hola! Quiero el Thermo T3 🔥 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
+                target="_blank" rel="noreferrer"
+                onClick={()=>trackEvent("InitiateCheckout",{content_name:"ThermoT3_Hero",content_type:"product"})}
+                style={{display:"block",background:"linear-gradient(135deg,#E65100,#ff7043)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(230,81,0,0.3)"}}>
+                💬 Quiero el Thermo T3 → ver precio
+              </a>
+            </div>
+
+            {/* Tercer producto: Reset */}
+            <div style={{background:"linear-gradient(135deg,#f0f7f3,#e8f5e9)",borderRadius:24,padding:"32px 28px",textAlign:"center",border:"2px solid rgba(45,106,79,0.12)",position:"relative"}}>
+              <div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#2d6a4f,#52b788)",color:"#fff",borderRadius:999,padding:"4px 16px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:800,letterSpacing:1.5,whiteSpace:"nowrap"}}>DETOX ESENCIAL</div>
+              <div style={{fontSize:64,marginBottom:12}}>🌿</div>
+              <h2 className="pf" style={{fontSize:22,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>Reset</h2>
+              <div className="int" style={{fontSize:11,fontWeight:700,color:"#2d6a4f",marginBottom:14,letterSpacing:1,textTransform:"uppercase"}}>Detox · Hígado · Digestión</div>
+              <p className="int" style={{fontSize:13,color:"#3a5a3a",lineHeight:1.7,marginBottom:18}}>Bebida efervescente con tuna roja y alcachofa que <strong>desintoxica el hígado y reactiva el metabolismo</strong> desde el primer uso.</p>
+              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
+                {["🫀 Desintoxica el hígado en 48hs","💧 Elimina toxinas acumuladas","🌿 Tuna roja · Alcachofa · Clorofila","⭐ #1 más pedido en Argentina"].map((b,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.05)",borderRadius:8,padding:"6px 10px"}}>
+                    <span className="int" style={{fontSize:12,color:"#4a5568"}}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href={waHref(WA, `Hola! Quiero el Reset 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}, ¿cuánto cuesta y cómo compro?`)}
+                target="_blank" rel="noreferrer"
+                onClick={()=>trackEvent("InitiateCheckout",{content_name:"Reset_Hero",content_type:"product"})}
+                style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#52b788)",color:"#fff",borderRadius:12,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxShadow:"0 8px 24px rgba(45,106,79,0.3)"}}>
+                💬 Quiero el Reset → ver precio
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -1230,31 +1377,55 @@ export default function App() {
         <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
       </footer>
 
-      {/* MODAL CLIENTE / EMPRENDEDOR */}
+      {/* MODAL DE COMPRA — WhatsApp directo */}
       {packModal&&(
-        <div onClick={()=>setPackModal(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",backdropFilter:"blur(10px)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <div onClick={()=>setPackModal(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",backdropFilter:"blur(12px)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:24,padding:"36px 30px",maxWidth:400,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,0.3)"}}>
-            <div style={{fontSize:40,marginBottom:12}}>🌿</div>
-            <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{packModal}</h3>
-            <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>{T.modalSub}</p>
-            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
-              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>{trackEvent("InitiateCheckout",{content_name:"Modal_Cliente"});setPackModal(null);}} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
-                {T.modalOpt1}
-                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>{T.modalOpt1Sub}</div>
+            <div style={{fontSize:40,marginBottom:8}}>🛒</div>
+            <h3 className="pf" style={{fontSize:19,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>{packModal}</h3>
+            <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.6,marginBottom:8}}>
+              {selectedCountry ? `Entrega en ${selectedCountry} · Pago por WhatsApp` : "Consultá precio y envío por WhatsApp en segundos"}
+            </p>
+            {/* Urgency */}
+            <div style={{background:"rgba(230,81,0,0.07)",border:"1px solid rgba(230,81,0,0.2)",borderRadius:10,padding:"7px 14px",marginBottom:22,display:"inline-flex",alignItems:"center",gap:6}}>
+              <span style={{width:6,height:6,borderRadius:"50%",background:"#E65100",animation:"pulse 1.2s ease-in-out infinite",display:"inline-block"}}/>
+              <span className="int" style={{fontSize:11,color:"#E65100",fontWeight:700}}>Oferta válida solo hoy · Respondemos en &lt;10 min</span>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:14}}>
+              <a
+                href={waHref(WA, `¡Hola! Quiero comprar: ${packModal} 🛒\nEstoy en: ${selectedCountry||"mi país"}\n¿Cuánto cuesta y cómo pago?`)}
+                target="_blank" rel="noreferrer"
+                onClick={()=>{trackEvent("Purchase",{content_name:packModal,content_type:"product"});setPackModal(null);}}
+                style={{display:"block",background:"linear-gradient(135deg,#25D366,#128C7E)",color:"#fff",borderRadius:12,padding:"16px 20px",fontFamily:"'Inter',sans-serif",fontWeight:800,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
+                💬 Quiero este producto → WhatsApp
+                <div style={{fontSize:10,fontWeight:400,opacity:0.9,marginTop:2}}>Precio + envío + forma de pago</div>
               </a>
-              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>{trackEvent("InitiateCheckout",{content_name:"Modal_Emprendedor"});setPackModal(null);}} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
-                {T.modalOpt2}
-                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:2}}>{T.modalOpt2Sub}</div>
+              <a
+                href={waHref(WA, `¡Hola! Me interesa ser distribuidor y vender: ${packModal} 💼\nEstoy en: ${selectedCountry||"mi país"}\n¿Cómo funciona el negocio?`)}
+                target="_blank" rel="noreferrer"
+                onClick={()=>{trackEvent("Lead",{content_name:`${packModal}_Negocio`});setPackModal(null);}}
+                style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"12px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textDecoration:"none"}}>
+                💼 Quiero ser distribuidor
+                <div style={{fontSize:10,fontWeight:400,opacity:0.85,marginTop:1}}>Precio especial + ingresos</div>
               </a>
             </div>
-            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>{T.modalCancel}</button>
+            <button onClick={()=>setPackModal(null)} className="int" style={{background:"none",border:"none",color:"#9ca3af",fontSize:12,cursor:"pointer"}}>Cancelar</button>
           </div>
         </div>
       )}
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
-      <a href={waLink} target="_blank" rel="noreferrer" title="WhatsApp" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Bubble"})} style={{position:"fixed",bottom:80,right:20,zIndex:249,width:48,height:48,borderRadius:"50%",background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,boxShadow:"0 7px 20px rgba(37,211,102,0.42)",textDecoration:"none"}}>💬</a>
-      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
+
+      {/* Botón flotante WhatsApp — prominente con texto */}
+      <a
+        href={waHref(WA, `Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)}
+        target="_blank" rel="noreferrer"
+        onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})}
+        style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}>
+        <span style={{fontSize:18}}>💬</span> Hacer pedido
+      </a>
+
+      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:16,zIndex:250,width:52,height:52,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:20,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
     </div>
