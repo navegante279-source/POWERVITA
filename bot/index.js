@@ -432,6 +432,37 @@ async function handleMessage(phone, text, contactName) {
     let history = conv?.history || [];
     let retries = conv?.retries || 0;
 
+    // ── PENDING TRANSFER CONFIRMATION ─────────────────────────
+    // Bot already asked "¿Querés que te pase con Andrés?" — any reply confirms
+    const hasPendingTransfer = history.some(h => h.role === "system" && h.content === "PENDING_TRANSFER");
+    if (hasPendingTransfer) {
+      const lang = countryInfo.lang || "es";
+      const confirmMsgs = {
+        es: `¡Perfecto! Andrés ya está al tanto y te va a escribir muy pronto 😊🌿`,
+        pt: `Ótimo! Andrés já foi notificado e vai te escrever em breve 😊🌿`,
+        en: `Great! Andrés is already aware and will write to you very soon 😊🌿`,
+        fr: `Parfait! Andrés est déjà informé et va vous écrire très bientôt 😊🌿`,
+        it: `Perfetto! Andrés è già stato avvisato e ti scriverà molto presto 😊🌿`,
+        de: `Perfekt! Andrés ist bereits informiert und meldet sich bald 😊🌿`,
+      };
+      const confirmMsg = confirmMsgs[lang] || confirmMsgs.es;
+      await sendWAMessage(phone, confirmMsg);
+
+      const cleanHistory = history
+        .filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"))
+        .concat([{ role: "user", content: text }, { role: "assistant", content: confirmMsg }])
+        .slice(-20);
+
+      await saveConversation(phone, { transferred: true, history: cleanHistory, last_message_at: new Date().toISOString() });
+      await saveLead(phone, { name: contactName, country: countryInfo.country, lang: countryInfo.lang, status: "transferred" });
+
+      const summary = cleanHistory.filter(h => h.role !== "system").slice(-8)
+        .map(h => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`).join("\n");
+      await notifyOwner(phone, contactName, summary || "Sin historial previo");
+      console.log(`🤝 Transfer confirmed: ${phone}`);
+      return;
+    }
+
     // Anti-loop: detect meaningless input
     const isMeaningless = text.trim().length < 2 || /^[^a-zA-ZÀ-ÿ0-9]+$/.test(text.trim());
     if (isMeaningless) retries++;
@@ -503,35 +534,38 @@ async function handleMessage(phone, text, contactName) {
       ...history,
       { role: "user", content: text },
       { role: "assistant", content: cleanResponse },
+      // Mark pending transfer — locked only after user's next reply confirms
+      ...(needsTransfer ? [{ role: "system", content: "PENDING_TRANSFER" }] : []),
     ].slice(-20);
 
-    // Save state
+    // Save state — bot stays active until user confirms transfer
     await saveConversation(phone, {
       history,
       retries,
-      transferred: needsTransfer,
+      transferred: false,
       last_message_at: new Date().toISOString(),
     });
     await saveLead(phone, {
       name: contactName,
       country: countryInfo.country,
       lang: countryInfo.lang,
-      status: needsTransfer ? "transferred" : "active",
+      status: needsTransfer ? "transfer_pending" : "active",
     });
 
     // Send response
     await sendWAMessage(phone, sanitizeForWhatsApp(cleanResponse));
 
-    // Notify owner if needed
+    // Notify owner proactively when transfer is pending
     if (needsTransfer) {
       const summary = history
+        .filter(h => h.role !== "system")
         .slice(-6)
         .map((h) => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`)
         .join("\n");
       await notifyOwner(phone, contactName, summary);
     }
 
-    console.log(`✅ Responded to ${phone} [${countryInfo.country}]${needsTransfer ? " → TRANSFERRED" : ""}`);
+    console.log(`✅ Responded to ${phone} [${countryInfo.country}]${needsTransfer ? " → TRANSFER PENDING" : ""}`);
   } catch (err) {
     console.error(`❌ Error handling message from ${phone}:`, err.message);
   }
