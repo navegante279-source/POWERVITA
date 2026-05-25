@@ -252,6 +252,7 @@ TU MISIÓN:
 Identificar el objetivo de salud del cliente → recomendar el pack FuXion ideal (3 o 5 productos disponibles en su país) → conseguir que contacte a ${OWNER_NAME} para el precio y la compra.
 
 ESTILO: Cálida, cercana, como una amiga que entiende de salud y bienestar. Máximo 3 párrafos por respuesta. Emojis con moderación.
+FORMATO: Texto plano únicamente. NUNCA uses asteriscos (*), guiones bajos (_), ni ningún símbolo de markdown para resaltar. Solo texto corrido y emojis.
 
 REGLAS CRÍTICAS:
 - NUNCA menciones precios (varían por país, los maneja ${OWNER_NAME} directamente)
@@ -331,6 +332,16 @@ async function getAIResponse(phone, userMessage, history, agentName, countryInfo
   });
 
   return response.content[0].text;
+}
+
+// ── TEXT SANITIZER ────────────────────────────────────────────
+function sanitizeForWhatsApp(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")   // **negrita** → texto
+    .replace(/__(.+?)__/g, "$1")        // __subrayado__ → texto
+    .replace(/(?<!\w)\*(?!\s)(.+?)(?<!\s)\*(?!\w)/g, "$1") // *italic* → texto
+    .replace(/_(?!\s)(.+?)(?<!\s)_/g, "$1")                // _italic_ → texto
+    .trim();
 }
 
 // ── WHATSAPP API ──────────────────────────────────────────────
@@ -509,7 +520,7 @@ async function handleMessage(phone, text, contactName) {
     });
 
     // Send response
-    await sendWAMessage(phone, cleanResponse);
+    await sendWAMessage(phone, sanitizeForWhatsApp(cleanResponse));
 
     // Notify owner if needed
     if (needsTransfer) {
