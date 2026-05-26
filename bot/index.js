@@ -236,95 +236,188 @@ function isBusinessHours() {
   return uyHour >= parseInt(BUSINESS_HOURS_START) && uyHour < parseInt(BUSINESS_HOURS_END);
 }
 
+// ── WARM LEAD DETECTION (mensajes pre-armados desde la landing) ──
+const WARM_LEAD_PATTERNS = [
+  "vi la oferta en la web", "vi la oferta", "quiero hacer mi primer pedido",
+  "quiero el ", "quiero comprar", "me interesa el ", "quiero pedir",
+  "cómo lo pido", "como lo pido", "quiero pedirlo", "quiero ordenar",
+  "vi el anuncio", "desde la página", "desde la web",
+];
+
+function isWarmLead(text) {
+  const normalized = text.toLowerCase();
+  return WARM_LEAD_PATTERNS.some(p => normalized.includes(p));
+}
+
+// ── OBJECTION DETECTION ───────────────────────────────────────
+const OBJECTION_PATTERNS = {
+  price:   ["caro", "cara", "costoso", "costosa", "no tengo plata", "no tengo dinero", "muy caro", "no puedo pagar", "expensive", "too much", "custa muito"],
+  delay:   ["lo pienso", "lo voy a pensar", "déjame pensar", "dejame pensar", "después", "despues", "luego", "más adelante", "más tarde", "think about", "let me think"],
+  doubt:   ["no sé si funciona", "no se si funciona", "no funciona", "ya probé", "ya probe", "no me funcionó", "doesn't work", "no funciona", "não funciona"],
+  trust:   ["no conozco", "qué es fuxion", "que es fuxion", "es seguro", "es confiable", "what is fuxion", "legit"],
+};
+
+function detectObjection(text) {
+  const normalized = text.toLowerCase();
+  for (const [type, patterns] of Object.entries(OBJECTION_PATTERNS)) {
+    if (patterns.some(p => normalized.includes(p))) return type;
+  }
+  return null;
+}
+
+// ── TRANSFER REPLY DETECTION ──────────────────────────────────
+const YES_PATTERNS = ["sí", "si", "dale", "ok", "okay", "perfecto", "claro", "bueno",
+  "genial", "me pasás", "me pasas", "conectame", "yes", "yeah", "sure", "sim", "oui", "ja", "sì",
+  "quiero", "anda", "andá", "vamos", "pasame", "pasámelo"];
+const NO_PATTERNS  = ["no", "no gracias", "no por ahora", "no quiero", "todavía no", "espera",
+  "wait", "nein", "non", "depois", "ahora no", "por ahora no"];
+
+function isYesReply(text) {
+  const n = text.toLowerCase().trim().replace(/[¡!¿?.,]/g, "");
+  return YES_PATTERNS.some(w => n === w || n.startsWith(w + " ") || n.endsWith(" " + w));
+}
+function isNoReply(text) {
+  const n = text.toLowerCase().trim().replace(/[¡!¿?.,]/g, "");
+  return NO_PATTERNS.some(w => n === w || n.startsWith(w + " "));
+}
+
 // ── LANGUAGE INSTRUCTIONS ─────────────────────────────────────
 const LANG_INSTRUCTIONS = {
-  es: "Responde SIEMPRE en español. Tono cálido y cercano.",
-  pt: "Responda SEMPRE em português brasileiro. Tom caloroso e próximo.",
-  en: "ALWAYS respond in English. Warm and friendly tone.",
-  fr: "Répondez TOUJOURS en français. Ton chaleureux et proche.",
-  it: "Rispondi SEMPRE in italiano. Tono caldo e vicino.",
-  de: "Antworte IMMER auf Deutsch. Warmer und freundlicher Ton.",
+  es: "Responde SIEMPRE en español latinoamericano. Tono cálido, cercano y directo.",
+  pt: "Responda SEMPRE em português brasileiro. Tom caloroso e direto.",
+  en: "ALWAYS respond in English. Warm, direct, friendly tone.",
+  fr: "Répondez TOUJOURS en français. Ton chaleureux et direct.",
+  it: "Rispondi SEMPRE in italiano. Tono caldo e diretto.",
+  de: "Antworte IMMER auf Deutsch. Warmer, direkter Ton.",
 };
 
 // ── SYSTEM PROMPT ─────────────────────────────────────────────
-function buildSystemPrompt(phone, agentName, countryInfo) {
+function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
   const { country, lang } = countryInfo;
   const langInstruction = LANG_INSTRUCTIONS[lang] || "Respond in the same language the client uses.";
   const inHours = isBusinessHours();
   const unavailable = getUnavailableProducts(country);
   const available = getAvailableProducts(country);
   const availabilityText =
-    `PRODUCTOS DISPONIBLES EN ${country.toUpperCase()} (SOLO puedes recomendar estos):\n` +
+    `PRODUCTOS DISPONIBLES EN ${country.toUpperCase()} (SOLO podés recomendar estos):\n` +
     available.join(", ") +
-    (unavailable.length ? `\n\nNO DISPONIBLES EN ${country.toUpperCase()} — NUNCA los menciones: ${unavailable.join(", ")}` : "");
+    (unavailable.length ? `\n\nNO DISPONIBLES EN ${country.toUpperCase()} — NUNCA los menciones ni sugieras: ${unavailable.join(", ")}` : "");
 
-  return `Eres ${agentName}, asesora de bienestar del equipo PowerVita FuXion. Nunca menciones proactivamente que eres IA o bot.
+  return `Eres ${agentName}, asesora senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas y conocés FuXion a fondo.
+Si alguien te pregunta si sos IA o bot, respondé calurosamente que sos parte del equipo humano y añadí [TRANSFER_NEEDED].
 
 IDIOMA: ${langInstruction}
-PAÍS DEL CLIENTE: ${country}
-HORARIO LABORAL ACTIVO: ${inHours ? "SÍ" : `NO — si el cliente pide precio o quiere comprar, indica que ${OWNER_NAME} atiende de 9am a 10pm`}
+PAÍS: ${country}
+HORARIO: ${inHours ? "Horario activo — podés ofrecer conexión inmediata con Andrés" : `Fuera de horario — Andrés atiende de 9am a 10pm hora Uruguay, pero tomá el pedido ahora para que él lo atienda primero`}
+LEAD CALIENTE: ${isWarm ? "SÍ — el cliente ya vio los productos y quiere comprar. Saltá el diagnóstico largo. Confirmá el producto, 2 beneficios clave, y pasá directo al precio con Andrés en este mensaje." : "NO — lead nuevo, hacer diagnóstico."}
 
 ${availabilityText}
 
-TU MISIÓN:
-Identificar el objetivo de salud del cliente → recomendar el pack FuXion ideal (3 o 5 productos disponibles en su país) → conseguir que contacte a ${OWNER_NAME} para el precio y la compra.
+════════════════════════════════
+MISIÓN: CERRAR VENTAS, NO SOLO INFORMAR
+════════════════════════════════
 
-ESTILO: Cálida, cercana, como una amiga que entiende de salud y bienestar. Máximo 3 párrafos por respuesta. Emojis con moderación.
-FORMATO: Texto plano únicamente. NUNCA uses asteriscos (*), guiones bajos (_), ni ningún símbolo de markdown. Cuando recomiendes productos, ponelos en líneas separadas con su emoji y beneficio principal, no en un párrafo largo.
+FLUJO EN 3 MENSAJES MÁXIMO:
 
-REGLAS CRÍTICAS:
-- NUNCA menciones precios (varían por país, los maneja ${OWNER_NAME} directamente)
-- La landing ${LANDING_URL} muestra el catálogo de productos, NO los precios
-- Si el cliente pregunta el PRECIO o quiere COMPRAR de un producto específico: primero respondé con 2-3 beneficios concretos del producto que mencionó (genera deseo), luego una línea de prueba social, y al final decí "¿Querés que te pase con Andrés para el precio ahora mismo?" y añade [TRANSFER_NEEDED]. Ejemplo: si preguntan precio de Thermo T3 → explicá que activa el metabolismo, quema grasa con 3 tipos de té y L-Carnitina, que miles de personas en su país lo usan, y luego ofrecé el precio con Andrés.
-- Si el cliente pregunta precio SIN mencionar producto específico: antes de transferir, preguntá qué objetivo tiene para recomendarle el pack más adecuado, y recién después de recomendar el pack ofrecé el precio con Andrés.
-- Si preguntan si eres bot/IA/real: responde cálidamente que eres parte del equipo y añade [TRANSFER_NEEDED]
-- Si piden hablar con una persona: responde que los conectas y añade [TRANSFER_NEEDED]
-- Si no entiendes el mensaje 2 veces seguidas: añade [TRANSFER_NEEDED]
+MENSAJE 1 — DIAGNÓSTICO (solo si NO es lead caliente):
+Saludo + privacidad en 1 línea + 1 pregunta específica sobre el problema real:
+No: "¿Cuál es tu objetivo?" (genérico)
+Sí: "¿Hace cuánto tenés ese problema? ¿Qué es lo que más te molesta de eso día a día?"
+Privacidad: "🔒 Tu info es confidencial, solo la uso para recomendarte bien."
 
-FLUJO IDEAL:
-1. BIENVENIDA: Saludo cálido + mención breve de privacidad + pregunta sobre su objetivo principal
-2. PROFUNDIZAR: 1-2 preguntas específicas según el objetivo detectado
-3. RECOMENDACIÓN: Pack personalizado (solo productos disponibles en ${country}) con beneficio específico
-4. CTA: "¿Querés que te pase el precio para ${country}? Te conecto con Andrés ahora" → [TRANSFER_NEEDED]
-5. Prueba social: "Muchas personas en ${country} ya están viendo resultados con este pack 💪"
+MENSAJE 2 — PACK + RESULTADO CONCRETO:
+Empezá por el RESULTADO en semanas, no por los ingredientes:
+No: "Thermo T3 tiene L-Carnitina y extracto de té verde..."
+Sí: "Con Thermo T3 + Nocarb-T, en 3-4 semanas vas a notar menos hinchazón, más energía y empezar a marcar diferencia en la balanza. El Thermo activa el metabolismo y el Nocarb frena la absorción de carbohidratos en cada comida."
+Cerrá con 1 línea de prueba social específica al caso.
 
-CATÁLOGO FUXION:
+MENSAJE 3 — CIERRE ASUMIDO:
+No preguntes "¿te interesa?". Asumí el cierre:
+"¿Para ${country} le digo a Andrés que prepare el precio?"
+O: "Andrés puede armar el pedido para ${country} hoy mismo. ¿Te lo paso?"
+Siempre añadí [TRANSFER_NEEDED]
+
+════════════════════════════════
+MANEJO DE OBJECIONES (OBLIGATORIO — no ignorar)
+════════════════════════════════
+
+"Es caro" / "No tengo presupuesto" / "Muy caro":
+→ "Entiendo. ¿Cuánto gastás al mes en lo que usás ahora para ese problema — farmacias, otros suplementos? Un pack FuXion sale menos que eso y va a la raíz, no solo al síntoma. ¿Querés que Andrés te dé el precio exacto para comparar?"
+
+"Lo pienso" / "Déjame ver" / "Después" / "Más adelante":
+→ "Claro, lo entiendo. Mirá, Andrés está juntando los pedidos de ${country} esta semana y tiene precio especial para primeras compras — no te apuro, pero conviene verlo antes de que cierre. ¿Le pido que te mande el número ahora y lo charlás con calma?"
+
+"No sé si funciona" / "Ya probé de todo" / "No me funcionó nada":
+→ "Eso me lo dicen muchas personas de ${country} antes de empezar. La diferencia es que FuXion es biotecnología certificada GMP — el mismo estándar que los medicamentos, no un suplemento de góndola. ¿Qué probaste antes? Así te explico exactamente qué hace diferente el [producto recomendado] en tu caso."
+
+"No conozco FuXion" / "¿Es seguro?" / "¿Es legítimo?":
+→ "FuXion lleva más de 20 años, presente en 37 países, con certificación GMP internacional. En ${country} hay miles de clientes activos. ¿Qué querés saber puntualmente — los ingredientes, el proceso, los resultados?"
+
+"Primero dame el precio":
+→ Nunca digas que no lo sabés. Decí: "Los precios varían según el pack y el país — por eso Andrés los maneja directo, así te arma el mejor precio para ${country} según exactamente lo que necesitás. ¿Te lo paso?"
+
+════════════════════════════════
+URGENCIA (usá 1 por conversación, con naturalidad)
+════════════════════════════════
+Elegí según el contexto:
+"Andrés está cerrando los pedidos de ${country} esta semana"
+"El stock de [producto específico] en ${country} está limitado"
+"Hay precio especial para primeras compras que Andrés puede aplicar"
+
+════════════════════════════════
+PRUEBA SOCIAL ESPECÍFICA (adaptala al caso del cliente)
+════════════════════════════════
+Peso/hinchazón: "Una clienta de ${country} con el mismo problema empezó con este pack y en 3 semanas bajó 4kg y desapareció la hinchazón"
+Energía/fatiga: "Un cliente con fatiga igual que la tuya notó diferencia en 10 días con el Vita Xtra T+"
+Digestión: "Con Prunex 1 la mayoría nota mejoría en el tránsito en los primeros 7 días"
+Estrés/sueño: "Clientas que no podían dormir bien empezaron a descansar en la primera semana con No Stress"
+Músculo: "Clientes que entrenaban sin ver resultados empezaron a notar músculo en 3 semanas con Biopro+ Sport"
+
+════════════════════════════════
+CATÁLOGO FUXION
+════════════════════════════════
 🌿 DETOX/DIGESTIÓN: Prunex 1 (tránsito intestinal), Flora Liv (probióticos), Liquid Fibra (fibra soluble), Alpha Balance (pH alcalino), Rexet (desintox hígado), Berry Balance (tracto urinario)
 💪 PROTEÍNAS: Biopro+ Fit (quemar grasa + músculo), Biopro+ Sport (masa muscular magra), Biopro+ Tect (sistema inmune), Protein Active (100% vegetal)
-⚡ ENERGÍA: Vita Xtra T+ (fatiga y antioxidantes), Nutraday (multivitamínico familiar), Xpeed (energía inmediata)
-⚖️ CONTROL DE PESO: Thermo T3 (termogénico, quema grasa), Nocarb-T (bloquea carbohidratos), Café & Café Fit (apetito y azúcar), Chocolate Fit (ansiedad + medidas)
-🛡️ INMUNIDAD: Vera+ (aloe vera + betaglucanos), Gano Excel / Café Gano (hongo Ganoderma)
-✨ ANTIEDAD: Youth Elixir (regeneración celular nocturna), Beauty In (colágeno piel/cabello/uñas), Golden FLX (articulaciones), Passion (vigor y circulación)
-🧠 MENTAL: On (concentración, memoria, foco), No Stress (ansiedad, equilibrio nervioso)
-🏃 DEPORTE: Pre Sport (rendimiento pre-entreno), Post Sport (recuperación BCAA), Xpeed (potencia)
+⚡ ENERGÍA: Vita Xtra T+ (fatiga crónica, antioxidantes), Nutraday (multivitamínico), Xpeed (energía inmediata)
+⚖️ PESO: Thermo T3 (termogénico, quema grasa), Nocarb-T (bloquea carbohidratos), Café & Café Fit (apetito y azúcar), Chocolate Fit (ansiedad + medidas)
+🛡️ INMUNIDAD: Vera+ (aloe vera + betaglucanos), Gano Excel/Café Gano (Ganoderma)
+✨ ANTIEDAD: Youth Elixir (regeneración nocturna), Beauty In (colágeno piel/cabello/uñas), Golden FLX (articulaciones), Passion (vigor y circulación)
+🧠 MENTAL: On (concentración, memoria), No Stress (ansiedad, sueño, nervios)
+🏃 DEPORTE: Pre Sport (pre-entreno), Post Sport (recuperación BCAA), Xpeed (potencia)
 
-PACKS SUGERIDOS (referencia base — SIEMPRE verificá que cada producto esté en la lista de DISPONIBLES antes de recomendarlo; si alguno no está disponible en ${country}, sustitúyelo por otro del catálogo disponible con beneficio similar):
+PACKS (verificá siempre que estén en la lista de disponibles para ${country}):
 🔥 BAJAR DE PESO: Thermo T3 + Nocarb-T + Prunex 1 | Completo: + Liquid Fibra + Café & Café Fit
-💪 GANAR MÚSCULO: Biopro+ Sport + Pre Sport + Post Sport | Completo: + Xpeed + Alpha Balance
+💪 MÚSCULO: Biopro+ Sport + Pre Sport + Post Sport | Completo: + Xpeed + Alpha Balance
 🛡️ DEFENSAS: Vera+ + Biopro+ Tect + Alpha Balance | Completo: + Berry Balance + Rexet
 ✨ ANTIEDAD: Beauty In + Youth Elixir + Golden FLX | Completo: + Passion + Berry Balance
-🧠 ENERGÍA: On + Vita Xtra T+ + No Stress | Completo: + Nutraday + Café & Café Fit
-😴 ESTRÉS: No Stress + Youth Elixir + Flora Liv | Completo: + Vera+ + Golden FLX
+🧠 ENERGÍA/MENTAL: On + Vita Xtra T+ + No Stress | Completo: + Nutraday + Café & Café Fit
+😴 ESTRÉS/SUEÑO: No Stress + Youth Elixir + Flora Liv | Completo: + Vera+ + Golden FLX
 🌿 DETOX: Flora Liv + Liquid Fibra + Prunex 1 | Completo: + Berry Balance + Rexet
 
-PRIVACIDAD (úsalo en el primer mensaje): "🔒 Tu información es confidencial y se usa únicamente para recomendarte los mejores productos."
-PRUEBA SOCIAL (úsalo al recomendar): "Muchas personas en ${country} ya están transformando su salud con FuXion 💪"
+════════════════════════════════
+REGLAS DE FORMATO (CRÍTICO)
+════════════════════════════════
+Texto plano únicamente. NUNCA asteriscos (*), guiones bajos (_) ni markdown.
+Máximo 3 párrafos cortos — esto es WhatsApp, no un email.
+Productos en líneas separadas con emoji, nunca en párrafo corrido.
 
-Eres ${agentName} del equipo PowerVita. Profesional, cálida, persuasiva — nunca presionante.`;
+[TRANSFER_NEEDED]: añadí este tag exactamente cuando:
+el cliente quiere precio o quiere comprar, después del mensaje 3 de la conversación,
+si pregunta si sos real o pide hablar con persona, o si no pudiste resolver una objeción.`;
 }
 
 // ── AI RESPONSE ───────────────────────────────────────────────
-async function getAIResponse(phone, userMessage, history, agentName, countryInfo) {
-  const systemPrompt = buildSystemPrompt(phone, agentName, countryInfo);
+async function getAIResponse(phone, userMessage, history, agentName, countryInfo, isWarm = false) {
+  const systemPrompt = buildSystemPrompt(phone, agentName, countryInfo, isWarm);
 
   const messages = [
-    ...history.map((h) => ({ role: h.role, content: h.content })),
+    ...history.filter(h => h.role !== "system").map((h) => ({ role: h.role, content: h.content })),
     { role: "user", content: userMessage },
   ];
 
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 600,
+    max_tokens: 800,
     system: systemPrompt,
     messages,
   });
@@ -365,14 +458,28 @@ async function sendWAMessage(to, text) {
   return data;
 }
 
-async function notifyOwner(clientPhone, clientName, summary) {
-  const msg =
-    `🔔 *TRANSFERENCIA — PowerVita Bot*\n\n` +
-    `👤 Cliente: *${clientName || "Sin nombre"}*\n` +
-    `📱 Número: ${clientPhone}\n\n` +
-    `📋 Resumen:\n${summary}\n\n` +
-    `👉 El cliente quiere atención personalizada.`;
-  return sendWAMessage(OWNER_PHONE, msg);
+async function notifyOwner(clientPhone, clientName, summary, extra = {}) {
+  const countryInfo = detectCountry(clientPhone);
+  const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
+    España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
+  const flag = flagMap[countryInfo.country] || "🌍";
+
+  const lines = [
+    `🔔 LEAD LISTO PARA CERRAR — PowerVita`,
+    ``,
+    `👤 ${clientName || "Sin nombre"} ${flag} ${countryInfo.country}`,
+    `📱 Escribile: wa.me/${clientPhone}`,
+    extra.product   ? `🛒 Interesado en: ${extra.product}` : "",
+    extra.objective ? `🎯 Objetivo: ${extra.objective}` : "",
+    extra.objection ? `⚠️ Objeción que tuvo: "${extra.objection}"` : "",
+    ``,
+    `💬 Conversación:`,
+    summary,
+    ``,
+    `👉 Escribile ahora antes de que se enfríe.`,
+  ].filter(l => l !== undefined && !(l === "" && lines?.[lines.length-1] === ""));
+
+  return sendWAMessage(OWNER_PHONE, lines.join("\n"));
 }
 
 // ── DATABASE ──────────────────────────────────────────────────
@@ -431,34 +538,61 @@ async function handleMessage(phone, text, contactName) {
     let retries = conv?.retries || 0;
 
     // ── PENDING TRANSFER CONFIRMATION ─────────────────────────
-    // Bot already asked "¿Querés que te pase con Andrés?" — any reply confirms
     const hasPendingTransfer = history.some(h => h.role === "system" && h.content === "PENDING_TRANSFER");
     if (hasPendingTransfer) {
       const lang = countryInfo.lang || "es";
-      const confirmMsgs = {
-        es: `¡Perfecto! Andrés ya está al tanto y te va a escribir muy pronto 😊🌿`,
-        pt: `Ótimo! Andrés já foi notificado e vai te escrever em breve 😊🌿`,
-        en: `Great! Andrés is already aware and will write to you very soon 😊🌿`,
-        fr: `Parfait! Andrés est déjà informé et va vous écrire très bientôt 😊🌿`,
-        it: `Perfetto! Andrés è già stato avvisato e ti scriverà molto presto 😊🌿`,
-        de: `Perfekt! Andrés ist bereits informiert und meldet sich bald 😊🌿`,
-      };
-      const confirmMsg = confirmMsgs[lang] || confirmMsgs.es;
-      await sendWAMessage(phone, confirmMsg);
 
-      const cleanHistory = history
-        .filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"))
-        .concat([{ role: "user", content: text }, { role: "assistant", content: confirmMsg }])
-        .slice(-20);
+      if (isNoReply(text)) {
+        // Cliente dijo que no — limpiar el pending y seguir conversando
+        const cleanedHistory = history.filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"));
+        const noMsgs = {
+          es: "Sin problema 😊 ¿Qué más querés saber sobre los productos?",
+          pt: "Sem problema 😊 O que mais você quer saber?",
+          en: "No problem 😊 What else would you like to know?",
+          fr: "Pas de problème 😊 Que souhaitez-vous savoir d'autre?",
+          it: "Nessun problema 😊 Cos'altro vuoi sapere?",
+          de: "Kein Problem 😊 Was möchten Sie noch wissen?",
+        };
+        const noMsg = noMsgs[lang] || noMsgs.es;
+        await sendWAMessage(phone, noMsg);
+        await saveConversation(phone, { history: [...cleanedHistory, { role: "user", content: text }, { role: "assistant", content: noMsg }].slice(-20), last_message_at: new Date().toISOString() });
+        console.log(`↩️ Transfer declined, continuing: ${phone}`);
+        return;
+      }
 
-      await saveConversation(phone, { transferred: true, history: cleanHistory, last_message_at: new Date().toISOString() });
-      await saveLead(phone, { name: contactName, country: countryInfo.country, lang: countryInfo.lang, status: "transferred" });
+      if (isYesReply(text) || !isNoReply(text) && text.trim().length > 1) {
+        // Confirma o continúa — proceder con la transferencia
+        const confirmMsgs = {
+          es: `¡Perfecto! 🙌 Andrés ya está al tanto y te va a escribir muy pronto con el precio para ${countryInfo.country} 😊🌿`,
+          pt: `Ótimo! 🙌 Andrés já foi notificado e vai te escrever em breve com o preço 😊🌿`,
+          en: `Perfect! 🙌 Andrés is already aware and will write to you very soon with the price 😊🌿`,
+          fr: `Parfait! 🙌 Andrés est déjà informé et va vous écrire très bientôt avec le prix 😊🌿`,
+          it: `Perfetto! 🙌 Andrés è già stato avvisato e ti scriverà presto con il prezzo 😊🌿`,
+          de: `Perfekt! 🙌 Andrés ist bereits informiert und meldet sich bald mit dem Preis 😊🌿`,
+        };
+        const confirmMsg = confirmMsgs[lang] || confirmMsgs.es;
+        await sendWAMessage(phone, confirmMsg);
 
-      const summary = cleanHistory.filter(h => h.role !== "system").slice(-8)
-        .map(h => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`).join("\n");
-      await notifyOwner(phone, contactName, summary || "Sin historial previo");
-      console.log(`🤝 Transfer confirmed: ${phone}`);
-      return;
+        const cleanHistory = history
+          .filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"))
+          .concat([{ role: "user", content: text }, { role: "assistant", content: confirmMsg }])
+          .slice(-20);
+
+        await saveConversation(phone, { transferred: true, history: cleanHistory, last_message_at: new Date().toISOString() });
+        await saveLead(phone, { name: contactName, country: countryInfo.country, lang: countryInfo.lang, status: "transferred" });
+
+        const summary = cleanHistory.filter(h => h.role !== "system").slice(-8)
+          .map(h => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`).join("\n");
+        // Extract product interest from history for owner notification
+        const productLine = cleanHistory.find(h => h.role === "assistant" && h.content.match(/Thermo|Biopro|Vita Xtra|No Stress|Prunex|Nocarb|Flora Liv|Youth Elixir|Beauty In|Golden FLX/i));
+        const productMatch = productLine?.content.match(/(Thermo T3|Biopro\+\s*\w+|Vita Xtra T\+|No Stress|Prunex 1|Nocarb-T|Flora Liv|Youth Elixir|Beauty In|Golden FLX|Protein Active)/i);
+        await notifyOwner(phone, contactName, summary || "Sin historial previo", {
+          product: productMatch?.[0] || "",
+          country: countryInfo.country,
+        });
+        console.log(`🤝 Transfer confirmed: ${phone}`);
+        return;
+      }
     }
 
     // Anti-loop: detect meaningless input
@@ -514,10 +648,19 @@ async function handleMessage(phone, text, contactName) {
       return;
     }
 
+    // Detect warm lead (high purchase intent from landing CTAs)
+    const warm = history.length === 0 && isWarmLead(text);
+
+    // Detect objection for context injection
+    const objection = detectObjection(text);
+    const enrichedText = objection
+      ? `[OBJECIÓN DETECTADA: ${objection}] ${text}`
+      : text;
+
     // Get AI response
     let aiResponse;
     try {
-      aiResponse = await getAIResponse(phone, text, history, agentName, countryInfo);
+      aiResponse = await getAIResponse(phone, enrichedText, history, agentName, countryInfo, warm);
     } catch (err) {
       console.error("AI error:", err.message);
       aiResponse = `¡Hola! Soy ${agentName} del equipo PowerVita 😊 Tuve un pequeño inconveniente técnico. ${OWNER_NAME} te contactará muy pronto. ¡Disculpa!`;
@@ -560,7 +703,13 @@ async function handleMessage(phone, text, contactName) {
         .slice(-6)
         .map((h) => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`)
         .join("\n");
-      await notifyOwner(phone, contactName, summary);
+      const productMatch = history.concat([{ role: "assistant", content: cleanResponse }])
+        .find(h => h.role === "assistant" && h.content.match(/Thermo|Biopro|Vita Xtra|No Stress|Prunex|Nocarb|Flora Liv|Youth Elixir|Beauty In|Golden FLX/i));
+      const product = productMatch?.content.match(/(Thermo T3|Biopro\+\s*\w+|Vita Xtra T\+|No Stress|Prunex 1|Nocarb-T|Flora Liv|Youth Elixir|Beauty In|Golden FLX)/i)?.[0] || "";
+      await notifyOwner(phone, contactName, summary, {
+        product,
+        objection: objection ? text.slice(0, 80) : "",
+      });
     }
 
     console.log(`✅ Responded to ${phone} [${countryInfo.country}]${needsTransfer ? " → TRANSFER PENDING" : ""}`);
@@ -577,44 +726,44 @@ async function handleMessage(phone, text, contactName) {
 const FOLLOWUP_STAGES = [
   {
     stage: 0,
-    hoursAfter: 24,
+    hoursAfter: 20,
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner) => `¡Hola${name ? ` ${name}` : ""}! 👋 Soy ${agent} del equipo PowerVita. Solo quería saber si pudiste ver la información que te compartí 😊 Cualquier duda que tengas, estoy aquí para ayudarte. ¡Tu bienestar no puede esperar! 💪`,
-      pt: (name, agent) => `Olá${name ? ` ${name}` : ""}! 👋 Sou ${agent} do time PowerVita. Só queria saber se conseguiu ver as informações 😊 Qualquer dúvida, estou aqui! 💪`,
-      en: (name, agent) => `Hey${name ? ` ${name}` : ""}! 👋 I'm ${agent} from PowerVita. Just checking if you had a chance to look at what I shared 😊 I'm here if you have any questions! 💪`,
-      fr: (name, agent) => `Bonjour${name ? ` ${name}` : ""}! 👋 Je suis ${agent} de PowerVita. Je voulais juste savoir si vous avez pu consulter les infos 😊 Je suis là pour vous aider! 💪`,
-      it: (name, agent) => `Ciao${name ? ` ${name}` : ""}! 👋 Sono ${agent} di PowerVita. Volevo solo controllare se hai visto le informazioni 😊 Sono qui per aiutarti! 💪`,
-      de: (name, agent) => `Hallo${name ? ` ${name}` : ""}! 👋 Ich bin ${agent} von PowerVita. Ich wollte nur fragen, ob Sie die Informationen gesehen haben 😊 Ich helfe Ihnen gerne! 💪`,
+      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} del equipo PowerVita.\nSolo quería contarte: esta semana tuvimos varios pedidos de ${country} con el pack que te recomendé y los resultados de las primeras clientas son muy buenos 🌿\n¿Seguís con dudas o te paso el precio con ${owner} ahora mismo?`,
+      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da equipe PowerVita.\nSó queria te contar: essa semana tivemos vários pedidos de ${country} com o pack que recomendei e os resultados são ótimos 🌿\nAinda tem dúvidas ou posso te passar o preço com ${owner} agora?`,
+      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nJust wanted to let you know — we had several orders from ${country} with the pack I recommended and early results are great 🌿\nStill have questions, or should I get you the price with ${owner} now?`,
+      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nJe voulais juste vous dire — nous avons eu plusieurs commandes de ${country} cette semaine et les résultats sont très bons 🌿\nDes questions encore, ou je vous passe le prix avec ${owner} maintenant?`,
+      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nVolevo dirti — abbiamo avuto diversi ordini da ${country} questa settimana e i risultati iniziali sono ottimi 🌿\nHai ancora domande o ti passo il prezzo con ${owner} adesso?`,
+      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nIch wollte Ihnen kurz mitteilen — wir hatten diese Woche mehrere Bestellungen aus ${country} und die ersten Ergebnisse sind sehr gut 🌿\nNoch Fragen, oder soll ich Sie jetzt mit ${owner} für den Preis verbinden?`,
     },
   },
   {
     stage: 1,
-    hoursAfter: 48,
+    hoursAfter: 72,
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
-      es: (name, agent, owner, country) => `¡Hola${name ? ` ${name}` : ""}! Soy ${agent} otra vez 😊\nQuiero contarte algo: muchas personas en ${country} que empezaron con FuXion este mes ya están notando cambios en su energía y digestión en menos de 2 semanas 🌿\nEl protocolo que te recomendé está diseñado exactamente para lo que me contaste. ¿Te cuento más o te paso directo con ${owner} para que te dé el precio?`,
-      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""}! Sou ${agent} novamente 😊\nMuitas pessoas em ${country} que começaram com FuXion já estão sentindo a diferença em menos de 2 semanas 🌿\nO protocolo que recomendei é perfeito para o que você me contou. Quer que eu te passe para ${owner} para o preço?`,
-      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""}! It's ${agent} again 😊\nMany people in ${country} who started FuXion this month are already feeling the difference in under 2 weeks 🌿\nThe protocol I recommended is designed exactly for your situation. Want me to connect you with ${owner} for the price?`,
-      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""}! C'est ${agent} encore 😊\nBeaucoup de personnes en ${country} qui ont commencé FuXion ce mois-ci voient déjà des résultats en moins de 2 semaines 🌿\nVoulez-vous que je vous mette en contact avec ${owner} pour le prix?`,
-      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""}! Sono ${agent} di nuovo 😊\nMolte persone in ${country} che hanno iniziato FuXion stanno già notando la differenza in meno di 2 settimane 🌿\nVuoi che ti metta in contatto con ${owner} per il prezzo?`,
-      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""}! Hier ist ${agent} nochmal 😊\nViele Menschen in ${country} die diesen Monat mit FuXion begonnen haben, spüren bereits den Unterschied in weniger als 2 Wochen 🌿\nSoll ich Sie mit ${owner} für den Preis verbinden?`,
+      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nMirá, quiero ser honesta: Andrés está cerrando los pedidos de ${country} esta semana y hay precio especial para primeras compras. Si arrancás ahora, llegás a tiempo.\nEl pack que te recomendé es exactamente lo que necesitás para lo que me contaste. ¿Le digo que te escriba hoy?`,
+      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nOlha, quero ser honesta: Andrés está fechando os pedidos de ${country} essa semana e há preço especial para primeiras compras.\nO pack que recomendei é exatamente o que você precisa. Posso dizer para ele te escrever hoje?`,
+      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nI want to be honest with you: Andrés is closing orders from ${country} this week and there's a special price for first purchases. If you start now, you're in time.\nShould I tell him to write to you today?`,
+      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nJe veux être honnête : Andrés ferme les commandes de ${country} cette semaine avec un prix spécial pour les premiers achats.\nDois-je lui dire de vous écrire aujourd'hui?`,
+      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nVoglio essere onesta: Andrés sta chiudendo gli ordini da ${country} questa settimana con un prezzo speciale per i primi acquisti.\nDevo dirgli di scriverti oggi?`,
+      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nIch möchte ehrlich sein: Andrés schließt diese Woche Bestellungen aus ${country} mit Sonderpreis für Erstkäufe.\nSoll ich ihm sagen, dass er Sie heute kontaktiert?`,
     },
   },
   {
     stage: 2,
-    hoursAfter: 120,
+    hoursAfter: 168,
     statusRequired: "followup_2",
     nextStatus: "cold",
     msgs: {
-      es: (name, agent) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte para no molestarte.\nEntiendo que quizás no es el momento ideal, y está perfecto. Cuando estés lista, acá vamos a estar 🌿\nSolo recordarte que el catálogo completo de FuXion está en ${LANDING_URL} para que lo veas cuando quieras. ¡Que tengas un excelente día! ✨`,
-      pt: (name, agent) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nEntendo que talvez não seja o momento certo, tudo bem. Quando estiver pronta, estaremos aqui 🌿\n¡Tenha um ótimo dia! ✨`,
-      en: (name, agent) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me, I don't want to bother you.\nI understand if the timing isn't right, and that's perfectly okay. Whenever you're ready, we'll be here 🌿\nHave a wonderful day! ✨`,
-      fr: (name, agent) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nJe comprends si ce n'est pas le bon moment, c'est tout à fait normal. Quand vous serez prêt(e), nous serons là 🌿 Bonne journée! ✨`,
-      it: (name, agent) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nCapisco se non è il momento giusto, va benissimo. Quando sei pronto/a, saremo qui 🌿 Buona giornata! ✨`,
-      de: (name, agent) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nIch verstehe, wenn es gerade nicht der richtige Zeitpunkt ist. Wenn Sie bereit sind, sind wir hier 🌿 Einen schönen Tag! ✨`,
+      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte, no quiero molestarte.\nSolo te dejo esto: el problema que me contaste no se va solo. Cada semana sin hacer algo es una semana más con eso.\nSi en algún momento decidís arrancar, ${owner} puede armar tu pack para ${country} en minutos. Acá vamos a estar 🌿`,
+      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nSó quero deixar uma coisa: o problema que você me contou não some sozinho. Cada semana sem fazer nada é mais uma semana com isso.\nQuando decidir começar, ${owner} pode montar seu pack para ${country} em minutos 🌿`,
+      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me, I don't want to be a bother.\nJust leaving you with this: the problem you told me about doesn't go away on its own. Every week without doing something is another week with it.\nWhen you're ready, ${owner} can put together your pack for ${country} in minutes 🌿`,
+      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nJuste une chose : le problème dont vous m'avez parlé ne disparaît pas seul. Chaque semaine sans agir est une semaine de plus avec ça.\nQuand vous serez prêt(e), ${owner} peut préparer votre pack pour ${country} en quelques minutes 🌿`,
+      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nSolo questo: il problema che mi hai raccontato non scompare da solo. Ogni settimana senza fare nulla è un'altra settimana con quello.\nQuando sei pronto/a, ${owner} può preparare il tuo pack per ${country} in pochi minuti 🌿`,
+      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nNur eines: Das Problem, das Sie mir erzählt haben, verschwindet nicht von alleine. Jede Woche ohne etwas zu tun ist eine weitere Woche damit.\nWenn Sie bereit sind, kann ${owner} Ihr Pack für ${country} in Minuten zusammenstellen 🌿`,
     },
   },
 ];
@@ -694,17 +843,36 @@ app.post("/webhook", async (req, res) => {
           if (msg.type === "audio" || msg.type === "voice") {
             const countryInfo = detectCountry(phone);
             const audioReplies = {
-              es: "¡Hola! 😊 Parece que el audio no se escuchó bien. ¿Podrías escribirme tu consulta? Así te ayudo mejor 📝",
-              pt: "Olá! 😊 Parece que o áudio não ficou bom. Você poderia me escrever sua dúvida? Assim consigo te ajudar melhor 📝",
-              en: "Hey! 😊 It seems the audio didn't come through clearly. Could you write your question? That way I can help you better 📝",
-              fr: "Bonjour! 😊 Il semble que l'audio n'est pas passé. Pourriez-vous écrire votre question? Je pourrai mieux vous aider 📝",
-              it: "Ciao! 😊 Sembra che l'audio non sia arrivato bene. Potresti scrivere la tua domanda? Così riesco ad aiutarti meglio 📝",
-              de: "Hallo! 😊 Es scheint, dass die Sprachnachricht nicht angekommen ist. Könnten Sie Ihre Frage schreiben? So kann ich Ihnen besser helfen 📝",
+              es: "¡Hola! 😊 No pude escuchar el audio. ¿Me escribís tu consulta? Así te ayudo enseguida 📝",
+              pt: "Olá! 😊 Não consegui ouvir o áudio. Você poderia me escrever? Assim te ajudo na hora 📝",
+              en: "Hey! 😊 I couldn't hear the audio. Could you write your question? I'll help you right away 📝",
+              fr: "Bonjour! 😊 Je n'ai pas pu entendre l'audio. Pourriez-vous écrire? Je vous aide tout de suite 📝",
+              it: "Ciao! 😊 Non sono riuscito a sentire l'audio. Potresti scrivere? Ti aiuto subito 📝",
+              de: "Hallo! 😊 Ich konnte das Audio nicht hören. Könnten Sie schreiben? Ich helfe Ihnen sofort 📝",
             };
             const reply = audioReplies[countryInfo.lang] || audioReplies.es;
             sendWAMessage(phone, reply);
             continue;
           }
+
+          // Imágenes: acusar recibo y pedir contexto
+          if (msg.type === "image") {
+            const countryInfo = detectCountry(phone);
+            const imgReplies = {
+              es: "Recibí tu imagen 😊 Para ayudarte mejor, ¿me contás qué producto o tema te interesa?",
+              pt: "Recebi sua imagem 😊 Para te ajudar melhor, pode me dizer o que você quer saber?",
+              en: "Got your image 😊 To help you better, could you tell me what product or topic you're interested in?",
+              fr: "J'ai reçu votre image 😊 Pour mieux vous aider, pourriez-vous me dire ce qui vous intéresse?",
+              it: "Ho ricevuto la tua immagine 😊 Per aiutarti meglio, puoi dirmi cosa ti interessa?",
+              de: "Ich habe Ihr Bild erhalten 😊 Um Ihnen besser zu helfen, könnten Sie mir sagen, was Sie interessiert?",
+            };
+            const reply = imgReplies[countryInfo.lang] || imgReplies.es;
+            sendWAMessage(phone, reply);
+            continue;
+          }
+
+          // Stickers y reacciones: ignorar silenciosamente
+          if (msg.type === "sticker" || msg.type === "reaction") continue;
 
           if (msg.type !== "text") continue;
           const text = msg.text.body;
