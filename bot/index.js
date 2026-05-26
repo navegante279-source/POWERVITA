@@ -268,7 +268,7 @@ function detectObjection(text) {
 // ── TRANSFER REPLY DETECTION ──────────────────────────────────
 const YES_PATTERNS = ["sí", "si", "dale", "ok", "okay", "perfecto", "claro", "bueno",
   "genial", "me pasás", "me pasas", "conectame", "yes", "yeah", "sure", "sim", "oui", "ja", "sì",
-  "quiero", "anda", "andá", "vamos", "pasame", "pasámelo"];
+  "anda", "andá", "vamos", "pasame", "pasámelo"];
 const NO_PATTERNS  = ["no", "no gracias", "no por ahora", "no quiero", "todavía no", "espera",
   "wait", "nein", "non", "depois", "ahora no", "por ahora no"];
 
@@ -488,7 +488,7 @@ async function notifyOwner(clientPhone, clientName, summary, extra = {}) {
     summary,
     ``,
     `👉 Escribile ahora antes de que se enfríe.`,
-  ].filter(l => l !== undefined && !(l === "" && lines?.[lines.length-1] === ""));
+  ].filter(l => l !== "");
 
   return sendWAMessage(OWNER_PHONE, lines.join("\n"));
 }
@@ -888,6 +888,19 @@ app.post("/webhook", async (req, res) => {
           if (msg.type !== "text") continue;
           const text = msg.text.body;
           console.log(`📨 [${phone}] ${name}: ${text}`);
+
+          // ── Owner command: VENDIDO <phone> ────────────────────
+          if (phone === OWNER_PHONE && /^VENDIDO\s+\d+/i.test(text.trim())) {
+            const targetPhone = text.trim().split(/\s+/)[1];
+            await Promise.all([
+              saveConversation(targetPhone, { purchased: true }),
+              saveLead(targetPhone, { status: "sold" }),
+            ]);
+            sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
+            console.log(`💰 Sale marked for ${targetPhone}`);
+            continue;
+          }
+
           handleMessage(phone, text, name); // async, no await
         }
       }
