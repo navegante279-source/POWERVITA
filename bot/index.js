@@ -132,11 +132,16 @@ function verifyMetaSignature(req) {
   if (!WEBHOOK_APP_SECRET) return true; // Skip if secret not configured
   const signature = req.headers["x-hub-signature-256"];
   if (!signature) return false;
+  if (!req.rawBody) return false;
   const expected = "sha256=" + crypto
     .createHmac("sha256", WEBHOOK_APP_SECRET)
     .update(req.rawBody)
     .digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  try {
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
 }
 
 // ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
