@@ -151,9 +151,11 @@ const COUNTRY_UNAVAILABLE = {
                      "Biopro+ Sport", "Biopro+ Tect", "Protein Active", "Nutraday", "Xpeed",
                      "Café & Café Fit", "Chocolate Fit", "Vera+", "Gano Excel", "Café Gano",
                      "Youth Elixir", "Beauty In", "Golden FLX", "Passion", "On", "No Stress",
-                     "Pre Sport", "Post Sport"],
-  "Argentina":      ["Xpeed"],
-  "Colombia":       ["Pre Sport"],
+                     "Pre Sport", "Post Sport", "HGH", "Probal", "Xtra Mile"],
+  "Argentina":      ["Biopro+ Sport", "Protein Active", "Xpeed", "Café & Café Fit",
+                     "Gano Excel", "Café Gano", "Youth Elixir", "Golden FLX", "No Stress",
+                     "Probal", "Xtra Mile"],
+  "Colombia":       ["Protein Active", "Xpeed", "Youth Elixir", "Golden FLX"],
   "México":         [],
   "España":         ["Pre Sport"],
   "Brasil":         [],
@@ -168,9 +170,9 @@ const ALL_PRODUCTS = [
   "Vita Xtra T+", "Nutraday", "Xpeed",
   "Thermo T3", "Nocarb-T", "Café & Café Fit", "Chocolate Fit",
   "Vera+", "Gano Excel", "Café Gano",
-  "Youth Elixir", "Beauty In", "Golden FLX", "Passion",
+  "Youth Elixir", "Beauty In", "Golden FLX", "Passion", "HGH",
   "On", "No Stress",
-  "Pre Sport", "Post Sport",
+  "Pre Sport", "Post Sport", "Probal", "Xtra Mile",
 ];
 
 function getUnavailableProducts(country) {
@@ -397,12 +399,12 @@ Músculo: "Clientes que entrenaban sin ver resultados empezaron a notar músculo
 ════════════════════════════════
 CATÁLOGO FUXION
 ════════════════════════════════
-🌿 DETOX/DIGESTIÓN: Prunex 1 (tránsito intestinal), Flora Liv (probióticos), Liquid Fibra (fibra soluble), Alpha Balance (pH alcalino), Rexet (desintox hígado), Berry Balance (tracto urinario)
+🌿 DETOX/DIGESTIÓN: Prunex 1 (tránsito intestinal), Flora Liv (probióticos), Liquid Fibra (fibra soluble), Alpha Balance (pH alcalino), Rexet (desintox hígado), Berry Balance (tracto urinario), Probal (probiótico avanzado)
 💪 PROTEÍNAS: Biopro+ Fit (quemar grasa + músculo), Biopro+ Sport (masa muscular magra), Biopro+ Tect (sistema inmune), Protein Active (100% vegetal)
-⚡ ENERGÍA: Vita Xtra T+ (fatiga crónica, antioxidantes), Nutraday (multivitamínico), Xpeed (energía inmediata)
+⚡ ENERGÍA: Vita Xtra T+ (fatiga crónica, antioxidantes), Nutraday (multivitamínico), Xpeed (energía inmediata), Xtra Mile (resistencia y rendimiento)
 ⚖️ PESO: Thermo T3 (termogénico, quema grasa), Nocarb-T (bloquea carbohidratos), Café & Café Fit (apetito y azúcar), Chocolate Fit (ansiedad + medidas)
 🛡️ INMUNIDAD: Vera+ (aloe vera + betaglucanos), Gano Excel/Café Gano (Ganoderma)
-✨ ANTIEDAD: Youth Elixir (regeneración nocturna), Beauty In (colágeno piel/cabello/uñas), Golden FLX (articulaciones), Passion (vigor y circulación)
+✨ ANTIEDAD: Youth Elixir (regeneración nocturna), Beauty In (colágeno piel/cabello/uñas), Golden FLX (articulaciones), Passion (vigor y circulación), HGH (hormona de crecimiento natural, antiedad)
 🧠 MENTAL: On (concentración, memoria), No Stress (ansiedad, sueño, nervios)
 🏃 DEPORTE: Pre Sport (pre-entreno), Post Sport (recuperación BCAA), Xpeed (potencia)
 
