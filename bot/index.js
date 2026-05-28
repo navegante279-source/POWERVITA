@@ -145,8 +145,13 @@ function verifyMetaSignature(req) {
 }
 
 // ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
+// En Uruguay solo están disponibles: Prunex 1, Thermo T3, Nocarb-T, Biopro+ Fit, Vita Xtra T+
 const COUNTRY_UNAVAILABLE = {
-  "Uruguay":        ["Pre Sport", "Xpeed", "Alpha Balance", "Rexet"],
+  "Uruguay":        ["Flora Liv", "Liquid Fibra", "Alpha Balance", "Rexet", "Berry Balance",
+                     "Biopro+ Sport", "Biopro+ Tect", "Protein Active", "Nutraday", "Xpeed",
+                     "Café & Café Fit", "Chocolate Fit", "Vera+", "Gano Excel", "Café Gano",
+                     "Youth Elixir", "Beauty In", "Golden FLX", "Passion", "On", "No Stress",
+                     "Pre Sport", "Post Sport"],
   "Argentina":      ["Xpeed"],
   "Colombia":       ["Pre Sport"],
   "México":         [],
