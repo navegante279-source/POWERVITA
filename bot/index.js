@@ -560,6 +560,23 @@ async function handleMessage(phone, text, contactName) {
     let history = conv?.history || [];
     let retries = conv?.retries || 0;
 
+    // ── NUEVO LEAD — notificar al dueño en el primer mensaje ──
+    const isNewLead = !conv || !history.length;
+    if (isNewLead) {
+      const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
+        España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
+      const flag = flagMap[countryInfo.country] || "🌍";
+      const fromAd = text.toLowerCase().includes("anuncio") || text.toLowerCase().includes("prunex");
+      const newLeadMsg =
+        `🆕 NUEVO CONTACTO — PowerVita\n\n` +
+        `👤 ${contactName || "Sin nombre"} ${flag} ${countryInfo.country}\n` +
+        `📱 wa.me/${phone}\n` +
+        (fromAd ? `📢 Viene del anuncio\n` : "") +
+        `💬 Dice: "${text}"`;
+      sendWAMessage(OWNER_PHONE, newLeadMsg); // sin await — no bloquear la respuesta
+      console.log(`🆕 New lead: ${phone} [${countryInfo.country}]`);
+    }
+
     // ── PENDING TRANSFER CONFIRMATION ─────────────────────────
     const hasPendingTransfer = history.some(h => h.role === "system" && h.content === "PENDING_TRANSFER");
     if (hasPendingTransfer) {
