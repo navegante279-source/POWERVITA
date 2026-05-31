@@ -80,7 +80,8 @@
 
   <div class="tabs">
     <div class="tab active" onclick="switchTab('leads')">📋 Leads</div>
-    <div class="tab" onclick="switchTab('venta')">✅ Registrar Venta</div>
+    <div class="tab" onclick="switchTab('clicks')">🔗 Clicks</div>
+    <div class="tab" onclick="switchTab('venta')">✅ Venta</div>
   </div>
 
   <!-- LEADS PANEL -->
@@ -99,6 +100,11 @@
   </div>
 
   <!-- VENTA PANEL -->
+  <!-- CLICKS PANEL -->
+  <div class="panel" id="panelClicks">
+    <div id="clicksBox" style="padding:8px 0">Seleccioná la pestaña para cargar.</div>
+  </div>
+
   <div class="panel" id="panelVenta">
     <h2>Registrar Cliente</h2>
     <p class="sub" style="margin-bottom:16px">Marca una venta cerrada → se envía a Meta CAPI</p>
@@ -280,9 +286,46 @@
 
   // Tab switching
   function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='leads')||(i===1&&tab==='venta')));
+    document.querySelectorAll('.tab').forEach((t,i) => {
+      t.classList.toggle('active', (i===0&&tab==='leads')||(i===1&&tab==='clicks')||(i===2&&tab==='venta'));
+    });
     document.getElementById('panelLeads').classList.toggle('active', tab==='leads');
+    document.getElementById('panelClicks').classList.toggle('active', tab==='clicks');
     document.getElementById('panelVenta').classList.toggle('active', tab==='venta');
+    if (tab==='clicks') loadClicks();
+  }
+
+  async function loadClicks() {
+    const box = document.getElementById('clicksBox');
+    box.innerHTML = 'Cargando…';
+    try {
+      const r = await fetch('/api/clicks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: window._pwd}) });
+      const d = await r.json();
+      if (!d.ok) { box.innerHTML = 'Error: ' + d.error; return; }
+      const { total, byCountry, recent } = d;
+      const flags = { uy:'🇺🇾', ar:'🇦🇷', co:'🇨🇴' };
+      box.innerHTML = `
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          ${Object.entries(byCountry).map(([c,n])=>`
+            <div style="flex:1;min-width:80px;background:#f0f7f3;border-radius:12px;padding:12px;text-align:center">
+              <div style="font-size:24px">${flags[c]||'🌍'}</div>
+              <div style="font-size:22px;font-weight:800;color:#2d6a4f">${n}</div>
+              <div style="font-size:11px;color:#7a9a7a">clicks</div>
+            </div>`).join('')}
+          <div style="flex:1;min-width:80px;background:#2d6a4f;border-radius:12px;padding:12px;text-align:center;color:#fff">
+            <div style="font-size:24px">🔗</div>
+            <div style="font-size:22px;font-weight:800">${total}</div>
+            <div style="font-size:11px;opacity:.8">total</div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#7a9a7a;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Últimos clicks</div>
+        ${recent.map(c=>`
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:rgba(45,106,79,0.04);border-radius:8px;margin-bottom:6px;font-size:12px">
+            <span>${flags[c.country]||'🌍'} ${c.phone || 'Anónimo'}</span>
+            <span style="color:#7a9a7a">${new Date(c.created_at).toLocaleString('es-UY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span>
+          </div>`).join('')}
+      `;
+    } catch(e) { box.innerHTML = 'Error de conexión'; }
   }
 
   // Leads

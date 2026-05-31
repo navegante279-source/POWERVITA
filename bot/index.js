@@ -295,13 +295,16 @@ function isNoReply(text) {
 
 // ── BUY LINKS BY COUNTRY ─────────────────────────────────────
 const COUNTRY_BUY_LINKS = {
-  "Uruguay":   "https://tiendafuxion.com/storelt/Andresvarela/3073072",
-  "Argentina": "https://tiendafuxion.com/storelt/Andresvarela/3085903",
-  "Colombia":  "https://tiendafuxion.com/storelt/Andresvarela/3086029",
+  "Uruguay":   "uy",
+  "Argentina": "ar",
+  "Colombia":  "co",
 };
 
-function getBuyLink(country) {
-  return COUNTRY_BUY_LINKS[country] || FUXION_BUY_LINK;
+function getBuyLink(country, phone = "") {
+  const code = COUNTRY_BUY_LINKS[country];
+  if (!code) return FUXION_BUY_LINK;
+  const base = "https://powervita.vercel.app/api/go";
+  return `${base}?c=${code}${phone ? `&p=${phone}` : ""}`;
 }
 
 // ── PRODUCT PRICES ────────────────────────────────────────────
@@ -330,6 +333,7 @@ const LANG_INSTRUCTIONS = {
 // ── SYSTEM PROMPT ─────────────────────────────────────────────
 function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
   const { country, lang } = countryInfo;
+  const buyLink = getBuyLink(country, phone);
   const langInstruction = LANG_INSTRUCTIONS[lang] || "Respond in the same language the client uses.";
   const inHours = isBusinessHours();
 
@@ -341,7 +345,6 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
       priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency}`);
     }
   }
-  const buyLink = getBuyLink(country);
   const priceSection = priceLines.length
     ? `PRECIOS CONFIRMADOS PARA ${country.toUpperCase()} (podés darlos directamente):\n${priceLines.join("\n")}\nLINK DE COMPRA PARA ${country.toUpperCase()}: ${buyLink}`
     : `Para este país no tenés precio cargado — transferí a ${OWNER_NAME} para el precio.\nLINK DE COMPRA: ${buyLink}`;
