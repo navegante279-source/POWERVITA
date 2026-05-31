@@ -297,7 +297,7 @@ function isNoReply(text) {
 const COUNTRY_BUY_LINKS = {
   "Uruguay":   "https://tiendafuxion.com/storelt/Andresvarela/3073072",
   "Argentina": "https://tiendafuxion.com/storelt/Andresvarela/3085903",
-  "Colombia":  "https://tiendafuxion.com/storelt/Andresvarela/3085903",
+  "Colombia":  "https://tiendafuxion.com/storelt/Andresvarela/3086029",
 };
 
 function getBuyLink(country) {
