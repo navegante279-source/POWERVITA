@@ -28,7 +28,7 @@ const {
   OWNER_PHONE = "59898950206",
   OWNER_NAME = "Andrés",
   LANDING_URL = "https://powervita.vercel.app/",
-  FUXION_BUY_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson",
+  FUXION_BUY_LINK = "https://tiendafuxion.com/storelt/Andresvarela/3085903",
   BUSINESS_HOURS_START = "9",
   BUSINESS_HOURS_END = "22",
   WEBHOOK_APP_SECRET,
@@ -293,6 +293,17 @@ function isNoReply(text) {
   return NO_PATTERNS.some(w => n === w || n.startsWith(w + " "));
 }
 
+// ── BUY LINKS BY COUNTRY ─────────────────────────────────────
+const COUNTRY_BUY_LINKS = {
+  "Uruguay":   "https://tiendafuxion.com/storelt/Andresvarela/3073072",
+  "Argentina": "https://tiendafuxion.com/storelt/Andresvarela/3085903",
+  "Colombia":  "https://tiendafuxion.com/storelt/Andresvarela/3085903",
+};
+
+function getBuyLink(country) {
+  return COUNTRY_BUY_LINKS[country] || FUXION_BUY_LINK;
+}
+
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
   "Prunex 1": {
@@ -330,9 +341,10 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
       priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency}`);
     }
   }
+  const buyLink = getBuyLink(country);
   const priceSection = priceLines.length
-    ? `PRECIOS CONFIRMADOS PARA ${country.toUpperCase()} (podés darlos directamente):\n${priceLines.join("\n")}`
-    : `Para este país no tenés precio cargado — transferí a ${OWNER_NAME} para el precio.`;
+    ? `PRECIOS CONFIRMADOS PARA ${country.toUpperCase()} (podés darlos directamente):\n${priceLines.join("\n")}\nLINK DE COMPRA PARA ${country.toUpperCase()}: ${buyLink}`
+    : `Para este país no tenés precio cargado — transferí a ${OWNER_NAME} para el precio.\nLINK DE COMPRA: ${buyLink}`;
   const unavailable = getUnavailableProducts(country);
   const available = getAvailableProducts(country);
   const availabilityText =
