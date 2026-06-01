@@ -4,13 +4,26 @@ const LINKS = {
   co: "https://tiendafuxion.com/storelt/Andresvarela/3086029",
 };
 
+const FLAGS = { uy: "🇺🇾 Uruguay", ar: "🇦🇷 Argentina", co: "🇨🇴 Colombia" };
+
+async function sendWA(to, text) {
+  const { WHATSAPP_TOKEN, WHATSAPP_PHONE_ID } = process.env;
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) return;
+  await fetch(`https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { body: text } }),
+  }).catch(() => {});
+}
+
 export default async function handler(req, res) {
   const c = (req.query.c || "uy").toLowerCase();
   const phone = req.query.p || "";
   const link = LINKS[c] || LINKS.uy;
 
-  // Log click to Supabase (non-blocking)
-  const { SUPABASE_URL, SUPABASE_KEY } = process.env;
+  const { SUPABASE_URL, SUPABASE_KEY, OWNER_PHONE } = process.env;
+
+  // Log to Supabase (non-blocking)
   if (SUPABASE_URL && SUPABASE_KEY) {
     fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
       method: "POST",
@@ -22,6 +35,18 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({ country: c, phone, created_at: new Date().toISOString() }),
     }).catch(() => {});
+  }
+
+  // Notify owner on WhatsApp (non-blocking)
+  if (OWNER_PHONE) {
+    const hora = new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo", hour: "2-digit", minute: "2-digit" });
+    const msg =
+      `🔗 CLICK EN LINK DE COMPRA\n\n` +
+      `${FLAGS[c] || "🌍 Internacional"}\n` +
+      (phone ? `📱 wa.me/${phone}\n` : "") +
+      `🕐 ${hora}\n\n` +
+      `👉 Puede estar comprando ahora mismo`;
+    sendWA(OWNER_PHONE, msg);
   }
 
   res.redirect(302, link);
