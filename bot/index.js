@@ -535,11 +535,40 @@ async function sendWAMessage(to, text) {
   return data;
 }
 
-async function notifyOwner(clientPhone, clientName, summary, extra = {}) {
+async function generateSalesBrief(history, country) {
+  try {
+    const convo = history
+      .filter(h => h.role !== "system")
+      .slice(-10)
+      .map(h => `${h.role === "user" ? "Cliente" : "Bot"}: ${h.content}`)
+      .join("\n");
+
+    const r = await anthropic.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 300,
+      system: `Sos un coach de ventas analizando una conversación de WhatsApp de FuXion en ${country}.
+Respondé SOLO con este formato exacto, sin texto extra, sin asteriscos:
+
+🌡️ Temperatura: [Frío / Tibio / Caliente] — [una razón en 5 palabras]
+😟 Su dolor: [dolor principal que mencionó]
+💊 Producto recomendado: [producto/s]
+💡 Cómo cerrar: [consejo específico y concreto de 1 línea para que Andrés cierre esta venta]
+⚠️ Cuidado con: [objeción probable o punto sensible, o "Sin objeciones detectadas"]`,
+      messages: [{ role: "user", content: `Conversación:\n${convo}` }],
+    });
+    return r.content[0].text.trim();
+  } catch {
+    return null;
+  }
+}
+
+async function notifyOwner(clientPhone, clientName, summary, extra = {}, history = []) {
   const countryInfo = detectCountry(clientPhone);
   const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
     España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
   const flag = flagMap[countryInfo.country] || "🌍";
+
+  const brief = history.length >= 2 ? await generateSalesBrief(history, countryInfo.country) : null;
 
   const lines = [
     `🔔 LEAD LISTO PARA CERRAR — PowerVita`,
@@ -548,7 +577,8 @@ async function notifyOwner(clientPhone, clientName, summary, extra = {}) {
     `📱 Escribile: wa.me/${clientPhone}`,
     extra.product   ? `🛒 Interesado en: ${extra.product}` : "",
     extra.objective ? `🎯 Objetivo: ${extra.objective}` : "",
-    extra.objection ? `⚠️ Objeción que tuvo: "${extra.objection}"` : "",
+    ``,
+    brief ? `📊 ANÁLISIS DE LA CHARLA:\n${brief}` : "",
     ``,
     `💬 Conversación:`,
     summary,
@@ -683,7 +713,7 @@ async function handleMessage(phone, text, contactName) {
         await notifyOwner(phone, contactName, summary || "Sin historial previo", {
           product: productMatch?.[0] || "",
           country: countryInfo.country,
-        });
+        }, cleanHistory);
         console.log(`🤝 Transfer confirmed: ${phone}`);
         return;
       }
@@ -704,7 +734,7 @@ async function handleMessage(phone, text, contactName) {
         .slice(-4)
         .map((h) => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`)
         .join("\n");
-      await notifyOwner(phone, contactName, summary || "Sin historial previo");
+      await notifyOwner(phone, contactName, summary || "Sin historial previo", {}, history);
       await saveConversation(phone, { transferred: true, history, retries });
       await saveLead(phone, {
         name: contactName,
@@ -729,7 +759,7 @@ async function handleMessage(phone, text, contactName) {
       const msg = distMsgs[lang] || distMsgs.es;
       await sendWAMessage(phone, msg);
       const summary = `INTERESADO EN NEGOCIO/DISTRIBUCIÓN\nMensaje: "${text}"\nPaís: ${countryInfo.country}`;
-      await notifyOwner(phone, contactName, summary);
+      await notifyOwner(phone, contactName, summary, {}, history);
       await saveConversation(phone, { transferred: true, history, retries });
       await saveLead(phone, {
         name: contactName,
@@ -803,7 +833,7 @@ async function handleMessage(phone, text, contactName) {
       await notifyOwner(phone, contactName, summary, {
         product,
         objection: objection ? text.slice(0, 80) : "",
-      });
+      }, history);
     }
 
     console.log(`✅ Responded to ${phone} [${countryInfo.country}]${needsTransfer ? " → TRANSFER PENDING" : ""}`);
