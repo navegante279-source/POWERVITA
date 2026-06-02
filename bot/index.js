@@ -248,12 +248,17 @@ function isBusinessHours() {
   return uyHour >= parseInt(BUSINESS_HOURS_START) && uyHour < parseInt(BUSINESS_HOURS_END);
 }
 
-// ── WARM LEAD DETECTION (mensajes pre-armados desde la landing) ──
+// ── WARM LEAD DETECTION (mensajes pre-armados desde la landing o anuncio) ──
 const WARM_LEAD_PATTERNS = [
   "vi la oferta en la web", "vi la oferta", "quiero hacer mi primer pedido",
   "quiero el ", "quiero comprar", "me interesa el ", "quiero pedir",
   "cómo lo pido", "como lo pido", "quiero pedirlo", "quiero ordenar",
   "vi el anuncio", "desde la página", "desde la web",
+  // Leads de Meta Ads
+  "asesoría personalizada", "asesoria personalizada",
+  "quiero asesoría", "quiero asesoria",
+  "quiero información", "quiero informacion",
+  "prunex", "thermo t3", "biopro", "vita xtra",
 ];
 
 function isWarmLead(text) {
@@ -320,6 +325,13 @@ function getPriceInfo(product, country) {
   return PRODUCT_PRICES[product]?.[country] || null;
 }
 
+// ── PRICE ANCHORS (comparación para anclar el valor) ─────────
+const PRICE_ANCHORS = {
+  "Uruguay":   "menos que una consulta médica privada en Montevideo",
+  "Argentina": "menos que una semana de delivery",
+  "Colombia":  "menos que dos consultas con nutricionista",
+};
+
 // ── LANGUAGE INSTRUCTIONS ─────────────────────────────────────
 const LANG_INSTRUCTIONS = {
   es: "Responde SIEMPRE en español latinoamericano. Tono cálido, cercano y directo.",
@@ -345,9 +357,24 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
       priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency}`);
     }
   }
+
+  const hasDirectBuyLink = !!COUNTRY_BUY_LINKS[country];
+  const priceAnchor = PRICE_ANCHORS[country] || "una inversión puntual en tu salud";
+
   const priceSection = priceLines.length
-    ? `PRECIOS CONFIRMADOS PARA ${country.toUpperCase()} (podés darlos directamente):\n${priceLines.join("\n")}\nLINK DE COMPRA PARA ${country.toUpperCase()}: ${buyLink}`
-    : `Para este país no tenés precio cargado — transferí a ${OWNER_NAME} para el precio.\nLINK DE COMPRA: ${buyLink}`;
+    ? `PRECIOS CONFIRMADOS (dálos directamente):\n${priceLines.join("\n")}\nAL DAR EL PRECIO: siempre añadí "— ${priceAnchor}" (ej: "Prunex 1 vale $U 1.710 — ${priceAnchor}")\nLINK DIRECTO DE COMPRA: ${buyLink}`
+    : `Sin precio cargado para ${country} — derivá a ${OWNER_NAME} para el precio.\nLINK DE COMPRA: ${buyLink}`;
+
+  const closeSection = hasDirectBuyLink
+    ? `EN ${country.toUpperCase()} EL CLIENTE COMPRA DIRECTAMENTE — sin esperar a Andrés:
+  1. Espejo: "Con todo lo que me contás, tiene sentido que quieras resolver esto ya."
+  2. Precio anclado: "[Producto] vale [precio] — ${priceAnchor}."
+  3. Resultado concreto: "En 7 días ya vas a notar la diferencia."
+  4. Urgencia real: "Hay descuento de primera compra para nuevos clientes de ${country} que podés usar ahora."
+  5. Cierre directo: "Comprá acá, es 100% seguro y llega a tu domicilio: ${buyLink} — ¿lo pedimos?"
+NO uses [TRANSFER_NEEDED] para este cierre. Solo si el cliente pide hablar con Andrés o quiere pack de varios productos.`
+    : `EN ${country.toUpperCase()} DERIVAR A ${OWNER_NAME.toUpperCase()} PARA EL CIERRE:
+Hacé las preguntas de dolor → luego: "${OWNER_NAME} te arma el precio exacto para ${country} ahora mismo. ¿Te lo paso?" → [TRANSFER_NEEDED]`;
   const unavailable = getUnavailableProducts(country);
   const available = getAvailableProducts(country);
   const availabilityText =
@@ -374,14 +401,14 @@ MISIÓN: CERRAR VENTAS, NO SOLO INFORMAR
 FLUJO PAS + SPIN (3 MENSAJES MÁXIMO):
 
 MENSAJE 1 — ENGANCHE INICIAL:
-Si el cliente menciona "Prunex", "anuncio", "hinchazón" o "digestión" en su primer mensaje:
-→ No preguntes qué lo trajo — ya lo sabés. Entrá directo al dolor:
-"¡Hola! Soy Valeria 😊 Vi que te interesó Prunex. Contame — esa sensación de hinchazón o malestar digestivo, ¿hace cuánto la tenés? ¿Es algo de todos los días?"
-Esto conecta con el anuncio que vio y genera confianza inmediata.
+Si el cliente menciona "Prunex", "anuncio", "asesoría personalizada" o llega con LEAD CALIENTE:
+→ No preguntes qué lo trajo — ya lo sabés. Reconocé el producto y dejá que elijan su dolor:
+"¡Hola! Soy ${agentName} 😊 Prunex es nuestro producto estrella para el bienestar intestinal. Contame — ¿qué es lo que más te molesta ahora: el tránsito, la hinchazón, o algo con la digestión en general?"
+No asumas el dolor específico — dejá que lo identifiquen ellos.
 
-Si el primer mensaje es genérico ("hola", "info", "asesoría"):
+Si el primer mensaje es genérico ("hola", "info", sin producto específico):
 → Saludo cálido + UNA pregunta que abra el dolor emocional, no el objetivo racional:
-"¡Hola! Soy Valeria 😊 Contame, ¿qué es lo que más te está incomodando últimamente con tu cuerpo o tu energía? Quiero entender bien tu caso."
+"¡Hola! Soy ${agentName} 😊 Contame, ¿qué es lo que más te está incomodando últimamente con tu cuerpo o tu energía? Quiero entender bien tu caso."
 NO preguntes "¿cuál es tu objetivo?" — eso es frío y genérico.
 
 La nota de privacidad la mencionás solo si el cliente pregunta por sus datos o si mostrás desconfianza. En el primer mensaje no va.
@@ -410,13 +437,8 @@ A — ATENCIÓN: ya la tenés (el cliente escribió)
 I — INTERÉS: preguntá el dolor. Si piden precio directo → "Te lo doy ahora mismo, pero antes quiero asegurarme de recomendarte bien. ¿Hace cuánto tenés este problema? ¿Cómo te afecta en el día a día?"
 D — DESEO: cuando respondan, una pregunta más: "¿Hay algo que dejaste de hacer por esto?" — que verbalicen el costo emocional. Luego conectá el producto a ESE dolor específico.
 A — ACCIÓN: recién ahí, el precio con framing completo:
-  1. Espejo: "Con todo lo que me contás, tiene sentido que quieras resolver esto ya."
-  2. Precio: "Prunex 1 para ${country} vale [precio] — menos de lo que gastás en [comparación con su dolor]."
-  3. Resultado: "En 7 días ya vas a notar la diferencia."
-  4. Urgencia: "El stock en ${country} es limitado."
-  5. Cierre asumido: "Podés pedirlo directo acá: ${buyLink} — ¿arrancamos?" → [TRANSFER_NEEDED]
 
-Si NO tenés precio para ese país → igual hacé las preguntas de dolor → luego: "Andrés te arma el precio exacto para ${country} ahora mismo. ¿Te lo paso?" → [TRANSFER_NEEDED]
+${closeSection}
 
 ════════════════════════════════
 MANEJO DE OBJECIONES (OBLIGATORIO — no ignorar)
@@ -443,12 +465,12 @@ Luego asumí: "¿Arrancamos? El link de compra es ${buyLink}" → [TRANSFER_NEED
 → Nunca lo presentes como una limitación. Respondé con entusiasmo: "¡Sí, claro! El proceso es muy simple y 100% seguro: te comparto el link de la tienda oficial de FuXion para ${country}, entrás, elegís tu producto y completás el pedido en 2 minutos — con tarjeta o los medios de pago disponibles en tu país. Te llega directamente a tu domicilio sin complicaciones. ¿Te mando el link ahora? 👉 ${buyLink}"
 
 ════════════════════════════════
-URGENCIA (usá 1 por conversación, con naturalidad)
+URGENCIA REAL (usá 1 sola vez por conversación, con naturalidad)
 ════════════════════════════════
 Elegí según el contexto:
-"Andrés está cerrando los pedidos de ${country} esta semana"
-"El stock de [producto específico] en ${country} está limitado"
-"Hay precio especial para primeras compras que Andrés puede aplicar"
+"El stock de [producto] en ${country} es limitado — no siempre tenemos disponibilidad inmediata"
+"Hay descuento de primera compra para nuevos clientes de ${country} que podés aprovechar esta semana"
+"Los pedidos de esta semana llegan antes del [día de la semana próxima]"
 
 ════════════════════════════════
 PRUEBA SOCIAL ESPECÍFICA (adaptala al caso del cliente)
@@ -488,8 +510,12 @@ Máximo 3 párrafos cortos — esto es WhatsApp, no un email.
 Productos en líneas separadas con emoji, nunca en párrafo corrido.
 
 [TRANSFER_NEEDED]: añadí este tag exactamente cuando:
-el cliente quiere precio o quiere comprar, después del mensaje 3 de la conversación,
-si pregunta si sos real o pide hablar con persona, o si no pudiste resolver una objeción.`;
+- El cliente pide hablar con Andrés o con una persona directamente
+- El cliente pregunta si sos IA o bot
+- El cliente quiere un pack personalizado de varios productos (precio complejo)
+- No pudiste resolver una objeción con los recursos disponibles
+- El país no tiene link de compra directo y el cliente quiere precio/comprar
+${hasDirectBuyLink ? `IMPORTANTE: en ${country} el cliente compra directo — NO uses este tag para cierres estándar de un solo producto.` : ""}`;
 }
 
 // ── AI RESPONSE ───────────────────────────────────────────────
@@ -659,7 +685,7 @@ async function handleMessage(phone, text, contactName) {
       const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
         España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
       const flag = flagMap[countryInfo.country] || "🌍";
-      const fromAd = text.toLowerCase().includes("anuncio") || text.toLowerCase().includes("prunex");
+      const fromAd = text.toLowerCase().includes("anuncio") || text.toLowerCase().includes("prunex") || text.toLowerCase().includes("asesor");
       const newLeadMsg =
         `🆕 NUEVO CONTACTO — PowerVita\n\n` +
         `👤 ${contactName || "Sin nombre"} ${flag} ${countryInfo.country}\n` +
@@ -693,8 +719,8 @@ async function handleMessage(phone, text, contactName) {
         return;
       }
 
-      if (isYesReply(text) || !isNoReply(text) && text.trim().length > 1) {
-        // Confirma o continúa — proceder con la transferencia
+      if (isYesReply(text)) {
+        // Confirma explícitamente — proceder con la transferencia
         const confirmMsgs = {
           es: `¡Perfecto! 🙌 Andrés ya está al tanto y te va a escribir muy pronto con el precio para ${countryInfo.country} 😊🌿`,
           pt: `Ótimo! 🙌 Andrés já foi notificado e vai te escrever em breve com o preço 😊🌿`,
@@ -726,6 +752,10 @@ async function handleMessage(phone, text, contactName) {
         console.log(`🤝 Transfer confirmed: ${phone}`);
         return;
       }
+
+      // Cliente escribió algo distinto a sí/no (pregunta, comentario) — limpiar PENDING_TRANSFER y continuar con IA
+      history = history.filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"));
+      console.log(`↪️ PENDING_TRANSFER cleared — client sent non-yes/no: ${phone}`);
     }
 
     // Anti-loop: detect meaningless input
@@ -859,7 +889,7 @@ async function handleMessage(phone, text, contactName) {
 const FOLLOWUP_STAGES = [
   {
     stage: 0,
-    hoursAfter: 20,
+    hoursAfter: 2,
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
