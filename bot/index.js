@@ -319,6 +319,18 @@ const PRODUCT_PRICES = {
     "Argentina": { amount: "45.550", currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "38.700", currency: "pesos colombianos", symbol: "$"  },
   },
+  "Vita Xtra T+": {
+    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3062050" },
+  },
+  "Biopro+ Fit": {
+    "Uruguay":   { amount: "1.425", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073816" },
+  },
+  "Nocarb-T": {
+    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073820" },
+  },
+  "Thermo T3": {
+    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073822" },
+  },
 };
 
 function getPriceInfo(product, country) {
@@ -354,7 +366,8 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
   for (const [product, countries] of Object.entries(PRODUCT_PRICES)) {
     if (countries[country]) {
       const p = countries[country];
-      priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency}`);
+      const productLink = p.link || buyLink;
+      priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency} → Link: ${productLink}`);
     }
   }
 
@@ -362,7 +375,7 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
   const priceAnchor = PRICE_ANCHORS[country] || "una inversión puntual en tu salud";
 
   const priceSection = priceLines.length
-    ? `PRECIOS CONFIRMADOS (dálos directamente):\n${priceLines.join("\n")}\nAL DAR EL PRECIO: siempre añadí "— ${priceAnchor}" (ej: "Prunex 1 vale $U 1.710 — ${priceAnchor}")\nLINK DIRECTO DE COMPRA: ${buyLink}`
+    ? `PRECIOS Y LINKS CONFIRMADOS PARA ${country.toUpperCase()} (dálos directamente al cerrar):\n${priceLines.join("\n")}\nAL DAR EL PRECIO: siempre añadí "— ${priceAnchor}"\nCada producto tiene su propio link — usá el que corresponde al producto que le estás ofreciendo.`
     : `Sin precio cargado para ${country} — derivá a ${OWNER_NAME} para el precio.\nLINK DE COMPRA: ${buyLink}`;
 
   const closeSection = hasDirectBuyLink
@@ -371,7 +384,8 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
   2. Precio anclado: "[Producto] vale [precio] — ${priceAnchor}."
   3. Resultado concreto: "En 7 días ya vas a notar la diferencia."
   4. Urgencia real: "Hay descuento de primera compra para nuevos clientes de ${country} que podés usar ahora."
-  5. Cierre directo: "Comprá acá, es 100% seguro y llega a tu domicilio: ${buyLink} — ¿lo pedimos?"
+  5. Cierre directo: "Comprá acá, es 100% seguro y llega a tu domicilio: [link del producto de la lista de precios arriba] — ¿lo pedimos?"
+Cada producto tiene su propio link en la lista de precios — usá el link exacto del producto que le estás ofreciendo.
 NO uses [TRANSFER_NEEDED] para este cierre. Solo si el cliente pide hablar con Andrés o quiere pack de varios productos.`
     : `EN ${country.toUpperCase()} DERIVAR A ${OWNER_NAME.toUpperCase()} PARA EL CIERRE:
 Hacé las preguntas de dolor → luego: "${OWNER_NAME} te arma el precio exacto para ${country} ahora mismo. ¿Te lo paso?" → [TRANSFER_NEEDED]`;
