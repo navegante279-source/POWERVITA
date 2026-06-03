@@ -145,17 +145,17 @@ function verifyMetaSignature(req) {
 }
 
 // ── PRODUCTS UNAVAILABLE BY COUNTRY ──────────────────────────
-// En Uruguay solo están disponibles: Prunex 1, Thermo T3, Nocarb-T, Biopro+ Fit, Vita Xtra T+
+// Uruguay: solo Prunex 1, Thermo T3, Nocarb-T, Biopro+ Fit, Vita Xtra T+
+// Argentina y Colombia: según campañas activas de Meta Ads
 const COUNTRY_UNAVAILABLE = {
   "Uruguay":        ["Flora Liv", "Liquid Fibra", "Alpha Balance", "Rexet", "Berry Balance",
                      "Biopro+ Sport", "Biopro+ Tect", "Protein Active", "Nutraday", "Xpeed",
                      "Café & Café Fit", "Chocolate Fit", "Vera+", "Gano Excel", "Café Gano",
                      "Youth Elixir", "Beauty In", "Golden FLX", "Passion", "On", "No Stress",
                      "Pre Sport", "Post Sport", "HGH", "Probal", "Xtra Mile"],
-  "Argentina":      ["Biopro+ Sport", "Protein Active", "Xpeed", "Café & Café Fit",
-                     "Gano Excel", "Café Gano", "Youth Elixir", "Golden FLX", "No Stress",
-                     "Probal", "Xtra Mile"],
-  "Colombia":       ["Protein Active", "Xpeed", "Youth Elixir", "Golden FLX"],
+  "Argentina":      ["Protein Active", "Xpeed", "Café & Café Fit",
+                     "Gano Excel", "Café Gano", "Golden FLX", "No Stress", "Probal"],
+  "Colombia":       ["Xpeed", "Youth Elixir"],
   "México":         [],
   "España":         ["Pre Sport"],
   "Brasil":         [],
@@ -514,6 +514,9 @@ CATÁLOGO FUXION
 ✨ ANTIEDAD: Youth Elixir (regeneración nocturna), Beauty In (colágeno piel/cabello/uñas), Golden FLX (articulaciones), Passion (vigor y circulación), HGH (hormona de crecimiento natural, antiedad)
 🧠 MENTAL: On (concentración, memoria), No Stress (ansiedad, sueño, nervios)
 🏃 DEPORTE: Pre Sport (pre-entreno), Post Sport (recuperación BCAA), Xpeed (potencia)
+
+COMBOS Y PACKS PERSONALIZADOS (detox, vuelta a clases, día de la madre, etc.):
+→ No des precio — armá el deseo y derivá: "Ese combo lo arma Andrés directo para ${country}, con el precio especial incluido. ¿Le digo que te escriba hoy?" → [TRANSFER_NEEDED]
 
 PACKS (verificá siempre que estén en la lista de disponibles para ${country}):
 🔥 BAJAR DE PESO: Thermo T3 + Nocarb-T + Prunex 1 | Completo: + Liquid Fibra + Café & Café Fit
