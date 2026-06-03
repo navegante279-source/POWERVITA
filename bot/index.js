@@ -320,16 +320,20 @@ const PRODUCT_PRICES = {
     "Colombia":  { amount: "38.700", currency: "pesos colombianos", symbol: "$"  },
   },
   "Vita Xtra T+": {
-    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3062050" },
+    "Uruguay":  { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3062050" },
+    "Colombia": { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086025" },
   },
   "Biopro+ Fit": {
-    "Uruguay":   { amount: "1.425", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073816" },
+    "Uruguay":  { amount: "1.425",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073816" },
+    "Colombia": { amount: "115.900", currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086030" },
   },
   "Nocarb-T": {
-    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073820" },
+    "Uruguay":  { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073820" },
+    "Colombia": { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086028" },
   },
   "Thermo T3": {
-    "Uruguay":   { amount: "1.710", currency: "pesos uruguayos", symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073822" },
+    "Uruguay":  { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073822" },
+    "Colombia": { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086074" },
   },
 };
 
