@@ -1066,15 +1066,18 @@ app.post("/webhook", async (req, res) => {
           const text = msg.text.body;
           console.log(`📨 [${phone}] ${name}: ${text}`);
 
-          // ── Owner command: VENDIDO <phone> ────────────────────
-          if (phone === OWNER_PHONE && /^VENDIDO\s+\d+/i.test(text.trim())) {
-            const targetPhone = text.trim().split(/\s+/)[1];
-            await Promise.all([
-              saveConversation(targetPhone, { purchased: true }),
-              saveLead(targetPhone, { status: "sold" }),
-            ]);
-            sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
-            console.log(`💰 Sale marked for ${targetPhone}`);
+          // ── Owner commands ────────────────────────────────────
+          if (phone === OWNER_PHONE) {
+            if (/^VENDIDO\s+\d+/i.test(text.trim())) {
+              const targetPhone = text.trim().split(/\s+/)[1];
+              await Promise.all([
+                saveConversation(targetPhone, { purchased: true }),
+                saveLead(targetPhone, { status: "sold" }),
+              ]);
+              sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
+              console.log(`💰 Sale marked for ${targetPhone}`);
+            }
+            // Ignorar todos los mensajes del dueño — no procesar como cliente
             continue;
           }
 
