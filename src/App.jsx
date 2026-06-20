@@ -45,7 +45,7 @@ const RECIPES = [
   { id:8, cat:"Beauty",  name:"Collagen Glow Drink",   img:"✨", product:"YOUTH ELIXIR HGH",  ingredients:["agua de rosas","jugo de granada","1 sobre YOUTH ELIXIR HGH","aloe vera","menta"],    prep:"Mezcla sin licuadora. Agita bien. Toma 2x día para piel radiante." },
 ];
 
-const TESTIMONIALS = [
+const TESTIMONIALS_ROW1 = [
   { name:"Elena García",   country:"España",    flag:"🇪🇸", role:"Cliente verificada",  text:"Increíble el cambio en mi digestión. ¡El envío a Madrid fue súper rápido!", pack:"Transform Kit",  days:45, color:"#2d6a4f" },
   { name:"Camila Rojas",   country:"Chile",     flag:"🇨🇱", role:"Usuaria Premium",     text:"Desde que uso FuXion Energy tengo una vitalidad que no sentía desde mis 20s.", pack:"Elite Program",  days:90, color:"#7B3FA0" },
   { name:"André Santos",   country:"Brasil",    flag:"🇧🇷", role:"Cliente verificado",  text:"O sistema Immuno me ajudou a passar o inverno sem adoecer uma única vez!", pack:"Starter Pack",  days:30, color:"#1565C0" },
@@ -56,11 +56,22 @@ const TESTIMONIALS = [
   { name:"Sofía Morales",  country:"Argentina", flag:"🇦🇷", role:"Gold Partner",        text:"En 8 meses construí un equipo en 5 países. El soporte del sistema es incomparable.", pack:"Elite Program", days:90, color:"#C9A84C" },
   { name:"Pedro Fernandes",country:"Portugal",  flag:"🇵🇹", role:"Diamond Partner",     text:"Comecei do zero e hoje tenho renda passiva de 6 dígitos. Revolucionário.", pack:"Elite Program", days:90, color:"#1565C0" },
 ];
+const TESTIMONIALS_ROW2 = [
+  { name:"Lucía Herrera",  country:"Perú",      flag:"🇵🇪", role:"Cliente verificada",  text:"El Thermo T3 me ayudó a sentirme más liviana y con energía desde la primera semana.", pack:"Starter Pack", days:30, color:"#E65100" },
+  { name:"Roberto Díaz",   country:"Ecuador",   flag:"🇪🇨", role:"Gold Partner",        text:"Encontré en Power Vita una comunidad real. El acompañamiento marca la diferencia.", pack:"Elite Program", days:90, color:"#C9A84C" },
+  { name:"Fernanda Lima",  country:"Brasil",    flag:"🇧🇷", role:"Usuaria Premium",     text:"O Flora Liv mudou minha rotina. Minha digestão nunca esteve tão bem!", pack:"Transform Kit", days:60, color:"#2d6a4f" },
+  { name:"Diego Martínez", country:"Uruguay",   flag:"🇺🇾", role:"Cliente verificado",  text:"Probé el Starter Pack por curiosidad y ya llevo 4 meses. Los resultados hablan solos.", pack:"Starter Pack", days:120, color:"#1565C0" },
+  { name:"Isabella Torres",country:"Colombia",  flag:"🇨🇴", role:"Embajadora",          text:"Mi piel y mi energía cambiaron por completo. Mis amigas ya están pidiendo info.", pack:"Transform Kit", days:45, color:"#7B3FA0" },
+  { name:"Gabriel Vargas", country:"México",    flag:"🇲🇽", role:"Builder",             text:"Armé mi equipo en 3 meses. Las herramientas de IA hacen todo más fácil.", pack:"Elite Program", days:90, color:"#1a2e1a" },
+  { name:"Carolina Ruiz",  country:"Chile",     flag:"🇨🇱", role:"Cliente verificada",  text:"El No Stress me devolvió el sueño. Dormí toda la noche por primera vez en meses.", pack:"Starter Pack", days:30, color:"#2d6a4f" },
+  { name:"Ryan Mitchell",  country:"USA",       flag:"🇺🇸", role:"Verified Customer",   text:"Started with Protein Fit, now I use the full system. Game changer for my workouts.", pack:"Transform Kit", days:60, color:"#E65100" },
+  { name:"Martina Gómez",  country:"Argentina", flag:"🇦🇷", role:"Usuaria Premium",     text:"El detox con Rexet fue increíble. Me siento más liviana y con claridad mental.", pack:"Transform Kit", days:45, color:"#7B3FA0" },
+];
 
 const BEFORE_AFTER = [
-  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"78 kg",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"70 kg",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"-8 kg",Energía:"+85%",Digestión:"+90%",Sueño:"+70%"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
-  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"82 kg",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"86 kg",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"+4kg músculo",Energía:"+120%",Digestión:"+95%",Rendimiento:"+110%"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
-  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"65 kg",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"63 kg",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"-2 kg",Energía:"+70%",Digestión:"+95%",Piel:"+85%"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
+  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"⬇️ Con sobrepeso",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"⬆️ Saludable",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"+100%",Energía:"+85%",Digestión:"+90%",Sueño:"+70%"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
+  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"⬇️ Sin tono",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"⬆️ Tonificado",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"+100%",Energía:"+120%",Digestión:"+95%",Rendimiento:"+110%"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
+  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"⬇️ Pesada",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"⬆️ Ligera",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"+90%",Energía:"+70%",Digestión:"+95%",Piel:"+85%"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
 ];
 
 const SOCIAL_PROOF = ["🇲🇽 Carlos de México acaba de unirse","🇨🇴 Laura de Colombia compró Energy+","🇧🇷 Pedro de Brasil se registró","🇦🇷 Sofía compró Detox Kit","🇪🇸 Elena de España se unió","🇨🇱 Diego compró Immuno Shield","🇺🇸 James se convirtió en Partner","🇺🇾 Marcos de Uruguay se registró"];
@@ -465,7 +476,8 @@ export default function App() {
 
   const waLink = `https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Te contacto desde ${selCountry||"mi país"} para más info sobre Power Vita 🌿`)}`;
   const certDouble = [...CERTS,...CERTS];
-  const testMarquee = [...TESTIMONIALS,...TESTIMONIALS];
+  const testMarqueeRow1 = [...TESTIMONIALS_ROW1,...TESTIMONIALS_ROW1];
+  const testMarqueeRow2 = [...TESTIMONIALS_ROW2,...TESTIMONIALS_ROW2];
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
   const lineKeys = ["","Detox","Energy","Protein","Immunity","Sport","Control"];
   const lineLabels = ["Todos","Detox","Energy","Protein","Immunity","Sport","Control"];
@@ -796,7 +808,7 @@ export default function App() {
         {/* Marquee fila 1 */}
         <div style={{overflow:"hidden",marginBottom:14}}>
           <div style={{display:"flex",gap:14,animation:"marquee 60s linear infinite",width:"max-content",paddingLeft:40}}>
-            {testMarquee.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
+            {testMarqueeRow1.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
               <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{position:"relative",flexShrink:0}}>
@@ -819,7 +831,7 @@ export default function App() {
         {/* Marquee fila 2 inversa */}
         <div style={{overflow:"hidden",marginBottom:52}}>
           <div style={{display:"flex",gap:14,animation:"marquee2 68s linear infinite",width:"max-content",paddingLeft:40}}>
-            {[...testMarquee.slice(5),...testMarquee.slice(0,5)].map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
+            {testMarqueeRow2.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
               <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{position:"relative",flexShrink:0}}>
