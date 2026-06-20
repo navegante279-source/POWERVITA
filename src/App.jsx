@@ -55,12 +55,21 @@ const TESTIMONIALS = [
   { name:"Marcus Johnson", country:"USA",       flag:"🇺🇸", role:"Diamond Partner",     text:"Llevar Power Vita a mi país ha sido la mejor decisión financiera de mi vida.", pack:"Elite Program", days:90, color:"#1a2e1a" },
   { name:"Sofía Morales",  country:"Argentina", flag:"🇦🇷", role:"Gold Partner",        text:"En 8 meses construí un equipo en 5 países. El soporte del sistema es incomparable.", pack:"Elite Program", days:90, color:"#C9A84C" },
   { name:"Pedro Fernandes",country:"Portugal",  flag:"🇵🇹", role:"Diamond Partner",     text:"Comecei do zero e hoje tenho renda passiva de 6 dígitos. Revolucionário.", pack:"Elite Program", days:90, color:"#1565C0" },
+  { name:"Lucía Herrera",  country:"Perú",      flag:"🇵🇪", role:"Cliente verificada",  text:"El Thermo T3 me ayudó a sentirme más liviana y con energía desde la primera semana.", pack:"Starter Pack", days:30, color:"#E65100" },
+  { name:"Roberto Díaz",   country:"Ecuador",   flag:"🇪🇨", role:"Gold Partner",        text:"Encontré en Power Vita una comunidad real. El acompañamiento marca la diferencia.", pack:"Elite Program", days:90, color:"#C9A84C" },
+  { name:"Fernanda Lima",  country:"Brasil",    flag:"🇧🇷", role:"Usuaria Premium",     text:"O Flora Liv mudou minha rotina. Minha digestão nunca esteve tão bem!", pack:"Transform Kit", days:60, color:"#2d6a4f" },
+  { name:"Diego Martínez", country:"Uruguay",   flag:"🇺🇾", role:"Cliente verificado",  text:"Probé el Starter Pack por curiosidad y ya llevo 4 meses. Los resultados hablan solos.", pack:"Starter Pack", days:120, color:"#1565C0" },
+  { name:"Isabella Torres",country:"Colombia",  flag:"🇨🇴", role:"Embajadora",          text:"Mi piel y mi energía cambiaron por completo. Mis amigas ya están pidiendo info.", pack:"Transform Kit", days:45, color:"#7B3FA0" },
+  { name:"Gabriel Vargas", country:"México",    flag:"🇲🇽", role:"Builder",             text:"Armé mi equipo en 3 meses. Las herramientas de IA hacen todo más fácil.", pack:"Elite Program", days:90, color:"#1a2e1a" },
+  { name:"Carolina Ruiz",  country:"Chile",     flag:"🇨🇱", role:"Cliente verificada",  text:"El No Stress me devolvió el sueño. Dormí toda la noche por primera vez en meses.", pack:"Starter Pack", days:30, color:"#2d6a4f" },
+  { name:"Ryan Mitchell",  country:"USA",       flag:"🇺🇸", role:"Verified Customer",   text:"Started with Protein Fit, now I use the full system. Game changer for my workouts.", pack:"Transform Kit", days:60, color:"#E65100" },
+  { name:"Martina Gómez",  country:"Argentina", flag:"🇦🇷", role:"Usuaria Premium",     text:"El detox con Rexet fue increíble. Me siento más liviana y con claridad mental.", pack:"Transform Kit", days:45, color:"#7B3FA0" },
 ];
 
 const BEFORE_AFTER = [
-  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"78 kg",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"70 kg",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"-8 kg",Energía:"+85%",Digestión:"+90%",Sueño:"+70%"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
-  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"82 kg",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"86 kg",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"+4kg músculo",Energía:"+120%",Digestión:"+95%",Rendimiento:"+110%"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
-  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"65 kg",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"63 kg",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"-2 kg",Energía:"+70%",Digestión:"+95%",Piel:"+85%"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
+  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Composición:"⬇️ Con sobrepeso",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Composición:"⬆️ Saludable",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Composición:"+100%",Energía:"+85%",Digestión:"+90%",Sueño:"+70%"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
+  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Composición:"⬇️ Sin tono",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Composición:"⬆️ Tonificado",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Composición:"+100%",Energía:"+120%",Digestión:"+95%",Rendimiento:"+110%"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
+  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Bienestar:"⬇️ Pesada",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Bienestar:"⬆️ Ligera",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Bienestar:"+90%",Energía:"+70%",Digestión:"+95%",Piel:"+85%"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
 ];
 
 const SOCIAL_PROOF = ["🇲🇽 Carlos de México acaba de unirse","🇨🇴 Laura de Colombia compró Energy+","🇧🇷 Pedro de Brasil se registró","🇦🇷 Sofía compró Detox Kit","🇪🇸 Elena de España se unió","🇨🇱 Diego compró Immuno Shield","🇺🇸 James se convirtió en Partner","🇺🇾 Marcos de Uruguay se registró"];
@@ -335,35 +344,6 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
   return null;
 }
 
-// ── CONTADOR TIEMPO REAL ──────────────────────────────────────────────────────
-function ContadorTiempoReal() {
-  const NAMES = [{name:"María G.",country:"Uruguay",flag:"🇺🇾",product:"Transform Kit"},{name:"Carlos R.",country:"Argentina",flag:"🇦🇷",product:"Elite Program"},{name:"Laura M.",country:"Colombia",flag:"🇨🇴",product:"REXET"},{name:"Diego F.",country:"México",flag:"🇲🇽",product:"Starter Pack"},{name:"Ana P.",country:"España",flag:"🇪🇸",product:"THERMO T3"},{name:"Pedro L.",country:"Brasil",flag:"🇧🇷",product:"Transform Kit"},{name:"Sofía V.",country:"Chile",flag:"🇨🇱",product:"Elite Program"},{name:"James W.",country:"USA",flag:"🇺🇸",product:"BIOPRO+ TECT"},{name:"Valentina C.",country:"Colombia",flag:"🇨🇴",product:"NO STRESS"},{name:"Martín R.",country:"Perú",flag:"🇵🇪",product:"NUTRADAY"},{name:"Camila S.",country:"Chile",flag:"🇨🇱",product:"VITA XTRA T+"},{name:"Roberto M.",country:"Ecuador",flag:"🇪🇨",product:"Starter Pack"},{name:"Elena D.",country:"España",flag:"🇪🇸",product:"PROTEIN FIT"},{name:"Fernando A.",country:"Uruguay",flag:"🇺🇾",product:"THERMO T3"}];
-  const [count,setCount]=useState(0); const [joins,setJoins]=useState([]);
-  const getBase = () => { const h=new Date().getHours(); if(h<6)return 8; if(h<9)return 22; if(h<12)return 47; if(h<15)return 74; if(h<18)return 93; if(h<21)return 78; return 41; };
-  useEffect(() => {
-    const shuffled = [...NAMES].sort(()=>Math.random()-0.5);
-    setCount(getBase()); setJoins(shuffled.slice(0,3).map((n,i)=>({...n,mins:3+i*7,id:i})));
-    const ci = setInterval(()=>{const h=new Date().getHours();if(h>=9&&h<21)setCount(p=>p+Math.floor(Math.random()*2)+1);},90000);
-    let ji=3; const jt=setInterval(()=>{const pick=shuffled[ji%shuffled.length];setJoins(p=>{if(p[0]&&p[0].name===pick.name)return p;return[{...pick,mins:1,id:Date.now()},...p.slice(0,3)];});ji++;},18000);
-    return()=>{clearInterval(ci);clearInterval(jt);};
-  }, []);
-  const h = new Date().getHours();
-  const bars = [8,12,18,25,34,42,56,74,89,98,106,98,84,74,67,58,47,39,28,19,14,10,8,6];
-  return (
-    <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,overflow:"hidden",boxShadow:"0 6px 24px rgba(45,106,79,0.07)"}}>
-      <div style={{background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",padding:"13px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:"#fff",marginBottom:1}}>Actividad en tiempo real</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.88)"}}>Últimas 24 horas · Global</div></div>
-        <div style={{display:"flex",alignItems:"center",gap:5,background:"rgba(37,211,102,0.14)",border:"1px solid rgba(37,211,102,0.28)",borderRadius:999,padding:"3px 9px"}}><div style={{width:5,height:5,borderRadius:"50%",background:"#25D366",animation:"pulse 1.5s ease-in-out infinite"}}/><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366"}}>EN VIVO</span></div>
-      </div>
-      <div style={{padding:"14px 16px 10px",borderBottom:"1px solid rgba(45,106,79,0.06)"}}>
-        <div style={{display:"flex",alignItems:"flex-end",gap:10,marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:44,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{count}</div><div style={{paddingBottom:5,fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#2d6a4f",lineHeight:1.3}}>personas se unieron<br/>en las últimas 24hs</div></div>
-        <div style={{marginBottom:7}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af",marginBottom:3,fontWeight:600}}>ACTIVIDAD HOY POR HORA</div><div style={{display:"flex",gap:2,alignItems:"flex-end",height:24}}>{bars.map((v,i)=>{const isNow=i===h,isPast=i<h;return(<div key={i} style={{flex:1,background:isNow?"#2d6a4f":isPast?"rgba(45,106,79,0.32)":"rgba(45,106,79,0.08)",borderRadius:"2px 2px 0 0",height:`${(v/106)*100}%`,position:"relative"}}>{isNow&&<div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:"#2d6a4f",color:"#fff",borderRadius:3,padding:"1px 3px",fontFamily:"'Inter',sans-serif",fontSize:6,whiteSpace:"nowrap"}}>ahora</div>}</div>);})}</div><div style={{display:"flex",justifyContent:"space-between",marginTop:2}}>{["00:00","12:00","23:00"].map(t=><span key={t} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>{t}</span>)}</div></div>
-        <div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#4a7c5e",fontWeight:600}}>{h>=9&&h<21?"🟢 Alta actividad ahora":"🔵 Actividad normal"}</div>
-      </div>
-      <div style={{padding:"9px 14px"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",letterSpacing:1,marginBottom:6}}>ÚLTIMAS INCORPORACIONES</div>{joins.map((j,i)=><div key={j.id} style={{display:"flex",alignItems:"center",gap:9,padding:"4px 0",borderBottom:i<joins.length-1?"1px solid rgba(45,106,79,0.05)":"none"}}><div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#E8F0E9,#2d6a4f)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{j.flag}</div><div style={{flex:1}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#1a2e1a"}}>{j.name} <span style={{color:"#9ca3af",fontWeight:400}}>de {j.country}</span></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>Se unió con <span style={{color:"#2d6a4f",fontWeight:700}}>{j.product}</span></div></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af"}}>hace {j.mins}min</div></div>)}</div>
-    </div>
-  );
-}
 
 // ── ANTES / DESPUÉS ───────────────────────────────────────────────────────────
 function AntesDespues() {
@@ -465,7 +445,8 @@ export default function App() {
 
   const waLink = `https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Te contacto desde ${selCountry||"mi país"} para más info sobre Power Vita 🌿`)}`;
   const certDouble = [...CERTS,...CERTS];
-  const testMarquee = [...TESTIMONIALS,...TESTIMONIALS];
+  const testMarqueeRow1 = [...TESTIMONIALS.slice(0,9),...TESTIMONIALS.slice(0,9)];
+  const testMarqueeRow2 = [...TESTIMONIALS.slice(9),...TESTIMONIALS.slice(9)];
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
   const lineKeys = ["","Detox","Energy","Protein","Immunity","Sport","Control"];
   const lineLabels = ["Todos","Detox","Energy","Protein","Immunity","Sport","Control"];
@@ -796,7 +777,7 @@ export default function App() {
         {/* Marquee fila 1 */}
         <div style={{overflow:"hidden",marginBottom:14}}>
           <div style={{display:"flex",gap:14,animation:"marquee 60s linear infinite",width:"max-content",paddingLeft:40}}>
-            {testMarquee.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
+            {testMarqueeRow1.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
               <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{position:"relative",flexShrink:0}}>
@@ -819,7 +800,7 @@ export default function App() {
         {/* Marquee fila 2 inversa */}
         <div style={{overflow:"hidden",marginBottom:52}}>
           <div style={{display:"flex",gap:14,animation:"marquee2 68s linear infinite",width:"max-content",paddingLeft:40}}>
-            {[...testMarquee.slice(5),...testMarquee.slice(0,5)].map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
+            {testMarqueeRow2.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
               <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{position:"relative",flexShrink:0}}>
@@ -839,8 +820,7 @@ export default function App() {
         </div>
         {/* Contador + Antes/Después */}
         <div style={{maxWidth:1100,margin:"0 auto",padding:"0 40px"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:22,marginBottom:48}}>
-            <ContadorTiempoReal/>
+          <div style={{marginBottom:48}}>
             <AntesDespues/>
           </div>
           {/* Stats */}
