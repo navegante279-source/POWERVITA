@@ -424,7 +424,6 @@ function AntesDespues() {
 
 // ── CHAT ──────────────────────────────────────────────────────────────────────
 function Chat({ open, onClose, country }) {
-  const T = useContext(LangCtx);
   const [msgs,setMsgs]=useState([]);
   const [inp,setInp]=useState(""); const [loading,setLoading]=useState(false); const botRef=useRef();
   const notified=useRef(false);
@@ -449,7 +448,7 @@ function Chat({ open, onClose, country }) {
   };
   const greeting = isUnconfigured
     ? `¡Hola desde ${country}! 🌍 FuXion opera en tu país. Podés hacer pedidos y también unirte al equipo. ¿En qué puedo ayudarte?`
-    : (T?.chatGreeting||"");
+    : "¡Hola! 🌿 Soy Vita Advisor, tu asistente de Power Vita. ¿Querés información sobre productos, precios o cómo unirte al equipo?";
   if (!open) return null;
   return (
     <div style={{position:"fixed",bottom:84,right:20,width:295,zIndex:300,background:"rgba(250,250,247,0.97)",backdropFilter:"blur(20px)",border:"1.5px solid rgba(45,106,79,0.22)",borderRadius:18,boxShadow:"0 20px 52px rgba(45,106,79,0.2)",overflow:"hidden"}}>
