@@ -124,10 +124,10 @@
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
     <div class="slide-dots" id="slideDots"></div>
     <div class="rec-badge" id="recBadge"><div class="rec-dot"></div> GRABANDO</div>
-    <button class="btn btn-green" id="recordBtn" onclick="startRecording()" disabled>⏺ Grabar video (.webm)</button>
+    <button class="btn btn-green" id="recordBtn" onclick="startRecording()" disabled>⏺ Grabar video</button>
     <div class="caption-box" id="captionBox">El caption aparecerá aquí una vez generado…</div>
     <div class="caption-actions">
-      <button class="btn btn-secondary" onclick="copyCaption()">📋 Copiar caption</button>
+      <button class="btn btn-secondary" onclick="copyCaption(this)">📋 Copiar caption</button>
     </div>
   </div>
 </div>
@@ -415,18 +415,22 @@ function updateDots(idx){
 function startRecording(){
   if(!slides.length) return;
   const canvas=document.getElementById('vc');
+  if(!canvas.captureStream){setStatus('❌ Tu navegador no soporta grabación de canvas');return;}
   const stream=canvas.captureStream(30);
   recordedChunks=[];
-  mediaRecorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+  const mimeType=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+  mediaRecorder=new MediaRecorder(stream,mimeType?{mimeType}:{});
   mediaRecorder.ondataavailable=e=>{if(e.data.size>0)recordedChunks.push(e.data);};
   mediaRecorder.onstop=()=>{
-    const blob=new Blob(recordedChunks,{type:'video/webm'});
+    const blobType=mimeType||'video/webm';
+    const blob=new Blob(recordedChunks,{type:blobType});
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='powervita-reel.webm';a.click();
+    const ext=blobType.includes('mp4')?'mp4':'webm';
+    const a=document.createElement('a');a.href=url;a.download=`powervita-reel.${ext}`;a.click();
     URL.revokeObjectURL(url);
     document.getElementById('recBadge').style.display='none';
     document.getElementById('recordBtn').disabled=false;
-    document.getElementById('recordBtn').textContent='⏺ Grabar video (.webm)';
+    document.getElementById('recordBtn').textContent='⏺ Grabar video';
     setStatus('✅ Video descargado');
   };
   const totalMs=slides.length*slideDuration+600;
@@ -440,12 +444,19 @@ function startRecording(){
   setTimeout(()=>{if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();},totalMs);
 }
 
-function copyCaption(){
+function copyCaption(btn){
   const text=document.getElementById('captionBox').textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=event.target;btn.textContent='✅ Copiado';
-    setTimeout(()=>btn.textContent='📋 Copiar caption',2000);
-  });
+  const done=()=>{btn.textContent='✅ Copiado';setTimeout(()=>btn.textContent='📋 Copiar caption',2000);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
+  } else { fallbackCopy(text,done); }
+}
+function fallbackCopy(text,done){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');done();}catch(e){}
+  document.body.removeChild(ta);
 }
 function setStatus(msg){document.getElementById('status').textContent=msg;}
 
