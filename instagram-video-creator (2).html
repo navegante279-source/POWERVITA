@@ -170,7 +170,29 @@ async function generateVideo() {
     benefits:'3 beneficios clave', routine:'rutina saludable de 3 pasos',
     question:'pregunta gancho + 2 respuestas sorprendentes',
   };
-
+  const TOPICS = [
+    'energía natural y vitalidad durante el día',
+    'alimentación saludable y nutrición práctica',
+    'pérdida de peso sostenible sin dietas extremas',
+    'metabolismo activo y quema de grasa',
+    'digestión saludable y microbiota intestinal',
+    'hidratación y su impacto en el cuerpo',
+    'sueño reparador y recuperación del cuerpo',
+    'inflamación crónica y cómo reducirla con alimentación',
+    'azúcar en sangre y cómo estabilizarla naturalmente',
+    'antioxidantes, detox y limpieza del organismo',
+    'proteínas, músculos y composición corporal',
+    'hábitos matutinos que transforman el metabolismo',
+    'alimentos que aceleran la pérdida de grasa',
+    'carbohidratos: cuáles comer y cuáles evitar',
+    'grasas saludables y su rol en la energía',
+    'control del apetito y saciedad natural',
+    'estrés, cortisol y su efecto en el peso',
+    'fibra, tránsito intestinal y salud digestiva',
+    'vitaminas y minerales esenciales para la energía',
+    'rutinas de bienestar que se mantienen en el tiempo',
+  ];
+  const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
   const prod = productMap[product];
   const seed = Math.floor(Math.random()*99999);
 
@@ -183,17 +205,18 @@ async function generateVideo() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1200,
-        system: `Experto en marketing de bienestar para Instagram LATAM. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
+        system: `Sos experto en marketing de bienestar y salud para Instagram LATAM. Creás contenido educativo, variado y accionable sobre nutrición, energía, metabolismo y pérdida de peso. NUNCA hablés de ciclo menstrual, hormonas reproductivas ni salud ginecológica. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
         messages: [{role:'user', content:`Seed:${seed}
+Tema obligatorio de este video: ${topic}
 Tarea: ${typeMap[contentType]}
-${prod ? `Producto (solo en última slide): ${prod}` : 'SIN mencionar productos ni marcas.'}
+${prod ? `Producto (mencionarlo solo en la última slide como solución): ${prod}` : 'SIN mencionar productos ni marcas.'}
 
-Generá 5 slides para Reel de bienestar/salud femenina.
-Slide 1: Hook impactante (máx 10 palabras)
-Slides 2-4: Puntos educativos (título corto + detalle 1 línea)
-Slide 5: CTA${prod ? ' + producto' : ''}
+Generá 5 slides para un Reel de bienestar/salud.
+Slide 1: Hook que genere curiosidad sobre "${topic}" (máx 10 palabras, impactante)
+Slides 2-4: Puntos concretos y educativos sobre el tema (título corto + detalle 1 línea)
+Slide 5: CTA motivador${prod ? ' + mención del producto' : ''}
 
-Para cada slide: photo_query en inglés para Pexels (ambientes, plantas, alimentos — sin personas específicas).
+Para cada slide: photo_query en inglés para Pexels relacionada al tema (ambientes, alimentos, naturaleza — sin personas).
 
 JSON:
 {
@@ -204,7 +227,7 @@ JSON:
     {"type":"point","title":"...","subtitle":"...","photo_query":"..."},
     {"type":"cta","title":"...","subtitle":"...","photo_query":"..."}
   ],
-  "caption":"Caption Instagram con emojis y hashtags. Máx 200 palabras."
+  "caption":"Caption Instagram con emojis y hashtags relacionados al tema. Máx 200 palabras."
 }`}]
       })
     });
