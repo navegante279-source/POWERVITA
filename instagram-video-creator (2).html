@@ -191,6 +191,14 @@ async function generateVideo() {
     'fibra, tránsito intestinal y salud digestiva',
     'vitaminas y minerales esenciales para la energía',
     'rutinas de bienestar que se mantienen en el tiempo',
+    'receta saludable rápida: desayuno nutritivo y energizante',
+    'receta saludable: snack sin culpa alto en proteína',
+    'receta saludable: almuerzo liviano que sacia y nutre',
+    'receta detox: jugo o batido verde depurativo',
+    'receta de meal prep: preparar comida sana para toda la semana',
+    'receta anti-inflamatoria: ingredientes que sanan desde adentro',
+    'receta saludable: cena liviana para dormir mejor y bajar de peso',
+    'receta saludable: bowl nutritivo con proteínas y vegetales',
   ];
   const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
   const prod = productMap[product];
@@ -212,9 +220,15 @@ Tarea: ${typeMap[contentType]}
 ${prod ? `Producto (mencionarlo solo en la última slide como solución): ${prod}` : 'SIN mencionar productos ni marcas.'}
 
 Generá 5 slides para un Reel de bienestar/salud.
-Slide 1: Hook que genere curiosidad sobre "${topic}" (máx 10 palabras, impactante)
+${topic.includes('receta') ? `Este video ES UNA RECETA. Estructura:
+Slide 1: Nombre atractivo de la receta + gancho (ej: "Batido que quema grasa mientras dormís")
+Slide 2: Ingredientes principales (título: "Ingredientes", subtítulo: lista breve)
+Slide 3: Preparación paso a paso resumida (título corto, subtítulo: pasos en 1-2 líneas)
+Slide 4: Beneficio clave de la receta (título: el beneficio, subtítulo: por qué funciona)
+Slide 5: CTA + invitación a guardar la receta${prod ? ' + producto relacionado' : ''}` :
+`Slide 1: Hook que genere curiosidad sobre "${topic}" (máx 10 palabras, impactante)
 Slides 2-4: Puntos concretos y educativos sobre el tema (título corto + detalle 1 línea)
-Slide 5: CTA motivador${prod ? ' + mención del producto' : ''}
+Slide 5: CTA motivador${prod ? ' + mención del producto' : ''}`}
 
 Para cada slide: photo_query en inglés para Pexels relacionada al tema (ambientes, alimentos, naturaleza — sin personas).
 
