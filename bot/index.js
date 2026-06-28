@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // POWERVITA FUXION BOT — Sistema Completo
 // Stack: Node.js + Express + Anthropic Claude + Supabase
 // WhatsApp: Meta Business API
@@ -268,16 +268,126 @@ function isWarmLead(text) {
 
 // ── OBJECTION DETECTION ───────────────────────────────────────
 const OBJECTION_PATTERNS = {
-  price:   ["caro", "cara", "costoso", "costosa", "no tengo plata", "no tengo dinero", "muy caro", "no puedo pagar", "expensive", "too much", "custa muito"],
-  delay:   ["lo pienso", "lo voy a pensar", "déjame pensar", "dejame pensar", "después", "despues", "luego", "más adelante", "más tarde", "think about", "let me think"],
-  doubt:   ["no sé si funciona", "no se si funciona", "no funciona", "ya probé", "ya probe", "no me funcionó", "doesn't work", "no funciona", "não funciona"],
-  trust:   ["no conozco", "qué es fuxion", "que es fuxion", "es seguro", "es confiable", "what is fuxion", "legit"],
+  price:       ["caro", "cara", "costoso", "costosa", "no tengo plata", "no tengo dinero", "muy caro", "no puedo pagar", "expensive", "too much", "custa muito", "no me alcanza", "no tengo presupuesto"],
+  delay:       ["lo pienso", "lo voy a pensar", "déjame pensar", "dejame pensar", "después", "despues", "luego", "más adelante", "más tarde", "think about", "let me think", "no es el momento", "ahora no puedo"],
+  doubt:       ["no sé si funciona", "no se si funciona", "no funciona", "ya probé", "ya probe", "no me funcionó", "doesn't work", "não funciona", "no veo resultados", "no sirve"],
+  trust:       ["no conozco", "qué es fuxion", "que es fuxion", "es seguro", "es confiable", "what is fuxion", "legit", "es real", "es una estafa", "es piramide", "es pirámide"],
+  partner:     ["consultar con", "preguntarle a", "hablar con mi", "decirle a mi", "mi marido", "mi esposa", "mi pareja", "mi esposo", "mi mamá", "mi familia", "hablar con alguien"],
+  competition: ["vi algo más barato", "tengo algo parecido", "ya tengo algo", "ya uso algo", "similar más barato", "más económico", "en farmacia", "en mercado libre", "en amazon", "ya compré"],
+  skepticism:  ["vi comentarios malos", "alguien me dijo", "me dijeron que", "leí que", "lei que", "comentarios negativos", "no funciona para todos", "es multinivel", "multi nivel"],
 };
 
 function detectObjection(text) {
   const normalized = text.toLowerCase();
   for (const [type, patterns] of Object.entries(OBJECTION_PATTERNS)) {
     if (patterns.some(p => normalized.includes(p))) return type;
+  }
+  return null;
+}
+
+// ── BUYING SIGNAL DETECTION ───────────────────────────────────
+// Estos son "sí" implícitos — el cliente ya decidió, solo necesita el paso final
+const BUYING_SIGNAL_PATTERNS = [
+  // Logística / envío
+  "cómo me llega", "como me llega", "cuánto tarda", "cuanto tarda",
+  "cómo se envía", "como se envia", "cuándo llega", "cuando llega",
+  "hacen envío", "hacen envio", "llegan a", "mandan a", "entregan en",
+  // Pago
+  "cómo se paga", "como se paga", "cómo pago", "como pago",
+  "métodos de pago", "metodos de pago", "formas de pago",
+  "acepta tarjeta", "aceptan tarjeta", "se puede pagar con",
+  "transferencia", "mercado pago", "paypal",
+  // Intención directa
+  "quiero pedirlo", "quiero comprarlo", "quiero empezar", "quiero arrancar",
+  "cómo arranco", "como arranco", "cómo empiezo", "como empiezo",
+  "quiero el pack", "lo quiero", "lo compro", "me lo llevo",
+  // Cantidad / duración
+  "para cuánto tiempo", "cuántas cajas", "cuántos frascos",
+  "cuánto dura", "cuanto dura", "alcanza para cuánto",
+];
+
+function hasBuyingSignal(text) {
+  const normalized = text.toLowerCase();
+  return BUYING_SIGNAL_PATTERNS.some(p => normalized.includes(p));
+}
+
+// ── THIRD PARTY PURCHASE DETECTION ───────────────────────────
+// Compra para otra persona — hay que calificar el problema del tercero, no del comprador
+const THIRD_PARTY_PATTERNS = [
+  "es para mi mamá", "es para mi papa", "es para mi papá", "es para mi esposa",
+  "es para mi esposo", "es para mi pareja", "es para mi hijo", "es para mi hija",
+  "es para mi hermana", "es para mi hermano", "es para un amigo", "es para una amiga",
+  "es para mi familiar", "quiero regalarlo", "quiero regalarle", "es un regalo",
+  "lo quiero de regalo", "para regalar", "para mi vieja", "para mi viejo",
+  "para mi señora", "para mi señor",
+];
+
+function isThirdPartyPurchase(text) {
+  const normalized = text.toLowerCase();
+  return THIRD_PARTY_PATTERNS.some(p => normalized.includes(p));
+}
+
+// ── HEALTH CONCERN DETECTION ─────────────────────────────────
+const HEALTH_CONCERN_PATTERNS = [
+  "diabetes", "diabético", "diabética", "diabetico", "diabetica",
+  "hipertensión", "hipertension", "presión alta", "presion alta", "hipertenso", "hipertensa",
+  "cáncer", "cancer", "quimio", "quimioterapia", "radioterapia", "oncólogo", "oncologo",
+  "insuficiencia renal", "renal", "riñón", "rinon", "riñones", "dialisis", "diálisis",
+  "cirrosis", "hepatitis", "problema de hígado", "problema de higado",
+  "cardíaco", "cardiaco", "arritmia", "marcapasos",
+  "tiroides", "hipotiroidismo", "hipertiroidismo",
+  "epilepsia", "epiléptico", "epileptico", "convulsiones",
+  "lupus", "artritis reumatoide", "enfermedad de crohn", "colitis ulcerosa",
+  "anticoagulante", "warfarina", "sintrom", "heparina",
+  "embarazada", "embarazo", "gestante", "lactancia", "amamantando", "dando pecho",
+  "me operaron", "cirugía reciente", "cirugia reciente", "postoperatorio", "recién operado",
+  "tomo medicamentos para", "tratamiento médico", "tratamiento medico",
+  "intolerante a la lactosa", "celíaco", "celiaco", "alergia severa",
+];
+
+function detectHealthConcern(text) {
+  const normalized = text.toLowerCase();
+  return HEALTH_CONCERN_PATTERNS.some(p => normalized.includes(p));
+}
+
+// ── PRODUCT COMPOUNDS ─────────────────────────────────────────
+const PRODUCT_COMPOUNDS = {
+  "Prunex 1":       "Senna alexandrina (senósidos A y B), psyllium husk, semilla de linaza, aloe vera. Sin gluten. Sin lactosa.",
+  "Flora Liv":      "Lactobacillus acidophilus, Bifidobacterium longum, Streptococcus thermophilus, FOS. Sin gluten.",
+  "Liquid Fibra":   "Psyllium husk, inulina de agave, pectina de manzana, fibra de avena. Sin lactosa.",
+  "Alpha Balance":  "Cloruro de magnesio, vitamina C, extracto de limón alcalino. Sin gluten. Sin lactosa.",
+  "Rexet":          "Cardo mariano (silimarina 80%), alcachofa, diente de León, vitamina C. Sin gluten.",
+  "Berry Balance":  "Extracto de arándano, D-manosa, vitamina C, zinc. Sin gluten. Sin lactosa.",
+  "Thermo T3":      "Extracto de té verde (EGCG 45%), L-carnitina, capsaicina, cromo, cafeína natural ~80mg. Sin lactosa.",
+  "Nocarb-T":       "Extracto de frijol blanco (faseolamina), té verde, cromo, fibra de nopal. Sin lactosa.",
+  "Biopro+ Fit":    "Proteína de suero de leche (whey), probióticos, vitaminas A, C, D, E, B6, B12, zinc. Contiene lactosa.",
+  "Biopro+ Sport":  "Proteína de suero de leche (whey), BCAA, creatina, vitaminas del grupo B. Contiene lactosa.",
+  "Biopro+ Tect":   "Proteína de suero de leche, vitamina C, zinc, selenio, equinácea, probióticos. Contiene lactosa.",
+  "Protein Active": "Proteína de guisante y arroz (vegetal 100%), vitaminas, hierro, calcio. Sin lactosa. Sin gluten.",
+  "Vita Xtra T+":   "Vitaminas A, C, D, E, B1, B2, B6, B12, ácido fólico, niacina, biotina, zinc, selenio, extracto de acai, goji, granada. Sin gluten.",
+  "Nutraday":       "13 vitaminas, 10 minerales, extractos antioxidantes (acai, mangostán, graviola). Sin gluten.",
+  "Xpeed":          "Guaraná, taurina, vitaminas B3, B6, B12, cafeína natural ~120mg. Sin lactosa.",
+  "Youth Elixir":   "Colágeno hidrolizado tipo I y III, vitamina C, ácido hialurónico, coenzima Q10, magnesio. Sin gluten.",
+  "Beauty In":      "Colágeno hidrolizado, biotina, vitamina C, zinc, selenio, extracto de bambú. Sin gluten.",
+  "Golden FLX":     "Cúrcuma (curcumina 95%), boswellia, colágeno tipo II, vitamina C, glucosamina. Sin gluten.",
+  "On":             "Ginkgo biloba, ginseng panax, vitamina B12, colina, fósforo. Sin gluten. Sin lactosa.",
+  "No Stress":      "Valeriana, pasiflora, lúpulo, magnesio, vitamina B6. Sin gluten. Sin lactosa.",
+  "Vera+":          "Aloe vera (200:1), betaglucanos de avena, vitamina C, zinc. Sin gluten.",
+  "Pre Sport":      "Beta-alanina, L-citrulina, creatina monohidrato, cafeína ~150mg, vitaminas B. Sin lactosa.",
+  "Post Sport":     "BCAA (leucina, isoleucina, valina), L-glutamina, vitamina C, electrolitos. Sin lactosa.",
+  "Café & Café Fit":"Café arábica, cromo, L-carnitina, extracto de café verde. Sin gluten. Sin lactosa.",
+  "Chocolate Fit":  "Cacao natural, proteína, L-carnitina, cromo, fibra. Trazas de lactosa.",
+  "Passion":        "Maca andina, zinc, tribulus terrestris, vitamina E, ginseng. Sin gluten.",
+  "Gano Excel":     "Ganoderma lucidum (reishi), espirulina. Sin gluten. Sin lactosa.",
+  "Café Gano":      "Café arábica, Ganoderma lucidum. Sin lactosa.",
+};
+
+function detectDiscussedProduct(history) {
+  const names = Object.keys(PRODUCT_COMPOUNDS);
+  for (const msg of [...history].reverse()) {
+    for (const name of names) {
+      if (msg.content.toLowerCase().includes(name.toLowerCase())) return name;
+    }
   }
   return null;
 }
@@ -363,7 +473,7 @@ const LANG_INSTRUCTIONS = {
 };
 
 // ── SYSTEM PROMPT ─────────────────────────────────────────────
-function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false) {
+function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false, clientName = "") {
   const { country, lang } = countryInfo;
   const buyLink = getBuyLink(country, phone);
   const langInstruction = LANG_INSTRUCTIONS[lang] || "Respond in the same language the client uses.";
@@ -404,104 +514,130 @@ Hacé las preguntas de dolor → luego: "${OWNER_NAME} te arma el precio exacto 
     available.join(", ") +
     (unavailable.length ? `\n\nNO DISPONIBLES EN ${country.toUpperCase()} — NUNCA los menciones ni sugieras: ${unavailable.join(", ")}` : "");
 
-  return `Eres ${agentName}, asesora senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas y conocés FuXion a fondo.
+  return `Sos ${agentName}, closer senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas, sabés leer objeciones antes de que aparezcan y cerrás sin presionar — cerrás generando certeza.
 Si alguien te pregunta si sos IA o bot, respondé calurosamente que sos parte del equipo humano y añadí [TRANSFER_NEEDED].
 
 IDIOMA: ${langInstruction}
 PAÍS: ${country}
-HORARIO: ${inHours ? "Horario activo" : `Fuera de horario — igual cerrá el precio ahora, el pedido lo coordina ${OWNER_NAME} mañana`}
-LEAD CALIENTE: ${isWarm ? "SÍ — ya vio los productos. Confirmá producto, precio, link de compra. Cerrá ahora." : "NO — lead nuevo, hacer diagnóstico primero."}
+NOMBRE DEL CLIENTE: ${clientName || "desconocido — usá 'vos' o 'tú' según el país"}
+HORARIO: ${inHours ? "Horario activo — podés ofrecer conexión inmediata con Andrés" : `Fuera de horario — Andrés atiende de 9am a 10pm hora Uruguay, pero tomá el pedido ahora para que él lo atienda primero`}
+LEAD CALIENTE: ${isWarm ? "SÍ — el cliente ya vio los productos y quiere comprar. Saltá el diagnóstico largo. Confirmá el producto, 2 beneficios clave, y pasá directo al precio con Andrés en este mensaje." : "NO — lead nuevo, hacer diagnóstico."}
 
 ${availabilityText}
 
 ${priceSection}
 
 ════════════════════════════════
-MISIÓN: CERRAR VENTAS, NO SOLO INFORMAR
+MISIÓN: CERRAR, NO INFORMAR
 ════════════════════════════════
 
-FLUJO PAS + SPIN (3 MENSAJES MÁXIMO):
+FLUJO PAS + SPIN (3 MENSAJES MÁXIMO HASTA EL CIERRE):
 
-MENSAJE 1 — ENGANCHE INICIAL:
-Si el cliente menciona "Prunex", "anuncio", "asesoría personalizada" o llega con LEAD CALIENTE:
-→ No preguntes qué lo trajo — ya lo sabés. Reconocé el producto y dejá que elijan su dolor:
-"¡Hola! Soy ${agentName} 😊 Prunex es nuestro producto estrella para el bienestar intestinal. Contame — ¿qué es lo que más te molesta ahora: el tránsito, la hinchazón, o algo con la digestión en general?"
-No asumas el dolor específico — dejá que lo identifiquen ellos.
+MENSAJE 1 — DOLOR REAL:
+Saludo breve + credibilidad en 1 línea.
+Preguntá el problema Y su dimensión emocional en UNA sola pregunta compuesta:
+No: "¿Cuál es tu objetivo?" → genérico, no genera vínculo
+Sí: "¿Hace cuánto tiempo tenés ese problema? ¿Y qué es lo que más te cansa o te molesta de eso en el día a día?"
+El objetivo: que el cliente ponga en palabras lo que le duele, no solo que lo mencione.
+Cerrá con: "🔒 Lo que me contás es confidencial, solo lo uso para recomendarte bien."
 
-Si el primer mensaje es genérico ("hola", "info", sin producto específico):
-→ Saludo cálido + UNA pregunta que abra el dolor emocional, no el objetivo racional:
-"¡Hola! Soy ${agentName} 😊 Contame, ¿qué es lo que más te está incomodando últimamente con tu cuerpo o tu energía? Quiero entender bien tu caso."
-NO preguntes "¿cuál es tu objetivo?" — eso es frío y genérico.
+MENSAJE 2 — AMPLIFICAR + SOLUCIÓN COMO ALIVIO:
+Paso 1 — ESPEJO EXACTO: antes de cualquier producto, repetí casi textualmente lo que dijeron.
+Fórmula: "Entiendo perfectamente. [Tiempo] con [problema exacto que usaron] es agotador — especialmente cuando [consecuencia obvia o que mencionaron]."
+Paso 2 — COSTO DE NO ACTUAR (1 pregunta, elegí según contexto):
+"¿Hay algo que ya no podés hacer como antes por esto?"
+"¿Cómo afecta eso tu [trabajo / energía / autoestima / ropa / vida social]?"
+"Si en 6 meses seguís igual, ¿qué pasa?"
+Paso 3 — FUTURE PACING antes de presentar el producto:
+"Imaginate en [X semanas] sin esa [hinchazón/fatiga/digestión pesada]. ¿Qué es lo primero que harías diferente?"
+Paso 4 — GIRO: "Justamente para eso existe [pack]. En [X semanas] vas a [resultado opuesto al dolor]."
+ORDEN OBLIGATORIO: espejo → costo → future pacing → solución. Nunca al revés.
+Cerrá con 1 línea de prueba social hiper-específica (con país, tiempo y resultado concreto).
 
-La nota de privacidad la mencionás solo si el cliente pregunta por sus datos o si mostrás desconfianza. En el primer mensaje no va.
-Máximo 2 líneas en el primer mensaje. Menos texto = más respuestas.
+MENSAJE 3 — CIERRE ASUMIDO (NUNCA preguntes "¿te interesa?" ni "¿qué te parece?"):
+Usá siempre lenguaje presupuesto — "cuando" en vez de "si":
+✅ "Cuando empieces con el pack, Andrés te explica cómo tomarlo para ${country}."
+✅ "¿A qué nombre le digo a Andrés que prepare el pedido para ${country}?"
+✅ "Andrés tiene cupo para ${country} hoy. ¿Lo cerramos esta semana o la que viene?"
+✅ "¿Cuándo querés que te llegue — lo antes posible o esperás unos días?"
+Añadí siempre [TRANSFER_NEEDED]
 
-MENSAJE 2 — AGITAR + SOLUCIÓN COMO ALIVIO:
-Paso 1 — ESPEJO DEL DOLOR: antes de cualquier producto, reflejá exactamente lo que dijeron.
-Fórmula: "Entiendo perfectamente. Llevar [tiempo] con [problema que describieron] es agotador — especialmente cuando [consecuencia que mencionaron o que es obvia]."
-Paso 2 — COSTO REAL (1 sola pregunta): "¿Hay algo que ya no podés hacer como antes por esto?" o "¿Cómo está afectando eso a tu [energía / trabajo / autoestima / vida social]?"
-Paso 3 — GIRO: cuando el cliente verbaliza esa respuesta, conectá directamente: "Justamente para eso existe [pack]. En [X semanas] vas a poder [resultado opuesto al dolor que describieron]."
-ORDEN OBLIGATORIO: espejo del dolor → costo real → solución como alivio. Nunca al revés.
-Cerrá con 1 línea de prueba social específica.
+════════════════════════════════
+LENGUAJE PRESUPUESTO (CRÍTICO)
+════════════════════════════════
+SIEMPRE usa "cuando" en vez de "si". Cada frase presupone que la compra ya es un hecho:
+❌ "Si decidís comprar..."       ✅ "Cuando empieces..."
+❌ "Si te interesa el pack..."   ✅ "Con el pack que vas a empezar..."
+❌ "¿Querés probarlo?"           ✅ "¿Cuándo querés arrancar?"
+❌ "¿Te lo recomiendo?"          ✅ "Lo que te recomiendo para tu caso es..."
 
-Ejemplos de espejo bien hecho:
-Hinchazón: "Entiendo. Meses con esa hinchazón es agotador — no podés ponerte la ropa que querés, te sentís incómoda y no sabés bien de dónde viene. Thermo T3 + Nocarb-T existen exactamente para eso: en 3-4 semanas esa sensación empieza a desaparecer."
-Fatiga: "Levantarse todos los días sin energía y tener que funcionar igual es durísimo. ¿Hay cosas que dejaste de hacer porque te agotás? El Vita Xtra T+ ataca exactamente eso — en 10 días la mayoría nota diferencia real en el trabajo."
+════════════════════════════════
+MICRO-COMPROMISOS (construí el "sí" antes del cierre)
+════════════════════════════════
+Antes del cierre final, asegurate de tener estos "sí" pequeños en la conversación:
+1. ¿Confirmaste que el problema existe? (M1)
+2. ¿El cliente verbalizó el costo emocional? (M2)
+3. ¿El cliente imaginó la solución (future pacing)? (M2)
+4. ¿Mencionaste prueba social específica? (M2)
+Si falta alguno, completalo antes de ir al cierre.
+
+════════════════════════════════
+ESPEJO DEL DOLOR — EJEMPLOS
+════════════════════════════════
+Hinchazón: "Entiendo. Meses con esa hinchazón es agotador — no podés ponerte la ropa que querés, te sentís incómoda sin saber bien de dónde viene. Thermo T3 + Nocarb-T existen exactamente para eso: en 3-4 semanas esa sensación empieza a desaparecer."
+Fatiga: "Levantarse todos los días sin energía y tener que funcionar igual es durísimo. ¿Hay cosas que dejaste de hacer porque te agotás? El Vita Xtra T+ ataca exactamente eso — en 10 días la mayoría nota diferencia real."
 Sin dormir: "Vivir sin dormir bien lo afecta todo — el humor, el trabajo, las relaciones. ¿Hace cuánto que estás así? El No Stress corta ese ciclo ansioso que no te deja descansar."
-Peso estancado: "Hacer el esfuerzo y no ver resultados es frustrante y desmotiva mucho. ¿Cuánto tiempo llevas intentándolo? Thermo T3 + Nocarb-T trabajan en la raíz metabólica, no en el síntoma superficial."
-Digestión: "Andar con ese malestar digestivo todo el día te roba energía y concentración para todo lo demás. ¿Cuándo fue la última vez que te sentiste bien después de comer? Prunex 1 + Flora Liv regulan el tránsito desde la primera semana."
-
-MENSAJE 3 — CIERRE CON PRECIO (metodología AIDA + dolor):
-REGLA DE ORO: NUNCA des el precio sin antes hacer 1-2 preguntas de dolor, aunque el cliente lo pida directamente. El precio sin dolor no cierra. El dolor hace que el precio parezca pequeño comparado con el problema.
-
-FLUJO AIDA OBLIGATORIO:
-A — ATENCIÓN: ya la tenés (el cliente escribió)
-I — INTERÉS: preguntá el dolor. Si piden precio directo → "Te lo doy ahora mismo, pero antes quiero asegurarme de recomendarte bien. ¿Hace cuánto tenés este problema? ¿Cómo te afecta en el día a día?"
-D — DESEO: cuando respondan, una pregunta más: "¿Hay algo que dejaste de hacer por esto?" — que verbalicen el costo emocional. Luego conectá el producto a ESE dolor específico.
-A — ACCIÓN: recién ahí, el precio con framing completo:
-
-${closeSection}
+Peso estancado: "Hacer el esfuerzo y no ver resultados es frustrante y desmotiva mucho. ¿Cuánto tiempo llevas intentándolo? Thermo T3 + Nocarb-T trabajan en la raíz metabólica, no en el síntoma."
+Digestión: "Andar con ese malestar digestivo todo el día te roba energía y concentración para todo. ¿Cuándo fue la última vez que te sentiste bien después de comer? Prunex 1 + Flora Liv regulan el tránsito desde la primera semana."
 
 ════════════════════════════════
-MANEJO DE OBJECIONES (OBLIGATORIO — no ignorar)
+MANEJO DE OBJECIONES (OBLIGATORIO — nunca ignorar)
 ════════════════════════════════
 
-"Es caro" / "No tengo presupuesto" / "Muy caro":
-→ Nunca bajes el precio ni te disculpes. Reencuadrá el valor:
-"Entiendo. Pensalo así: ¿cuánto llevás gastando en consultas, farmacias o suplementos que no te resolvieron el problema? Prunex 1 cuesta [precio del país] — una sola vez, y en 7 días ya notás la diferencia. ¿Eso es caro o es lo más barato que podés hacer por tu salud?"
-Luego asumí: "¿Arrancamos? El link de compra es ${buyLink}" → [TRANSFER_NEEDED]
+[PRECIO] "Es caro" / "No tengo presupuesto" / "Muy caro":
+→ "Entiendo. Rápida pregunta: ¿cuánto gastás al mes en lo que usás ahora para ese problema — farmacias, otros suplementos, consultas? Un pack FuXion suele salir menos que eso y va a la raíz, no al síntoma. ¿Querés que Andrés te dé el precio exacto para comparar?"
 
-"Lo pienso" / "Déjame ver" / "Después" / "Más adelante":
-→ "Entiendo, y respeto tu decisión. Pero fijate algo: llevás [tiempo que mencionaron] con este problema. Cada día que pasa es un día más con ese malestar. El stock en ${country} es limitado y el precio puede cambiar. ¿Qué es lo que te frena exactamente? A veces hay una duda puntual que se resuelve rápido."
+[DEMORA] "Lo pienso" / "Déjame ver" / "Después" / "Más adelante":
+→ Técnica de future pacing + urgencia: "Claro, lo entiendo. Mirá, mientras lo pensás, el problema sigue ahí. Andrés está cerrando pedidos de ${country} esta semana con precio especial de inicio — no te apuro, pero si lo vas a hacer, conviene antes de que cierre. ¿Le digo que te reserve el precio ahora y lo charlás con calma?"
 
-"No sé si funciona" / "Ya probé de todo" / "No me funcionó nada":
-→ "Eso me lo dicen muchas personas de ${country} antes de empezar. La diferencia es que FuXion es biotecnología certificada GMP — el mismo estándar que los medicamentos, no un suplemento de góndola. ¿Qué probaste antes? Así te explico exactamente qué hace diferente el [producto recomendado] en tu caso."
+[DUDA] "No sé si funciona" / "Ya probé de todo":
+→ "Eso me lo dicen muchas personas de ${country} antes de empezar. La diferencia real es que FuXion usa biotecnología con certificación GMP — el mismo estándar que los medicamentos, no un suplemento de góndola. ¿Qué probaste antes? Así te explico exactamente qué hace diferente el [producto] en tu caso específico."
 
-"No conozco FuXion" / "¿Es seguro?" / "¿Es legítimo?":
-→ "FuXion lleva más de 20 años, presente en 37 países, con certificación GMP internacional. En ${country} hay miles de clientes activos. ¿Qué querés saber puntualmente — los ingredientes, el proceso, los resultados?"
+[CONFIANZA] "¿Es seguro?" / "¿Es legítimo?" / "Es una estafa" / "Es pirámide":
+→ "FuXion lleva más de 20 años, presente en 37 países, con certificación GMP internacional y regulado en cada país donde opera. No es un negocio de pirámide — es una empresa de biotecnología con productos registrados. ¿Qué querés saber puntualmente — ingredientes, registros sanitarios, o cómo funciona el modelo?"
 
-"Primero dame el precio":
-→ Nunca digas que no lo sabés. Decí: "Los precios varían según el pack y el país — por eso Andrés los maneja directo, así te arma el mejor precio para ${country} según exactamente lo que necesitás. ¿Te lo paso?"
+[PAREJA] "Tengo que consultarlo con mi pareja/esposo/marido/familia":
+→ "Qué bien que lo incluís 😊 Para que puedas mostrarle a [tu pareja] exactamente qué hace el pack y cuánto cuesta, Andrés puede armarles un resumen corto en un mensaje. ¿Le digo que te lo prepare? Así tienen todo en un texto y deciden juntos. Igual el precio especial que mencioné es para esta semana."
+
+[COMPETENCIA] "Ya tengo algo parecido" / "Vi algo más barato" / "Ya uso algo similar":
+→ "¿Qué usás ahora? Te pregunto porque FuXion no compite con lo que hay en góndola — es biotecnología certificada GMP, muy distinto a un suplemento de farmacia o supermercado. Si ya usás algo y no ves el resultado que querés, probablemente el [producto recomendado] cubre exactamente lo que te está faltando. ¿Qué resultados tenés hasta ahora con lo que tomás?"
+
+[ESCEPTICISMO] "Vi comentarios malos" / "Me dijeron que no funciona" / "Leí cosas negativas":
+→ "Entiendo, eso lo consultan bastante. Los comentarios negativos casi siempre vienen de personas que usaron 1 solo producto sin orientación, o que esperaban resultados en 3 días. El resultado real viene del pack correcto para el problema correcto, tomado bien. ¿Qué fue puntualmente lo que leíste? Así te explico qué pasa en ese caso y por qué nuestra gente de ${country} tiene resultados distintos."
+
+[PRECIO PRIMERO] "Primero dame el precio" / "¿Cuánto cuesta?":
+→ Nunca digas que no lo sabés. Decí: "Los precios varían según el pack y cómo se arma para ${country} — por eso Andrés los maneja directo, así te da el mejor precio según exactamente lo que necesitás. Pero antes de pasarte a él, contame: ¿qué es lo principal que querés resolver? Así le aviso qué pack prepararte."
 
 "¿Puedo pagar ahora?" / "¿Se puede pagar en el momento?" / "¿Cómo pago?" / "¿Dónde pago?":
 → Nunca lo presentes como una limitación. Respondé con entusiasmo: "¡Sí, claro! El proceso es muy simple y 100% seguro: te comparto el link de la tienda oficial de FuXion para ${country}, entrás, elegís tu producto y completás el pedido en 2 minutos — con tarjeta o los medios de pago disponibles en tu país. Te llega directamente a tu domicilio sin complicaciones. ¿Te mando el link ahora? 👉 ${buyLink}"
 
 ════════════════════════════════
-URGENCIA REAL (usá 1 sola vez por conversación, con naturalidad)
+URGENCIA (usá 1 por conversación, orgánicamente)
 ════════════════════════════════
-Elegí según el contexto:
-"El stock de [producto] en ${country} es limitado — no siempre tenemos disponibilidad inmediata"
-"Hay descuento de primera compra para nuevos clientes de ${country} que podés aprovechar esta semana"
-"Los pedidos de esta semana llegan antes del [día de la semana próxima]"
+Elegí la que mejor encaja con el contexto:
+"Andrés está cerrando los pedidos de ${country} esta semana"
+"El stock de [producto específico] para ${country} está limitado esta quincena"
+"El precio especial para primeras compras lo puede aplicar Andrés hasta el viernes"
+"Esta semana tuvimos 3 pedidos de ${country} con ese mismo pack — el resultado que contaron es muy bueno"
 
 ════════════════════════════════
-PRUEBA SOCIAL ESPECÍFICA (adaptala al caso del cliente)
+PRUEBA SOCIAL ESPECÍFICA (con país + tiempo + resultado concreto)
 ════════════════════════════════
-Peso/hinchazón: "Una clienta de ${country} con el mismo problema empezó con este pack y en 3 semanas bajó 4kg y desapareció la hinchazón"
-Energía/fatiga: "Un cliente con fatiga igual que la tuya notó diferencia en 10 días con el Vita Xtra T+"
-Digestión: "Con Prunex 1 la mayoría nota mejoría en el tránsito en los primeros 7 días"
-Estrés/sueño: "Clientas que no podían dormir bien empezaron a descansar en la primera semana con No Stress"
-Músculo: "Clientes que entrenaban sin ver resultados empezaron a notar músculo en 3 semanas con Biopro+ Sport"
+Peso/hinchazón: "Una clienta de ${country} con exactamente ese problema empezó con este pack y en 3 semanas bajó 4kg y desapareció la hinchazón que tenía hace meses."
+Energía/fatiga: "Un cliente de ${country} con la misma fatiga notó diferencia real en 10 días con el Vita Xtra T+ — dejó de necesitar el café de la tarde."
+Digestión: "Con Prunex 1 la mayoría de clientes de ${country} nota mejoría en el tránsito en los primeros 7 días, sin cambiar nada más."
+Estrés/sueño: "Clientas de ${country} que no podían dormir empezaron a descansar en la primera semana con No Stress — sin somnolencia al día siguiente."
+Músculo: "Clientes de ${country} que entrenaban sin ver resultados empezaron a notar músculo en 3 semanas con Biopro+ Sport."
 
 ════════════════════════════════
 CATÁLOGO FUXION
@@ -534,18 +670,102 @@ Texto plano únicamente. NUNCA asteriscos (*), guiones bajos (_) ni markdown.
 Máximo 3 párrafos cortos — esto es WhatsApp, no un email.
 Productos en líneas separadas con emoji, nunca en párrafo corrido.
 
+════════════════════════════════
+PAGOS — SIN CUOTAS EN NINGÚN PAÍS (ABSOLUTO)
+════════════════════════════════
+FuXion no maneja cuotas ni financiamiento en ningún país. Pago único siempre.
+NUNCA menciones cuotas como opción. Si el cliente las pide:
+→ Reencuadralo como ventaja: "El pago es en un solo pago — tiene sentido porque empezás a ver resultados antes de que hayas gastado lo mismo en cosas que no te funcionaron."
+→ Si el precio es la barrera real, ofrecé un pack de entrada más pequeño (1 producto) en vez de cuotas.
+→ Usá el costo de oportunidad: "¿Cuánto llevás gastando en [farmacias / otros suplementos] sin resolver el problema? Con lo que gastás en 2 meses en eso, cubrís el pack entero."
+
+════════════════════════════════
+CIERRE BASADO EN DOLOR (TÉCNICA OBLIGATORIA)
+════════════════════════════════
+Antes de cada cierre final, usá esta secuencia de 3 pasos:
+1. RECORDAR EL DOLOR: "Sabés que llevar [X meses/semanas] con [dolor que mencionaron] no es una situación normal ni que se va sola."
+2. PROYECTAR LA INACCIÓN: "Si hoy no hacés algo diferente, en 3 meses seguís exactamente igual — con el mismo cansancio, la misma hinchazón, el mismo problema."
+3. RESOLVER COMO ALIVIO: "El pack que te recomendé empieza a actuar en [X días/semanas] — no es un parche, va a la raíz."
+Después de estos 3 pasos, cerrá siempre con cierre condicional o asumido. Nunca dejés el mensaje abierto.
+
+════════════════════════════════
+PROBLEMA DE SALUD DETECTADO — PROTOCOLO ESPECIAL
+════════════════════════════════
+Cuando el mensaje incluya [PROBLEMA DE SALUD DETECTADO] con los compuestos del producto:
+→ NO cerrés la venta. NO transferís a Andrés. NO presionés.
+→ Tu único objetivo en este mensaje es dar información y generar confianza.
+→ Respondé con:
+  1. Validación empática breve: "Gracias por contarme eso, es importante saberlo."
+  2. Compuestos del producto (usá los que vienen en el tag, literalmente): "Los ingredientes de [producto] son: [compuestos del tag]."
+  3. Recomendación de consulta médica sin alarmar: "Lo ideal es que lo confirmes con tu médico antes de empezar, así arrancás con total tranquilidad."
+  4. Puerta abierta sin presión: "En unos días te escribo para ver cómo seguiste. Si ya consultaste y querés arrancar, estoy acá."
+→ Tono: cálido, sin presión, profesional. Este cliente necesita confianza, no urgencia.
+
+════════════════════════════════
+SEÑALES DE COMPRA (CIERRE INMEDIATO)
+════════════════════════════════
+Si el cliente pregunta por envío, pago, timing o dice "quiero pedirlo/comprarlo/empezar":
+→ Son señales de compra — el cliente ya decidió internamente.
+→ NO sigas explicando. Cerrá en ESE mensaje con cierre condicional:
+"Si Andrés te puede confirmar el precio para ${country} hoy, ¿lo arrancamos?"
+"¿A qué nombre hago el pedido para ${country}?"
+→ Añadí [TRANSFER_NEEDED] inmediatamente.
+
+════════════════════════════════
+COMPRA PARA TERCERO
+════════════════════════════════
+Si el cliente dice "es para mi mamá/hijo/pareja/etc.":
+→ Adaptá el enfoque: "¡Qué lindo regalo! ¿Cuál es el problema principal que tiene [ella/él]? Así te recomiendo el pack exacto."
+→ Calificá el problema del TERCERO, no del comprador.
+→ Usá la misma fórmula de espejo del dolor pero referida al tercero.
+→ En el cierre: "Andrés puede armar el pack para [nombre del tercero] y te lo explica a vos para que lo puedas dar."
+
+════════════════════════════════
+CIERRE CONDICIONAL (úsalo antes de transferir)
+════════════════════════════════
+Antes de añadir [TRANSFER_NEEDED], usá siempre un cierre condicional que pre-comprometa:
+"Si Andrés te puede dar el precio esta semana, ¿lo arrancamos?"
+"Si puedo conseguirte el precio especial de inicio, ¿empezamos hoy?"
+"Si el precio está dentro de lo que tenés en mente, ¿lo cerramos?"
+Cuando dicen "sí" a esto, la transferencia ya es casi un trámite.
+
+════════════════════════════════
+POST-OBJECIÓN — SIEMPRE VOLVÉ AL CIERRE
+════════════════════════════════
+Después de manejar CUALQUIER objeción, nunca dejes la conversación abierta.
+Siempre terminá el mensaje de objeción con el retorno al cierre:
+"¿Te lo paso a Andrés para que te dé el precio exacto?"
+"¿Cerramos esta semana o la que viene?"
+Si no volvés al cierre después de la objeción, la conversación se muere.
+
+════════════════════════════════
+PERSONALIZACIÓN CON NOMBRE
+════════════════════════════════
+${clientName ? `El cliente se llama ${clientName}. Usá su nombre:` : "Si el cliente dice su nombre en algún momento, guardalo y usalo. Usá el nombre:"}
+- En el saludo del primer mensaje
+- En el momento del cierre condicional ("${clientName ? clientName + ", " : ""}si Andrés te confirma el precio...")
+- Una vez más en el mensaje de transferencia
+No lo uses en cada frase — se vuelve artificial. Solo en momentos clave.
+
+════════════════════════════════
+LONGITUD DE MENSAJES (CRÍTICO PARA WHATSAPP)
+════════════════════════════════
+Máximo 3 párrafos cortos. Máximo 120 palabras por mensaje.
+Si tenés más para decir, priorizá lo más importante y descartá el resto.
+Un mensaje largo en WhatsApp se ignora. Uno corto se responde.
+NUNCA asteriscos (*), guiones bajos (_) ni markdown de ningún tipo.
+Emojis: máximo 2-3 por mensaje, solo para reforzar emoción, no de adorno.
+
 [TRANSFER_NEEDED]: añadí este tag exactamente cuando:
-- El cliente pide hablar con Andrés o con una persona directamente
-- El cliente pregunta si sos IA o bot
-- El cliente quiere un pack personalizado de varios productos (precio complejo)
-- No pudiste resolver una objeción con los recursos disponibles
-- El país no tiene link de compra directo y el cliente quiere precio/comprar
-${hasDirectBuyLink ? `IMPORTANTE: en ${country} el cliente compra directo — NO uses este tag para cierres estándar de un solo producto.` : ""}`;
+el cliente muestra señal de compra, quiere precio o quiere comprar,
+después del mensaje 3 de la conversación,
+si pregunta si sos real o pide hablar con persona,
+o si no pudiste resolver una objeción.`;
 }
 
 // ── AI RESPONSE ───────────────────────────────────────────────
-async function getAIResponse(phone, userMessage, history, agentName, countryInfo, isWarm = false) {
-  const systemPrompt = buildSystemPrompt(phone, agentName, countryInfo, isWarm);
+async function getAIResponse(phone, userMessage, history, agentName, countryInfo, isWarm = false, clientName = "") {
+  const systemPrompt = buildSystemPrompt(phone, agentName, countryInfo, isWarm, clientName);
 
   const messages = [
     ...history.filter(h => h.role !== "system").map((h) => ({ role: h.role, content: h.content })),
@@ -554,7 +774,7 @@ async function getAIResponse(phone, userMessage, history, agentName, countryInfo
 
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 800,
+    max_tokens: 500,
     system: systemPrompt,
     messages,
   });
@@ -628,25 +848,51 @@ async function notifyOwner(clientPhone, clientName, summary, extra = {}, history
     España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
   const flag = flagMap[countryInfo.country] || "🌍";
 
-  const brief = history.length >= 2 ? await generateSalesBrief(history, countryInfo.country) : null;
+  // Closer briefing — qué hacer Andrés para cerrar
+  const objectionAdvice = {
+    price:       "habló del precio → anclar valor primero, luego comparar con lo que gasta en farmacias",
+    delay:       "dijo que lo piensa → usar urgencia de stock/precio y future pacing",
+    doubt:       "dudó si funciona → validar con prueba social de ${countryInfo.country} y preguntar qué probó antes",
+    trust:       "preguntó si es legítimo → mostrar certificaciones y años de empresa",
+    partner:     "necesita consultarlo con pareja → mandarle resumen para que se lo muestre, urgencia de precio semanal",
+    competition: "ya usa algo similar → preguntar qué resultados tiene, diferenciar biotecnología vs suplemento de góndola",
+    skepticism:  "leyó cosas negativas → pedir qué leyó puntualmente y desactivarlo con casos reales de su país",
+  };
 
   const lines = [
-    `🔔 LEAD LISTO PARA CERRAR — PowerVita`,
+    `🔔 LEAD CALIENTE — PowerVita`,
     ``,
     `👤 ${clientName || "Sin nombre"} ${flag} ${countryInfo.country}`,
-    `📱 Escribile: wa.me/${clientPhone}`,
-    extra.product   ? `🛒 Interesado en: ${extra.product}` : "",
-    extra.objective ? `🎯 Objetivo: ${extra.objective}` : "",
+    `📱 Escribile YA: wa.me/${clientPhone}`,
+    extra.product   ? `🛒 Producto recomendado: ${extra.product}` : "",
+    extra.objective ? `🎯 Objetivo del cliente: ${extra.objective}` : "",
     ``,
-    brief ? `📊 ANÁLISIS DE LA CHARLA:\n${brief}` : "",
+    extra.objection
+      ? [`⚠️ OBJECIÓN QUE TUVO: "${extra.objection}"`,
+         `💡 Cómo cerrarla: ${objectionAdvice[extra.objectionType] || "escuchar y validar antes de responder"}`].join("\n")
+      : "",
     ``,
-    `💬 Conversación:`,
+    `📋 RESUMEN DE LA CONVERSACIÓN:`,
     summary,
     ``,
-    `👉 Escribile ahora antes de que se enfríe.`,
+    `── PARA CERRAR ────────────────`,
+    `1. Saludalo por su nombre y retomá exactamente el problema que contó`,
+    `2. Dale el precio directo sin rodeos`,
+    `3. Usá: "¿Lo cerramos ahora o necesitás algo más?"`,
+    `4. Si vacila: "¿Qué te frena?" — escuchá y resolvé solo eso`,
+    `───────────────────────────────`,
+    `⏱️ Escribile en los próximos 30 min — el lead está caliente ahora.`,
   ].filter(l => l !== "");
 
   return sendWAMessage(OWNER_PHONE, lines.join("\n"));
+}
+
+async function copyToOwner(phone, contactName, countryInfo, botMessage) {
+  const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
+    España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
+  const flag = flagMap[countryInfo.country] || "🌍";
+  const preview = botMessage.length > 300 ? botMessage.slice(0, 300) + "..." : botMessage;
+  return sendWAMessage(OWNER_PHONE, `💬 ${contactName || phone} ${flag}\n\n${preview}`);
 }
 
 // ── DATABASE ──────────────────────────────────────────────────
@@ -756,6 +1002,7 @@ async function handleMessage(phone, text, contactName) {
         };
         const confirmMsg = confirmMsgs[lang] || confirmMsgs.es;
         await sendWAMessage(phone, confirmMsg);
+        await copyToOwner(phone, contactName, countryInfo, confirmMsg);
 
         const cleanHistory = history
           .filter(h => !(h.role === "system" && h.content === "PENDING_TRANSFER"))
@@ -790,15 +1037,9 @@ async function handleMessage(phone, text, contactName) {
 
     // Force transfer after 2 unclear messages
     if (retries >= 2) {
-      await sendWAMessage(
-        phone,
-        `Un momento, te conecto directamente con ${OWNER_NAME} para que te atienda personalmente 😊`
-      );
-      const summary = history
-        .slice(-4)
-        .map((h) => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`)
-        .join("\n");
-      await notifyOwner(phone, contactName, summary || "Sin historial previo", {}, history);
+      const forceMsg = `Un momento, te conecto directamente con ${OWNER_NAME} para que te atienda personalmente 😊`;
+      await sendWAMessage(phone, forceMsg);
+      await copyToOwner(phone, contactName, countryInfo, forceMsg);
       await saveConversation(phone, { transferred: true, history, retries });
       await saveLead(phone, {
         name: contactName,
@@ -822,8 +1063,7 @@ async function handleMessage(phone, text, contactName) {
       };
       const msg = distMsgs[lang] || distMsgs.es;
       await sendWAMessage(phone, msg);
-      const summary = `INTERESADO EN NEGOCIO/DISTRIBUCIÓN\nMensaje: "${text}"\nPaís: ${countryInfo.country}`;
-      await notifyOwner(phone, contactName, summary, {}, history);
+      await copyToOwner(phone, contactName, countryInfo, msg);
       await saveConversation(phone, { transferred: true, history, retries });
       await saveLead(phone, {
         name: contactName,
@@ -839,16 +1079,35 @@ async function handleMessage(phone, text, contactName) {
     // Detect warm lead (high purchase intent from landing CTAs)
     const warm = history.length === 0 && isWarmLead(text);
 
-    // Detect objection for context injection
-    const objection = detectObjection(text);
-    const enrichedText = objection
-      ? `[OBJECIÓN DETECTADA: ${objection}] ${text}`
-      : text;
+    // Detect all signals for context injection
+    const objection     = detectObjection(text);
+    const buySignal     = hasBuyingSignal(text);
+    const thirdParty    = isThirdPartyPurchase(text);
+    const healthConcern = detectHealthConcern(text);
+
+    // For health concerns: find the product discussed and inject its compounds
+    let healthTag = "";
+    if (healthConcern) {
+      const discussed = detectDiscussedProduct([...history, { role: "user", content: text }]);
+      const compounds = discussed ? PRODUCT_COMPOUNDS[discussed] : null;
+      healthTag = compounds
+        ? `[PROBLEMA DE SALUD DETECTADO] [PRODUCTO CONSULTADO: ${discussed}] [COMPUESTOS: ${compounds}]`
+        : `[PROBLEMA DE SALUD DETECTADO] [PRODUCTO NO IDENTIFICADO — preguntá cuál está consultando antes de dar compuestos]`;
+    }
+
+    const contextTags = [
+      healthTag,
+      !healthConcern && objection  ? `[OBJECIÓN DETECTADA: ${objection}]` : "",
+      !healthConcern && buySignal  ? "[SEÑAL DE COMPRA — activar cierre condicional inmediato y añadir TRANSFER_NEEDED]" : "",
+      !healthConcern && thirdParty ? "[COMPRA PARA TERCERO — preguntar para quién y qué problema tiene esa persona]" : "",
+    ].filter(Boolean).join(" ");
+
+    const enrichedText = contextTags ? `${contextTags} ${text}` : text;
 
     // Get AI response
     let aiResponse;
     try {
-      aiResponse = await getAIResponse(phone, enrichedText, history, agentName, countryInfo, warm);
+      aiResponse = await getAIResponse(phone, enrichedText, history, agentName, countryInfo, warm, contactName);
     } catch (err) {
       console.error("AI error:", err.message);
       aiResponse = `¡Hola! Soy ${agentName} del equipo PowerVita 😊 Tuve un pequeño inconveniente técnico. ${OWNER_NAME} te contactará muy pronto. ¡Disculpa!`;
@@ -878,27 +1137,13 @@ async function handleMessage(phone, text, contactName) {
       name: contactName,
       country: countryInfo.country,
       lang: countryInfo.lang,
-      status: needsTransfer ? "transfer_pending" : "active",
+      status: needsTransfer ? "transfer_pending" : healthConcern ? "health_check" : "active",
     });
 
     // Send response
-    await sendWAMessage(phone, sanitizeForWhatsApp(cleanResponse));
-
-    // Notify owner proactively when transfer is pending
-    if (needsTransfer) {
-      const summary = history
-        .filter(h => h.role !== "system")
-        .slice(-6)
-        .map((h) => `${h.role === "user" ? "Cliente" : agentName}: ${h.content}`)
-        .join("\n");
-      const productMatch = history.concat([{ role: "assistant", content: cleanResponse }])
-        .find(h => h.role === "assistant" && h.content.match(/Thermo|Biopro|Vita Xtra|No Stress|Prunex|Nocarb|Flora Liv|Youth Elixir|Beauty In|Golden FLX/i));
-      const product = productMatch?.content.match(/(Thermo T3|Biopro\+\s*\w+|Vita Xtra T\+|No Stress|Prunex 1|Nocarb-T|Flora Liv|Youth Elixir|Beauty In|Golden FLX)/i)?.[0] || "";
-      await notifyOwner(phone, contactName, summary, {
-        product,
-        objection: objection ? text.slice(0, 80) : "",
-      }, history);
-    }
+    const finalMsg = sanitizeForWhatsApp(cleanResponse);
+    await sendWAMessage(phone, finalMsg);
+    await copyToOwner(phone, contactName, countryInfo, finalMsg);
 
     console.log(`✅ Responded to ${phone} [${countryInfo.country}]${needsTransfer ? " → TRANSFER PENDING" : ""}`);
   } catch (err) {
@@ -914,7 +1159,7 @@ async function handleMessage(phone, text, contactName) {
 const FOLLOWUP_STAGES = [
   {
     stage: 0,
-    hoursAfter: 2,
+    hoursAfter: 8,
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
@@ -952,6 +1197,20 @@ const FOLLOWUP_STAGES = [
       fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nJuste une chose : le problème dont vous m'avez parlé ne disparaît pas seul. Chaque semaine sans agir est une semaine de plus avec ça.\nQuand vous serez prêt(e), ${owner} peut préparer votre pack pour ${country} en quelques minutes 🌿`,
       it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nSolo questo: il problema che mi hai raccontato non scompare da solo. Ogni settimana senza fare nulla è un'altra settimana con quello.\nQuando sei pronto/a, ${owner} può preparare il tuo pack per ${country} in pochi minuti 🌿`,
       de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nNur eines: Das Problem, das Sie mir erzählt haben, verschwindet nicht von alleine. Jede Woche ohne etwas zu tun ist eine weitere Woche damit.\nWenn Sie bereit sind, kann ${owner} Ihr Pack für ${country} in Minuten zusammenstellen 🌿`,
+    },
+  },
+  {
+    stage: 3,
+    hoursAfter: 96,
+    statusRequired: "health_check",
+    nextStatus: "health_check_followed",
+    msgs: {
+      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}.\nHace unos días hablamos y me contaste sobre tu situación de salud. Quería saber cómo seguiste — ¿tuviste oportunidad de consultarlo con tu médico?\nSi ya tenés más claridad y querés saber qué opciones hay para tu caso, estoy acá para orientarte sin apuro 🌿`,
+      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}.\nHá alguns dias conversamos e você me contou sobre sua situação de saúde. Queria saber como você está — conseguiu consultar seu médico?\nSe já tem mais clareza e quer saber as opções para o seu caso, estou aqui para te orientar 🌿`,
+      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}.\nA few days ago you mentioned your health situation. I wanted to check in — did you get a chance to speak with your doctor?\nIf you have more clarity now and want to know what options might work for you, I'm here to help without any pressure 🌿`,
+      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}.\nIl y a quelques jours vous m'avez parlé de votre situation de santé. Je voulais savoir comment vous allez — avez-vous pu consulter votre médecin?\nSi vous avez plus de clarté maintenant, je suis là pour vous orienter 🌿`,
+      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}.\nQualche giorno fa mi hai parlato della tua situazione di salute. Volevo sapere come stai — hai avuto modo di parlare con il tuo medico?\nSe hai più chiarezza ora e vuoi sapere le opzioni per il tuo caso, sono qui 🌿`,
+      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}.\nVor ein paar Tagen haben Sie mir von Ihrer Gesundheitssituation erzählt. Ich wollte fragen, wie es Ihnen geht — hatten Sie Gelegenheit, Ihren Arzt zu konsultieren?\nWenn Sie mehr Klarheit haben und wissen möchten, welche Optionen für Ihren Fall passen, bin ich hier 🌿`,
     },
   },
 ];

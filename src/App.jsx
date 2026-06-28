@@ -81,13 +81,27 @@ const LINE_COLORS = { Detox:"#2d6a4f", Energy:"#7B3FA0", Protein:"#1565C0", Immu
 
 function detectCountry() {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-  if (tz.includes("Montevideo")) return "Uruguay";
-  if (tz.includes("Argentina"))  return "Argentina";
-  if (tz.includes("Bogota"))     return "Colombia";
-  if (tz.includes("Mexico"))     return "México";
-  if (tz.includes("Sao_Paulo"))  return "Brasil";
-  if (tz.includes("Madrid"))     return "España";
-  if (tz.includes("Santiago"))   return "Chile";
+  if (tz.includes("Montevideo"))    return "Uruguay";
+  if (tz.includes("Argentina"))     return "Argentina";
+  if (tz.includes("Bogota"))        return "Colombia";
+  if (tz.includes("Mexico"))        return "México";
+  if (["Sao_Paulo","Manaus","Belem","Fortaleza","Recife","Araguaina","Maceio","Bahia","Cuiaba","Porto_Velho","Boa_Vista","Rio_Branco","Campo_Grande","Noronha","Santarem","Eirunepe"].some(c=>tz.includes(c))) return "Brasil";
+  if (tz.includes("Madrid"))        return "España";
+  if (tz.includes("Santiago"))      return "Chile";
+  if (tz.includes("Lima"))          return "Perú";
+  if (["New_York","Chicago","Denver","Los_Angeles","Phoenix","Anchorage","Adak","Honolulu","Indiana","Kentucky","Detroit","Menominee","Boise"].some(c=>tz.includes(c))||tz.startsWith("US/")) return "Estados Unidos";
+  if (tz.includes("La_Paz"))        return "Bolivia";
+  if (tz.includes("Guayaquil")||tz.includes("Galapagos")) return "Ecuador";
+  if (tz.includes("Caracas"))       return "Venezuela";
+  if (tz.includes("Asuncion"))      return "Paraguay";
+  if (tz.includes("Panama"))        return "Panamá";
+  if (tz.includes("Costa_Rica"))    return "Costa Rica";
+  if (tz.includes("Guatemala"))     return "Guatemala";
+  if (tz.includes("Tegucigalpa"))   return "Honduras";
+  if (tz.includes("El_Salvador"))   return "El Salvador";
+  if (tz.includes("Managua"))       return "Nicaragua";
+  if (tz.includes("Santo_Domingo")) return "República Dominicana";
+  if (tz.includes("Havana"))        return "Cuba";
   return "";
 }
 function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p); }
@@ -409,15 +423,23 @@ function AntesDespues() {
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────────────────
-function Chat({ open, onClose }) {
-  const [msgs,setMsgs]=useState([{role:"assistant",text:"¡Hola! Soy tu Vita Advisor 🌿 ¿En qué puedo ayudarte?"}]);
+function Chat({ open, onClose, country }) {
+  const T = useContext(LangCtx);
+  const [msgs,setMsgs]=useState([]);
   const [inp,setInp]=useState(""); const [loading,setLoading]=useState(false); const botRef=useRef();
+  const notified=useRef(false);
+  const isUnconfigured = !!(country && !COUNTRY_DATA[country]);
   useEffect(()=>{botRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
   const send = async () => {
     if (!inp.trim()||loading) return;
     const um={role:"user",text:inp}; setMsgs(m=>[...m,um]); setInp(""); setLoading(true);
+    if (isUnconfigured && !notified.current) {
+      notified.current=true;
+      fetch("/api/notify-country",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({country,message:inp})}).catch(()=>{});
+    }
     try {
-      const sys=`Eres Vita Advisor, asistente IA de Power Vita (distribuidor FuXion Global). Responde en español. Experto en nutrición biotecnológica FuXion y negocio en 37 países. Máx 3 oraciones, amable, usa emojis. Link: ${FUXION_LINK}. WhatsApp: +${WA}.`;
+      const countryCtx = country ? ` Usuario en ${country}${isUnconfigured?" (país sin precios cargados — recomendar WhatsApp para coordinar pedido)":""}.` : "";
+      const sys=`Eres Vita Advisor, asistente IA de Power Vita (distribuidor FuXion Global). Responde en español. Experto en nutrición biotecnológica FuXion y negocio en 37 países. Máx 3 oraciones, amable, usa emojis. Link: ${FUXION_LINK}. WhatsApp: +${WA}.${countryCtx}`;
       const history=msgs.concat(um).map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}));
       const res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:300,system:sys,messages:history})});
       const data=await res.json();
@@ -425,6 +447,9 @@ function Chat({ open, onClose }) {
     } catch { setMsgs(m=>[...m,{role:"assistant",text:"Error. Contáctanos por WhatsApp 💬"}]); }
     finally { setLoading(false); }
   };
+  const greeting = isUnconfigured
+    ? `¡Hola desde ${country}! 🌍 FuXion opera en tu país. Podés hacer pedidos y también unirte al equipo. ¿En qué puedo ayudarte?`
+    : (T?.chatGreeting||"");
   if (!open) return null;
   return (
     <div style={{position:"fixed",bottom:84,right:20,width:295,zIndex:300,background:"rgba(250,250,247,0.97)",backdropFilter:"blur(20px)",border:"1.5px solid rgba(45,106,79,0.22)",borderRadius:18,boxShadow:"0 20px 52px rgba(45,106,79,0.2)",overflow:"hidden"}}>
@@ -433,7 +458,7 @@ function Chat({ open, onClose }) {
         <button onClick={onClose} style={{background:"none",border:"none",color:"rgba(255,255,255,0.85)",fontSize:15,cursor:"pointer"}}>✕</button>
       </div>
       <div style={{height:240,overflowY:"auto",padding:"10px 10px 4px",display:"flex",flexDirection:"column",gap:7}}>
-        {msgs.map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"82%",background:m.role==="user"?"#1a2e1a":"rgba(45,106,79,0.08)",color:m.role==="user"?"#fff":"#1a2e1a",borderRadius:10,padding:"6px 9px",fontFamily:"'Inter',sans-serif",fontSize:11,lineHeight:1.5}}>{m.text}</div></div>)}
+        {(msgs.length===0?[{role:"assistant",text:greeting}]:msgs).map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}><div style={{maxWidth:"82%",background:m.role==="user"?"#1a2e1a":"rgba(45,106,79,0.08)",color:m.role==="user"?"#fff":"#1a2e1a",borderRadius:10,padding:"6px 9px",fontFamily:"'Inter',sans-serif",fontSize:11,lineHeight:1.5}}>{m.text}</div></div>)}
         {loading&&<div style={{display:"flex"}}><div style={{background:"rgba(45,106,79,0.08)",borderRadius:10,padding:"6px 11px",color:"#2d6a4f",fontSize:15}}>···</div></div>}
         <div ref={botRef}/>
       </div>
@@ -956,8 +981,16 @@ export default function App() {
         </div>
       )}
 
-      <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
-      <button onClick={()=>setChatOpen(o=>!o)} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
+      {/* STICKY MOBILE CTA */}
+      <style>{`.sticky-wa-bar{display:flex}@media(min-width:640px){.sticky-wa-bar{display:none!important}}@media(max-width:639px){footer{padding-bottom:72px!important}}`}</style>
+      <a href={waHref(WA,"Hola! Quiero más info sobre Power Vita FuXion 🌿 Soy de [tu país].")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
+        <span style={{fontSize:18}}>💬</span>
+        <span>Consultar ahora · Respondemos al instante</span>
+      </a>
+
+      <Chat open={chatOpen} onClose={()=>setChatOpen(false)} country={selCountry}/>
+      <a href={waHref(WA,`Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})} style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}><span style={{fontSize:18}}>💬</span> Hacer pedido</a>
+      <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
     </div>
