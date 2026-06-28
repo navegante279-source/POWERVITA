@@ -79,6 +79,9 @@
         <option value="benefits">✅ Beneficios clave</option>
         <option value="routine">🌅 Rutina / Hábito saludable</option>
         <option value="question">❓ Pregunta que engancha</option>
+        <option disabled>──────────────────</option>
+        <option value="recipe-breakfast">🍳 Receta — Desayuno saludable</option>
+        <option value="recipe-lunch">🥗 Receta — Almuerzo saludable</option>
       </select>
     </div>
     <div>
@@ -179,7 +182,29 @@ async function generateVideo() {
     educational:'3 tips o datos educativos', myth:'desmontá 1 mito con su realidad',
     benefits:'3 beneficios clave', routine:'rutina saludable de 3 pasos',
     question:'pregunta gancho + 2 respuestas sorprendentes',
+    'recipe-breakfast':'receta de desayuno saludable',
+    'recipe-lunch':'receta de almuerzo saludable',
   };
+  const BREAKFAST_TOPICS = [
+    'batido verde energizante con espinaca y banana',
+    'bowl de avena con frutas y semillas',
+    'tostadas saludables con palta y huevo',
+    'panqueques proteicos sin harina blanca',
+    'yogur natural con granola casera y berries',
+    'smoothie bowl antioxidante para empezar el día',
+    'huevos revueltos con vegetales y queso fresco',
+    'overnight oats: avena preparada la noche anterior',
+  ];
+  const LUNCH_TOPICS = [
+    'bowl de arroz integral con pollo y vegetales asados',
+    'ensalada completa con proteína y grasas saludables',
+    'wrap integral con atún y vegetales frescos',
+    'sopa nutritiva de lentejas y verduras',
+    'salteado de vegetales con quinoa y tofu',
+    'bowl de legumbres con arroz y aguacate',
+    'pechuga de pollo al horno con batata y brócoli',
+    'pasta integral con salsa de tomate natural y albahaca',
+  ];
   const TOPICS = [
     'energía natural y vitalidad durante el día',
     'alimentación saludable y nutrición práctica',
@@ -210,7 +235,10 @@ async function generateVideo() {
     'receta saludable: cena liviana para dormir mejor y bajar de peso',
     'receta saludable: bowl nutritivo con proteínas y vegetales',
   ];
-  const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
+  const topicPool = contentType==='recipe-breakfast' ? BREAKFAST_TOPICS
+    : contentType==='recipe-lunch' ? LUNCH_TOPICS
+    : TOPICS;
+  const topic = topicPool[Math.floor(Math.random()*topicPool.length)];
   const prod = productMap[product];
   const seed = Math.floor(Math.random()*99999);
 
@@ -234,12 +262,12 @@ Estructura del Reel (30 segundos, fórmula viral):
 SLIDE 1 — HOOK (3 segundos, para el scroll):
 Título: frase corta e impactante, máx 7 palabras. Debe crear urgencia, curiosidad o sorpresa. Ejemplos del estilo: "Esto destruye tu metabolismo sin que lo sepas", "El error que te impide bajar de peso", "Lo que nadie te dice sobre ${topic}". Sin subtítulo.
 
-${topic.includes('receta') ? `SLIDE 2 — INGREDIENTES:
-Título: nombre atractivo de la receta. Subtítulo: lista breve de ingredientes clave.
+${(contentType==='recipe-breakfast'||contentType==='recipe-lunch') ? `SLIDE 2 — INGREDIENTES:
+Título: nombre atractivo y apetitoso de la receta (ej: "Bowl energizante de avena y frutos rojos"). Subtítulo: lista de 4-5 ingredientes clave separados por · .
 SLIDE 3 — PREPARACIÓN:
-Título: "Cómo hacerlo". Subtítulo: pasos resumidos en 1-2 líneas.
+Título: "Cómo prepararlo". Subtítulo: 3 pasos muy breves, numerados, cada uno en media línea.
 SLIDE 4 — BENEFICIO:
-Título: el beneficio principal. Subtítulo: por qué funciona (ciencia simple).` :
+Título: el beneficio principal en 3-4 palabras (ej: "Energía por horas"). Subtítulo: por qué este ${contentType==='recipe-breakfast'?'desayuno':'almuerzo'} es ideal para la salud, en 1 línea.` :
 `SLIDES 2, 3 y 4 — RETENCIÓN (contenido de valor):
 Cada slide: dato sorprendente o tip accionable sobre ${topic}. Título corto (3-5 palabras). Subtítulo: explicación en 1 línea que genere "no sabía esto".`}
 
