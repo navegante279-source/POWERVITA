@@ -117,7 +117,7 @@
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
     <div class="slide-dots" id="slideDots"></div>
     <div class="rec-badge" id="recBadge"><div class="rec-dot"></div> GRABANDO</div>
-    <button class="btn btn-green" id="recordBtn" onclick="startRecording()" disabled>⏺ Grabar video</button>
+    <button class="btn btn-green" id="recordBtn" onclick="startRecording()" disabled>⬇️ Descargar MP4</button>
     <div class="caption-box" id="captionBox">El caption aparecerá aquí una vez generado…</div>
     <div class="caption-actions">
       <button class="btn btn-secondary" onclick="copyCaption(this)">📋 Copiar caption</button>
@@ -135,7 +135,7 @@ const OVERLAYS = {
 let slides=[], slideImages=[], caption='';
 let animating=false, animFrame=null, slideIndex=0, slideStart=null;
 let slideDuration=3000, overlayOpacity=0.55, currentOverlay='sage';
-let mediaRecorder=null, recordedChunks=[];
+let _muxerLoaded=false;
 
 document.getElementById('slideDur').addEventListener('input', function() {
   slideDuration = parseFloat(this.value)*1000;
@@ -422,66 +422,88 @@ function updateDots(idx){
   document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
 }
 
-let _ffmpeg=null, _fetchFile=null, _ffmpegReady=false;
-async function ensureFFmpeg(){
-  if(_ffmpegReady) return;
-  setStatus('⏳ Cargando convertidor de video (primera vez, ~25 MB)…');
+async function loadMuxer(){
+  if(_muxerLoaded) return;
   await new Promise((resolve,reject)=>{
     const s=document.createElement('script');
-    s.src='https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js';
+    s.src='https://cdn.jsdelivr.net/npm/mp4-muxer@5/build/mp4-muxer.js';
     s.onload=resolve; s.onerror=reject;
     document.head.appendChild(s);
   });
-  const {createFFmpeg,fetchFile}=window.FFmpeg;
-  _fetchFile=fetchFile;
-  _ffmpeg=createFFmpeg({log:false,corePath:'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'});
-  await _ffmpeg.load();
-  _ffmpegReady=true;
+  _muxerLoaded=true;
 }
 
-function startRecording(){
+async function startRecording(){
   if(!slides.length) return;
-  const canvas=document.getElementById('vc');
-  if(!canvas.captureStream){setStatus('❌ Tu navegador no soporta grabación de canvas');return;}
-  const stream=canvas.captureStream(30);
-  recordedChunks=[];
-  const mimeType=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'].find(t=>MediaRecorder.isTypeSupported(t))||'';
-  mediaRecorder=new MediaRecorder(stream,mimeType?{mimeType}:{});
-  mediaRecorder.ondataavailable=e=>{if(e.data.size>0)recordedChunks.push(e.data);};
-  mediaRecorder.onstop=async()=>{
-    const webmBlob=new Blob(recordedChunks,{type:mimeType||'video/webm'});
-    document.getElementById('recBadge').style.display='none';
-    document.getElementById('recordBtn').disabled=true;
-    try {
-      await ensureFFmpeg();
-      setStatus('⏳ Convirtiendo a MP4 para Instagram…');
-      _ffmpeg.FS('writeFile','input.webm',await _fetchFile(webmBlob));
-      await _ffmpeg.run('-i','input.webm','-c:v','libx264','-preset','ultrafast','-pix_fmt','yuv420p','-movflags','+faststart','output.mp4');
-      const data=_ffmpeg.FS('readFile','output.mp4');
-      const mp4Blob=new Blob([data.buffer],{type:'video/mp4'});
-      const url=URL.createObjectURL(mp4Blob);
-      const a=document.createElement('a');a.href=url;a.download='powervita-reel.mp4';a.click();
-      URL.revokeObjectURL(url);
-      setStatus('✅ MP4 descargado — listo para subir a Instagram');
-    } catch(e) {
-      console.error('FFmpeg:',e);
-      const url=URL.createObjectURL(webmBlob);
-      const a=document.createElement('a');a.href=url;a.download='powervita-reel.webm';a.click();
-      URL.revokeObjectURL(url);
-      setStatus('⚠️ Descargado como .webm — convertí con CapCut antes de subir');
+  if(!window.VideoEncoder){
+    setStatus('❌ Necesitás Chrome o Edge para exportar MP4.');
+    return;
+  }
+  const btn=document.getElementById('recordBtn');
+  const badge=document.getElementById('recBadge');
+  btn.disabled=true;
+  ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=true);
+
+  try{
+    setStatus('⏳ Preparando exportación MP4…');
+    await loadMuxer();
+
+    const canvas=document.getElementById('vc');
+    const W=canvas.width, H=canvas.height;
+    const fps=30;
+    const totalMs=slides.length*slideDuration;
+    const totalFrames=Math.ceil(totalMs/1000*fps);
+
+    const {Muxer,ArrayBufferTarget}=window.Mp4Muxer;
+    const target=new ArrayBufferTarget();
+    const muxer=new Muxer({target,video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+
+    const encoder=new VideoEncoder({
+      output:(chunk,meta)=>muxer.addVideoChunk(chunk,meta),
+      error:e=>{throw e;}
+    });
+    encoder.configure({codec:'avc1.4d002a',width:W,height:H,bitrate:6_000_000,framerate:fps});
+
+    stopAnimation();
+    badge.style.display='flex';
+
+    for(let f=0;f<totalFrames;f++){
+      const timeMs=f*1000/fps;
+      let ms=timeMs, si=0;
+      while(ms>=slideDuration && si<slides.length-1){ms-=slideDuration;si++;}
+      const progress=Math.min(ms/slideDuration,1);
+      renderSlide(si,progress);
+      updateDots(si);
+
+      const vf=new VideoFrame(canvas,{timestamp:Math.round(f*1_000_000/fps),duration:Math.round(1_000_000/fps)});
+      encoder.encode(vf,{keyFrame:f%(fps*2)===0});
+      vf.close();
+
+      if(f%fps===0){
+        setStatus(`⏳ Generando MP4… ${Math.round(f/totalFrames*100)}%`);
+        await new Promise(r=>setTimeout(r,0));
+      }
     }
-    document.getElementById('recordBtn').disabled=false;
-    document.getElementById('recordBtn').textContent='⏺ Grabar video';
-  };
-  const totalMs=slides.length*slideDuration+600;
-  stopAnimation();slideIndex=0;slideStart=performance.now();
-  animating=true;animFrame=requestAnimationFrame(loop);
-  mediaRecorder.start();
-  document.getElementById('recBadge').style.display='flex';
-  document.getElementById('recordBtn').disabled=true;
-  document.getElementById('recordBtn').textContent='⏳ Grabando…';
-  setStatus(`⏺ Grabando ${(totalMs/1000).toFixed(1)}s…`);
-  setTimeout(()=>{if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();},totalMs);
+
+    await encoder.flush();
+    muxer.finalize();
+
+    const blob=new Blob([target.buffer],{type:'video/mp4'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='powervita-reel.mp4';a.click();
+    URL.revokeObjectURL(url);
+    setStatus('✅ MP4 descargado — listo para subir a Instagram');
+
+    startAnimation();
+  }catch(err){
+    console.error('Export error:',err);
+    setStatus('❌ Error al exportar: '+err.message);
+  }
+
+  badge.style.display='none';
+  btn.disabled=false;
+  btn.textContent='⬇️ Descargar MP4';
+  ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=false);
 }
 
 function copyCaption(btn){
