@@ -101,8 +101,8 @@
     <div>
       <div class="section-label">Duración por slide</div>
       <div class="slider-row">
-        <input type="range" id="slideDur" min="2" max="6" step="0.5" value="3">
-        <span class="slider-val" id="durVal">3s</span>
+        <input type="range" id="slideDur" min="2" max="6" step="0.5" value="6">
+        <span class="slider-val" id="durVal">6s</span>
       </div>
     </div>
     <button class="btn btn-primary" id="generateBtn" onclick="generateVideo()">✨ Generar video</button>
@@ -134,7 +134,7 @@ const OVERLAYS = {
 
 let slides=[], slideImages=[], caption='';
 let animating=false, animFrame=null, slideIndex=0, slideStart=null;
-let slideDuration=3000, overlayOpacity=0.55, currentOverlay='sage';
+let slideDuration=6000, overlayOpacity=0.55, currentOverlay='sage';
 let _muxerLoaded=false;
 
 document.getElementById('slideDur').addEventListener('input', function() {
