@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const token   = process.env.WHATSAPP_TOKEN;
   const phoneId = process.env.WHATSAPP_PHONE_ID;
-  const owner   = process.env.OWNER_PHONE;
+  const owner   = process.env.NOTIFY_PHONE || process.env.OWNER_PHONE;
 
   if (!token || !phoneId || !owner) {
     return res.status(200).json({ ok: true, skipped: "WhatsApp vars not set" });
