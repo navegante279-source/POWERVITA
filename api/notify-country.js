@@ -8,21 +8,31 @@ export default async function handler(req, res) {
   const { country, message } = req.body || {};
   if (!country) return res.status(400).json({ error: "country required" });
 
-  const topic = process.env.NTFY_TOPIC;
-  if (!topic) return res.status(200).json({ ok: true, skipped: "NTFY_TOPIC not set" });
+  const token   = process.env.WHATSAPP_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_ID;
+  const owner   = process.env.OWNER_PHONE;
+
+  if (!token || !phoneId || !owner) {
+    return res.status(200).json({ ok: true, skipped: "WhatsApp vars not set" });
+  }
+
+  const text = message
+    ? `🌍 *Nueva consulta desde ${country}*\n\n"${message}"\n\n_Power Vita — Vita Advisor IA_`
+    : `🌍 *Nueva consulta desde ${country}*\n\n_Power Vita — Vita Advisor IA_`;
 
   try {
-    await fetch(`https://ntfy.sh/${topic}`, {
+    await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain",
-        "Title": `Power Vita: consulta desde ${country}`,
-        "Priority": "high",
-        "Tags": "world_map,speech_balloon"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
-      body: message
-        ? `Mensaje: "${message}"\n\npowervita.vercel.app`
-        : `Alguien de ${country} abrió el chat.\n\npowervita.vercel.app`
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: owner,
+        type: "text",
+        text: { body: text }
+      })
     });
     res.status(200).json({ ok: true });
   } catch (e) {
