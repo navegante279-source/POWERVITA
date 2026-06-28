@@ -99,10 +99,10 @@
       </div>
     </div>
     <div>
-      <div class="section-label">Duración por slide</div>
+      <div class="section-label">Duración total del video</div>
       <div class="slider-row">
-        <input type="range" id="slideDur" min="2" max="6" step="0.5" value="6">
-        <span class="slider-val" id="durVal">6s</span>
+        <input type="range" id="slideDur" min="10" max="30" step="5" value="30">
+        <span class="slider-val" id="durVal">30s</span>
       </div>
     </div>
     <button class="btn btn-primary" id="generateBtn" onclick="generateVideo()">✨ Generar video</button>
@@ -138,8 +138,9 @@ let slideDuration=6000, overlayOpacity=0.55, currentOverlay='sage';
 let _muxerLoaded=false;
 
 document.getElementById('slideDur').addEventListener('input', function() {
-  slideDuration = parseFloat(this.value)*1000;
-  document.getElementById('durVal').textContent = this.value+'s';
+  const totalSec = parseFloat(this.value);
+  slideDuration = totalSec / (slides.length || 5) * 1000;
+  document.getElementById('durVal').textContent = totalSec+'s';
 });
 document.getElementById('overlayOpacity').addEventListener('input', function() {
   overlayOpacity = parseInt(this.value)/100;
