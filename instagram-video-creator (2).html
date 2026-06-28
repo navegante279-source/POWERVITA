@@ -134,12 +134,21 @@ const OVERLAYS = {
 
 let slides=[], slideImages=[], caption='';
 let animating=false, animFrame=null, slideIndex=0, slideStart=null;
-let slideDuration=6000, overlayOpacity=0.55, currentOverlay='sage';
+let totalVideoDuration=30000, slideDurations=[3000,6000,6000,6000,9000];
+let overlayOpacity=0.55, currentOverlay='sage';
 let _muxerLoaded=false;
+
+function calcDurations(totalMs){
+  const hook=3000;
+  const cta=Math.round(Math.max(5000, totalMs*0.25));
+  const content=Math.round((totalMs-hook-cta)/3);
+  return [hook, content, content, content, totalMs-hook-content*3];
+}
 
 document.getElementById('slideDur').addEventListener('input', function() {
   const totalSec = parseFloat(this.value);
-  slideDuration = totalSec / (slides.length || 5) * 1000;
+  totalVideoDuration = totalSec*1000;
+  slideDurations = calcDurations(totalVideoDuration);
   document.getElementById('durVal').textContent = totalSec+'s';
 });
 document.getElementById('overlayOpacity').addEventListener('input', function() {
@@ -214,24 +223,30 @@ async function generateVideo() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1200,
-        system: `Sos experto en marketing de bienestar y salud para Instagram LATAM. Creás contenido educativo, variado y accionable sobre nutrición, energía, metabolismo y pérdida de peso. NUNCA hablés de ciclo menstrual, hormonas reproductivas ni salud ginecológica. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
+        system: `Sos experto en marketing de contenido viral para Instagram LATAM especializado en salud y bienestar. Dominás la estructura hook-retención-CTA que usan los mejores creadores con millones de seguidores. NUNCA hablés de ciclo menstrual, hormonas reproductivas ni salud ginecológica. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
         messages: [{role:'user', content:`Seed:${seed}
-Tema obligatorio de este video: ${topic}
+Tema: ${topic}
 Tarea: ${typeMap[contentType]}
-${prod ? `Producto (mencionarlo solo en la última slide como solución): ${prod}` : 'SIN mencionar productos ni marcas.'}
+${prod ? `Producto: ${prod} (mencionarlo solo en el CTA como solución natural)` : 'SIN mencionar productos ni marcas.'}
 
-Generá 5 slides para un Reel de bienestar/salud.
-${topic.includes('receta') ? `Este video ES UNA RECETA. Estructura:
-Slide 1: Nombre atractivo de la receta + gancho (ej: "Batido que quema grasa mientras dormís")
-Slide 2: Ingredientes principales (título: "Ingredientes", subtítulo: lista breve)
-Slide 3: Preparación paso a paso resumida (título corto, subtítulo: pasos en 1-2 líneas)
-Slide 4: Beneficio clave de la receta (título: el beneficio, subtítulo: por qué funciona)
-Slide 5: CTA + invitación a guardar la receta${prod ? ' + producto relacionado' : ''}` :
-`Slide 1: Hook que genere curiosidad sobre "${topic}" (máx 10 palabras, impactante)
-Slides 2-4: Puntos concretos y educativos sobre el tema (título corto + detalle 1 línea)
-Slide 5: CTA motivador${prod ? ' + mención del producto' : ''}`}
+Estructura del Reel (30 segundos, fórmula viral):
 
-Para cada slide: photo_query en inglés para Pexels relacionada al tema (ambientes, alimentos, naturaleza — sin personas).
+SLIDE 1 — HOOK (3 segundos, para el scroll):
+Título: frase corta e impactante, máx 7 palabras. Debe crear urgencia, curiosidad o sorpresa. Ejemplos del estilo: "Esto destruye tu metabolismo sin que lo sepas", "El error que te impide bajar de peso", "Lo que nadie te dice sobre ${topic}". Sin subtítulo.
+
+${topic.includes('receta') ? `SLIDE 2 — INGREDIENTES:
+Título: nombre atractivo de la receta. Subtítulo: lista breve de ingredientes clave.
+SLIDE 3 — PREPARACIÓN:
+Título: "Cómo hacerlo". Subtítulo: pasos resumidos en 1-2 líneas.
+SLIDE 4 — BENEFICIO:
+Título: el beneficio principal. Subtítulo: por qué funciona (ciencia simple).` :
+`SLIDES 2, 3 y 4 — RETENCIÓN (contenido de valor):
+Cada slide: dato sorprendente o tip accionable sobre ${topic}. Título corto (3-5 palabras). Subtítulo: explicación en 1 línea que genere "no sabía esto".`}
+
+SLIDE 5 — CTA (potente, crea acción inmediata):
+Título: llamada a la acción directa y urgente. Ejemplos: "Guardá esto antes de olvidarlo 👆", "Compartilo con quien lo necesita hoy", "Seguinos para más secretos de salud". Subtítulo: refuerzo del beneficio${prod ? ` + mención de ${prod}` : ''}.
+
+Para cada slide: photo_query en inglés para Pexels (alimentos, naturaleza, bienestar — sin personas, sin texto en la imagen).
 
 JSON:
 {
@@ -242,7 +257,7 @@ JSON:
     {"type":"point","title":"...","subtitle":"...","photo_query":"..."},
     {"type":"cta","title":"...","subtitle":"...","photo_query":"..."}
   ],
-  "caption":"Caption Instagram con emojis y hashtags relacionados al tema. Máx 200 palabras."
+  "caption":"Caption Instagram viral: abrí con el hook, desarrollá el tema, cerrá con pregunta que invite a comentar. Emojis estratégicos. Hashtags mixtos (grandes + nicho). Máx 200 palabras."
 }`}]
       })
     });
@@ -253,6 +268,7 @@ JSON:
     const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
     slides = parsed.slides;
     caption = parsed.caption;
+    slideDurations = calcDurations(totalVideoDuration);
     document.getElementById('captionBox').textContent = caption;
 
     setStatus('🖼️ Buscando fotos en Pexels…');
@@ -310,12 +326,13 @@ function stopAnimation() {
 }
 function loop(now) {
   if(!animating) return;
+  const dur=slideDurations[slideIndex]||6000;
   const elapsed=now-slideStart;
-  const progress=Math.min(elapsed/slideDuration,1);
+  const progress=Math.min(elapsed/dur,1);
   renderSlide(slideIndex, progress);
-  const totalElapsed=slideIndex*slideDuration+elapsed;
-  document.getElementById('progressFill').style.width=
-    Math.min(totalElapsed/(slides.length*slideDuration)*100,100)+'%';
+  const totalMs=slideDurations.reduce((a,b)=>a+b,0);
+  const elapsedTotal=slideDurations.slice(0,slideIndex).reduce((a,b)=>a+b,0)+elapsed;
+  document.getElementById('progressFill').style.width=Math.min(elapsedTotal/totalMs*100,100)+'%';
   updateDots(slideIndex);
   if(progress>=1){
     slideIndex=(slideIndex+1)%slides.length;
@@ -466,7 +483,7 @@ async function startRecording(){
     const canvas=document.getElementById('vc');
     const W=canvas.width, H=canvas.height;
     const fps=30;
-    const totalMs=slides.length*slideDuration;
+    const totalMs=slideDurations.reduce((a,b)=>a+b,0);
     const totalFrames=Math.ceil(totalMs/1000*fps);
 
     const {Muxer,ArrayBufferTarget}=window.Mp4Muxer;
@@ -485,8 +502,8 @@ async function startRecording(){
     for(let f=0;f<totalFrames;f++){
       const timeMs=f*1000/fps;
       let ms=timeMs, si=0;
-      while(ms>=slideDuration && si<slides.length-1){ms-=slideDuration;si++;}
-      const progress=Math.min(ms/slideDuration,1);
+      while(si<slides.length-1 && ms>=slideDurations[si]){ms-=slideDurations[si];si++;}
+      const progress=Math.min(ms/(slideDurations[si]||6000),1);
       renderSlide(si,progress);
       updateDots(si);
 
