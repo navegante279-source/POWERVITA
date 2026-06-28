@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creador de Videos — Power Vita</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e12; --surface: #17171e; --border: #2a2a35;
+    --accent: #7c5cfc; --text: #f0eeff; --muted: #7a7a9a; --radius: 14px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
+  header { text-align: center; margin-bottom: 32px; }
+  header h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900;
+    background: linear-gradient(135deg, #a78bfa, #f0abfc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+  .layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; }
+  @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 18px; height: fit-content; }
+  .section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  select { width: 100%; background: #1e1e28; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 0.85rem; font-family: inherit; outline: none; cursor: pointer; }
+  select:focus { border-color: var(--accent); }
+  .slider-row { display: flex; align-items: center; gap: 10px; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
+  .slider-val { font-size: 0.8rem; font-weight: 600; color: #a78bfa; min-width: 40px; text-align: right; }
+  .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity .2s, transform .15s; font-family: inherit; }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-primary { background: linear-gradient(135deg, #7c5cfc, #a855f7); color: #fff; }
+  .btn-secondary { background: #1e1e28; color: var(--text); border: 1px solid var(--border); }
+  .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+  .status { font-size: 0.78rem; color: var(--muted); text-align: center; min-height: 18px; }
+  .preview-area { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+  .canvas-wrapper { position: relative; width: 100%; max-width: 360px; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.5); background: #111; }
+  canvas { width: 100%; height: 100%; display: block; }
+  .progress-bar-wrap { width: 100%; max-width: 360px; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #7c5cfc, #a855f7); width: 0%; transition: width .1s linear; }
+  .slide-dots { display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background .3s; }
+  .dot.active { background: #a78bfa; }
+  .rec-badge { display: none; align-items: center; gap: 6px; background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.4); border-radius: 99px; padding: 4px 12px; font-size: 0.75rem; font-weight: 600; color: #ef4444; }
+  .rec-dot { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .caption-box { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; font-size: 0.8rem; line-height: 1.6; color: #ccc; white-space: pre-wrap; word-break: break-word; min-height: 80px; }
+  .caption-actions { display: flex; gap: 8px; width: 100%; max-width: 360px; }
+  .caption-actions .btn { flex: 1; padding: 10px; font-size: 0.82rem; }
+  .apikey-box { background: #1e1e28; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .apikey-box input { background: none; border: none; color: var(--text); font-size: 0.82rem; width: 100%; outline: none; font-family: monospace; }
+  .apikey-box label { font-size: 0.68rem; color: var(--muted); display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Creador de Videos ✨</h1>
+  <p>Power Vita · @powervita_uy · Reels con fotos reales</p>
+</header>
+<div class="layout">
+  <div class="panel">
+
+    <div class="apikey-box">
+      <label>API KEY ANTHROPIC</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+    </div>
+
+    <div>
+      <div class="section-label">Producto</div>
+      <select id="productSel">
+        <option value="none">— Sin producto (educativo puro) —</option>
+        <option value="vitaxtra">Vita Xtra T+ · Energía natural y antioxidantes</option>
+        <option value="thermo">Thermo T3 · Quema de grasa termogénica</option>
+        <option value="nocarb">NoCArb · Control de carbohidratos</option>
+        <option value="bioprofit">Bio Profit · Salud intestinal y probióticos</option>
+        <option value="prunex">Prunex 1 · Detox colon y tránsito intestinal</option>
+      </select>
+    </div>
+    <div>
+      <div class="section-label">Tipo de contenido</div>
+      <select id="contentType">
+        <option value="educational">📚 Educativo (3 tips / datos)</option>
+        <option value="myth">❌ Mito vs Realidad</option>
+        <option value="benefits">✅ Beneficios clave</option>
+        <option value="routine">🌅 Rutina / Hábito saludable</option>
+        <option value="question">❓ Pregunta que engancha</option>
+      </select>
+    </div>
+    <div>
+      <div class="section-label">Color de overlay</div>
+      <select id="overlaySel">
+        <option value="sage">🌿 Verde sage</option>
+        <option value="mint">🍃 Mint</option>
+        <option value="blush">🌸 Blush rosado</option>
+        <option value="dark">🖤 Oscuro neutro</option>
+        <option value="warm">🌅 Cálido tostado</option>
+      </select>
+    </div>
+    <div>
+      <div class="section-label">Opacidad del overlay</div>
+      <div class="slider-row">
+        <input type="range" id="overlayOpacity" min="30" max="80" step="5" value="55">
+        <span class="slider-val" id="opacityVal">55%</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Duración por slide</div>
+      <div class="slider-row">
+        <input type="range" id="slideDur" min="2" max="6" step="0.5" value="3">
+        <span class="slider-val" id="durVal">3s</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="generateBtn" onclick="generateVideo()">✨ Generar video</button>
+    <button class="btn btn-secondary" id="regenBtn" onclick="generateVideo()" disabled>🔀 Regenerar</button>
+    <div class="status" id="status">Ingresá tu API key y presioná Generar</div>
+  </div>
+
+  <div class="preview-area">
+    <div class="canvas-wrapper">
+      <canvas id="vc" width="1080" height="1920"></canvas>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="slide-dots" id="slideDots"></div>
+    <div class="rec-badge" id="recBadge"><div class="rec-dot"></div> GRABANDO</div>
+    <button class="btn btn-green" id="recordBtn" onclick="startRecording()" disabled>⏺ Grabar video (.webm)</button>
+    <div class="caption-box" id="captionBox">El caption aparecerá aquí una vez generado…</div>
+    <div class="caption-actions">
+      <button class="btn btn-secondary" onclick="copyCaption()">📋 Copiar caption</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PEXELS_KEY = 'ONBASv9Wa6xTfJfSBxgmEeOUb6U64ruMPWkVScuq0eivlX4zfQrJk2NC';
+
+const OVERLAYS = {
+  sage:  [90,122,90], mint:[61,140,107], blush:[176,96,128], dark:[20,20,30], warm:[160,112,80]
+};
+
+let slides=[], slideImages=[], caption='';
+let animating=false, animFrame=null, slideIndex=0, slideStart=null;
+let slideDuration=3000, overlayOpacity=0.55, currentOverlay='sage';
+let mediaRecorder=null, recordedChunks=[];
+
+document.getElementById('slideDur').addEventListener('input', function() {
+  slideDuration = parseFloat(this.value)*1000;
+  document.getElementById('durVal').textContent = this.value+'s';
+});
+document.getElementById('overlayOpacity').addEventListener('input', function() {
+  overlayOpacity = parseInt(this.value)/100;
+  document.getElementById('opacityVal').textContent = this.value+'%';
+  if (slides.length) renderSlide(slideIndex, 0);
+});
+document.getElementById('overlaySel').addEventListener('change', function() {
+  currentOverlay = this.value;
+  if (slides.length) renderSlide(slideIndex, 0);
+});
+
+async function generateVideo() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { setStatus('⚠️ Ingresá tu API key de Anthropic'); return; }
+
+  const product = document.getElementById('productSel').value;
+  const contentType = document.getElementById('contentType').value;
+  stopAnimation();
+  setStatus('⏳ Generando contenido con IA…');
+  ['generateBtn','regenBtn','recordBtn'].forEach(id => document.getElementById(id).disabled=true);
+
+  const productMap = {
+    none:null, vitaxtra:'Vita Xtra T+ (energía natural, antioxidantes)',
+    thermo:'Thermo T3 (quema de grasa, termogénico)',
+    nocarb:'NoCArb (control de carbohidratos, saciedad)',
+    bioprofit:'Bio Profit (probióticos, salud intestinal)',
+    prunex:'Prunex 1 (detox colon, tránsito intestinal)',
+  };
+  const typeMap = {
+    educational:'3 tips o datos educativos', myth:'desmontá 1 mito con su realidad',
+    benefits:'3 beneficios clave', routine:'rutina saludable de 3 pasos',
+    question:'pregunta gancho + 2 respuestas sorprendentes',
+  };
+
+  const prod = productMap[product];
+  const seed = Math.floor(Math.random()*99999);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-client-side-key-disclosure': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1200,
+        system: `Experto en marketing de bienestar para Instagram LATAM. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
+        messages: [{role:'user', content:`Seed:${seed}
+Tarea: ${typeMap[contentType]}
+${prod ? `Producto (solo en última slide): ${prod}` : 'SIN mencionar productos ni marcas.'}
+
+Generá 5 slides para Reel de bienestar/salud femenina.
+Slide 1: Hook impactante (máx 10 palabras)
+Slides 2-4: Puntos educativos (título corto + detalle 1 línea)
+Slide 5: CTA${prod ? ' + producto' : ''}
+
+Para cada slide: photo_query en inglés para Pexels (ambientes, plantas, alimentos — sin personas específicas).
+
+JSON:
+{
+  "slides":[
+    {"type":"hook","title":"...","subtitle":"","photo_query":"..."},
+    {"type":"point","title":"...","subtitle":"...","photo_query":"..."},
+    {"type":"point","title":"...","subtitle":"...","photo_query":"..."},
+    {"type":"point","title":"...","subtitle":"...","photo_query":"..."},
+    {"type":"cta","title":"...","subtitle":"...","photo_query":"..."}
+  ],
+  "caption":"Caption Instagram con emojis y hashtags. Máx 200 palabras."
+}`}]
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const raw = data.content.map(b=>b.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    slides = parsed.slides;
+    caption = parsed.caption;
+    document.getElementById('captionBox').textContent = caption;
+
+    setStatus('🖼️ Buscando fotos en Pexels…');
+    slideImages = await fetchPexelsImages(slides);
+
+    buildDots(slides.length);
+    slideIndex=0;
+    startAnimation();
+    ['generateBtn','regenBtn','recordBtn'].forEach(id=>document.getElementById(id).disabled=false);
+    setStatus('✅ Video listo — preview en loop');
+  } catch(err) {
+    console.error(err);
+    setStatus('❌ Error: '+err.message);
+    ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=false);
+  }
+}
+
+async function fetchPexelsImages(slides) {
+  const images=[];
+  for (const slide of slides) {
+    try {
+      const q = encodeURIComponent(slide.photo_query||'wellness nature');
+      const res = await fetch(
+        `https://api.pexels.com/v1/search?query=${q}&per_page=8&orientation=portrait`,
+        { headers: { Authorization: PEXELS_KEY } }
+      );
+      const data = await res.json();
+      const photos = data.photos||[];
+      if (photos.length) {
+        const pick = photos[Math.floor(Math.random()*photos.length)];
+        const img = await loadImage(pick.src.large2x||pick.src.large);
+        images.push(img);
+      } else { images.push(null); }
+    } catch(e) { images.push(null); }
+  }
+  return images;
+}
+
+function loadImage(url) {
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=()=>resolve(img);
+    img.onerror=()=>resolve(null);
+    img.src=url;
+  });
+}
+
+function startAnimation() {
+  stopAnimation(); animating=true; slideStart=performance.now(); slideIndex=0;
+  animFrame=requestAnimationFrame(loop);
+}
+function stopAnimation() {
+  animating=false; if(animFrame) cancelAnimationFrame(animFrame); animFrame=null;
+}
+function loop(now) {
+  if(!animating) return;
+  const elapsed=now-slideStart;
+  const progress=Math.min(elapsed/slideDuration,1);
+  renderSlide(slideIndex, progress);
+  const totalElapsed=slideIndex*slideDuration+elapsed;
+  document.getElementById('progressFill').style.width=
+    Math.min(totalElapsed/(slides.length*slideDuration)*100,100)+'%';
+  updateDots(slideIndex);
+  if(progress>=1){
+    slideIndex=(slideIndex+1)%slides.length;
+    if(slideIndex===0) document.getElementById('progressFill').style.width='0%';
+    slideStart=performance.now();
+  }
+  animFrame=requestAnimationFrame(loop);
+}
+
+function renderSlide(idx, progress) {
+  const canvas=document.getElementById('vc');
+  const ctx=canvas.getContext('2d');
+  const W=1080,H=1920;
+  const slide=slides[idx], img=slideImages[idx];
+  if(!slide) return;
+  const fadeIn=Math.min(progress/0.12,1);
+  const fadeOut=progress>0.88?1-(progress-0.88)/0.12:1;
+  const alpha=Math.min(fadeIn,fadeOut);
+  ctx.clearRect(0,0,W,H);
+  if(img){
+    ctx.save();
+    const zoom=1+progress*0.06;
+    ctx.translate(W/2,H/2); ctx.scale(zoom,zoom); ctx.translate(-W/2,-H/2);
+    const iR=img.width/img.height,cR=W/H;
+    let dw,dh,dx,dy;
+    if(iR>cR){dh=H;dw=H*iR;dx=(W-dw)/2;dy=0;}
+    else{dw=W;dh=W/iR;dx=0;dy=(H-dh)/2;}
+    ctx.drawImage(img,dx,dy,dw,dh);
+    ctx.restore();
+  } else {
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,'#3a5c3a');g.addColorStop(1,'#1a3020');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  }
+  const [r,g,b]=OVERLAYS[currentOverlay]||OVERLAYS.sage;
+  ctx.fillStyle=`rgba(${r},${g},${b},${overlayOpacity})`;
+  ctx.fillRect(0,0,W,H);
+  const tg=ctx.createLinearGradient(0,0,0,H*0.4);
+  tg.addColorStop(0,'rgba(0,0,0,0.6)');tg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=tg;ctx.fillRect(0,0,W,H*0.4);
+  const bg2=ctx.createLinearGradient(0,H*0.6,0,H);
+  bg2.addColorStop(0,'rgba(0,0,0,0)');bg2.addColorStop(1,'rgba(0,0,0,0.72)');
+  ctx.fillStyle=bg2;ctx.fillRect(0,H*0.6,W,H*0.4);
+  ctx.globalAlpha=alpha;
+  ctx.textAlign='left';ctx.font='500 34px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillText('@powervita_uy',72,96);
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillRect(72,114,300,2);
+  ctx.textAlign='right';ctx.font='500 32px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fillText(`${idx+1}/${slides.length}`,W-72,96);
+  if(slide.type==='hook') renderHook(ctx,slide,W,H);
+  else if(slide.type==='cta') renderCTA(ctx,slide,W,H);
+  else renderPoint(ctx,slide,W,H,idx);
+  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,H-100,W,100);
+  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='500 32px Inter,Arial,sans-serif';
+  ctx.textAlign='center';ctx.fillText('Power Vita · powervita.vercel.app',W/2,H-38);
+  ctx.globalAlpha=1;
+}
+
+function renderHook(ctx,slide,W,H){
+  ctx.textAlign='center';
+  ctx.font=`italic 700 52px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.fillText('¿Lo sabías?',W/2,H*0.36);
+  ctx.font=`900 ${fs(slide.title,88,118)}px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=20;
+  wrapText(ctx,slide.title,W/2,H*0.46,W-160,lh(fs(slide.title,88,118)));
+  ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillRect(W/2-60,H*0.66,120,3);
+}
+function renderPoint(ctx,slide,W,H,idx){
+  const icons=['💧','🌿','⚡','🔥','✨'];
+  ctx.textAlign='center';ctx.font='110px Arial';
+  ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=16;
+  ctx.fillText(icons[(idx-1)%icons.length],W/2,H*0.30);ctx.shadowBlur=0;
+  ctx.font=`700 ${fs(slide.title,72,92)}px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=18;
+  wrapText(ctx,slide.title,W/2,H*0.46,W-160,lh(fs(slide.title,72,92)));ctx.shadowBlur=0;
+  if(slide.subtitle){
+    ctx.font='400 44px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.82)';
+    wrapText(ctx,slide.subtitle,W/2,H*0.66,W-200,58);
+  }
+}
+function renderCTA(ctx,slide,W,H){
+  ctx.textAlign='center';
+  ctx.font=`italic 700 54px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.fillText('¡No te lo pierdas!',W/2,H*0.32);
+  ctx.font=`900 ${fs(slide.title,72,96)}px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.65)';ctx.shadowBlur=22;
+  wrapText(ctx,slide.title,W/2,H*0.48,W-140,lh(fs(slide.title,72,96)));ctx.shadowBlur=0;
+  if(slide.subtitle){
+    ctx.font='400 44px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.82)';
+    wrapText(ctx,slide.subtitle,W/2,H*0.68,W-200,60);
+  }
+  ctx.font='64px Arial';ctx.fillText('👆',W/2,H*0.80);
+}
+
+function fs(text,min,max){
+  if(!text) return min;
+  return text.length>30?min:text.length>18?Math.round((min+max)/2):max;
+}
+function lh(size){return size*1.28;}
+function wrapText(ctx,text,x,y,maxW,lineHeight){
+  if(!text) return;
+  const words=text.split(' ');let line='',curY=y;
+  for(const word of words){
+    const test=line+(line?' ':'')+word;
+    if(ctx.measureText(test).width>maxW&&line){ctx.fillText(line,x,curY);line=word;curY+=lineHeight;}
+    else{line=test;}
+  }
+  ctx.fillText(line,x,curY);
+}
+
+function buildDots(n){
+  const wrap=document.getElementById('slideDots');wrap.innerHTML='';
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');wrap.appendChild(d);
+  }
+}
+function updateDots(idx){
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+
+function startRecording(){
+  if(!slides.length) return;
+  const canvas=document.getElementById('vc');
+  const stream=canvas.captureStream(30);
+  recordedChunks=[];
+  mediaRecorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+  mediaRecorder.ondataavailable=e=>{if(e.data.size>0)recordedChunks.push(e.data);};
+  mediaRecorder.onstop=()=>{
+    const blob=new Blob(recordedChunks,{type:'video/webm'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='powervita-reel.webm';a.click();
+    URL.revokeObjectURL(url);
+    document.getElementById('recBadge').style.display='none';
+    document.getElementById('recordBtn').disabled=false;
+    document.getElementById('recordBtn').textContent='⏺ Grabar video (.webm)';
+    setStatus('✅ Video descargado');
+  };
+  const totalMs=slides.length*slideDuration+600;
+  stopAnimation();slideIndex=0;slideStart=performance.now();
+  animating=true;animFrame=requestAnimationFrame(loop);
+  mediaRecorder.start();
+  document.getElementById('recBadge').style.display='flex';
+  document.getElementById('recordBtn').disabled=true;
+  document.getElementById('recordBtn').textContent='⏳ Grabando…';
+  setStatus(`⏺ Grabando ${(totalMs/1000).toFixed(1)}s…`);
+  setTimeout(()=>{if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();},totalMs);
+}
+
+function copyCaption(){
+  const text=document.getElementById('captionBox').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=event.target;btn.textContent='✅ Copiado';
+    setTimeout(()=>btn.textContent='📋 Copiar caption',2000);
+  });
+}
+function setStatus(msg){document.getElementById('status').textContent=msg;}
+
+(function init(){
+  const canvas=document.getElementById('vc');
+  const ctx=canvas.getContext('2d');
+  const W=1080,H=1920;
+  const g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#3a5c3a');g.addColorStop(1,'#1a3020');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,255,0.6)';ctx.textAlign='center';
+  ctx.font='500 52px Inter,Arial,sans-serif';
+  ctx.fillText('Ingresá tu API key y Generá ✨',W/2,H/2);
+  ctx.font='400 38px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.fillText('@powervita_uy',W/2,H/2+90);
+})();
+</script>
+</body>
+</html>
