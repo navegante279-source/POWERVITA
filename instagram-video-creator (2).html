@@ -49,9 +49,7 @@
   .caption-box { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; font-size: 0.8rem; line-height: 1.6; color: #ccc; white-space: pre-wrap; word-break: break-word; min-height: 80px; }
   .caption-actions { display: flex; gap: 8px; width: 100%; max-width: 360px; }
   .caption-actions .btn { flex: 1; padding: 10px; font-size: 0.82rem; }
-  .apikey-box { background: #1e1e28; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-  .apikey-box input { background: none; border: none; color: var(--text); font-size: 0.82rem; width: 100%; outline: none; font-family: monospace; }
-  .apikey-box label { font-size: 0.68rem; color: var(--muted); display: block; margin-bottom: 4px; }
+
 </style>
 </head>
 <body>
@@ -61,11 +59,6 @@
 </header>
 <div class="layout">
   <div class="panel">
-
-    <div class="apikey-box">
-      <label>API KEY ANTHROPIC</label>
-      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
-    </div>
 
     <div>
       <div class="section-label">Producto</div>
@@ -159,9 +152,6 @@ document.getElementById('overlaySel').addEventListener('change', function() {
 });
 
 async function generateVideo() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) { setStatus('⚠️ Ingresá tu API key de Anthropic'); return; }
-
   const product = document.getElementById('productSel').value;
   const contentType = document.getElementById('contentType').value;
   stopAnimation();
@@ -185,13 +175,10 @@ async function generateVideo() {
   const seed = Math.floor(Math.random()*99999);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://powervita.vercel.app/api/claude', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-client-side-key-disclosure': 'true'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',

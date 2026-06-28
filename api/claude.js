@@ -1,4 +1,21 @@
+const ALLOWED_ORIGINS = [
+  'https://navegante279-source.github.io',
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
 export default async function handler(req, res) {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -15,8 +32,8 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    return res.status(200).json(data);
+    return res.status(response.status).json(data);
   } catch (error) {
-    return res.status(500).json({ error: 'Error calling Claude API' });
+    return res.status(500).json({ error: error.message });
   }
 }
