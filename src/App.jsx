@@ -490,12 +490,22 @@ export default function App() {
   const [activeRecipe,setActiveRecipe]=useState(null); const [prodLine,setProdLine]=useState(0);
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
-  const [packModal,setPackModal]=useState(null); const [catalogOpen,setCatalogOpen]=useState(false);
+  const [packModal,setPackModal]=useState(null); const [catalogOpen,setCatalogOpen]=useState(true);
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
     const onScroll=()=>setScrollY(window.scrollY);
     window.addEventListener("scroll",onScroll); return()=>window.removeEventListener("scroll",onScroll);
+  },[]);
+
+  useEffect(()=>{
+    const fired=new Set();
+    const trackScroll=()=>{
+      const pct=Math.round((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100);
+      [25,50,75].forEach(d=>{if(pct>=d&&!fired.has(d)){fired.add(d);trackEvent("ViewContent",{content_name:`Scroll_${d}pct`});}});
+    };
+    window.addEventListener("scroll",trackScroll,{passive:true});
+    return()=>window.removeEventListener("scroll",trackScroll);
   },[]);
 
   const waLink = `https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Te contacto desde ${selCountry||"mi país"} para más info sobre Power Vita 🌿`)}`;
@@ -515,7 +525,7 @@ export default function App() {
     popular: ["REXET","VITA XTRA T+","NUTRADAY"]
   } : null);
 
-  const navSections = [["inicio","Inicio"],["sistema","Sistema"],["negocio","Negocio"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
+  const navSections = [["inicio","Inicio"],["sistema","Sistema"],["recetario","Recetas"],["negocio","Negocio"],["iatools","IA Tools"],["testimonios","Testimonios"],["contacto","Contacto"]];
 
   return (
     <div style={{fontFamily:"Georgia,serif",background:"#FAFAF7",color:"#1a2e1a",overflowX:"hidden"}}>
@@ -696,26 +706,36 @@ export default function App() {
                   <option value="">🌍 Seleccioná tu país...</option>
                   {COUNTRIES.map(c=><option key={c} value={c}>{COUNTRY_DATA[c]?.flag||"🌐"} {c}</option>)}
                 </select>
-                {selectedCountry&&countryData&&(
+                {selectedCountry&&(
+                  COUNTRY_DATA[selectedCountry] ? (
                   <div>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:9}}>
-                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💱 MONEDA</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{countryData.currency}</div></div>
-                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>🚚 ENVÍO</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{countryData.shipping}</div></div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7,marginBottom:9}}>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💱 MONEDA</div><div className="int" style={{fontSize:14,fontWeight:800,color:"#1a2e1a"}}>{COUNTRY_DATA[selectedCountry].currency}</div></div>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>💰 PRECIO</div><div className="int" style={{fontSize:11,fontWeight:800,color:"#1a2e1a"}}>~U$S 50</div><div className="int" style={{fontSize:8,color:"#7a9a7a"}}>por producto</div></div>
+                      <div style={{background:"rgba(45,106,79,0.05)",borderRadius:9,padding:"9px 11px"}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:2}}>🚚 ENVÍO</div><div className="int" style={{fontSize:10,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{COUNTRY_DATA[selectedCountry].shipping}</div></div>
                     </div>
-                    <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {countryData.note}</p></div>
-                    <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>🔥 MÁS PEDIDOS EN {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
-                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} Ver precios para {selectedCountry} →</a>
+                    <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {COUNTRY_DATA[selectedCountry].note}</p></div>
+                    <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>🔥 MÁS PEDIDOS EN {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{COUNTRY_DATA[selectedCountry].popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
+                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`¡Hola! Estoy en ${selectedCountry} ${COUNTRY_DATA[selectedCountry].flag} y quiero armar mi pack de FuXion (~U$S 50) 🌿`)}`} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{COUNTRY_DATA[selectedCountry].flag} Ver precios para {selectedCountry} →</a>
                   </div>
+                  ) : (
+                  <div style={{textAlign:"center",padding:"12px 0"}}>
+                    <div style={{fontSize:28,marginBottom:8}}>🌍</div>
+                    <p className="int" style={{fontSize:12,fontWeight:700,color:"#1a2e1a",marginBottom:4}}>FuXion llega a {selectedCountry}</p>
+                    <p className="int" style={{fontSize:11,color:"#7a9a7a",marginBottom:14,lineHeight:1.5}}>Los productos cuestan ~U$S 50 c/u. Escribinos y te damos el precio exacto en tu moneda.</p>
+                    <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Estoy en ${selectedCountry} y quiero info sobre FuXion 🌿 ¿Cuánto sale y cómo pido?`)}`} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",borderRadius:10,padding:"11px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>💬 Consultar por WhatsApp</a>
+                  </div>
+                  )
                 )}
-                {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver precios</p></div>}
+                {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>Seleccioná tu país para ver info de envío y precio</p></div>}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* RECETARIO OCULTO */}
-      {false && <section id="recetario" style={{padding:"80px 40px",background:"#F0F4ED"}}>
+      {/* RECETARIO */}
+      <section id="recetario" style={{padding:"80px 40px",background:"#F0F4ED"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           <div style={{textAlign:"center",marginBottom:44}}>
             <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Power Vita Kitchen</span>
@@ -739,7 +759,7 @@ export default function App() {
             ))}
           </div>
         </div>
-      </section>}
+      </section>
 
       {/* IA TOOLS */}
       <section id="iatools" style={{padding:"80px 40px",background:"linear-gradient(160deg,#020b18,#041a0e 50%,#020b18)",position:"relative",overflow:"hidden"}}>
@@ -955,7 +975,7 @@ export default function App() {
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
           <a href={FUXION_LINK} target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>🌐 FuXion Store</a>
         </div>
-        <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
+        <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2026 Power Vita · @powervita_uy · +598 98 950 206</div>
       </footer>
 
       {/* MODAL CLIENTE / EMPRENDEDOR */}
@@ -966,9 +986,9 @@ export default function App() {
             <h3 className="pf" style={{fontSize:20,fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{packModal}</h3>
             <p className="int" style={{fontSize:13,color:"#7a9a7a",lineHeight:1.65,marginBottom:28}}>¿Qué te describe mejor? Elegí tu perfil para continuar en FuXion.</p>
             <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
-              <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
+              <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hola! Quiero armar mi ${packModal||"pack"} de FuXion 🌿 ¿Cuánto cuesta en mi país?`)}`} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#2d6a4f,#1a2e1a)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
                 💚 Quiero los productos
-                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>Me registro como Cliente Preferente</div>
+                <div style={{fontSize:10,fontWeight:400,opacity:0.8,marginTop:2}}>Te cotizamos por WhatsApp en tu moneda</div>
               </a>
               <a href={FUXION_LINK} target="_blank" rel="noreferrer" onClick={()=>setPackModal(null)} style={{display:"block",background:"linear-gradient(135deg,#C9A84C,#E8C86A)",color:"#fff",borderRadius:12,padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textDecoration:"none"}}>
                 💼 Quiero el negocio
