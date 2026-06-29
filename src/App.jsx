@@ -1051,39 +1051,7 @@ export default function App() {
             ))}
           </div>
 
-          {/* Catálogo colapsado */}
-          <div style={{textAlign:"center"}}>
-            <button onClick={()=>setCatalogOpen(o=>!o)} className="int" style={{background:"none",border:"1.5px solid rgba(45,106,79,0.2)",borderRadius:999,padding:"10px 24px",fontSize:12,fontWeight:600,color:"#2d6a4f",cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(45,106,79,0.05)";}} onMouseLeave={e=>{e.currentTarget.style.background="none";}}>
-              {catalogOpen?T.catalogHide:T.catalogShow}
-            </button>
-          </div>
-          {catalogOpen&&(
-            <div style={{marginTop:32}}>
-              <div style={{display:"flex",gap:7,marginBottom:24,flexWrap:"wrap"}}>
-                {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"6px 14px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:14}}>
-                {filtProds.map(p=>{
-                  return (
-                  <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} onClick={()=>{setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}} style={{background:"#fff",borderRadius:16,overflow:"hidden",border:`1px solid ${hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id?`0 10px 28px ${p.color}18`:"0 2px 8px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id?"translateY(-3px)":"translateY(0)",display:"flex",flexDirection:"column",position:"relative",cursor:"pointer"}}>
-                    <div style={{background:p.bg,height:100,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-                      <div style={{position:"absolute",top:7,left:7,background:p.color,color:"#fff",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
-                      {p.img?<img src={p.img} alt={p.name} loading="lazy" style={{maxHeight:84,maxWidth:"80%",objectFit:"contain",filter:"drop-shadow(0 3px 8px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
-                      <div style={{display:p.img?"none":"flex",fontSize:36,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
-                    </div>
-                    <div style={{padding:"10px 11px 11px",flex:1,display:"flex",flexDirection:"column",gap:3}}>
-                      <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{p.name}</div>
-                      <p className="int" style={{fontSize:9,color:p.color,fontStyle:"italic",lineHeight:1.4}}>{p.tag}</p>
-                      <button onClick={e=>{e.stopPropagation();setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}} style={{marginTop:"auto",width:"100%",background:"transparent",border:`1.5px solid ${p.color}`,borderRadius:7,padding:"6px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:9,color:p.color,cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background=p.color;e.currentTarget.style.color="#fff";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=p.color;}}>Ver más →</button>
-                    </div>
-                  </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* SELECTOR DE PAÍS — fusionado */}
+          {/* SELECTOR DE PAÍS */}
           <div style={{marginTop:52,paddingTop:52,borderTop:"1px solid rgba(45,106,79,0.1)"}}>
             <div style={{textAlign:"center",marginBottom:28}}>
               <h3 className="pf" style={{fontSize:"clamp(1.2rem,2.5vw,1.7rem)",fontWeight:700,color:"#1a2e1a",marginBottom:6}}>{T.countryTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.countryTitleEm}</em></h3>
@@ -1111,6 +1079,40 @@ export default function App() {
                 {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>{T.countryEmpty}</p></div>}
               </div>
             </div>
+          </div>
+
+          {/* Catálogo — debajo del selector de país */}
+          <div style={{marginTop:48,paddingTop:48,borderTop:"1px solid rgba(45,106,79,0.08)"}}>
+            <div style={{textAlign:"center",marginBottom:16}}>
+              <button onClick={()=>setCatalogOpen(o=>!o)} className="int" style={{background:"none",border:"1.5px solid rgba(45,106,79,0.2)",borderRadius:999,padding:"10px 24px",fontSize:12,fontWeight:600,color:"#2d6a4f",cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(45,106,79,0.05)";}} onMouseLeave={e=>{e.currentTarget.style.background="none";}}>
+                {catalogOpen?T.catalogHide:T.catalogShow}
+              </button>
+            </div>
+            {catalogOpen&&(
+              <div style={{marginTop:24}}>
+                <div style={{display:"flex",gap:7,marginBottom:24,flexWrap:"wrap"}}>
+                  {lineLabels.map((l,i)=>{const lc=i===0?"#1a2e1a":LINE_COLORS[lineKeys[i]]||"#1a2e1a";return(<button key={i} onClick={()=>setProdLine(i)} className="int" style={{padding:"6px 14px",borderRadius:999,fontWeight:700,fontSize:10,cursor:"pointer",border:"2px solid",borderColor:prodLine===i?lc:"rgba(26,46,26,0.14)",background:prodLine===i?lc:"transparent",color:prodLine===i?"#fff":lc,transition:"all .2s"}}>{l}</button>);})}
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:14}}>
+                  {filtProds.map(p=>{
+                    return (
+                    <div key={p.id} onMouseEnter={()=>setHovCard(p.id)} onMouseLeave={()=>setHovCard(null)} onClick={()=>{setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}} style={{background:"#fff",borderRadius:16,overflow:"hidden",border:`1px solid ${hovCard===p.id?p.color+"45":"rgba(0,0,0,0.06)"}`,boxShadow:hovCard===p.id?`0 10px 28px ${p.color}18`:"0 2px 8px rgba(0,0,0,0.04)",transition:"all .3s",transform:hovCard===p.id?"translateY(-3px)":"translateY(0)",display:"flex",flexDirection:"column",position:"relative",cursor:"pointer"}}>
+                      <div style={{background:p.bg,height:100,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+                        <div style={{position:"absolute",top:7,left:7,background:p.color,color:"#fff",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{p.line}</div>
+                        {p.img?<img src={p.img} alt={p.name} loading="lazy" style={{maxHeight:84,maxWidth:"80%",objectFit:"contain",filter:"drop-shadow(0 3px 8px rgba(0,0,0,0.1))"}} onError={e=>{e.target.style.display="none";if(e.target.nextSibling)e.target.nextSibling.style.display="flex";}}/>:null}
+                        <div style={{display:p.img?"none":"flex",fontSize:36,alignItems:"center",justifyContent:"center",width:"100%",height:"100%"}}>{p.emoji}</div>
+                      </div>
+                      <div style={{padding:"10px 11px 11px",flex:1,display:"flex",flexDirection:"column",gap:3}}>
+                        <div className="pf" style={{fontSize:12,fontWeight:700,color:"#1a2e1a",lineHeight:1.3}}>{p.name}</div>
+                        <p className="int" style={{fontSize:9,color:p.color,fontStyle:"italic",lineHeight:1.4}}>{p.tag}</p>
+                        <button onClick={e=>{e.stopPropagation();setModalProduct(p);trackEvent("ViewContent",{content_name:p.name,content_type:"product",content_ids:[String(p.id)]});}} style={{marginTop:"auto",width:"100%",background:"transparent",border:`1.5px solid ${p.color}`,borderRadius:7,padding:"6px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:9,color:p.color,cursor:"pointer",transition:"all .2s"}} onMouseEnter={e=>{e.currentTarget.style.background=p.color;e.currentTarget.style.color="#fff";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=p.color;}}>Ver más →</button>
+                      </div>
+                    </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
