@@ -7,6 +7,8 @@ const FUXION_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson";
 const META_PIXEL_ID = "2212676212813152";
 // Pegá acá el ID del video de YouTube cuando esté listo (ej: "dQw4w9WgXcQ")
 const YOUTUBE_VIDEO_ID = "";
+// URL del post/reel de Instagram (con barra al final)
+const INSTAGRAM_POST_URL = "https://www.instagram.com/p/DSGZtksipld/";
 
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
@@ -973,22 +975,37 @@ export default function App() {
         </div>
       </section>
 
-      {/* VIDEO SECTION — activar pegando el ID de YouTube en YOUTUBE_VIDEO_ID */}
-      {YOUTUBE_VIDEO_ID && (
+      {/* VIDEO SECTION */}
+      {(INSTAGRAM_POST_URL || YOUTUBE_VIDEO_ID) && (
         <section style={{padding:"40px 20px 0",background:"#FAFAF7",display:"flex",flexDirection:"column",alignItems:"center"}}>
-          <div style={{maxWidth:700,width:"100%"}}>
-            <div style={{position:"relative",paddingBottom:"56.25%",height:0,borderRadius:18,overflow:"hidden",boxShadow:"0 16px 48px rgba(45,106,79,0.18)"}}>
-              <iframe
-                style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",border:"none"}}
-                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&modestbranding=1`}
-                title="Power Vita Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-            <div style={{textAlign:"center",marginTop:16,marginBottom:8}}>
-              <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Video_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 28px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
-                💬 Quiero más info → Escribir ahora
+          <div style={{maxWidth:INSTAGRAM_POST_URL?480:700,width:"100%"}}>
+            {INSTAGRAM_POST_URL ? (
+              <div style={{display:"flex",justifyContent:"center"}}>
+                <iframe
+                  src={`${INSTAGRAM_POST_URL}embed/captioned/`}
+                  width="400"
+                  height="505"
+                  frameBorder="0"
+                  scrolling="no"
+                  allowTransparency="true"
+                  style={{borderRadius:14,boxShadow:"0 16px 48px rgba(45,106,79,0.18)",maxWidth:"100%",display:"block"}}
+                  title="Power Vita Instagram"
+                />
+              </div>
+            ) : (
+              <div style={{position:"relative",paddingBottom:"56.25%",height:0,borderRadius:18,overflow:"hidden",boxShadow:"0 16px 48px rgba(45,106,79,0.18)"}}>
+                <iframe
+                  style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",border:"none"}}
+                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&modestbranding=1`}
+                  title="Power Vita Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            )}
+            <div style={{textAlign:"center",marginTop:20,marginBottom:8}}>
+              <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Video_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"13px 30px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
+                💬 Quiero más info · Escribir ahora
               </a>
             </div>
           </div>
