@@ -5,6 +5,8 @@ const LangCtx = createContext(null);
 const WA = "59898950206";
 const FUXION_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson";
 const META_PIXEL_ID = "2212676212813152";
+// Pegá acá el ID del video de YouTube cuando esté listo (ej: "dQw4w9WgXcQ")
+const YOUTUBE_VIDEO_ID = "";
 
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
@@ -861,6 +863,7 @@ export default function App() {
   const T=TRANSLATIONS[lang];
   const adVariant = new URLSearchParams(window.location.search).get('v') || '';
   const isHinchazion = adVariant === 'hinchazion';
+  const isVideo = adVariant === 'video';
 
   useEffect(()=>{
     setTimeout(()=>setLoaded(true),150);
@@ -868,7 +871,9 @@ export default function App() {
     window.addEventListener("scroll",onScroll); return()=>window.removeEventListener("scroll",onScroll);
   },[]);
 
-  const waLink = waHref(WA, `Hola! Te contacto desde ${selCountry||"mi país"} para más info sobre Power Vita 🌿`);
+  const waLink = waHref(WA, isVideo
+    ? `¡Hola! Vi el video de Power Vita y quiero información 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo hago mi primer pedido?`
+    : `¡Hola! Quiero información sobre Power Vita FuXion 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`);
   const certDouble = [...CERTS,...CERTS];
   const testDouble = [...TESTIMONIALS,...TESTIMONIALS];
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
@@ -928,20 +933,24 @@ export default function App() {
         <div style={{position:"absolute",bottom:-40,left:-40,width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
         <div className={loaded?"fade-up":""} style={{position:"relative",zIndex:1,maxWidth:640}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px",marginBottom:22}}>
-            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}</span>
-          </div>
-
-          <div style={{display:"flex",justifyContent:"center",marginBottom:22}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",borderRadius:999,padding:"5px 16px"}}>
-              <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}</span>
-            </div>
+            <span className="int" style={{fontSize:10,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>
+              {isVideo ? "🎬 Como viste en el video · 37 Países" : isHinchazion ? "Solución natural certificada · 37 Países" : T.heroBadge}
+            </span>
           </div>
 
           <h1 className="pf" style={{fontSize:"clamp(2.4rem,5vw,4rem)",fontWeight:700,lineHeight:1.06,color:"#1a2e1a",letterSpacing:-2,marginBottom:20}}>
-            {isHinchazion ? <>¿Sufrís de <em style={{fontStyle:"italic",color:"#2d6a4f"}}>hinchazón</em> o pesadez después de comer?</> : <>{T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}</>}
+            {isVideo
+              ? <>Lo que viste en el video es <em style={{fontStyle:"italic",color:"#2d6a4f"}}>real.</em></>
+              : isHinchazion
+                ? <>¿Sufrís de <em style={{fontStyle:"italic",color:"#2d6a4f"}}>hinchazón</em> o pesadez después de comer?</>
+                : <>{T.heroTitle1}<br/><em style={{fontStyle:"italic",color:"#2d6a4f"}}>{T.heroTitleEm}</em><br/>{T.heroTitle2}</>}
           </h1>
           <p className="int" style={{fontSize:16,lineHeight:1.8,color:"#5a7a5a",maxWidth:460,margin:"0 auto 36px",fontWeight:300}}>
-            {isHinchazion ? "No es lo que comés — es lo que tu cuerpo no puede procesar. FuXion tiene la solución natural certificada en 37 países." : T.heroSub}
+            {isVideo
+              ? "Biotecnología natural certificada en 37 países. Escribinos ahora y en menos de 10 minutos te armamos tu plan personalizado."
+              : isHinchazion
+                ? "No es lo que comés — es lo que tu cuerpo no puede procesar. FuXion tiene la solución natural certificada en 37 países."
+                : T.heroSub}
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
             <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
@@ -963,6 +972,28 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* VIDEO SECTION — activar pegando el ID de YouTube en YOUTUBE_VIDEO_ID */}
+      {YOUTUBE_VIDEO_ID && (
+        <section style={{padding:"40px 20px 0",background:"#FAFAF7",display:"flex",flexDirection:"column",alignItems:"center"}}>
+          <div style={{maxWidth:700,width:"100%"}}>
+            <div style={{position:"relative",paddingBottom:"56.25%",height:0,borderRadius:18,overflow:"hidden",boxShadow:"0 16px 48px rgba(45,106,79,0.18)"}}>
+              <iframe
+                style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",border:"none"}}
+                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&modestbranding=1`}
+                title="Power Vita Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div style={{textAlign:"center",marginTop:16,marginBottom:8}}>
+              <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Video_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 28px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
+                💬 Quiero más info → Escribir ahora
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* SEGMENTATION CARDS */}
       <section style={{padding:"32px 20px",background:"#F0F4ED"}}>
@@ -1317,9 +1348,9 @@ export default function App() {
 
       {/* STICKY MOBILE CTA */}
       <style>{`.sticky-wa-bar{display:flex}@media(min-width:640px){.sticky-wa-bar{display:none!important}}@media(max-width:639px){footer{padding-bottom:72px!important}}`}</style>
-      <a href={waHref(WA,"Hola! Quiero más info sobre Power Vita FuXion 🌿 Soy de [tu país].")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
+      <a href={waHref(WA,`¡Hola! Quiero información sobre Power Vita 🌿 Soy de ${selectedCountry||detectCountry()||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
         <span style={{fontSize:18}}>💬</span>
-        <span>Consultar ahora · Respondemos al instante</span>
+        <span>Consultar precio · Respondemos al instante</span>
       </a>
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
