@@ -905,6 +905,15 @@ async function getConversation(phone) {
   return data;
 }
 
+async function getLead(phone) {
+  const { data } = await supabase
+    .from("leads")
+    .select("*")
+    .eq("phone", phone)
+    .maybeSingle();
+  return data;
+}
+
 async function saveConversation(phone, updates) {
   await supabase
     .from("conversations")
@@ -918,8 +927,15 @@ async function saveLead(phone, updates) {
 }
 
 // ── MAIN MESSAGE HANDLER ──────────────────────────────────────
-async function handleMessage(phone, text, contactName) {
+function extractRef(text) {
+  const m = text.match(/\[ref:([^\]]+)\]\s*$/i);
+  if (!m) return { clean: text, ref: "" };
+  return { clean: text.slice(0, m.index).trim(), ref: m[1] };
+}
+
+async function handleMessage(phone, rawText, contactName) {
   try {
+    const { clean: text, ref: landingRef } = extractRef(rawText);
     const conv = await getConversation(phone);
 
     // Rate limit check
@@ -962,9 +978,10 @@ async function handleMessage(phone, text, contactName) {
         `👤 ${contactName || "Sin nombre"} ${flag} ${countryInfo.country}\n` +
         `📱 wa.me/${phone}\n` +
         (fromAd ? `📢 Viene del anuncio\n` : "") +
+        (landingRef ? `🔗 Origen landing: ${landingRef}\n` : "") +
         `💬 Dice: "${text}"`;
       sendWAMessage(OWNER_PHONE, newLeadMsg); // sin await — no bloquear la respuesta
-      console.log(`🆕 New lead: ${phone} [${countryInfo.country}]`);
+      console.log(`🆕 New lead: ${phone} [${countryInfo.country}]${landingRef ? ` ref=${landingRef}` : ""}`);
     }
 
     // ── PENDING TRANSFER CONFIRMATION ─────────────────────────
@@ -990,8 +1007,8 @@ async function handleMessage(phone, text, contactName) {
         return;
       }
 
-      if (isYesReply(text)) {
-        // Confirma explícitamente — proceder con la transferencia
+      if (isYesReply(text) || hasBuyingSignal(text)) {
+        // Confirma explícitamente (o ya pregunta cómo pagar/recibir) — proceder con la transferencia
         const confirmMsgs = {
           es: `¡Perfecto! 🙌 Andrés ya está al tanto y te va a escribir muy pronto con el precio para ${countryInfo.country} 😊🌿`,
           pt: `Ótimo! 🙌 Andrés já foi notificado e vai te escrever em breve com o preço 😊🌿`,
@@ -1151,10 +1168,53 @@ async function handleMessage(phone, text, contactName) {
   }
 }
 
-// ── SEGUIMIENTO INTELIGENTE (3 etapas) ───────────────────────
-// Etapa 1: 24hs  → recordatorio suave
-// Etapa 2: 2 días → mensaje de valor + urgencia
-// Etapa 3: 5 días → último intento, puerta abierta
+// ── NUDGE POR "LEÍDO SIN RESPUESTA" ───────────────────────────
+// Meta manda un evento de status "read" cuando el lead ve nuestro mensaje.
+// Si pasan 25 min y sigue sin responder (status sigue "active"), le mandamos
+// un empujón corto antes de esperar a las 8hs del seguimiento normal.
+const READ_NUDGE_DELAY_MS = 25 * 60 * 1000;
+const pendingReadNudges = new Set();
+
+const READ_NUDGE_MSGS = {
+  es: (name, agent) => `¡Vi que leíste mi mensaje! 👀${name ? ` ${name}` : ""} ¿Te quedó alguna duda o querés que te pase el precio directo? Soy ${agent}, estoy para ayudarte 🌿`,
+  pt: (name, agent) => `Vi que você leu minha mensagem! 👀${name ? ` ${name}` : ""} Ficou alguma dúvida ou quer que eu te passe o preço direto? Sou ${agent} 🌿`,
+  en: (name, agent) => `Saw you read my message! 👀${name ? ` ${name}` : ""} Any questions, or want me to send you the price directly? It's ${agent}, here to help 🌿`,
+  fr: (name, agent) => `J'ai vu que vous avez lu mon message! 👀${name ? ` ${name}` : ""} Des questions, ou je vous envoie le prix directement? C'est ${agent} 🌿`,
+  it: (name, agent) => `Ho visto che hai letto il mio messaggio! 👀${name ? ` ${name}` : ""} Hai dubbi o vuoi che ti passi il prezzo diretto? Sono ${agent} 🌿`,
+  de: (name, agent) => `Ich habe gesehen, dass Sie meine Nachricht gelesen haben! 👀${name ? ` ${name}` : ""} Noch Fragen, oder soll ich Ihnen direkt den Preis schicken? Hier ist ${agent} 🌿`,
+};
+
+function scheduleReadNudge(phone) {
+  if (pendingReadNudges.has(phone)) return; // ya hay un chequeo programado, no duplicar
+  pendingReadNudges.add(phone);
+  setTimeout(async () => {
+    pendingReadNudges.delete(phone);
+    try {
+      const lead = await getLead(phone);
+      if (!lead || lead.status !== "active") return; // ya respondió o cambió de estado
+
+      const conv = await getConversation(phone);
+      if (!conv || conv.transferred || conv.purchased || conv.opted_out) return;
+
+      const agentName = getAgentName(phone);
+      const lang = lead.lang || "es";
+      const msgFn = READ_NUDGE_MSGS[lang] || READ_NUDGE_MSGS.es;
+      const msg = msgFn(lead.name, agentName);
+
+      await sendWAMessage(phone, msg);
+      await saveLead(phone, { status: "followup_1" }); // sigue la cadena normal desde stage 1
+      console.log(`👀 Read-nudge sent to ${phone}`);
+    } catch (err) {
+      console.error("Read-nudge error:", err.message);
+    }
+  }, READ_NUDGE_DELAY_MS);
+}
+
+// ── SEGUIMIENTO INTELIGENTE (4 etapas) ────────────────────────
+// Etapa 0: 8hs   → red de seguridad si no hubo recibo de lectura
+// Etapa 1: 24hs  → recordatorio suave (o antes, via nudge de lectura)
+// Etapa 2: 4 días → mensaje de valor + urgencia
+// Etapa 3: seguimiento de consulta de salud a las 96hs
 
 const FOLLOWUP_STAGES = [
   {
@@ -1173,7 +1233,7 @@ const FOLLOWUP_STAGES = [
   },
   {
     stage: 1,
-    hoursAfter: 72,
+    hoursAfter: 24,
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
@@ -1187,7 +1247,7 @@ const FOLLOWUP_STAGES = [
   },
   {
     stage: 2,
-    hoursAfter: 168,
+    hoursAfter: 96,
     statusRequired: "followup_2",
     nextStatus: "cold",
     msgs: {
@@ -1276,7 +1336,14 @@ app.post("/webhook", async (req, res) => {
 
     for (const e of entry || []) {
       for (const change of e.changes || []) {
-        const { messages, contacts } = change.value || {};
+        const { messages, contacts, statuses } = change.value || {};
+
+        for (const st of statuses || []) {
+          if (st.status === "read" && st.recipient_id && st.recipient_id !== OWNER_PHONE) {
+            scheduleReadNudge(st.recipient_id);
+          }
+        }
+
         if (!messages?.length) continue;
 
         for (const msg of messages) {

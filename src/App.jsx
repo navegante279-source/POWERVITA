@@ -111,8 +111,9 @@ function detectCountry() {
 }
 function eventId(name) { return `${name}_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; }
 function trackEvent(n, p={}) { if (window.fbq) window.fbq("track", n, p, { eventID: eventId(n) }); }
-function waHref(phone, text) {
-  const msg = encodeURIComponent(text);
+function waHref(phone, text, ref) {
+  const full = ref ? `${text}\n\n[ref:${ref}]` : text;
+  const msg = encodeURIComponent(full);
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"")
     ? `whatsapp://send?phone=${phone}&text=${msg}`
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
@@ -213,7 +214,7 @@ Usa solo: REXET,LIQUID FIBER,NUTRADAY,VITA XTRA T+,XPEED,BIOPRO+,PROTEIN FIT,NO 
         <div style={{marginBottom:10}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,fontWeight:800,color:"#2d6a4f",letterSpacing:1.5,marginBottom:5}}>📅 7 DÍAS</div><div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:3}}>{plan.dias?.map((d,i)=><div key={i} style={{minWidth:95,background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:8,padding:"6px",flexShrink:0}}><div style={{fontFamily:"'Inter',sans-serif",fontWeight:700,color:"#2d6a4f",fontSize:11,textAlign:"center",background:"rgba(45,106,79,0.07)",borderRadius:4,padding:"1px 0",marginBottom:3}}>{d.dia}</div>{[{k:"desayuno",i:"🌅"},{k:"almuerzo",i:"☀️"},{k:"cena",i:"🌙"},{k:"snack",i:"🍎"}].map(({k,i:ic})=><div key={k} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#4a5568",marginBottom:2}}>{ic} {d[k]}</div>)}</div>)}</div></div>
         {plan.tips && <div style={{marginBottom:12}}>{plan.tips.map((t,i)=><div key={i} style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#2d5a3d",padding:"2px 0",display:"flex",gap:5}}><span style={{color:"#C9A84C"}}>✓</span>{t}</div>)}</div>}
         <div style={{display:"flex",gap:7}}>
-          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"NutriPlan_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
+          <a href={waHref(WA, "¡Hola! Generé mi plan nutricional con Power Vita IA 🌿 Quiero empezar.", "NutriPlan")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"NutriPlan_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.nutriStart}</a>
           <button onClick={()=>setPlan(null)} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.nutriNew}</button>
         </div>
       </div>
@@ -263,7 +264,7 @@ function SymptomAnalyzer() {
       <div style={{marginBottom:8}}>{result.productos?.map((p,i)=><div key={i} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.1)",borderRadius:9,padding:"7px 9px",marginBottom:4}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}><span style={{fontFamily:"'Playfair Display',Georgia,serif",fontWeight:700,color:"#1a2e1a",fontSize:11}}>{p.nombre}</span><span style={{fontFamily:"'Inter',sans-serif",background:"#2d6a4f",color:"#fff",borderRadius:999,padding:"1px 6px",fontSize:11,fontWeight:700}}>{p.match}%</span></div><div style={{height:3,background:"rgba(45,106,79,0.1)",borderRadius:2,marginBottom:3}}><div style={{height:"100%",width:`${p.match}%`,background:"linear-gradient(90deg,#2d6a4f,#C9A84C)",borderRadius:2}}/></div><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{p.razon}</p></div>)}</div>
       <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"8px 10px",marginBottom:10}}><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,color:"#8B6914",fontStyle:"italic"}}>{result.mensaje_motivador}</p></div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Symptom_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
+        <a href={waHref(WA, "¡Hola! Analicé mis síntomas con Power Vita IA 🌿", "Symptom")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Symptom_WA"})} style={{flex:1,background:"#25D366",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>{T.symptomStart}</a>
         <button onClick={()=>{setResult(null);setText("");}} style={{flex:1,background:"rgba(45,106,79,0.07)",border:"1px solid rgba(45,106,79,0.18)",color:"#2d6a4f",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>{T.symptomNew}</button>
       </div>
     </div>
@@ -308,7 +309,7 @@ SOLO JSON: {"mes1":{"min":100,"max":400,"descripcion":""},"mes3":{"min":400,"max
       <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:9,padding:"7px 9px",marginBottom:8}}><p style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{result.ventaja_pais}</p></div>
       <div style={{marginBottom:9}}>{result.estrategia?.map((s,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:4}}><div style={{width:15,height:15,borderRadius:"50%",background:"linear-gradient(135deg,#C9A84C,#FFD700)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:900,flexShrink:0,color:"#1a1a1a"}}>{i+1}</div><span style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.95)",lineHeight:1.5}}>{s}</span></div>)}</div>
       <div style={{display:"flex",gap:7}}>
-        <a href={waHref(WA, `¡Hola! Calculé mi potencial desde ${form.country} con Power Vita IA 💰 Quiero ser socio.`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"ROI_Socio_WA"})} style={{flex:1,background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>👑 Quiero ser socio</a>
+        <a href={waHref(WA, `¡Hola! Calculé mi potencial desde ${form.country} con Power Vita IA 💰 Quiero ser socio.`, "ROI_Socio")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"ROI_Socio_WA"})} style={{flex:1,background:"linear-gradient(135deg,#C9A84C,#FFD700)",color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>👑 Quiero ser socio</a>
         <button onClick={()=>{setResult(null);setForm({country:"",hours:"",contacts:"",experience:""}); }} style={{flex:1,background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",color:"rgba(255,255,255,0.95)",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,cursor:"pointer"}}>🔄 Recalcular</button>
       </div>
     </div>
@@ -348,7 +349,7 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
       setStep(3);
     }
   };
-  const openWA = () => { if (!plan) return; const msg=encodeURIComponent(`¡Hola! Generé mi Plan Elite 90 días con Power Vita IA 👑\nNombre: ${form.name}\nPaís: ${form.country}\nObjetivo: ${form.goal}\nFase 1: ${plan.fases?.[0]?.nombre}\nFase 2: ${plan.fases?.[1]?.nombre}\nFase 3: ${plan.fases?.[2]?.nombre}\n\n¿Cuál es el precio en ${form.country}?`); window.open(waHref(WA, decodeURIComponent(msg)),"_blank"); };
+  const openWA = () => { if (!plan) return; const msg=encodeURIComponent(`¡Hola! Generé mi Plan Elite 90 días con Power Vita IA 👑\nNombre: ${form.name}\nPaís: ${form.country}\nObjetivo: ${form.goal}\nFase 1: ${plan.fases?.[0]?.nombre}\nFase 2: ${plan.fases?.[1]?.nombre}\nFase 3: ${plan.fases?.[2]?.nombre}\n\n¿Cuál es el precio en ${form.country}?`); window.open(waHref(WA, decodeURIComponent(msg), "Elite_Plan"),"_blank"); };
   const inp = { width:"100%", background:"rgba(255,255,255,0.07)", border:"1.5px solid rgba(201,168,76,0.22)", borderRadius:9, padding:"8px 10px", fontSize:11, outline:"none", color:"#fff", boxSizing:"border-box", fontFamily:"'Inter',sans-serif" };
   if (step===1) return (
     <div style={{padding:"20px"}}>
@@ -447,7 +448,7 @@ function AntesDespues() {
           {metrics.map(key=>{const val=showAfter?c.after[key]:c.before[key];return(<div key={key} style={{background:showAfter?`${color}07`:"rgba(229,57,53,0.04)",border:`1px solid ${showAfter?color+"18":"rgba(229,57,53,0.1)"}`,borderRadius:8,padding:"7px 9px",transition:"all .3s"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",marginBottom:2}}>{key}</div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:showAfter?color:"#e53e3e"}}>{val}</div>{showAfter&&<div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366",marginTop:1}}>{c.diff[key]}</div>}</div>);})}
         </div>
         <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 9px",marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:16,color:"#C9A84C",lineHeight:0.8,marginBottom:3}}>"</div><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.6}}>{c.quote}</p></div>
-        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"AntesDespues_WA"})} style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
+        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`, "AntesDespues")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"AntesDespues_WA"})} style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
       </div>
     </div>
   );
@@ -873,9 +874,10 @@ export default function App() {
     window.addEventListener("scroll",onScroll); return()=>window.removeEventListener("scroll",onScroll);
   },[]);
 
-  const waLink = waHref(WA, isVideo
+  const waLinkFor = (ref) => waHref(WA, isVideo
     ? `¡Hola! Vi el video de Power Vita y quiero información 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo hago mi primer pedido?`
-    : `¡Hola! Quiero información sobre Power Vita FuXion 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`);
+    : `¡Hola! Quiero información sobre Power Vita FuXion 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`, ref);
+  const waLink = waLinkFor("nav");
   const certDouble = [...CERTS,...CERTS];
   const testDouble = [...TESTIMONIALS,...TESTIMONIALS];
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
@@ -956,7 +958,7 @@ export default function App() {
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
             <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
-            <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
+            <a href={waLinkFor("hero")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
           </div>
 
           <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:40,flexWrap:"wrap"}}>
@@ -1004,7 +1006,7 @@ export default function App() {
               </div>
             )}
             <div style={{textAlign:"center",marginTop:20,marginBottom:8}}>
-              <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Video_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"13px 30px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
+              <a href={waLinkFor("video_section")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Video_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"13px 30px",borderRadius:100,fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.35)"}}>
                 💬 Quiero más info · Escribir ahora
               </a>
             </div>
@@ -1067,7 +1069,7 @@ export default function App() {
                     <span style={{background:"rgba(0,0,0,0.04)",borderRadius:999,padding:"3px 9px",fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>+más</span>
                   </div>
                   <div style={{display:"flex",gap:7,marginTop:"auto"}}>
-                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
+                    <a href={waHref(WA, `Hola! Me interesa el Paso ${p.step} (${p.title}) de FuXion 🌿 ¿Cuál es el precio en mi país?`, `Paso_${p.step}`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`Paso_${p.step}_Precio`})} style={{flex:1,background:p.color,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                   </div>
                 </div>
               </div>
@@ -1093,7 +1095,7 @@ export default function App() {
                 <p className="int" style={{fontSize:12,color:"#7a9a7a",lineHeight:1.65,marginBottom:14}}>{pack.desc}</p>
                 <div style={{marginBottom:18}}>{pack.includes.map((item,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}><div style={{width:15,height:15,borderRadius:"50%",background:`${pack.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:pack.color,fontSize:8,fontWeight:800}}>✓</span></div><span className="int" style={{fontSize:11,color:"#4a5568"}}>{item}</span></div>)}</div>
                 <div style={{display:"flex",gap:8}}>
-                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
+                  <a href={waHref(WA, `Hola! Me interesa el ${pack.name} de Power Vita FuXion 🌿 ¿Cuál es el precio en mi país?`, pack.name.replace(/\s+/g,"_"))} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${pack.name}_Precio`})} style={{flex:1,background:`linear-gradient(135deg,${pack.color}cc,${pack.color})`,color:"#fff",borderRadius:10,padding:"10px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none"}}>💬 Consultar precio →</a>
                 </div>
               </div>
             ))}
@@ -1121,7 +1123,7 @@ export default function App() {
                     </div>
                     <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 10px",marginBottom:9}}><p className="int" style={{fontSize:10,color:"#8B6914",lineHeight:1.5}}>ℹ️ {countryData.note}</p></div>
                     <div style={{marginBottom:11}}><div className="int" style={{fontSize:9,fontWeight:700,color:"#2d6a4f",marginBottom:4}}>{T.countryPopular} {selectedCountry.toUpperCase()}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{countryData.popular.map(p=><div key={p} style={{background:"#fff",border:"1px solid rgba(45,106,79,0.13)",borderRadius:7,padding:"2px 8px",fontFamily:"'Inter',sans-serif",fontSize:9,fontWeight:700,color:"#2d6a4f"}}>{p}</div>)}</div></div>
-                    <a href={waHref(WA, `¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`)} target="_blank" rel="noreferrer" style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} {T.countryViewPrices} {selectedCountry} →</a>
+                    <a href={waHref(WA, `¡Hola! Estoy en ${selectedCountry} ${countryData.flag} y quiero ver los precios de FuXion 🌿`, "CountryBlock")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"CountryBlock_WA"})} style={{display:"block",width:"100%",background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",borderRadius:10,padding:"11px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:12,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{countryData.flag} {T.countryViewPrices} {selectedCountry} →</a>
                   </div>
                 )}
                 {!selectedCountry&&<div style={{textAlign:"center",padding:"8px 0"}}><div style={{fontSize:24,marginBottom:4}}>🌍</div><p className="int" style={{fontSize:11,color:"#9ca3af"}}>{T.countryEmpty}</p></div>}
@@ -1296,7 +1298,7 @@ export default function App() {
             {T.faqQA.map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
           </div>
           <div style={{textAlign:"center",marginTop:36}}>
-            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"FAQ_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
+            <a href={waHref(WA, "Hola! Tengo una pregunta sobre FuXion y Power Vita 🌿", "FAQ")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"FAQ_WA"})} className="int" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"12px 24px",borderRadius:12,fontWeight:700,textDecoration:"none",fontSize:13}}>{T.faqMoreQ}</a>
           </div>
         </div>
       </section>
@@ -1321,7 +1323,7 @@ export default function App() {
         </div>
         <div className="int" style={{color:"rgba(255,255,255,0.32)",fontSize:10,marginBottom:20}}>{T.footerSub}</div>
         <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
-          <a href={waLink} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Footer_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
+          <a href={waLinkFor("footer")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Footer_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
         </div>
         <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
@@ -1354,8 +1356,8 @@ export default function App() {
               </div>
               <hr style={{border:"none",borderTop:"1px solid rgba(0,0,0,0.07)",marginBottom:14}}/>
               <div style={{display:"flex",flexDirection:"column",gap:9}}>
-                <a href={waHref(WA, `Hola! Me interesa ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${modalProduct.name}_Precio`})} style={{display:"block",width:"100%",background:"#25D366",color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>💬 Consultar precio en mi país</a>
-                <a href={waHref(WA, `Hola! Quiero comprar ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cómo lo pido?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("InitiateCheckout",{content_name:modalProduct.name,content_type:"product",content_ids:[String(modalProduct.id)],currency:"USD"})} style={{display:"block",width:"100%",background:modalProduct.color,color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>🛒 Lo quiero · ¿Cómo lo pido?</a>
+                <a href={waHref(WA, `Hola! Me interesa ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`, `Modal_${modalProduct.name.replace(/\s+/g,"_")}_Precio`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${modalProduct.name}_Precio`})} style={{display:"block",width:"100%",background:"#25D366",color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>💬 Consultar precio en mi país</a>
+                <a href={waHref(WA, `Hola! Quiero comprar ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cómo lo pido?`, `Modal_${modalProduct.name.replace(/\s+/g,"_")}_Comprar`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("InitiateCheckout",{content_name:modalProduct.name,content_type:"product",content_ids:[String(modalProduct.id)],currency:"USD"})} style={{display:"block",width:"100%",background:modalProduct.color,color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>🛒 Lo quiero · ¿Cómo lo pido?</a>
               </div>
               <p className="int" style={{fontSize:10,color:"#9ca3af",textAlign:"center",marginTop:9}}>Entrega disponible en +20 países de Latinoamérica 🌍</p>
             </div>
@@ -1365,13 +1367,13 @@ export default function App() {
 
       {/* STICKY MOBILE CTA */}
       <style>{`.sticky-wa-bar{display:flex}@media(min-width:640px){.sticky-wa-bar{display:none!important}}@media(max-width:639px){footer{padding-bottom:72px!important}}`}</style>
-      <a href={waHref(WA,`¡Hola! Quiero información sobre Power Vita 🌿 Soy de ${selectedCountry||detectCountry()||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
+      <a href={waHref(WA,`¡Hola! Quiero información sobre Power Vita 🌿 Soy de ${selectedCountry||detectCountry()||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`,"StickyBar")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"StickyBar_Mobile"})} className="sticky-wa-bar" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:300,background:"#25D366",color:"#fff",textAlign:"center",padding:"14px 20px",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:14,textDecoration:"none",boxShadow:"0 -4px 20px rgba(0,0,0,0.18)",alignItems:"center",justifyContent:"center",gap:8}}>
         <span style={{fontSize:18}}>💬</span>
         <span>Consultar precio · Respondemos al instante</span>
       </a>
 
       <Chat open={chatOpen} onClose={()=>setChatOpen(false)}/>
-      <a href={waHref(WA,`Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})} style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}><span style={{fontSize:18}}>💬</span> Hacer pedido</a>
+      <a href={waHref(WA,`Hola! Quiero hacer mi pedido de Power Vita 🌿 Estoy en ${selectedCountry||detectCountry()||"mi país"}`,"FloatingBtn")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"FloatingWA_Comprar"})} style={{position:"fixed",bottom:80,right:16,zIndex:249,display:"flex",alignItems:"center",gap:8,background:"#25D366",color:"#fff",padding:"11px 18px",borderRadius:100,textDecoration:"none",boxShadow:"0 8px 24px rgba(37,211,102,0.5)",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13}}><span style={{fontSize:18}}>💬</span> Hacer pedido</a>
       <button onClick={()=>{if(!chatOpen)trackEvent("Contact",{content_name:"Chat_Open"});setChatOpen(o=>!o);}} style={{position:"fixed",bottom:20,right:20,zIndex:250,width:48,height:48,borderRadius:"50%",border:"none",background:chatOpen?"#0d3d24":"linear-gradient(135deg,#1a2e1a,#2d6a4f)",color:"#fff",fontSize:19,cursor:"pointer",boxShadow:"0 7px 20px rgba(26,46,26,0.38)",transition:"all .3s"}}>
         {chatOpen?"✕":"🌿"}
       </button>
@@ -1392,7 +1394,7 @@ function LeadFormInline({ T }) {
     const gl = goals.find(g=>g.v===form.goal)?.l||form.goal;
     const msg = encodeURIComponent(`¡Hola! Soy ${form.name} de ${form.country} 🌍\nMe interesa: ${gl}\n${form.email?`Email: ${form.email}\n`:""}Quiero mi plan personalizado con Power Vita 🌿`);
     trackEvent("Lead", { content_name:gl, country:form.country });
-    window.open(waHref(WA, decodeURIComponent(msg)),"_blank");
+    window.open(waHref(WA, decodeURIComponent(msg), "LeadForm"),"_blank");
     setSent(true);
   };
   const inp = { width:"100%", background:"rgba(45,106,79,0.04)", border:"1.5px solid rgba(45,106,79,0.16)", borderRadius:10, padding:"10px 12px", fontFamily:"'Inter',sans-serif", fontSize:12, outline:"none", color:"#1a2e1a", boxSizing:"border-box" };
