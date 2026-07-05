@@ -425,9 +425,9 @@ function getBuyLink(country, phone = "") {
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
   "Prunex 1": {
-    "Uruguay":   { amount: "1.710",  currency: "pesos uruguayos",   symbol: "$U" },
-    "Argentina": { amount: "45.550", currency: "pesos argentinos",  symbol: "$"  },
-    "Colombia":  { amount: "38.700", currency: "pesos colombianos", symbol: "$"  },
+    "Uruguay":   { amount: "1.710",  currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073072" },
+    "Argentina": { amount: "45.550", currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085903" },
+    "Colombia":  { amount: "38.700", currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086029" },
   },
   "Vita Xtra T+": {
     "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3062050" },
