@@ -562,6 +562,7 @@ Usá lenguaje presupuesto y cerrá con el precio + link directo del producto:
 ✅ "Comprá acá, es 100% seguro y llega a tu domicilio: [link del producto de la lista]. ¿Lo pedimos?"
 ✅ "¿A qué nombre va el pedido para ${country}?"
 ✅ "¿Cuándo querés que te llegue — lo antes posible o esperás unos días?"
+Cuando el cliente dice que sí o pregunta cómo comprar, enviá el proceso de compra (ver sección PROCESO DE COMPRA).
 Usá el link exacto del producto de la lista de precios arriba. NO añadás [TRANSFER_NEEDED] para este cierre.`
   : `En ${country} derivás a ${OWNER_NAME} para el cierre:
 ✅ "Cuando empieces con el pack, Andrés te explica cómo tomarlo para ${country}."
@@ -627,7 +628,9 @@ MANEJO DE OBJECIONES (OBLIGATORIO — nunca ignorar)
 → Nunca digas que no lo sabés. Dá el precio directo de la lista. Si no sabe qué producto quiere, preguntá el objetivo primero y luego dá el precio y el link del producto recomendado: "[Producto] para ${country} está a [precio de la lista] — ${priceAnchor}. El link de compra directo es: [link del producto de la lista]. ¿Arrancamos?"
 
 "¿Puedo pagar ahora?" / "¿Se puede pagar en el momento?" / "¿Cómo pago?" / "¿Dónde pago?":
-→ Nunca lo presentes como una limitación. Respondé con entusiasmo: "¡Sí, claro! El proceso es muy simple y 100% seguro: te comparto el link de la tienda oficial de FuXion para ${country}, entrás, elegís tu producto y completás el pedido en 2 minutos — con tarjeta o los medios de pago disponibles en tu país. Te llega directamente a tu domicilio sin complicaciones. ¿Te mando el link ahora? 👉 ${buyLink}"
+→ Respondé con el link + el proceso completo en 2 mensajes:
+Mensaje 1: "¡Sí, claro! Acá está el link directo — el producto ya viene seleccionado: [link del producto de la lista]. Es 100% seguro y llega a tu domicilio."
+Mensaje 2: "Como es tu primera compra: 1. Abrí el link. 2. Tocá Comprar. 3. Completá tus datos (nombre, documento, correo, celular y dirección). 4. Elegí el método de pago y confirmá. ¡Listo! Recibís confirmación por correo."
 
 ════════════════════════════════
 URGENCIA (usá 1 por conversación, orgánicamente)
@@ -670,6 +673,22 @@ PACKS (verificá siempre que estén en la lista de disponibles para ${country}):
 🧠 ENERGÍA/MENTAL: On + Vita Xtra T+ + No Stress | Completo: + Nutraday + Café & Café Fit
 😴 ESTRÉS/SUEÑO: No Stress + Youth Elixir + Flora Liv | Completo: + Vera+ + Golden FLX
 🌿 DETOX: Flora Liv + Liquid Fibra + Prunex 1 | Completo: + Berry Balance + Rexet
+
+════════════════════════════════
+PROCESO DE COMPRA — GUIÁ AL CLIENTE PASO A PASO
+════════════════════════════════
+Cada vez que enviás el link de compra, incluí siempre el proceso en el mismo mensaje:
+
+"Como es tu primera compra, el sistema te va a pedir registrarte. Es rápido:
+1. Abrí el link — el producto ya viene seleccionado.
+2. Tocá Comprar.
+3. Completá tus datos: nombre, documento, correo, celular y dirección de entrega.
+4. Creá una contraseña si te lo pide.
+5. Elegí el método de pago y confirmá.
+¡Listo! Recibís la confirmación de tu pedido por correo."
+
+Si el cliente ya compró antes: "Entrá con tu cuenta — el producto ya viene seleccionado, solo confirmás el pago."
+El proceso es en 2 mensajes: primero el link + precio, segundo el paso a paso. Así no abrumás en uno solo.
 
 ════════════════════════════════
 REGLAS DE FORMATO (CRÍTICO)
@@ -1265,12 +1284,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} y los resultados son muy buenos 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio, 100% seguro: ${buyLink}\n¿Lo vemos?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos vários pedidos de ${country} com ótimos resultados 🌿\nVocê pode fazer seu pedido direto aqui — entrega em casa: ${buyLink}\nVamos?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had several orders from ${country} this week with great results 🌿\nYou can order directly here — delivered to your door: ${buyLink}\nShall we?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu plusieurs commandes de ${country} cette semaine avec de très bons résultats 🌿\nVous pouvez commander directement ici — livraison à domicile: ${buyLink}\nOn y va?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto diversi ordini da ${country} questa settimana con ottimi risultati 🌿\nPuoi ordinare direttamente qui — consegna a domicilio: ${buyLink}\nCi siamo?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche mehrere Bestellungen aus ${country} mit sehr guten Ergebnissen 🌿\nSie können hier direkt bestellen — Lieferung nach Hause: ${buyLink}\nMachen wir es?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} y los resultados son muy buenos 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio, 100% seguro: ${buyLink}\n\nComo es tu primera compra: abrí el link, el producto ya viene seleccionado, tocá Comprar, completá tus datos y elegí el método de pago. Recibís confirmación por correo. ¿Lo hacemos ahora?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos ótimos resultados em ${country} 🌿\nFaça seu pedido direto aqui: ${buyLink}\n\nNa primeira compra: abra o link, o produto já vem selecionado, toque em Comprar, preencha seus dados e escolha o pagamento. Confirmação por e-mail. Vamos?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had great results in ${country} this week 🌿\nOrder directly here: ${buyLink}\n\nFirst purchase: open the link, product is pre-selected, tap Buy, fill in your details and choose payment. You'll get confirmation by email. Shall we?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu de très bons résultats en ${country} cette semaine 🌿\nCommandez directement ici: ${buyLink}\n\nPremière commande: ouvrez le lien, le produit est déjà sélectionné, cliquez Acheter, remplissez vos données et choisissez le paiement. Confirmation par e-mail. On y va?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto ottimi risultati in ${country} questa settimana 🌿\nOrdina direttamente qui: ${buyLink}\n\nPrimo acquisto: apri il link, il prodotto è già selezionato, tocca Acquista, inserisci i tuoi dati e scegli il pagamento. Conferma via e-mail. Ci siamo?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche tolle Ergebnisse in ${country} 🌿\nBestellen Sie direkt hier: ${buyLink}\n\nErster Kauf: Link öffnen, Produkt ist vorgewählt, auf Kaufen tippen, Daten ausfüllen und Zahlung wählen. Bestätigung per E-Mail. Machen wir es?`,
     },
   },
   {
@@ -1279,12 +1298,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl problema que me contaste no se va solo — y el precio especial para primeras compras en ${country} está disponible ahora.\nHacé tu pedido directo acá en 2 minutos: ${buyLink}\n¿Arrancamos esta semana?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO problema que você me contou não some sozinho — e o preço especial para primeiras compras em ${country} está disponível agora.\nFaça seu pedido direto aqui em 2 minutos: ${buyLink}\nVamos começar essa semana?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nThe problem you told me about doesn't go away on its own — and the first-purchase special price for ${country} is available right now.\nOrder directly here in 2 minutes: ${buyLink}\nShall we start this week?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe problème dont vous m'avez parlé ne disparaît pas seul — et le prix spécial pour les premiers achats en ${country} est disponible maintenant.\nCommandez directement ici en 2 minutes: ${buyLink}\nOn commence cette semaine?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl problema che mi hai raccontato non scompare da solo — e il prezzo speciale per il primo acquisto in ${country} è disponibile ora.\nOrdina direttamente qui in 2 minuti: ${buyLink}\nCominciamo questa settimana?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDas Problem, das Sie mir erzählt haben, geht nicht von alleine weg — und der Sonderpreis für Erstkäufe in ${country} ist jetzt verfügbar.\nBestellen Sie direkt hier in 2 Minuten: ${buyLink}\nFangen wir diese Woche an?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl precio especial de primera compra en ${country} está disponible ahora — y el problema que me contaste no se va solo.\nAcá está el link directo: ${buyLink}\n\nSolo tenés que: 1. Tocar Comprar. 2. Completar tus datos. 3. Elegir el método de pago. ¡Listo, confirmación por correo! ¿Arrancamos hoy?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO preço especial de primeira compra em ${country} está disponível agora — e o problema que me contou não some sozinho.\nLink direto: ${buyLink}\n\nSó precisa: 1. Tocar Comprar. 2. Preencher seus dados. 3. Escolher o pagamento. Confirmação por e-mail! Vamos hoje?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nFirst-purchase special price for ${country} is available now — and the problem you told me about doesn't go away on its own.\nDirect link: ${buyLink}\n\nJust: 1. Tap Buy. 2. Fill in your details. 3. Choose payment. Confirmation by email! Shall we do it today?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe prix spécial première commande pour ${country} est disponible maintenant.\nLien direct: ${buyLink}\n\nJuste: 1. Cliquer Acheter. 2. Remplir vos données. 3. Choisir le paiement. Confirmation par e-mail! On le fait aujourd'hui?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl prezzo speciale primo acquisto per ${country} è disponibile ora.\nLink diretto: ${buyLink}\n\nBasta: 1. Toccare Acquista. 2. Inserire i dati. 3. Scegliere il pagamento. Conferma via e-mail! Lo facciamo oggi?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDer Erstkäufer-Sonderpreis für ${country} ist jetzt verfügbar.\nDirektlink: ${buyLink}\n\nNur: 1. Kaufen tippen. 2. Daten ausfüllen. 3. Zahlung wählen. Bestätigung per E-Mail! Machen wir es heute?`,
     },
   },
   {
