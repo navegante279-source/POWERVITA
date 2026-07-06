@@ -1203,20 +1203,25 @@ async function handleMessage(phone, rawText, contactName) {
       transferred: false,
       last_message_at: new Date().toISOString(),
     });
-    await saveLead(phone, {
-      name: contactName,
-      country: countryInfo.country,
-      lang: countryInfo.lang,
-      status: needsTransfer ? "transfer_pending" : healthConcern ? "health_check" : "active",
-    });
-
-    // Send response
+    // Send response first so we know the final message content
     const finalMsg = sanitizeForWhatsApp(cleanResponse);
     await sendWAMessage(phone, finalMsg);
     await copyToOwner(phone, contactName, countryInfo, finalMsg);
 
-    // Notify owner when bot sends a direct buy link
-    const hasBuyLinkInResponse = finalMsg.includes("tiendafuxion.com");
+    // Notify owner when bot sends a direct buy link; mark lead as link_sent for 4h follow-up
+    const hasBuyLinkInResponse = finalMsg.includes("tiendafuxion.com") || finalMsg.includes("powervita.vercel.app/api/go");
+    const leadStatus = needsTransfer ? "transfer_pending"
+      : healthConcern ? "health_check"
+      : hasBuyLinkInResponse ? "link_sent"
+      : "active";
+
+    await saveLead(phone, {
+      name: contactName,
+      country: countryInfo.country,
+      lang: countryInfo.lang,
+      status: leadStatus,
+    });
+
     if (hasBuyLinkInResponse) {
       const displayName = contactName || phone;
       sendWAMessage(OWNER_PHONE, `🔗 Link de compra enviado a ${displayName} (${countryInfo.country})`).catch(() => {});
@@ -1334,7 +1339,72 @@ const FOLLOWUP_STAGES = [
       de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}.\nVor ein paar Tagen haben Sie mir von Ihrer Gesundheitssituation erzählt. Ich wollte fragen, wie es Ihnen geht — hatten Sie Gelegenheit, Ihren Arzt zu konsultieren?\nWenn Sie mehr Klarheit haben und wissen möchten, welche Optionen für Ihren Fall passen, bin ich hier 🌿`,
     },
   },
+  {
+    stage: 4,
+    hoursAfter: 4,
+    statusRequired: "link_sent",
+    nextStatus: "followup_1",
+    msgs: {
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}. Vi que te mandé el link para hacer tu pedido — ¿pudiste abrirlo?\nAcá lo tenés de nuevo: ${buyLink}\n\nSi es tu primera compra: abrí el link, el producto ya viene seleccionado, tocá Comprar, completá tus datos y elegí el método de pago. Recibís confirmación por correo. ¿Tenés alguna duda del proceso?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}. Vi que te mandei o link — você conseguiu abrir?\nAqui está de novo: ${buyLink}\n\nSe for sua primeira compra: abra o link, o produto já vem selecionado, toque Comprar, preencha seus dados e escolha o pagamento. Confirmação por e-mail. Alguma dúvida?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}. I saw I sent you the link — were you able to open it?\nHere it is again: ${buyLink}\n\nIf it's your first purchase: open the link, the product is pre-selected, tap Buy, fill in your details and choose payment. You'll get confirmation by email. Any questions about the process?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}. J'ai vu que je vous ai envoyé le lien — avez-vous pu l'ouvrir?\nLe voici à nouveau: ${buyLink}\n\nSi c'est votre premier achat: ouvrez le lien, le produit est déjà sélectionné, cliquez Acheter, remplissez vos données et choisissez le paiement. Confirmation par e-mail. Des questions?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}. Ho visto che ti ho mandato il link — sei riuscito/a ad aprirlo?\nEccolo di nuovo: ${buyLink}\n\nSe è il tuo primo acquisto: apri il link, il prodotto è già selezionato, tocca Acquista, inserisci i dati e scegli il pagamento. Conferma via e-mail. Hai domande?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}. Ich habe gesehen, dass ich Ihnen den Link geschickt habe — konnten Sie ihn öffnen?\nHier nochmal: ${buyLink}\n\nBeim ersten Kauf: Link öffnen, Produkt ist vorgewählt, Kaufen tippen, Daten ausfüllen und Zahlung wählen. Bestätigung per E-Mail. Fragen zum Prozess?`,
+    },
+  },
 ];
+
+async function reactivateTodayLeads() {
+  try {
+    const todayMidnight = new Date();
+    todayMidnight.setHours(0, 0, 0, 0);
+
+    const { data: leads, error } = await supabase
+      .from("leads")
+      .select("*")
+      .gte("updated_at", todayMidnight.toISOString())
+      .not("status", "in", '("sold","opted_out","cold","transferred")');
+
+    if (error) {
+      sendWAMessage(OWNER_PHONE, `❌ Error al buscar leads de hoy: ${error.message}`).catch(() => {});
+      return;
+    }
+    if (!leads?.length) {
+      sendWAMessage(OWNER_PHONE, `ℹ️ No hay leads activos de hoy para reactivar.`).catch(() => {});
+      return;
+    }
+
+    let sent = 0;
+    for (const lead of leads) {
+      const conv = await getConversation(lead.phone);
+      if (!conv || conv.transferred || conv.purchased || conv.opted_out) continue;
+
+      const agentName = getAgentName(lead.phone);
+      const lang = lead.lang || "es";
+      const buyLink = getBuyLink(lead.country, lead.phone);
+      const country = lead.country || "tu país";
+      const name = lead.name || "";
+
+      const msgs = {
+        es: `Hola${name ? ` ${name}` : ""} 😊 Soy ${agentName} de PowerVita.\nQuería saber si tuviste algún problema para completar el pedido — estoy acá para ayudarte.\nAcá está el link directo para ${country}: ${buyLink}\n\nSolo tenés que: 1. Tocar Comprar. 2. Completar tus datos. 3. Elegir el método de pago. ¡Listo, confirmación por correo! ¿Tenés alguna duda?`,
+        pt: `Olá${name ? ` ${name}` : ""} 😊 Sou ${agentName} da PowerVita.\nQueria saber se teve algum problema para completar o pedido — estou aqui para ajudar.\nLink direto para ${country}: ${buyLink}\n\nSó precisa: 1. Tocar Comprar. 2. Preencher dados. 3. Escolher pagamento. Confirmação por e-mail! Alguma dúvida?`,
+        en: `Hey${name ? ` ${name}` : ""} 😊 It's ${agentName} from PowerVita.\nI wanted to check if you had any trouble completing your order — I'm here to help.\nDirect link for ${country}: ${buyLink}\n\nJust: 1. Tap Buy. 2. Fill in your details. 3. Choose payment. Confirmation by email! Any questions?`,
+      };
+      const msg = msgs[lang] || msgs.es;
+
+      await sendWAMessage(lead.phone, msg);
+      await saveLead(lead.phone, { status: "link_sent" });
+      sent++;
+      console.log(`🔄 Reactivated: ${lead.phone} [${country}]`);
+    }
+
+    sendWAMessage(OWNER_PHONE, `✅ REACTIVAR completado: ${sent} lead${sent !== 1 ? "s" : ""} contactado${sent !== 1 ? "s" : ""} con link de compra directo.`).catch(() => {});
+  } catch (err) {
+    console.error("Reactivate error:", err.message);
+    sendWAMessage(OWNER_PHONE, `❌ Error en REACTIVAR: ${err.message}`).catch(() => {});
+  }
+}
 
 async function runFollowUps() {
   try {
@@ -1464,6 +1534,9 @@ app.post("/webhook", async (req, res) => {
               ]);
               sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
               console.log(`💰 Sale marked for ${targetPhone}`);
+            } else if (/^REACTIVAR$/i.test(text.trim())) {
+              // Reactivate all active leads from today — send them purchase link + steps
+              reactivateTodayLeads();
             }
             // Ignorar todos los mensajes del dueño — no procesar como cliente
             continue;
