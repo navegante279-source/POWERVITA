@@ -39,6 +39,90 @@ const {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
 
+// ── SISTEMA DE APRENDIZAJE ────────────────────────────────────
+// Cada 6h analiza conversaciones reales, extrae patrones de dolor,
+// productos que resonaron y cierres que funcionaron. Los inyecta en
+// el system prompt para que el bot mejore con cada ciclo.
+
+let learnedInsights = "";       // texto plano, actualizado cada 6h
+let insightsUpdatedAt = null;   // Date del último refresh
+
+async function refreshInsights() {
+  try {
+    const cutoff30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    // Leads que cerraron (sold/link_sent) y los que se enfriaron (cold)
+    const { data: leads } = await supabase
+      .from("leads")
+      .select("phone, name, country, status")
+      .gte("updated_at", cutoff30d)
+      .in("status", ["sold", "link_sent", "cold"])
+      .limit(60);
+
+    if (!leads?.length) { console.log("🧠 No hay leads para aprender"); return; }
+
+    const successful = leads.filter(l => ["sold", "link_sent"].includes(l.status)).slice(0, 20);
+    const failed     = leads.filter(l => l.status === "cold").slice(0, 10);
+    const toFetch    = [...successful, ...failed];
+
+    const convs = await Promise.all(toFetch.map(l => getConversation(l.phone)));
+
+    const formatConv = (conv, lead, outcome) => {
+      if (!conv?.history?.length) return null;
+      const msgs = conv.history
+        .filter(h => h.role !== "system")
+        .map(h => `${h.role === "user" ? "CLIENTE" : "BOT"}: ${h.content.slice(0, 300)}`)
+        .join("\n");
+      return `[${outcome} — ${lead.country}]\n${msgs}`;
+    };
+
+    const blocks = toFetch
+      .map((lead, i) => formatConv(convs[i], lead, ["sold","link_sent"].includes(lead.status) ? "CERRADO" : "FRÍO"))
+      .filter(Boolean)
+      .join("\n\n---\n\n");
+
+    if (!blocks) return;
+
+    const response = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 700,
+      system: "Sos un analista de ventas experto en salud y bienestar para Latinoamérica. Analizás conversaciones reales de WhatsApp de un bot de ventas de suplementos FuXion.",
+      messages: [{
+        role: "user",
+        content: `Analizá estas conversaciones (CERRADO = llegó al link de compra, FRÍO = se enfrió sin comprar).
+
+Extraé en texto plano, sin títulos, sin markdown, máximo 550 palabras:
+
+1. Las 6-8 frases EXACTAS más frecuentes que usan los clientes para describir su dolor (copiá textual).
+2. Qué producto se recomendó con cada tipo de dolor y si funcionó.
+3. Las 3-4 frases de cierre del bot que generaron respuesta positiva.
+4. Los 2-3 patrones que aparecen en los FRÍOS (qué hizo que se enfriaran).
+
+Solo datos concretos. Sin explicaciones. Sin bullets — párrafos cortos.
+
+CONVERSACIONES:
+${blocks.slice(0, 9000)}`
+      }]
+    });
+
+    learnedInsights = response.content[0].text;
+    insightsUpdatedAt = new Date();
+    console.log(`🧠 Insights actualizados — ${successful.length} cierres + ${failed.length} fríos analizados`);
+
+    // Notificar al dueño con los insights del día
+    sendWAMessage(OWNER_PHONE,
+      `🧠 Aprendizaje diario actualizado (${successful.length} conversaciones exitosas + ${failed.length} frías):\n\n${learnedInsights.slice(0, 900)}`
+    ).catch(() => {});
+
+  } catch (err) {
+    console.error("refreshInsights error:", err.message);
+  }
+}
+
+// Primer refresh 60s después del inicio, luego cada 6h
+setTimeout(refreshInsights, 60_000);
+setInterval(refreshInsights, 6 * 60 * 60 * 1000);
+
 // ── AGENT NAME ROTATION ───────────────────────────────────────
 const AGENT_NAMES = ["Valeria", "Luna", "Sofía"];
 
@@ -514,7 +598,16 @@ Hacé las preguntas de dolor → luego: "${OWNER_NAME} te arma el precio exacto 
     available.join(", ") +
     (unavailable.length ? `\n\nNO DISPONIBLES EN ${country.toUpperCase()} — NUNCA los menciones ni sugieras: ${unavailable.join(", ")}` : "");
 
-  return `Sos ${agentName}, closer senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas, sabés leer objeciones antes de que aparezcan y cerrás sin presionar — cerrás generando certeza.
+  const insightsSection = learnedInsights
+    ? `════════════════════════════════
+APRENDIZAJES DEL CAMPO${insightsUpdatedAt ? ` (actualizado ${insightsUpdatedAt.toLocaleDateString("es-UY", {day:"2-digit",month:"2-digit"})})` : ""}
+════════════════════════════════
+${learnedInsights}
+Cuando el cliente use frases parecidas a las anteriores, usá ESE vocabulario exacto en tu espejo — no el genérico. Estos son patrones reales de tu audiencia actual.
+════════════════════════════════`
+    : "";
+
+  return `Sos ${agentName}, closer senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas, sabés leer objeciones antes de que aparecen y cerrás sin presionar — cerrás generando certeza.
 Si alguien te pregunta si sos IA o bot, respondé calurosamente que sos parte del equipo humano y añadí [TRANSFER_NEEDED].
 
 IDIOMA: ${langInstruction}
@@ -522,6 +615,8 @@ PAÍS: ${country}
 NOMBRE DEL CLIENTE: ${clientName || "desconocido — usá 'vos' o 'tú' según el país"}
 HORARIO: ${inHours ? "Horario activo — podés ofrecer conexión inmediata con Andrés" : `Fuera de horario — Andrés atiende de 9am a 10pm hora Uruguay, pero tomá el pedido ahora para que él lo atienda primero`}
 LEAD CALIENTE: ${isWarm ? "SÍ — el cliente ya vio los productos y quiere comprar. Saltá el diagnóstico largo. Confirmá el producto, 2 beneficios clave, y pasá directo al precio con Andrés en este mensaje." : "NO — lead nuevo, hacer diagnóstico."}
+
+${insightsSection}
 
 ${availabilityText}
 
@@ -1535,8 +1630,17 @@ app.post("/webhook", async (req, res) => {
               sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
               console.log(`💰 Sale marked for ${targetPhone}`);
             } else if (/^REACTIVAR$/i.test(text.trim())) {
-              // Reactivate all active leads from today — send them purchase link + steps
               reactivateTodayLeads();
+            } else if (/^APRENDER$/i.test(text.trim())) {
+              // Force insight refresh and show current learnings to owner
+              sendWAMessage(OWNER_PHONE, "🧠 Actualizando aprendizajes... (puede tardar 30 segundos)").catch(() => {});
+              refreshInsights();
+            } else if (/^INSIGHTS?$/i.test(text.trim())) {
+              // Show current cached insights without refreshing
+              const msg = learnedInsights
+                ? `🧠 Aprendizajes actuales (${insightsUpdatedAt ? insightsUpdatedAt.toLocaleString("es-UY") : "sin fecha"}):\n\n${learnedInsights.slice(0, 1200)}`
+                : "🧠 Sin aprendizajes cargados todavía. Mandá APRENDER para analizar ahora.";
+              sendWAMessage(OWNER_PHONE, msg).catch(() => {});
             }
             // Ignorar todos los mensajes del dueño — no procesar como cliente
             continue;
