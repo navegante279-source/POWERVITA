@@ -1217,12 +1217,12 @@ const READ_NUDGE_DELAY_MS = 25 * 60 * 1000;
 const pendingReadNudges = new Set();
 
 const READ_NUDGE_MSGS = {
-  es: (name, agent) => `¡Vi que leíste mi mensaje! 👀${name ? ` ${name}` : ""} ¿Te quedó alguna duda o querés que te pase el precio directo? Soy ${agent}, estoy para ayudarte 🌿`,
-  pt: (name, agent) => `Vi que você leu minha mensagem! 👀${name ? ` ${name}` : ""} Ficou alguma dúvida ou quer que eu te passe o preço direto? Sou ${agent} 🌿`,
-  en: (name, agent) => `Saw you read my message! 👀${name ? ` ${name}` : ""} Any questions, or want me to send you the price directly? It's ${agent}, here to help 🌿`,
-  fr: (name, agent) => `J'ai vu que vous avez lu mon message! 👀${name ? ` ${name}` : ""} Des questions, ou je vous envoie le prix directement? C'est ${agent} 🌿`,
-  it: (name, agent) => `Ho visto che hai letto il mio messaggio! 👀${name ? ` ${name}` : ""} Hai dubbi o vuoi che ti passi il prezzo diretto? Sono ${agent} 🌿`,
-  de: (name, agent) => `Ich habe gesehen, dass Sie meine Nachricht gelesen haben! 👀${name ? ` ${name}` : ""} Noch Fragen, oder soll ich Ihnen direkt den Preis schicken? Hier ist ${agent} 🌿`,
+  es: (name, agent, buyLink) => `¡Vi que leíste mi mensaje! 👀${name ? ` ${name}` : ""} ¿Tenés alguna duda, o hacemos el pedido directo ahora? Acá está el link: ${buyLink} — Soy ${agent} 🌿`,
+  pt: (name, agent, buyLink) => `Vi que você leu minha mensagem! 👀${name ? ` ${name}` : ""} Ficou alguma dúvida, ou fazemos o pedido agora? O link direto: ${buyLink} — Sou ${agent} 🌿`,
+  en: (name, agent, buyLink) => `Saw you read my message! 👀${name ? ` ${name}` : ""} Any questions, or shall we place the order now? Direct link: ${buyLink} — It's ${agent} 🌿`,
+  fr: (name, agent, buyLink) => `J'ai vu que vous avez lu mon message! 👀${name ? ` ${name}` : ""} Des questions, ou on passe la commande maintenant? Lien direct: ${buyLink} — C'est ${agent} 🌿`,
+  it: (name, agent, buyLink) => `Ho visto che hai letto il mio messaggio! 👀${name ? ` ${name}` : ""} Hai dubbi, o facciamo l'ordine adesso? Link diretto: ${buyLink} — Sono ${agent} 🌿`,
+  de: (name, agent, buyLink) => `Ich habe gesehen, dass Sie meine Nachricht gelesen haben! 👀${name ? ` ${name}` : ""} Noch Fragen, oder bestellen wir jetzt? Direktlink: ${buyLink} — Hier ist ${agent} 🌿`,
 };
 
 function scheduleReadNudge(phone) {
@@ -1240,7 +1240,8 @@ function scheduleReadNudge(phone) {
       const agentName = getAgentName(phone);
       const lang = lead.lang || "es";
       const msgFn = READ_NUDGE_MSGS[lang] || READ_NUDGE_MSGS.es;
-      const msg = msgFn(lead.name, agentName);
+      const buyLink = getBuyLink(lead.country, phone);
+      const msg = msgFn(lead.name, agentName, buyLink);
 
       await sendWAMessage(phone, msg);
       await saveLead(phone, { status: "followup_1" }); // sigue la cadena normal desde stage 1
@@ -1264,12 +1265,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} del equipo PowerVita.\nSolo quería contarte: esta semana tuvimos varios pedidos de ${country} con el pack que te recomendé y los resultados de las primeras clientas son muy buenos 🌿\n¿Seguís con dudas o te paso el precio con ${owner} ahora mismo?`,
-      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da equipe PowerVita.\nSó queria te contar: essa semana tivemos vários pedidos de ${country} com o pack que recomendei e os resultados são ótimos 🌿\nAinda tem dúvidas ou posso te passar o preço com ${owner} agora?`,
-      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nJust wanted to let you know — we had several orders from ${country} with the pack I recommended and early results are great 🌿\nStill have questions, or should I get you the price with ${owner} now?`,
-      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nJe voulais juste vous dire — nous avons eu plusieurs commandes de ${country} cette semaine et les résultats sont très bons 🌿\nDes questions encore, ou je vous passe le prix avec ${owner} maintenant?`,
-      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nVolevo dirti — abbiamo avuto diversi ordini da ${country} questa settimana e i risultati iniziali sono ottimi 🌿\nHai ancora domande o ti passo il prezzo con ${owner} adesso?`,
-      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nIch wollte Ihnen kurz mitteilen — wir hatten diese Woche mehrere Bestellungen aus ${country} und die ersten Ergebnisse sind sehr gut 🌿\nNoch Fragen, oder soll ich Sie jetzt mit ${owner} für den Preis verbinden?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} y los resultados son muy buenos 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio, 100% seguro: ${buyLink}\n¿Lo vemos?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos vários pedidos de ${country} com ótimos resultados 🌿\nVocê pode fazer seu pedido direto aqui — entrega em casa: ${buyLink}\nVamos?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had several orders from ${country} this week with great results 🌿\nYou can order directly here — delivered to your door: ${buyLink}\nShall we?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu plusieurs commandes de ${country} cette semaine avec de très bons résultats 🌿\nVous pouvez commander directement ici — livraison à domicile: ${buyLink}\nOn y va?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto diversi ordini da ${country} questa settimana con ottimi risultati 🌿\nPuoi ordinare direttamente qui — consegna a domicilio: ${buyLink}\nCi siamo?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche mehrere Bestellungen aus ${country} mit sehr guten Ergebnissen 🌿\nSie können hier direkt bestellen — Lieferung nach Hause: ${buyLink}\nMachen wir es?`,
     },
   },
   {
@@ -1278,12 +1279,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
-      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nMirá, quiero ser honesta: Andrés está cerrando los pedidos de ${country} esta semana y hay precio especial para primeras compras. Si arrancás ahora, llegás a tiempo.\nEl pack que te recomendé es exactamente lo que necesitás para lo que me contaste. ¿Le digo que te escriba hoy?`,
-      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nOlha, quero ser honesta: Andrés está fechando os pedidos de ${country} essa semana e há preço especial para primeiras compras.\nO pack que recomendei é exatamente o que você precisa. Posso dizer para ele te escrever hoje?`,
-      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nI want to be honest with you: Andrés is closing orders from ${country} this week and there's a special price for first purchases. If you start now, you're in time.\nShould I tell him to write to you today?`,
-      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nJe veux être honnête : Andrés ferme les commandes de ${country} cette semaine avec un prix spécial pour les premiers achats.\nDois-je lui dire de vous écrire aujourd'hui?`,
-      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nVoglio essere onesta: Andrés sta chiudendo gli ordini da ${country} questa settimana con un prezzo speciale per i primi acquisti.\nDevo dirgli di scriverti oggi?`,
-      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nIch möchte ehrlich sein: Andrés schließt diese Woche Bestellungen aus ${country} mit Sonderpreis für Erstkäufe.\nSoll ich ihm sagen, dass er Sie heute kontaktiert?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl problema que me contaste no se va solo — y el precio especial para primeras compras en ${country} está disponible ahora.\nHacé tu pedido directo acá en 2 minutos: ${buyLink}\n¿Arrancamos esta semana?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO problema que você me contou não some sozinho — e o preço especial para primeiras compras em ${country} está disponível agora.\nFaça seu pedido direto aqui em 2 minutos: ${buyLink}\nVamos começar essa semana?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nThe problem you told me about doesn't go away on its own — and the first-purchase special price for ${country} is available right now.\nOrder directly here in 2 minutes: ${buyLink}\nShall we start this week?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe problème dont vous m'avez parlé ne disparaît pas seul — et le prix spécial pour les premiers achats en ${country} est disponible maintenant.\nCommandez directement ici en 2 minutes: ${buyLink}\nOn commence cette semaine?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl problema che mi hai raccontato non scompare da solo — e il prezzo speciale per il primo acquisto in ${country} è disponibile ora.\nOrdina direttamente qui in 2 minuti: ${buyLink}\nCominciamo questa settimana?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDas Problem, das Sie mir erzählt haben, geht nicht von alleine weg — und der Sonderpreis für Erstkäufe in ${country} ist jetzt verfügbar.\nBestellen Sie direkt hier in 2 Minuten: ${buyLink}\nFangen wir diese Woche an?`,
     },
   },
   {
@@ -1292,12 +1293,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "followup_2",
     nextStatus: "cold",
     msgs: {
-      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte, no quiero molestarte.\nSolo te dejo esto: el problema que me contaste no se va solo. Cada semana sin hacer algo es una semana más con eso.\nSi en algún momento decidís arrancar, ${owner} puede armar tu pack para ${country} en minutos. Acá vamos a estar 🌿`,
-      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nSó quero deixar uma coisa: o problema que você me contou não some sozinho. Cada semana sem fazer nada é mais uma semana com isso.\nQuando decidir começar, ${owner} pode montar seu pack para ${country} em minutos 🌿`,
-      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me, I don't want to be a bother.\nJust leaving you with this: the problem you told me about doesn't go away on its own. Every week without doing something is another week with it.\nWhen you're ready, ${owner} can put together your pack for ${country} in minutes 🌿`,
-      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nJuste une chose : le problème dont vous m'avez parlé ne disparaît pas seul. Chaque semaine sans agir est une semaine de plus avec ça.\nQuand vous serez prêt(e), ${owner} peut préparer votre pack pour ${country} en quelques minutes 🌿`,
-      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nSolo questo: il problema che mi hai raccontato non scompare da solo. Ogni settimana senza fare nulla è un'altra settimana con quello.\nQuando sei pronto/a, ${owner} può preparare il tuo pack per ${country} in pochi minuti 🌿`,
-      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nNur eines: Das Problem, das Sie mir erzählt haben, verschwindet nicht von alleine. Jede Woche ohne etwas zu tun ist eine weitere Woche damit.\nWenn Sie bereit sind, kann ${owner} Ihr Pack für ${country} in Minuten zusammenstellen 🌿`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte.\nEl problema que me contaste no se va solo. Cada semana sin hacer algo es una semana más con eso.\nSi decidís arrancar, acá podés hacer el pedido directo para ${country} — llega a tu casa: ${buyLink} 🌿`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nO problema que você me contou não some sozinho. Cada semana sem agir é mais uma semana com isso.\nQuando decidir, faça seu pedido direto para ${country} aqui: ${buyLink} 🌿`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me.\nThe problem you told me about doesn't go away on its own. Every week without action is another week with it.\nWhen you're ready, order directly for ${country} here: ${buyLink} 🌿`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nLe problème dont vous m'avez parlé ne disparaît pas seul. Chaque semaine sans agir est une semaine de plus avec ça.\nQuand vous êtes prêt(e), commandez directement pour ${country} ici: ${buyLink} 🌿`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nIl problema che mi hai raccontato non scompare da solo. Ogni settimana senza fare nulla è un'altra settimana con quello.\nQuando sei pronto/a, ordina direttamente per ${country} qui: ${buyLink} 🌿`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nDas Problem, das Sie mir erzählt haben, verschwindet nicht von alleine. Jede Woche ohne Handeln ist eine weitere Woche damit.\nWenn Sie bereit sind, bestellen Sie direkt für ${country} hier: ${buyLink} 🌿`,
     },
   },
   {
@@ -1336,7 +1337,8 @@ async function runFollowUps() {
         const agentName = getAgentName(lead.phone);
         const lang = lead.lang || "es";
         const msgFn = stage.msgs[lang] || stage.msgs.es;
-        const msg = msgFn(lead.name, agentName, OWNER_NAME, lead.country || "tu país");
+        const buyLink = getBuyLink(lead.country, lead.phone);
+        const msg = msgFn(lead.name, agentName, OWNER_NAME, lead.country || "tu país", buyLink);
 
         await sendWAMessage(lead.phone, msg);
         await saveLead(lead.phone, { status: stage.nextStatus });
