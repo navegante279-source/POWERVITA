@@ -941,26 +941,44 @@ function sanitizeForWhatsApp(text) {
 }
 
 // ── WHATSAPP API ──────────────────────────────────────────────
+let lastWAError = null; // track most recent send error for /health
+
 async function sendWAMessage(to, text) {
-  const res = await fetch(
-    `https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${WHATSAPP_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to,
-        type: "text",
-        text: { body: text, preview_url: false },
-      }),
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
+    console.error("❌ sendWAMessage: WHATSAPP_TOKEN or WHATSAPP_PHONE_ID missing");
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to,
+          type: "text",
+          text: { body: text, preview_url: false },
+        }),
+      }
+    );
+    const data = await res.json();
+    if (data.error) {
+      lastWAError = `[${new Date().toISOString()}] to=${to} error=${data.error.message} (code ${data.error.code})`;
+      console.error("❌ WA send error:", lastWAError);
+    } else {
+      // Clear error on success
+      if (to === OWNER_PHONE) lastWAError = null;
     }
-  );
-  const data = await res.json();
-  if (data.error) console.error("WA send error:", data.error.message);
-  return data;
+    return data;
+  } catch (err) {
+    lastWAError = `[${new Date().toISOString()}] to=${to} fetch_error=${err.message}`;
+    console.error("❌ WA fetch error:", lastWAError);
+    return null;
+  }
 }
 
 async function generateSalesBrief(history, country) {
@@ -1636,11 +1654,19 @@ app.post("/webhook", async (req, res) => {
               sendWAMessage(OWNER_PHONE, "🧠 Actualizando aprendizajes... (puede tardar 30 segundos)").catch(() => {});
               refreshInsights();
             } else if (/^INSIGHTS?$/i.test(text.trim())) {
-              // Show current cached insights without refreshing
               const msg = learnedInsights
                 ? `🧠 Aprendizajes actuales (${insightsUpdatedAt ? insightsUpdatedAt.toLocaleString("es-UY") : "sin fecha"}):\n\n${learnedInsights.slice(0, 1200)}`
                 : "🧠 Sin aprendizajes cargados todavía. Mandá APRENDER para analizar ahora.";
               sendWAMessage(OWNER_PHONE, msg).catch(() => {});
+            } else if (/^PING$/i.test(text.trim())) {
+              const now = new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" });
+              const errMsg = lastWAError ? `\n⚠️ Último error WA: ${lastWAError}` : "";
+              const insightMsg = insightsUpdatedAt
+                ? `\n🧠 Insights: ${insightsUpdatedAt.toLocaleString("es-UY")}`
+                : "\n🧠 Sin insights cargados";
+              sendWAMessage(OWNER_PHONE,
+                `🏓 PONG — Bot activo\n📅 ${now}\n📱 Owner: ${OWNER_PHONE}\n🌐 Phone ID: ${WHATSAPP_PHONE_ID || "❌ MISSING"}\n🔑 Token: ${WHATSAPP_TOKEN ? "✅ set" : "❌ MISSING"}${errMsg}${insightMsg}`
+              ).catch(() => {});
             }
             // Ignorar todos los mensajes del dueño — no procesar como cliente
             continue;
@@ -1655,16 +1681,47 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-// Health check
-app.get("/health", (_req, res) =>
-  res.json({ status: "ok", ts: new Date().toISOString(), bot: "PowerVita FuXion Bot" })
-);
+// Health check — shows env var status, last WA error, insights state
+app.get("/health", (_req, res) => res.json({
+  status: "ok",
+  ts: new Date().toISOString(),
+  bot: "PowerVita FuXion Bot",
+  env: {
+    WHATSAPP_TOKEN:    WHATSAPP_TOKEN    ? "✅ set" : "❌ MISSING",
+    WHATSAPP_PHONE_ID: WHATSAPP_PHONE_ID ? "✅ set" : "❌ MISSING",
+    VERIFY_TOKEN:      VERIFY_TOKEN      ? "✅ set" : "❌ MISSING",
+    ANTHROPIC_API_KEY: ANTHROPIC_API_KEY ? "✅ set" : "❌ MISSING",
+    SUPABASE_URL:      SUPABASE_URL      ? "✅ set" : "❌ MISSING",
+    SUPABASE_KEY:      SUPABASE_KEY      ? "✅ set" : "❌ MISSING",
+    OWNER_PHONE:       OWNER_PHONE || "❌ MISSING",
+    WEBHOOK_APP_SECRET: WEBHOOK_APP_SECRET ? "✅ set" : "⚠️ not set (signature check skipped)",
+  },
+  lastWAError: lastWAError || "none",
+  insights: insightsUpdatedAt
+    ? `last updated ${insightsUpdatedAt.toISOString()}`
+    : "not loaded yet",
+}));
 
 // ── SERVER START ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 PowerVita Bot running on port ${PORT}`);
+  console.log(`📱 Owner notifications → ${OWNER_PHONE}`);
   console.log(`🌍 Webhook: POST /webhook`);
   console.log(`💚 Health:  GET  /health`);
+
+  // Startup self-test: send a ping to OWNER_PHONE 10s after boot
+  setTimeout(async () => {
+    const result = await sendWAMessage(
+      OWNER_PHONE,
+      `✅ PowerVita Bot reiniciado y operativo. ${new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" })} 🌿`
+    );
+    if (result?.error) {
+      console.error("⚠️ Startup ping to owner failed:", result.error.message,
+        "— 24h window may be closed. Send any message to the bot to reopen it.");
+    } else {
+      console.log("✅ Startup ping sent to owner:", OWNER_PHONE);
+    }
+  }, 10_000);
 });
 
 // Run follow-ups every hour
