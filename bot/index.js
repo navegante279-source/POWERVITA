@@ -499,6 +499,15 @@ const COUNTRY_BUY_LINKS = {
   "Colombia":  "co",
 };
 
+// Maps product name → URL key used in api/go.js
+const PRODUCT_KEYS = {
+  "Prunex 1":    "prunex",
+  "Vita Xtra T+": "vita",
+  "Biopro+ Fit":  "biopro",
+  "Nocarb-T":     "nocarb",
+  "Thermo T3":    "thermo",
+};
+
 function getBuyLink(country, phone = "") {
   const code = COUNTRY_BUY_LINKS[country];
   if (!code) return FUXION_BUY_LINK;
@@ -506,32 +515,42 @@ function getBuyLink(country, phone = "") {
   return `${base}?c=${code}${phone ? `&p=${phone}` : ""}`;
 }
 
+// Routes per-product links through the tracking redirect (api/go.js)
+// so every click is logged to Supabase and notifies the owner.
+function getProductBuyLink(product, country) {
+  const code = COUNTRY_BUY_LINKS[country];
+  if (!code) return FUXION_BUY_LINK;
+  const prodKey = PRODUCT_KEYS[product];
+  const base = "https://powervita.vercel.app/api/go";
+  return `${base}?c=${code}${prodKey ? `&prod=${prodKey}` : ""}`;
+}
+
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
   "Prunex 1": {
-    "Uruguay":   { amount: "1.710",  currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073072" },
-    "Argentina": { amount: "45.550", currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085903" },
-    "Colombia":  { amount: "38.700", currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086029" },
+    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
+    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Vita Xtra T+": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3062050" },
-    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085893" },
-    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086025" },
+    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
+    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Biopro+ Fit": {
-    "Uruguay":   { amount: "1.425",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073816" },
-    "Argentina": { amount: "37.950",  currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085938" },
-    "Colombia":  { amount: "115.900", currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086030" },
+    "Uruguay":   { amount: "1.425",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Argentina": { amount: "37.950",  currency: "pesos argentinos",  symbol: "$"  },
+    "Colombia":  { amount: "115.900", currency: "pesos colombianos", symbol: "$"  },
   },
   "Nocarb-T": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073820" },
-    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085893" },
-    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086028" },
+    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
+    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Thermo T3": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U", link: "https://tiendafuxion.com/storelt/Andresvarela/3073822" },
-    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3085898" },
-    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$",  link: "https://tiendafuxion.com/storelt/Andresvarela/3086074" },
+    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
+    "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
 };
 
@@ -568,7 +587,7 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false, client
   for (const [product, countries] of Object.entries(PRODUCT_PRICES)) {
     if (countries[country]) {
       const p = countries[country];
-      const productLink = p.link || buyLink;
+      const productLink = getProductBuyLink(product, country);
       priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency} → Link: ${productLink}`);
     }
   }
@@ -652,12 +671,16 @@ Cerrá con 1 línea de prueba social hiper-específica (con país, tiempo y resu
 MENSAJE 3 — CIERRE DIRECTO (NUNCA preguntes "¿te interesa?" ni "¿qué te parece?"):
 ${hasDirectBuyLink
   ? `En ${country} CERRÁS VOS — sin pasar a Andrés:
-Usá lenguaje presupuesto y cerrá con el precio + link directo del producto:
-✅ "Con todo lo que me contás, este es el paso. [Producto] cuesta [precio de la lista] — ${priceAnchor}."
-✅ "Comprá acá, es 100% seguro y llega a tu domicilio: [link del producto de la lista]. ¿Lo pedimos?"
+Paso 0 — MICRO-COMPROMISO antes del link (obligatorio, 1 pregunta):
+"¿Cuándo querés que te llegue — esta semana o la que viene?"
+Esta pregunta hace que el cliente imagine recibirlo ANTES de ver el link. Cuando responda, pasá al cierre.
+
+Paso 1 — CIERRE CON PRECIO + LINK:
+✅ "Perfecto. [Producto] cuesta [precio de la lista] — ${priceAnchor}."
+✅ "Comprá acá directamente — el producto ya viene seleccionado y llega a tu domicilio: [link del producto de la lista]"
 ✅ "¿A qué nombre va el pedido para ${country}?"
-✅ "¿Cuándo querés que te llegue — lo antes posible o esperás unos días?"
-Cuando el cliente dice que sí o pregunta cómo comprar, enviá el proceso de compra (ver sección PROCESO DE COMPRA).
+
+El link te lleva al producto seleccionado. Solo se pide que completes info de entrega y pago — en 3 minutos está listo.
 Usá el link exacto del producto de la lista de precios arriba. NO añadás [TRANSFER_NEEDED] para este cierre.`
   : `En ${country} derivás a ${OWNER_NAME} para el cierre:
 ✅ "Cuando empieces con el pack, Andrés te explica cómo tomarlo para ${country}."
@@ -723,9 +746,7 @@ MANEJO DE OBJECIONES (OBLIGATORIO — nunca ignorar)
 → Nunca digas que no lo sabés. Dá el precio directo de la lista. Si no sabe qué producto quiere, preguntá el objetivo primero y luego dá el precio y el link del producto recomendado: "[Producto] para ${country} está a [precio de la lista] — ${priceAnchor}. El link de compra directo es: [link del producto de la lista]. ¿Arrancamos?"
 
 "¿Puedo pagar ahora?" / "¿Se puede pagar en el momento?" / "¿Cómo pago?" / "¿Dónde pago?":
-→ Respondé con el link + el proceso completo en 2 mensajes:
-Mensaje 1: "¡Sí, claro! Acá está el link directo — el producto ya viene seleccionado: [link del producto de la lista]. Es 100% seguro y llega a tu domicilio."
-Mensaje 2: "Como es tu primera compra: 1. Abrí el link. 2. Tocá Comprar. 3. Completá tus datos (nombre, documento, correo, celular y dirección). 4. Elegí el método de pago y confirmá. ¡Listo! Recibís confirmación por correo."
+→ "¡Sí, acá mismo! Acá está el link — el producto ya viene seleccionado: [link del producto de la lista]. Solo completás tu info de entrega, elegís cómo pagar y listo. Si algún paso no te queda claro, avisame y te guío."
 
 ════════════════════════════════
 URGENCIA (usá 1 por conversación, orgánicamente)
@@ -770,20 +791,16 @@ PACKS (verificá siempre que estén en la lista de disponibles para ${country}):
 🌿 DETOX: Flora Liv + Liquid Fibra + Prunex 1 | Completo: + Berry Balance + Rexet
 
 ════════════════════════════════
-PROCESO DE COMPRA — GUIÁ AL CLIENTE PASO A PASO
+PROCESO DE COMPRA — SIMPLIFICÁ, NO ASUSTES
 ════════════════════════════════
-Cada vez que enviás el link de compra, incluí siempre el proceso en el mismo mensaje:
+Al enviar el link NO detalles los pasos. Solo añadí esta frase corta al final:
+"El link te lleva directo al producto — solo completás tu info de entrega y elegís cómo pagar. En 3 minutos está listo."
 
-"Como es tu primera compra, el sistema te va a pedir registrarte. Es rápido:
-1. Abrí el link — el producto ya viene seleccionado.
-2. Tocá Comprar.
-3. Completá tus datos: nombre, documento, correo, celular y dirección de entrega.
-4. Creá una contraseña si te lo pide.
-5. Elegí el método de pago y confirmá.
-¡Listo! Recibís la confirmación de tu pedido por correo."
+Si el cliente pregunta cómo se hace ("¿qué hago con el link?", "¿cómo compro?", "¿es difícil registrarse?"):
+→ "Abrís el link → tocás Comprar → ponés tu nombre, dirección y correo → elegís cómo pagar. ¿Cuál paso te frena?"
+Respondé solo la duda específica, no expliques todo el proceso si no preguntaron.
 
-Si el cliente ya compró antes: "Entrá con tu cuenta — el producto ya viene seleccionado, solo confirmás el pago."
-El proceso es en 2 mensajes: primero el link + precio, segundo el paso a paso. Así no abrumás en uno solo.
+Si el cliente ya compró antes: "Entrás con tu cuenta — el producto ya viene seleccionado, solo confirmás el pago."
 
 ════════════════════════════════
 REGLAS DE FORMATO (CRÍTICO)
@@ -1281,7 +1298,9 @@ async function handleMessage(phone, rawText, contactName) {
     const contextTags = [
       healthTag,
       !healthConcern && objection  ? `[OBJECIÓN DETECTADA: ${objection}]` : "",
-      !healthConcern && buySignal  ? "[SEÑAL DE COMPRA — activar cierre condicional inmediato y añadir TRANSFER_NEEDED]" : "",
+      !healthConcern && buySignal  ? (COUNTRY_BUY_LINKS[countryInfo.country]
+        ? "[SEÑAL DE COMPRA — dar precio + link del producto de la lista AHORA, cierre directo, NO añadás TRANSFER_NEEDED]"
+        : "[SEÑAL DE COMPRA — cierre condicional + TRANSFER_NEEDED]") : "",
       !healthConcern && thirdParty ? "[COMPRA PARA TERCERO — preguntar para quién y qué problema tiene esa persona]" : "",
     ].filter(Boolean).join(" ");
 
@@ -1316,13 +1335,14 @@ async function handleMessage(phone, rawText, contactName) {
       transferred: false,
       last_message_at: new Date().toISOString(),
     });
-    // Send response first so we know the final message content
     const finalMsg = sanitizeForWhatsApp(cleanResponse);
-    await sendWAMessage(phone, finalMsg);
-    await copyToOwner(phone, contactName, countryInfo, finalMsg);
-
-    // Notify owner when bot sends a direct buy link; mark lead as link_sent for 4h follow-up
     const hasBuyLinkInResponse = finalMsg.includes("tiendafuxion.com") || finalMsg.includes("powervita.vercel.app/api/go");
+    await sendWAMessage(phone, finalMsg);
+
+    // Copy to owner only on key moments (buy link, transfer, buying signal) — avoids notification fatigue
+    if (hasBuyLinkInResponse || needsTransfer || buySignal) {
+      await copyToOwner(phone, contactName, countryInfo, finalMsg);
+    }
     const leadStatus = needsTransfer ? "transfer_pending"
       : healthConcern ? "health_check"
       : hasBuyLinkInResponse ? "link_sent"
@@ -1402,12 +1422,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} y los resultados son muy buenos 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio, 100% seguro: ${buyLink}\n\nComo es tu primera compra: abrí el link, el producto ya viene seleccionado, tocá Comprar, completá tus datos y elegí el método de pago. Recibís confirmación por correo. ¿Lo hacemos ahora?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos ótimos resultados em ${country} 🌿\nFaça seu pedido direto aqui: ${buyLink}\n\nNa primeira compra: abra o link, o produto já vem selecionado, toque em Comprar, preencha seus dados e escolha o pagamento. Confirmação por e-mail. Vamos?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had great results in ${country} this week 🌿\nOrder directly here: ${buyLink}\n\nFirst purchase: open the link, product is pre-selected, tap Buy, fill in your details and choose payment. You'll get confirmation by email. Shall we?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu de très bons résultats en ${country} cette semaine 🌿\nCommandez directement ici: ${buyLink}\n\nPremière commande: ouvrez le lien, le produit est déjà sélectionné, cliquez Acheter, remplissez vos données et choisissez le paiement. Confirmation par e-mail. On y va?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto ottimi risultati in ${country} questa settimana 🌿\nOrdina direttamente qui: ${buyLink}\n\nPrimo acquisto: apri il link, il prodotto è già selezionato, tocca Acquista, inserisci i tuoi dati e scegli il pagamento. Conferma via e-mail. Ci siamo?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche tolle Ergebnisse in ${country} 🌿\nBestellen Sie direkt hier: ${buyLink}\n\nErster Kauf: Link öffnen, Produkt ist vorgewählt, auf Kaufen tippen, Daten ausfüllen und Zahlung wählen. Bestätigung per E-Mail. Machen wir es?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} con muy buenos resultados 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio: ${buyLink}\n\n¿Tenés alguna duda o querés que te cuente cómo va el proceso?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos ótimos resultados em ${country} 🌿\nFaça seu pedido direto aqui — entrega na sua porta: ${buyLink}\n\nAlguma dúvida ou quer saber como funciona o processo?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had great results in ${country} this week 🌿\nOrder directly here — delivered to your door: ${buyLink}\n\nAny questions, or want me to walk you through the process?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu de très bons résultats en ${country} cette semaine 🌿\nCommandez directement ici — livraison à domicile: ${buyLink}\n\nDes questions ou vous voulez que je vous explique le processus?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto ottimi risultati in ${country} questa settimana 🌿\nOrdina direttamente qui — consegna a domicilio: ${buyLink}\n\nHai domande o vuoi che ti spieghi come funziona?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche tolle Ergebnisse in ${country} 🌿\nBestellen Sie direkt hier — Lieferung nach Hause: ${buyLink}\n\nFragen oder soll ich Ihnen den Ablauf erklären?`,
     },
   },
   {
@@ -1416,12 +1436,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl precio especial de primera compra en ${country} está disponible ahora — y el problema que me contaste no se va solo.\nAcá está el link directo: ${buyLink}\n\nSolo tenés que: 1. Tocar Comprar. 2. Completar tus datos. 3. Elegir el método de pago. ¡Listo, confirmación por correo! ¿Arrancamos hoy?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO preço especial de primeira compra em ${country} está disponível agora — e o problema que me contou não some sozinho.\nLink direto: ${buyLink}\n\nSó precisa: 1. Tocar Comprar. 2. Preencher seus dados. 3. Escolher o pagamento. Confirmação por e-mail! Vamos hoje?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nFirst-purchase special price for ${country} is available now — and the problem you told me about doesn't go away on its own.\nDirect link: ${buyLink}\n\nJust: 1. Tap Buy. 2. Fill in your details. 3. Choose payment. Confirmation by email! Shall we do it today?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe prix spécial première commande pour ${country} est disponible maintenant.\nLien direct: ${buyLink}\n\nJuste: 1. Cliquer Acheter. 2. Remplir vos données. 3. Choisir le paiement. Confirmation par e-mail! On le fait aujourd'hui?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl prezzo speciale primo acquisto per ${country} è disponibile ora.\nLink diretto: ${buyLink}\n\nBasta: 1. Toccare Acquista. 2. Inserire i dati. 3. Scegliere il pagamento. Conferma via e-mail! Lo facciamo oggi?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDer Erstkäufer-Sonderpreis für ${country} ist jetzt verfügbar.\nDirektlink: ${buyLink}\n\nNur: 1. Kaufen tippen. 2. Daten ausfüllen. 3. Zahlung wählen. Bestätigung per E-Mail! Machen wir es heute?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl problema que me contaste no se va solo — y el link para ${country} sigue activo:\n${buyLink}\n\n¿Qué te frenó? ¿Alguna duda del proceso o del producto?`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO problema que me contou não some sozinho — e o link para ${country} está ativo:\n${buyLink}\n\nO que te travou? Alguma dúvida do processo ou do produto?`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nThe problem you told me about doesn't fix itself — and the link for ${country} is still active:\n${buyLink}\n\nWhat held you back? Any questions about the process or the product?`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe problème dont vous m'avez parlé ne se résout pas tout seul — le lien pour ${country} est actif:\n${buyLink}\n\nQu'est-ce qui vous a arrêté(e)? Une question sur le processus ou le produit?`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl problema che mi hai raccontato non si risolve da solo — il link per ${country} è ancora attivo:\n${buyLink}\n\nCosa ti ha fermato? Hai domande sul processo o sul prodotto?`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDas Problem, das Sie mir erzählt haben, löst sich nicht von allein — der Link für ${country} ist noch aktiv:\n${buyLink}\n\nWas hat Sie aufgehalten? Fragen zum Prozess oder zum Produkt?`,
     },
   },
   {
@@ -1458,12 +1478,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "link_sent",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}. Vi que te mandé el link para hacer tu pedido — ¿pudiste abrirlo?\nAcá lo tenés de nuevo: ${buyLink}\n\nSi es tu primera compra: abrí el link, el producto ya viene seleccionado, tocá Comprar, completá tus datos y elegí el método de pago. Recibís confirmación por correo. ¿Tenés alguna duda del proceso?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}. Vi que te mandei o link — você conseguiu abrir?\nAqui está de novo: ${buyLink}\n\nSe for sua primeira compra: abra o link, o produto já vem selecionado, toque Comprar, preencha seus dados e escolha o pagamento. Confirmação por e-mail. Alguma dúvida?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}. I saw I sent you the link — were you able to open it?\nHere it is again: ${buyLink}\n\nIf it's your first purchase: open the link, the product is pre-selected, tap Buy, fill in your details and choose payment. You'll get confirmation by email. Any questions about the process?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}. J'ai vu que je vous ai envoyé le lien — avez-vous pu l'ouvrir?\nLe voici à nouveau: ${buyLink}\n\nSi c'est votre premier achat: ouvrez le lien, le produit est déjà sélectionné, cliquez Acheter, remplissez vos données et choisissez le paiement. Confirmation par e-mail. Des questions?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}. Ho visto che ti ho mandato il link — sei riuscito/a ad aprirlo?\nEccolo di nuovo: ${buyLink}\n\nSe è il tuo primo acquisto: apri il link, il prodotto è già selezionato, tocca Acquista, inserisci i dati e scegli il pagamento. Conferma via e-mail. Hai domande?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}. Ich habe gesehen, dass ich Ihnen den Link geschickt habe — konnten Sie ihn öffnen?\nHier nochmal: ${buyLink}\n\nBeim ersten Kauf: Link öffnen, Produkt ist vorgewählt, Kaufen tippen, Daten ausfüllen und Zahlung wählen. Bestätigung per E-Mail. Fragen zum Prozess?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}. Te mandé el link para tu pedido de ${country} — ¿pudiste abrirlo?\nAcá lo tenés de nuevo: ${buyLink}\n\n¿Tuviste algún problema con el formulario? Si necesitás que te guíe paso a paso, avisame y lo hacemos juntos.`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}. Te mandei o link do pedido para ${country} — conseguiste abrir?\nAqui está de novo: ${buyLink}\n\nTeve algum problema no formulário? Se precisar de ajuda, é só falar.`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}. I sent you the order link for ${country} — were you able to open it?\nHere it is again: ${buyLink}\n\nDid anything go wrong with the form? Just let me know and I'll walk you through it.`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}. Je vous ai envoyé le lien de commande pour ${country} — avez-vous pu l'ouvrir?\nLe voici à nouveau: ${buyLink}\n\nAvez-vous eu un problème avec le formulaire? Je suis là pour vous guider.`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}. Ti ho mandato il link dell'ordine per ${country} — sei riuscito/a ad aprirlo?\nEccolo di nuovo: ${buyLink}\n\nHai avuto problemi con il modulo? Sono qui per guidarti passo dopo passo.`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}. Ich habe Ihnen den Bestelllink für ${country} geschickt — konnten Sie ihn öffnen?\nHier nochmal: ${buyLink}\n\nHatten Sie Probleme mit dem Formular? Ich helfe Ihnen Schritt für Schritt.`,
     },
   },
 ];
@@ -1665,7 +1685,7 @@ app.post("/webhook", async (req, res) => {
                 ? `\n🧠 Insights: ${insightsUpdatedAt.toLocaleString("es-UY")}`
                 : "\n🧠 Sin insights cargados";
               sendWAMessage(OWNER_PHONE,
-                `🏓 PONG — Bot activo\n📅 ${now}\n📱 Owner: ${OWNER_PHONE}\n🌐 Phone ID: ${WHATSAPP_PHONE_ID || "❌ MISSING"}\n🔑 Token: ${WHATSAPP_TOKEN ? "✅ set" : "❌ MISSING"}${errMsg}${insightMsg}`
+                `🏓 PONG — Bot activo\n📅 ${now}\n📱 Owner: ${OWNER_PHONE}\n🌐 Phone ID: ${WHATSAPP_PHONE_ID || "❌ MISSING"}\n🔑 Token: ${WHATSAPP_TOKEN ? "✅ set" : "❌ MISSING"}${errMsg}${insightMsg}\n\n💡 Mandá PING una vez por día para mantener las notificaciones activas (ventana 24h de WhatsApp).`
               ).catch(() => {});
             }
             // Ignorar todos los mensajes del dueño — no procesar como cliente
@@ -1713,7 +1733,7 @@ app.listen(PORT, () => {
   setTimeout(async () => {
     const result = await sendWAMessage(
       OWNER_PHONE,
-      `✅ PowerVita Bot reiniciado y operativo. ${new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" })} 🌿`
+      `✅ PowerVita Bot reiniciado y operativo. ${new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" })} 🌿\n\n💡 Mandá PING al bot una vez por día para mantener las notificaciones activas.`
     );
     if (result?.error) {
       console.error("⚠️ Startup ping to owner failed:", result.error.message,
