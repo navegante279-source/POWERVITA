@@ -3,6 +3,7 @@
 // Stack: Node.js + Express + Anthropic Claude + Supabase
 // WhatsApp: Meta Business API
 // Países: Sudamérica, Centroamérica, Norteamérica, Europa
+// Build: 2026-07-10
 // ============================================================
 
 import express from "express";
