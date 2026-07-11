@@ -1858,11 +1858,42 @@ app.get("/health", (_req, res) => res.json({
     OWNER_PHONE:       OWNER_PHONE || "❌ MISSING",
     WEBHOOK_APP_SECRET: WEBHOOK_APP_SECRET ? "✅ set" : "⚠️ not set (signature check skipped)",
   },
+  supabase: supabase ? "✅ connected" : "❌ not connected",
   lastWAError: lastWAError || "none",
   insights: insightsUpdatedAt
     ? `last updated ${insightsUpdatedAt.toISOString()}`
     : "not loaded yet",
 }));
+
+// Test endpoint — sends a WhatsApp message to OWNER_PHONE to verify token
+app.get("/test-wa", async (_req, res) => {
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
+    return res.json({ ok: false, error: "WHATSAPP_TOKEN or WHATSAPP_PHONE_ID missing" });
+  }
+  try {
+    const result = await fetch(
+      `https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: OWNER_PHONE,
+          type: "text",
+          text: { body: "🔧 Test de conexión PowerVita Bot — si recibís este mensaje, el token de WhatsApp funciona correctamente." },
+        }),
+      }
+    );
+    const data = await result.json();
+    if (data.error) {
+      res.json({ ok: false, waError: data.error });
+    } else {
+      res.json({ ok: true, message: "Mensaje enviado a " + OWNER_PHONE, waResponse: data });
+    }
+  } catch (err) {
+    res.json({ ok: false, error: err.message });
+  }
+});
 
 // ── SERVER START ──────────────────────────────────────────────
 app.listen(PORT, () => {
