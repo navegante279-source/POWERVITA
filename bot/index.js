@@ -37,7 +37,18 @@ const {
 } = process.env;
 
 // ── CLIENTS ───────────────────────────────────────────────────
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Supabase is optional — bot runs in degraded mode (no DB) if missing
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  } catch (e) {
+    console.error("⚠️ Supabase init failed:", e.message, "— running without DB");
+  }
+} else {
+  console.warn("⚠️ SUPABASE_URL or SUPABASE_KEY missing — running without DB (no conversation history, no leads)");
+}
+
 const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
 
 // ── SISTEMA DE APRENDIZAJE ────────────────────────────────────
@@ -49,6 +60,7 @@ let learnedInsights = "";       // texto plano, actualizado cada 6h
 let insightsUpdatedAt = null;   // Date del último refresh
 
 async function refreshInsights() {
+  if (!supabase) { console.log("🧠 refreshInsights skipped — no Supabase"); return; }
   try {
     const cutoff30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -1196,33 +1208,45 @@ async function copyToOwner(phone, contactName, countryInfo, botMessage) {
 
 // ── DATABASE ──────────────────────────────────────────────────
 async function getConversation(phone) {
-  const { data } = await supabase
-    .from("conversations")
-    .select("*")
-    .eq("phone", phone)
-    .maybeSingle();
-  return data;
+  if (!supabase) return null;
+  try {
+    const { data } = await supabase
+      .from("conversations")
+      .select("*")
+      .eq("phone", phone)
+      .maybeSingle();
+    return data;
+  } catch { return null; }
 }
 
 async function getLead(phone) {
-  const { data } = await supabase
-    .from("leads")
-    .select("*")
-    .eq("phone", phone)
-    .maybeSingle();
-  return data;
+  if (!supabase) return null;
+  try {
+    const { data } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("phone", phone)
+      .maybeSingle();
+    return data;
+  } catch { return null; }
 }
 
 async function saveConversation(phone, updates) {
-  await supabase
-    .from("conversations")
-    .upsert({ phone, ...updates, updated_at: new Date().toISOString() });
+  if (!supabase) return;
+  try {
+    await supabase
+      .from("conversations")
+      .upsert({ phone, ...updates, updated_at: new Date().toISOString() });
+  } catch (e) { console.error("saveConversation error:", e.message); }
 }
 
 async function saveLead(phone, updates) {
+  if (!supabase) return;
+  try {
   await supabase
     .from("leads")
     .upsert({ phone, ...updates, updated_at: new Date().toISOString() });
+  } catch (e) { console.error("saveLead error:", e.message); }
 }
 
 // ── MAIN MESSAGE HANDLER ──────────────────────────────────────
@@ -1605,6 +1629,7 @@ const FOLLOWUP_STAGES = [
 ];
 
 async function reactivateTodayLeads() {
+  if (!supabase) { sendWAMessage(OWNER_PHONE, "⚠️ REACTIVAR sin efecto — Supabase no disponible").catch(() => {}); return; }
   try {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
@@ -1656,6 +1681,7 @@ async function reactivateTodayLeads() {
 }
 
 async function runFollowUps() {
+  if (!supabase) return;
   try {
     for (const stage of FOLLOWUP_STAGES) {
       const cutoff = new Date(Date.now() - stage.hoursAfter * 60 * 60 * 1000).toISOString();
