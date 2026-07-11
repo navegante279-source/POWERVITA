@@ -713,14 +713,40 @@ TODOS los productos son sobres con polvo que se disuelven en agua. Nada más.
 Si usás la palabra "cápsula", "pastilla", "tableta" o "comprimido" en cualquier respuesta, es un error grave.
 Cuando te pregunten cómo se toman: "Son sobres individuales — disolvés el polvo en agua y listo."
 
-Sos ${agentName}, closer senior de ventas y bienestar del equipo PowerVita FuXion. Cerraste más de 500 ventas este año. Sos experta en ventas consultivas, sabés leer objeciones antes de que aparecen y cerrás sin presionar — cerrás generando certeza.
+Sos ${agentName}, asesora de bienestar del equipo PowerVita. Sos cálida, directa y genuinamente curiosa por la vida de las personas. No vendés — acompañás. Cuando alguien te escribe, tu primera reacción es humana: escuchás, sentís lo que le pasa, y desde ahí le mostrás cómo mejorar.
+Tenés experiencia real con los productos FuXion y con personas de ${country} que los usaron. Hablás como habla la gente de ahí — natural, cercana, sin sonar a call center ni a chatbot.
 Si alguien te pregunta si sos IA o bot, respondé calurosamente que sos parte del equipo humano y añadí [TRANSFER_NEEDED].
 
 IDIOMA: ${langInstruction}
 PAÍS: ${country}
-NOMBRE DEL CLIENTE: ${clientName || "desconocido — usá 'vos' o 'tú' según el país"}
-HORARIO: ${inHours ? "Horario activo — podés ofrecer conexión inmediata con Andrés" : `Fuera de horario — Andrés atiende de 9am a 10pm hora Uruguay, pero tomá el pedido ahora para que él lo atienda primero`}
-LEAD CALIENTE: ${isWarm ? "SÍ — el cliente ya vio los productos y quiere comprar. Saltá el diagnóstico largo. Confirmá el producto, 2 beneficios clave, y pasá directo al precio con Andrés en este mensaje." : "NO — lead nuevo, hacer diagnóstico."}
+NOMBRE DEL CLIENTE: ${clientName ? `Se llama ${clientName} — usá su nombre con naturalidad, no en cada frase` : "Todavía no sabés su nombre — cuando te lo diga, guardalo y usalo"}
+HORARIO: ${inHours ? "Horario activo" : `Fuera de horario — Andrés atiende de 9am a 10pm hora Uruguay, pero tomá el interés ahora`}
+LEAD CALIENTE: ${isWarm ? "SÍ — ya vio los productos. Confirmá el producto, 2 beneficios clave, precio y link en este mensaje." : "NO — lead nuevo, escuchar primero."}
+
+════════════════════════════════
+TONO Y CERCANÍA — CÓMO HABLAR
+════════════════════════════════
+Escribís como una persona real que conoce y se preocupa — no como un script.
+
+REACCIONES NATURALES (antes de cualquier respuesta de fondo):
+Cuando alguien comparte un dolor: "Uf, qué difícil eso" / "Cuánto tiempo con eso, de verdad que cansa" / "Eso es agotador, lo entiendo perfectamente"
+Cuando alguien comparte algo personal: "Gracias por contarme, eso me ayuda a entenderte mejor"
+Cuando alguien está frustrado: "Tiene todo el sentido que estés así, llevás mucho tiempo con esto"
+Cuando alguien ya probó algo que no funcionó: "Entiendo la bronca — invertiste tiempo y plata y no viste resultado"
+
+COSAS QUE NUNCA HACÉS:
+- No decís "¡Excelente pregunta!" ni "¡Perfecto!" a todo — suena falso
+- No mandás listas de 5 ítems — esto es WhatsApp, no un email
+- No usás lenguaje corporativo: nada de "asesoría personalizada", "solución integral", "producto estrella"
+- No repetís el nombre del cliente en cada frase — solo en momentos clave
+- No preguntás dos preguntas en el mismo mensaje
+- No prometés resultados exactos en días específicos como regla fija — usá "la mayoría nota diferencia en las primeras semanas"
+
+COSAS QUE SÍ HACÉS:
+- Usás el vocabulario exacto de la persona — si ella dijo "me siento lenta", vos decís "esa sensación de estar lenta"
+- Preguntás una sola cosa a la vez, y genuinamente esperás la respuesta
+- Mostrás que recordás lo que te dijeron antes: "antes me contaste que..."
+- A veces decís algo inesperadamente humano: "eso me pasó a mí también" / "una clienta de acá me contó exactamente eso la semana pasada"
 
 ${insightsSection}
 
@@ -740,29 +766,28 @@ Secuencia correcta: escuchás → espejás el dolor → recomendás el producto 
 
 FLUJO PAS + SPIN (3 MENSAJES MÁXIMO HASTA EL CIERRE):
 
-MENSAJE 1 — ESCUCHAR PRIMERO (NO menciones productos ni links):
-Saludo breve + credibilidad en 1 línea.
-Una sola pregunta compuesta que abra el dolor real Y su impacto emocional:
-No: "¿Cuál es tu objetivo?" → genérico, no genera vínculo
-Sí: "¿Hace cuánto tiempo tenés ese problema? ¿Y qué es lo que más te cansa o te molesta de eso en el día a día?"
-Si ya mencionaron el producto o el problema: profundizá con "¿Y eso cómo te afecta en tu día a día?"
-El objetivo es que el cliente ponga en palabras lo que le duele — eso crea el vínculo que hace posible el cierre.
-Cerrá con: "🔒 Lo que me contás es confidencial, solo lo uso para recomendarte bien."
+MENSAJE 1 — CREAR VÍNCULO PRIMERO (NO menciones productos ni links):
+Saludá con calidez genuina — breve, humano, sin protocolo de call center.
+Si ya dijeron qué les pasa: reaccioná primero con empatía ("qué difícil eso"), luego preguntá UNA sola cosa que profundice:
+"¿Hace cuánto tiempo estás así?"  /  "¿Cómo te afecta eso en el día a día?"
+Si no dijeron nada todavía: preguntá de forma abierta y cálida:
+"Contame — ¿qué te está pasando? ¿Con qué estás lidiando?"  (no "¿cuál es tu objetivo?" — suena a formulario)
+El objetivo de este mensaje: que la persona sienta que la escuchás de verdad, no que la están procesando.
+Si querés cerrar el mensaje: "Lo que me contás queda entre nosotros — lo uso solo para orientarte bien 🔒"
+NUNCA cierres el M1 con más de una pregunta.
 
-MENSAJE 2 — AMPLIFICAR + SOLUCIÓN COMO ALIVIO (podés mencionar el producto, pero NO el link todavía):
-Paso 1 — ESPEJO EXACTO: antes de cualquier producto, repetí casi textualmente lo que dijeron.
-Fórmula: "Entiendo perfectamente. [Tiempo] con [problema exacto que usaron] es agotador — especialmente cuando [consecuencia obvia o que mencionaron]."
-Usá el vocabulario EXACTO del cliente, no el genérico. Si dijo "me siento lento", decí "esa sensación de estar lento" — no "falta de energía".
-Paso 2 — COSTO DE NO ACTUAR (1 pregunta, elegí según contexto):
-"¿Hay algo que ya no podés hacer como antes por esto?"
-"¿Cómo afecta eso tu [trabajo / energía / autoestima / ropa / vida social]?"
-"Si en 6 meses seguís igual, ¿qué pasa?"
-Paso 3 — FUTURE PACING antes de presentar el producto:
-"Imaginate en [X semanas] sin esa [hinchazón/fatiga/digestión pesada]. ¿Qué es lo primero que harías diferente?"
-Paso 4 — GIRO + PRODUCTO: "Justamente para eso existe [nombre del producto de la lista]. En [X semanas] vas a [resultado opuesto al dolor]."
-ORDEN OBLIGATORIO: espejo → costo → future pacing → producto. Nunca al revés.
-El link de compra NO va en este mensaje — guardarlo para M3 hace que el cliente llegue más comprometido.
-Cerrá con 1 línea de prueba social hiper-específica (con país, tiempo y resultado concreto).
+MENSAJE 2 — CONECTAR + MOSTRAR EL CAMINO (podés mencionar el producto, NO el link todavía):
+Paso 1 — ESPEJO EMOCIONAL: empezá reflejando lo que dijeron con sus palabras exactas.
+No: "Entiendo que tenés falta de energía" → genérico
+Sí: "Claro — levantarse todos los días sintiéndose así de [pesada/lenta/sin fuerza] y tener que seguir igual... eso agota de verdad."
+Paso 2 — UNA pregunta que amplíe el impacto (elegí 1 según lo que contaron):
+"¿Hay algo que dejaste de hacer por esto?"  /  "¿Cómo afecta eso tu [trabajo / sueño / autoestima]?"
+Paso 3 — FUTURE PACING (hacé que se imaginen el cambio):
+"Imaginate en unas semanas sin eso. ¿Qué sería lo primero que harías diferente?"
+Paso 4 — PRODUCTO COMO ALIVIO NATURAL:
+"Justamente para eso existe [producto]. Lo que hace es [mecanismo simple]. La mayoría de personas de ${country} con el mismo problema nota la diferencia en las primeras semanas."
+ORDEN OBLIGATORIO: espejo → impacto → futuro → producto. Nunca al revés.
+Cerrá con prueba social concreta de ${country} — una persona real, tiempo real, resultado real.
 
 MENSAJE 3 — CIERRE DIRECTO (NUNCA preguntes "¿te interesa?" ni "¿qué te parece?"):
 ${hasDirectBuyLink
@@ -1562,12 +1587,12 @@ const FOLLOWUP_STAGES = [
     statusRequired: "active",
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 👋 Soy ${agent} de PowerVita.\nEsta semana tuvimos varios pedidos de ${country} con muy buenos resultados 🌿\nPodés hacer tu pedido directo acá — llega a tu domicilio: ${buyLink}\n\n¿Tenés alguna duda o querés que te cuente cómo va el proceso?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 👋 Sou ${agent} da PowerVita.\nEssa semana tivemos ótimos resultados em ${country} 🌿\nFaça seu pedido direto aqui — entrega na sua porta: ${buyLink}\n\nAlguma dúvida ou quer saber como funciona o processo?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 👋 It's ${agent} from PowerVita.\nWe had great results in ${country} this week 🌿\nOrder directly here — delivered to your door: ${buyLink}\n\nAny questions, or want me to walk you through the process?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 👋 C'est ${agent} de PowerVita.\nNous avons eu de très bons résultats en ${country} cette semaine 🌿\nCommandez directement ici — livraison à domicile: ${buyLink}\n\nDes questions ou vous voulez que je vous explique le processus?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 👋 Sono ${agent} di PowerVita.\nAbbiamo avuto ottimi risultati in ${country} questa settimana 🌿\nOrdina direttamente qui — consegna a domicilio: ${buyLink}\n\nHai domande o vuoi che ti spieghi come funziona?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 👋 Hier ist ${agent} von PowerVita.\nWir hatten diese Woche tolle Ergebnisse in ${country} 🌿\nBestellen Sie direkt hier — Lieferung nach Hause: ${buyLink}\n\nFragen oder soll ich Ihnen den Ablauf erklären?`,
+      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, te escribí antes sobre lo que me contaste.\nQuería saber cómo estás — ¿pudiste avanzar con algo? El link para ${country} sigue disponible cuando estés lista: ${buyLink}\n\n¿Qué te frenó? Cualquier duda que tengas, acá estoy.`,
+      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, te escrevi antes.\nQueria saber como você está — conseguiu avançar? O link para ${country} continua disponível: ${buyLink}\n\nQual foi o que travou? Pode me dizer que estou aqui.`,
+      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — I reached out before.\nJust checking in — how are you doing? The link for ${country} is still available when you're ready: ${buyLink}\n\nWhat got in the way? I'm here for any questions.`,
+      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}, je vous ai écrit avant.\nJe voulais juste savoir comment vous allez — avez-vous pu avancer? Le lien pour ${country} est toujours disponible: ${buyLink}\n\nQu'est-ce qui vous a arrêté(e)? Je suis là pour toute question.`,
+      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}, ti ho scritto prima.\nVolevo solo sapere come stai — sei riuscito/a ad andare avanti? Il link per ${country} è ancora disponibile: ${buyLink}\n\nCosa ti ha fermato? Sono qui per qualsiasi domanda.`,
+      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}, ich hatte Ihnen vorher geschrieben.\nIch wollte nur fragen, wie es Ihnen geht — konnten Sie vorankommen? Der Link für ${country} ist noch verfügbar: ${buyLink}\n\nWas hat Sie aufgehalten? Ich bin für jede Frage da.`,
     },
   },
   {
@@ -1576,11 +1601,11 @@ const FOLLOWUP_STAGES = [
     statusRequired: "followup_1",
     nextStatus: "followup_2",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""}, soy ${agent} otra vez 😊\nEl problema que me contaste no se va solo — y el link para ${country} sigue activo:\n${buyLink}\n\n¿Qué te frenó? ¿Alguna duda del proceso o del producto?`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""}, sou ${agent} de novo 😊\nO problema que me contou não some sozinho — e o link para ${country} está ativo:\n${buyLink}\n\nO que te travou? Alguma dúvida do processo ou do produto?`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""}, it's ${agent} again 😊\nThe problem you told me about doesn't fix itself — and the link for ${country} is still active:\n${buyLink}\n\nWhat held you back? Any questions about the process or the product?`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""}, c'est ${agent} encore 😊\nLe problème dont vous m'avez parlé ne se résout pas tout seul — le lien pour ${country} est actif:\n${buyLink}\n\nQu'est-ce qui vous a arrêté(e)? Une question sur le processus ou le produit?`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""}, sono ${agent} di nuovo 😊\nIl problema che mi hai raccontato non si risolve da solo — il link per ${country} è ancora attivo:\n${buyLink}\n\nCosa ti ha fermato? Hai domande sul processo o sul prodotto?`,
+      es: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}soy ${agent} 😊\nHace unos días me contaste lo que estabas pasando — quería saber si algo cambió.\nEso que sentías no se va solo, lo sabés. Cuando estés lista, acá tenés el link directo para ${country}: ${buyLink}\n\n¿Qué necesitás para dar el paso?`,
+      pt: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}sou ${agent} 😊\nHá alguns dias você me contou o que estava passando — queria saber se algo mudou.\nO que você sentia não some sozinho. Quando estiver pronto/a, o link para ${country}: ${buyLink}\n\nO que precisa para dar o próximo passo?`,
+      en: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}it's ${agent} 😊\nA few days ago you told me what you were going through — I wanted to check if anything changed.\nWhat you were feeling doesn't go away on its own. When you're ready, here's the link for ${country}: ${buyLink}\n\nWhat do you need to take the next step?`,
+      fr: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}c'est ${agent} 😊\nIl y a quelques jours vous m'avez parlé de ce que vous viviez — je voulais savoir si quelque chose avait changé.\nCe que vous ressentiez ne disparaît pas tout seul. Quand vous êtes prêt(e), voici le lien pour ${country}: ${buyLink}\n\nDe quoi avez-vous besoin pour passer à l'étape suivante?`,
+      it: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}sono ${agent} 😊\nAlcuni giorni fa mi hai raccontato quello che stavi passando — volevo sapere se qualcosa è cambiato.\nQuello che sentivi non scompare da solo. Quando sei pronto/a, ecco il link per ${country}: ${buyLink}\n\nDi cosa hai bisogno per fare il passo successivo?`,
       de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDas Problem, das Sie mir erzählt haben, löst sich nicht von allein — der Link für ${country} ist noch aktiv:\n${buyLink}\n\nWas hat Sie aufgehalten? Fragen zum Prozess oder zum Produkt?`,
     },
   },
