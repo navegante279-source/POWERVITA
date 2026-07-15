@@ -2013,18 +2013,36 @@ app.listen(PORT, () => {
   // Startup self-test: send detailed status to OWNER_PHONE 10s after boot
   setTimeout(async () => {
     const now = new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" });
+
+    // Railway provides RAILWAY_PUBLIC_DOMAIN automatically — use it to self-report URL
+    const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN || process.env.RAILWAY_STATIC_URL;
+    const botUrl = railwayDomain
+      ? (railwayDomain.startsWith("http") ? railwayDomain : `https://${railwayDomain}`)
+      : null;
+
+    // Register URL in Supabase so Vercel /api/bot-status can find it even if WA is down
+    if (botUrl && supabase) {
+      supabase.from("conversations")
+        .upsert({ phone: "__bot_url__", history: [{ url: botUrl, ts: new Date().toISOString() }], updated_at: new Date().toISOString() })
+        .then(() => console.log("✅ Bot URL registered in Supabase:", botUrl))
+        .catch(e => console.warn("⚠️ Could not register bot URL:", e.message));
+    }
+
     const envStatus =
       `• WA Token: ${WHATSAPP_TOKEN ? "✅" : "❌ FALTA"}\n` +
       `• Phone ID: ${WHATSAPP_PHONE_ID ? "✅" : "❌ FALTA"}\n` +
       `• Anthropic: ${ANTHROPIC_API_KEY ? "✅" : "❌ FALTA"}\n` +
       `• Supabase: ${supabase ? "✅" : "⚠️ sin DB"}`;
 
+    const urlLine = botUrl ? `\n🔗 URL: ${botUrl}/health` : "";
+
     const result = await sendWAMessage(OWNER_PHONE,
-      `🚀 PowerVita Bot — REINICIO COMPLETO\n📅 ${now}\n\n${envStatus}\n\nComandos: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
+      `🚀 PowerVita Bot — REINICIO COMPLETO\n📅 ${now}${urlLine}\n\n${envStatus}\n\nComandos: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
     );
     if (result?.error) {
       console.error("⚠️ Startup ping failed:", result.error.message,
-        "— If error code 131047, the 24h window is closed. Ask a contact to message the bot number first.");
+        "— If error code 131047, the 24h window is closed. Send any message to the bot first to reopen it.");
+      console.log("🔗 Bot URL for manual health check:", botUrl ? botUrl + "/health" : "unknown (RAILWAY_PUBLIC_DOMAIN not set)");
     } else {
       console.log("✅ Startup ping sent to owner:", OWNER_PHONE);
     }
