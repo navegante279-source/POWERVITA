@@ -1173,6 +1173,25 @@ async function sendWAMessage(to, text) {
   }
 }
 
+// Mark an incoming message as read — shows sender the blue double-tick
+async function markAsRead(messageId) {
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID || !messageId) return;
+  try {
+    await fetch(`https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ messaging_product: "whatsapp", status: "read", message_id: messageId }),
+    });
+  } catch { /* silent */ }
+}
+
+// Minimum human-like delay — start it before awaiting the AI so fast AI responses
+// still feel natural. If AI takes longer than the delay, no extra wait is added.
+function humanDelay(minMs = 700, maxMs = 1900) {
+  const ms = Math.floor(minMs + Math.random() * (maxMs - minMs));
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function generateSalesBrief(history, country) {
   try {
     const convo = history
@@ -1493,7 +1512,9 @@ async function handleMessage(phone, rawText, contactName) {
 
     const enrichedText = contextTags ? `${contextTags} ${text}` : text;
 
-    // Get AI response
+    // Get AI response — start minimum human-like delay in parallel so fast AI
+    // calls still feel natural without adding wait time on slow calls.
+    const minWait = humanDelay(700, 1900);
     let aiResponse;
     try {
       aiResponse = await getAIResponse(phone, enrichedText, history, agentName, countryInfo, warm, contactName);
@@ -1501,6 +1522,7 @@ async function handleMessage(phone, rawText, contactName) {
       console.error("AI error:", err.message);
       aiResponse = `¡Hola! Soy ${agentName} del equipo PowerVita 😊 Tuve un pequeño inconveniente técnico. ${OWNER_NAME} te contactará muy pronto. ¡Disculpa!`;
     }
+    await minWait; // ensure minimum delay even when AI was faster
 
     // Detect transfer tag
     const needsTransfer = aiResponse.includes("[TRANSFER_NEEDED]");
@@ -1846,6 +1868,9 @@ app.post("/webhook", async (req, res) => {
           const text = msg.text.body;
           console.log(`📨 [${phone}] ${name}: ${text}`);
 
+          // Mark as read immediately — shows sender blue double-ticks
+          markAsRead(msg.id);
+
           // ── Owner commands ────────────────────────────────────
           if (phone === OWNER_PHONE) {
             if (/^VENDIDO\s+\d+/i.test(text.trim())) {
@@ -1876,6 +1901,42 @@ app.post("/webhook", async (req, res) => {
               sendWAMessage(OWNER_PHONE,
                 `🏓 PONG — Bot activo\n📅 ${now}\n📱 Owner: ${OWNER_PHONE}\n🌐 Phone ID: ${WHATSAPP_PHONE_ID || "❌ MISSING"}\n🔑 Token: ${WHATSAPP_TOKEN ? "✅ set" : "❌ MISSING"}${errMsg}${insightMsg}\n\n💡 Mandá PING una vez por día para mantener las notificaciones activas (ventana 24h de WhatsApp).`
               ).catch(() => {});
+            } else if (/^DIAGNOSTICO$/i.test(text.trim())) {
+              // Full system diagnostic — tests every component and reports
+              (async () => {
+                const now = new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" });
+                let report =
+                  `🔍 DIAGNÓSTICO — PowerVita Bot\n📅 ${now}\n\n` +
+                  `📋 VARIABLES DE ENTORNO:\n` +
+                  `• WhatsApp Token: ${WHATSAPP_TOKEN ? "✅" : "❌ FALTA — bot no puede enviar mensajes"}\n` +
+                  `• Phone ID: ${WHATSAPP_PHONE_ID ? "✅ " + WHATSAPP_PHONE_ID : "❌ FALTA"}\n` +
+                  `• Verify Token: ${VERIFY_TOKEN ? "✅" : "❌ FALTA — webhook no puede verificarse"}\n` +
+                  `• Anthropic API: ${ANTHROPIC_API_KEY ? "✅" : "❌ FALTA — IA no funciona"}\n` +
+                  `• Supabase URL: ${SUPABASE_URL ? "✅" : "❌ FALTA — sin historial de conversaciones"}\n` +
+                  `• Supabase Key: ${SUPABASE_KEY ? "✅" : "❌ FALTA"}\n\n` +
+                  `💾 BASE DE DATOS: ${supabase ? "✅ conectada" : "❌ modo degradado — sin historial"}\n` +
+                  `📡 ÚLTIMO ERROR WA: ${lastWAError || "ninguno"}\n` +
+                  `🧠 APRENDIZAJES: ${insightsUpdatedAt ? "✅ " + insightsUpdatedAt.toLocaleString("es-UY") : "⚠️ sin cargar aún"}`;
+
+                await sendWAMessage(OWNER_PHONE, report);
+
+                // Test Anthropic API live
+                try {
+                  const testR = await anthropic.messages.create({
+                    model: "claude-haiku-4-5-20251001",
+                    max_tokens: 10,
+                    messages: [{ role: "user", content: "Respondé solo: OK" }],
+                  });
+                  const ok = testR.content[0]?.text?.length > 0;
+                  await sendWAMessage(OWNER_PHONE, `🤖 ANTHROPIC API: ${ok ? "✅ funcionando correctamente" : "⚠️ respuesta inesperada — revisá la clave"}`);
+                } catch (err) {
+                  await sendWAMessage(OWNER_PHONE, `🤖 ANTHROPIC API: ❌ ERROR — ${err.message}\n→ Revisá ANTHROPIC_API_KEY en Railway`);
+                }
+
+                await sendWAMessage(OWNER_PHONE,
+                  `ℹ️ Si todo está ✅ y el bot no responde:\n1. Abrí Meta Business Manager\n2. Configuración → WhatsApp → Webhooks\n3. Verificá que la URL apunte a tu URL de Railway + /webhook\n4. Si el token expiró, generá uno nuevo y actualizalo en Railway → Variables\n\nComandos disponibles: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
+                );
+              })().catch(err => console.error("DIAGNOSTICO error:", err.message));
             }
             // Ignorar todos los mensajes del dueño — no procesar como cliente
             continue;
@@ -1949,15 +2010,21 @@ app.listen(PORT, () => {
   console.log(`🌍 Webhook: POST /webhook`);
   console.log(`💚 Health:  GET  /health`);
 
-  // Startup self-test: send a ping to OWNER_PHONE 10s after boot
+  // Startup self-test: send detailed status to OWNER_PHONE 10s after boot
   setTimeout(async () => {
-    const result = await sendWAMessage(
-      OWNER_PHONE,
-      `✅ PowerVita Bot reiniciado y operativo. ${new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" })} 🌿\n\n💡 Mandá PING al bot una vez por día para mantener las notificaciones activas.`
+    const now = new Date().toLocaleString("es-UY", { timeZone: "America/Montevideo" });
+    const envStatus =
+      `• WA Token: ${WHATSAPP_TOKEN ? "✅" : "❌ FALTA"}\n` +
+      `• Phone ID: ${WHATSAPP_PHONE_ID ? "✅" : "❌ FALTA"}\n` +
+      `• Anthropic: ${ANTHROPIC_API_KEY ? "✅" : "❌ FALTA"}\n` +
+      `• Supabase: ${supabase ? "✅" : "⚠️ sin DB"}`;
+
+    const result = await sendWAMessage(OWNER_PHONE,
+      `🚀 PowerVita Bot — REINICIO COMPLETO\n📅 ${now}\n\n${envStatus}\n\nComandos: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
     );
     if (result?.error) {
-      console.error("⚠️ Startup ping to owner failed:", result.error.message,
-        "— 24h window may be closed. Send any message to the bot to reopen it.");
+      console.error("⚠️ Startup ping failed:", result.error.message,
+        "— If error code 131047, the 24h window is closed. Ask a contact to message the bot number first.");
     } else {
       console.log("✅ Startup ping sent to owner:", OWNER_PHONE);
     }
