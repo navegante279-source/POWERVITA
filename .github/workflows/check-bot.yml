@@ -1,0 +1,51 @@
+name: Verify Bot After Deploy
+on:
+  push:
+    branches: [main]
+    paths: ["bot/**"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Railway to deploy
+        run: sleep 180
+
+      - name: Check bot status via Vercel
+        id: status
+        run: |
+          RESULT=$(curl -sf "https://powervita.vercel.app/api/bot-status" || echo '{"ok":false,"error":"Vercel endpoint unreachable"}')
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
+
+          OK=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print('true' if d.get('ok') else 'false')" 2>/dev/null || echo "false")
+          BOT_URL=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('botUrl') or 'unknown')" 2>/dev/null || echo "unknown")
+          WA_ERR=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); h=d.get('health',{}); print(h.get('lastWAError','?'))" 2>/dev/null || echo "?")
+          TIP=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tip',''))" 2>/dev/null || echo "")
+
+          echo "ok=$OK" >> $GITHUB_OUTPUT
+          echo "bot_url=$BOT_URL" >> $GITHUB_OUTPUT
+          echo "wa_error=$WA_ERR" >> $GITHUB_OUTPUT
+          echo "tip=$TIP" >> $GITHUB_OUTPUT
+
+          echo "--- Bot Status ---"
+          echo "Reachable: $OK"
+          echo "URL: $BOT_URL"
+          echo "WA Error: $WA_ERR"
+          echo "Tip: $TIP"
+          echo "Full response: $RESULT"
+
+      - name: Report status
+        run: |
+          if [ "${{ steps.status.outputs.ok }}" = "true" ]; then
+            echo "✅ Bot is UP at ${{ steps.status.outputs.bot_url }}"
+            echo "WA error log: ${{ steps.status.outputs.wa_error }}"
+          else
+            echo "❌ Bot appears DOWN or not yet registered."
+            echo "Tip: ${{ steps.status.outputs.tip }}"
+            echo ""
+            echo "To diagnose:"
+            echo "1. Check https://powervita.vercel.app/admin.html from your phone"
+            echo "2. Send PING to the bot's WhatsApp number"
+            echo "3. Check railway.app dashboard for service status"
+          fi

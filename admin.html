@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerVita — Estado del Bot</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f172a; color: #e2e8f0;
+      padding: 16px; min-height: 100vh;
+    }
+    h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; color: #f8fafc; }
+    .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+    .card {
+      background: #1e293b; border-radius: 12px;
+      padding: 16px; margin-bottom: 12px;
+      border: 1px solid #334155;
+    }
+    .card-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 10px; }
+    .status-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1e293b; font-size: 0.875rem; }
+    .status-row:last-child { border-bottom: none; }
+    .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+    .ok { background: #14532d; color: #4ade80; }
+    .err { background: #450a0a; color: #f87171; }
+    .warn { background: #451a03; color: #fb923c; }
+    .unknown { background: #1e293b; color: #94a3b8; }
+    #bot-url { word-break: break-all; font-size: 0.75rem; color: #38bdf8; margin-top: 6px; }
+    #ts { font-size: 0.7rem; color: #64748b; margin-top: 6px; }
+    button {
+      width: 100%; padding: 12px; border-radius: 10px; border: none;
+      background: #3b82f6; color: white; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; margin-top: 8px;
+    }
+    button:disabled { background: #1e40af; opacity: 0.6; }
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #94a3b8; border-top-color: #3b82f6; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-box { background: #450a0a; border: 1px solid #7f1d1d; border-radius: 10px; padding: 12px; font-size: 0.8rem; color: #fca5a5; margin-top: 8px; }
+    .tip { background: #0c1a2e; border: 1px solid #1e40af; border-radius: 10px; padding: 12px; font-size: 0.8rem; color: #93c5fd; margin-top: 8px; line-height: 1.5; }
+    .raw { font-family: monospace; font-size: 0.7rem; color: #94a3b8; white-space: pre-wrap; word-break: break-all; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>🌿 PowerVita — Estado del Bot</h1>
+  <p class="subtitle">Panel de diagnóstico — solo visible para Andrés</p>
+
+  <div class="card">
+    <div class="card-title">Estado general</div>
+    <div id="main-status">
+      <span class="spinner"></span> Verificando...
+    </div>
+    <div id="bot-url"></div>
+    <div id="ts"></div>
+  </div>
+
+  <div class="card" id="env-card" style="display:none">
+    <div class="card-title">Variables de entorno (Railway)</div>
+    <div id="env-rows"></div>
+  </div>
+
+  <div class="card" id="wa-card" style="display:none">
+    <div class="card-title">WhatsApp / Anthropic</div>
+    <div id="wa-rows"></div>
+  </div>
+
+  <div id="tip-box"></div>
+  <div id="error-box"></div>
+
+  <button id="refresh-btn" onclick="check()">🔄 Actualizar ahora</button>
+
+  <details style="margin-top:16px">
+    <summary style="font-size:0.75rem;color:#64748b;cursor:pointer">Ver respuesta completa (JSON)</summary>
+    <div class="raw" id="raw-json"></div>
+  </details>
+
+  <script>
+    const API = "/api/bot-status";
+
+    function badge(val) {
+      if (val === null || val === undefined) return `<span class="badge unknown">?</span>`;
+      const s = String(val);
+      if (s.includes("✅") || s === "true" || s === "ok") return `<span class="badge ok">${s}</span>`;
+      if (s.includes("❌") || s === "false") return `<span class="badge err">${s}</span>`;
+      if (s.includes("⚠️")) return `<span class="badge warn">${s}</span>`;
+      return `<span class="badge unknown">${s}</span>`;
+    }
+
+    function row(label, val) {
+      return `<div class="status-row"><span>${label}</span>${badge(val)}</div>`;
+    }
+
+    async function check() {
+      const btn = document.getElementById("refresh-btn");
+      btn.disabled = true; btn.textContent = "Verificando...";
+      document.getElementById("main-status").innerHTML = '<span class="spinner"></span> Verificando...';
+      document.getElementById("env-card").style.display = "none";
+      document.getElementById("wa-card").style.display = "none";
+      document.getElementById("tip-box").innerHTML = "";
+      document.getElementById("error-box").innerHTML = "";
+      document.getElementById("bot-url").innerHTML = "";
+      document.getElementById("ts").innerHTML = "";
+
+      try {
+        const res = await fetch(API + "?t=" + Date.now());
+        const data = await res.json();
+
+        document.getElementById("raw-json").textContent = JSON.stringify(data, null, 2);
+
+        // Main status
+        const ok = data.ok;
+        const icon = ok ? "✅" : "❌";
+        const label = ok ? "Bot operativo" : "Bot no responde";
+        document.getElementById("main-status").innerHTML =
+          `<div class="status-row"><span style="font-weight:600">${icon} ${label}</span><span></span></div>`;
+
+        if (data.botUrl) {
+          document.getElementById("bot-url").innerHTML = `🔗 ${data.botUrl}`;
+        }
+
+        if (data.registeredAt) {
+          const d = new Date(data.registeredAt);
+          document.getElementById("ts").textContent = "Último arranque registrado: " + d.toLocaleString("es-UY");
+        }
+
+        // Env vars (from health)
+        const h = data.health || {};
+        if (h.env) {
+          document.getElementById("env-card").style.display = "";
+          const envMap = {
+            WHATSAPP_TOKEN: "WA Token",
+            WHATSAPP_PHONE_ID: "Phone ID",
+            VERIFY_TOKEN: "Verify Token",
+            ANTHROPIC_API_KEY: "Anthropic API",
+            SUPABASE_URL: "Supabase URL",
+            SUPABASE_KEY: "Supabase Key",
+          };
+          let html = "";
+          for (const [k, label] of Object.entries(envMap)) {
+            html += row(label, h.env[k]);
+          }
+          document.getElementById("env-rows").innerHTML = html;
+        }
+
+        // WA / Supabase status
+        if (h.supabase || h.lastWAError !== undefined) {
+          document.getElementById("wa-card").style.display = "";
+          let html = "";
+          if (h.supabase) html += row("Base de datos", h.supabase);
+          if (h.lastWAError !== undefined) {
+            const waErr = h.lastWAError === "none" || !h.lastWAError ? "✅ ninguno" : "❌ " + h.lastWAError;
+            html += row("Último error WhatsApp", waErr);
+          }
+          if (h.insights) html += row("Aprendizajes IA", h.insights.includes("not loaded") ? "⚠️ sin cargar" : "✅ " + h.insights);
+          document.getElementById("wa-rows").innerHTML = html;
+        }
+
+        // Tip / error
+        if (data.tip) {
+          document.getElementById("tip-box").innerHTML = `<div class="tip">💡 ${data.tip}</div>`;
+        }
+        if (data.error) {
+          document.getElementById("error-box").innerHTML = `<div class="error-box">⚠️ ${data.error}</div>`;
+        }
+        if (h.error) {
+          document.getElementById("error-box").innerHTML += `<div class="error-box" style="margin-top:8px">❌ ${h.error}</div>`;
+        }
+
+      } catch (e) {
+        document.getElementById("main-status").innerHTML = `<span class="badge err">❌ Error al conectar con Vercel</span>`;
+        document.getElementById("error-box").innerHTML = `<div class="error-box">${e.message}</div>`;
+        document.getElementById("raw-json").textContent = e.message;
+      }
+
+      btn.disabled = false; btn.textContent = "🔄 Actualizar ahora";
+    }
+
+    check();
+  </script>
+</body>
+</html>
