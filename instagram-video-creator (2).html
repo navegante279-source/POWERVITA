@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Creador de Videos — Power Vita</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0e0e12; --surface: #17171e; --border: #2a2a35;
@@ -35,6 +35,7 @@
   .btn-secondary { background: #1e1e28; color: var(--text); border: 1px solid var(--border); }
   .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
   .status { font-size: 0.78rem; color: var(--muted); text-align: center; min-height: 18px; }
+  .tip-box { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.2); border-radius: 10px; padding: 10px 12px; font-size: 0.75rem; color: #a78bfa; line-height: 1.5; }
   .preview-area { display: flex; flex-direction: column; gap: 16px; align-items: center; }
   .canvas-wrapper { position: relative; width: 100%; max-width: 360px; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.5); background: #111; }
   canvas { width: 100%; height: 100%; display: block; }
@@ -49,7 +50,6 @@
   .caption-box { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; font-size: 0.8rem; line-height: 1.6; color: #ccc; white-space: pre-wrap; word-break: break-word; min-height: 80px; }
   .caption-actions { display: flex; gap: 8px; width: 100%; max-width: 360px; }
   .caption-actions .btn { flex: 1; padding: 10px; font-size: 0.82rem; }
-
 </style>
 </head>
 <body>
@@ -69,8 +69,10 @@
         <option value="nocarb">NoCArb · Control de carbohidratos</option>
         <option value="bioprofit">Bio Profit · Salud intestinal y probióticos</option>
         <option value="prunex">Prunex 1 · Detox colon y tránsito intestinal</option>
+        <option value="nostress">No Stress · Reducción del estrés y ansiedad</option>
       </select>
     </div>
+
     <div>
       <div class="section-label">Tipo de contenido</div>
       <select id="contentType">
@@ -84,6 +86,13 @@
         <option value="recipe-lunch">🥗 Receta — Almuerzo saludable</option>
       </select>
     </div>
+
+    <div id="recipeHint" style="display:none">
+      <div class="tip-box">
+        💡 <strong>Recetas:</strong> El video empieza con el plato terminado (resultado primero), luego el por qué, los ingredientes con su beneficio clave, la preparación y el CTA. Patrón viral probado.
+      </div>
+    </div>
+
     <div>
       <div class="section-label">Color de overlay</div>
       <select id="overlaySel">
@@ -92,25 +101,29 @@
         <option value="blush">🌸 Blush rosado</option>
         <option value="dark">🖤 Oscuro neutro</option>
         <option value="warm">🌅 Cálido tostado</option>
+        <option value="forest">🌲 Verde bosque</option>
       </select>
     </div>
+
     <div>
       <div class="section-label">Opacidad del overlay</div>
       <div class="slider-row">
-        <input type="range" id="overlayOpacity" min="30" max="80" step="5" value="55">
-        <span class="slider-val" id="opacityVal">55%</span>
+        <input type="range" id="overlayOpacity" min="30" max="75" step="5" value="52">
+        <span class="slider-val" id="opacityVal">52%</span>
       </div>
     </div>
+
     <div>
       <div class="section-label">Duración total del video</div>
       <div class="slider-row">
-        <input type="range" id="slideDur" min="10" max="30" step="5" value="30">
-        <span class="slider-val" id="durVal">30s</span>
+        <input type="range" id="slideDur" min="15" max="30" step="5" value="25">
+        <span class="slider-val" id="durVal">25s</span>
       </div>
     </div>
+
     <button class="btn btn-primary" id="generateBtn" onclick="generateVideo()">✨ Generar video</button>
     <button class="btn btn-secondary" id="regenBtn" onclick="generateVideo()" disabled>🔀 Regenerar</button>
-    <div class="status" id="status">Ingresá tu API key y presioná Generar</div>
+    <div class="status" id="status">Seleccioná el tipo de contenido y presioná Generar</div>
   </div>
 
   <div class="preview-area">
@@ -132,31 +145,95 @@
 const PEXELS_KEY = 'ONBASv9Wa6xTfJfSBxgmEeOUb6U64ruMPWkVScuq0eivlX4zfQrJk2NC';
 
 const OVERLAYS = {
-  sage:  [90,122,90], mint:[61,140,107], blush:[176,96,128], dark:[20,20,30], warm:[160,112,80]
+  sage:   [90,122,90],
+  mint:   [61,140,107],
+  blush:  [176,96,128],
+  dark:   [20,20,30],
+  warm:   [160,112,80],
+  forest: [34,80,54],
 };
 
-let slides=[], slideImages=[], caption='';
-let animating=false, animFrame=null, slideIndex=0, slideStart=null;
-let totalVideoDuration=30000, slideDurations=[3000,6000,6000,6000,9000];
-let overlayOpacity=0.55, currentOverlay='sage';
-let _muxerLoaded=false;
+// Emojis por tipo de slide para recetas
+const RECIPE_ICONS = {
+  hook:        '🍽️',
+  why:         '✨',
+  ingredients: '🛒',
+  prep:        '⏱️',
+  cta:         '💚',
+};
+const CONTENT_ICONS = ['💧','🌿','⚡','🔥','✨'];
 
-function calcDurations(totalMs){
-  const hook=3000;
-  const cta=Math.round(Math.max(5000, totalMs*0.25));
-  const content=Math.round((totalMs-hook-cta)/3);
-  return [hook, content, content, content, totalMs-hook-content*3];
+// Evita repetir los mismos temas/recetas en generaciones consecutivas (persiste entre sesiones)
+const HISTORY_KEY = 'pv_topic_history_v1';
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveHistory(h) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e) {}
+}
+function pickWithoutRepeat(pool, key) {
+  const history  = loadHistory();
+  const recent   = history[key] || [];
+  const maxRecent = Math.max(1, pool.length - 1); // no repetir hasta agotar el pool
+  let candidates = pool.map((_, i) => i).filter(i => !recent.includes(i));
+  if (!candidates.length) candidates = pool.map((_, i) => i);
+  const idx = candidates[Math.floor(Math.random() * candidates.length)];
+  history[key] = [...recent, idx].slice(-maxRecent);
+  saveHistory(history);
+  return pool[idx];
 }
 
+let slides=[], slideImages=[], caption='', currentContentType='educational';
+let animating=false, animFrame=null, slideIndex=0, slideStart=null;
+let totalVideoDuration=25000, slideDurations=[];
+let overlayOpacity=0.52, currentOverlay='sage';
+let _muxerLoaded=false;
+
+// Easing
+function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+function easeOutBack(t) { const c = 1.70158; return 1 + (c+1)*Math.pow(t-1,3) + c*Math.pow(t-1,2); }
+
+// Duración adaptada por tipo de contenido
+function calcDurations(totalMs, isRecipe) {
+  if (isRecipe) {
+    // Slide 2 (why) intencionalmente más corta: 10% — golpe emocional rápido, sin tiempo de abandonar
+    const hook = Math.round(totalMs * 0.17); // plato terminado
+    const why  = Math.round(totalMs * 0.10); // beneficio: rápido y directo
+    const ing  = Math.round(totalMs * 0.25); // ingredientes con reveal progresivo
+    const prep = Math.round(totalMs * 0.28); // pasos con reveal progresivo
+    const cta  = totalMs - hook - why - ing - prep;
+    return [hook, why, ing, prep, cta];
+  } else {
+    const hook = 3000;
+    const cta  = Math.round(Math.max(4500, totalMs * 0.22));
+    const content = Math.round((totalMs - hook - cta) / 3);
+    return [hook, content, content, content, totalMs - hook - content*3];
+  }
+}
+
+document.getElementById('contentType').addEventListener('change', function() {
+  const isRecipe = this.value.startsWith('recipe-');
+  document.getElementById('recipeHint').style.display = isRecipe ? 'block' : 'none';
+  if (isRecipe) {
+    document.getElementById('slideDur').value = 25;
+    document.getElementById('durVal').textContent = '25s';
+    totalVideoDuration = 25000;
+    document.getElementById('overlaySel').value = 'warm';
+    currentOverlay = 'warm';
+    document.getElementById('overlayOpacity').value = 48;
+    document.getElementById('opacityVal').textContent = '48%';
+    overlayOpacity = 0.48;
+  }
+});
+
 document.getElementById('slideDur').addEventListener('input', function() {
-  const totalSec = parseFloat(this.value);
-  totalVideoDuration = totalSec*1000;
-  slideDurations = calcDurations(totalVideoDuration);
-  document.getElementById('durVal').textContent = totalSec+'s';
+  totalVideoDuration = parseFloat(this.value) * 1000;
+  document.getElementById('durVal').textContent = this.value + 's';
+  slideDurations = calcDurations(totalVideoDuration, currentContentType.startsWith('recipe-'));
 });
 document.getElementById('overlayOpacity').addEventListener('input', function() {
-  overlayOpacity = parseInt(this.value)/100;
-  document.getElementById('opacityVal').textContent = this.value+'%';
+  overlayOpacity = parseInt(this.value) / 100;
+  document.getElementById('opacityVal').textContent = this.value + '%';
   if (slides.length) renderSlide(slideIndex, 0);
 });
 document.getElementById('overlaySel').addEventListener('change', function() {
@@ -164,117 +241,136 @@ document.getElementById('overlaySel').addEventListener('change', function() {
   if (slides.length) renderSlide(slideIndex, 0);
 });
 
-async function generateVideo() {
-  const product = document.getElementById('productSel').value;
-  const contentType = document.getElementById('contentType').value;
-  stopAnimation();
-  setStatus('⏳ Generando contenido con IA…');
-  ['generateBtn','regenBtn','recordBtn'].forEach(id => document.getElementById(id).disabled=true);
+// ── TEMAS ─────────────────────────────────────────────────────
+const BREAKFAST_TOPICS = [
+  { topic: 'batido verde con espinaca, banana y proteína', result: 'energía en 10 minutos', time: '5 minutos' },
+  { topic: 'bowl de avena proteica con frutos rojos y mantequilla de maní', result: 'saciedad por 4 horas', time: '8 minutos' },
+  { topic: 'tostadas de aguacate con huevo pochado y semillas', result: 'metabolismo activo toda la mañana', time: '10 minutos' },
+  { topic: 'panqueques proteicos de banana sin harina blanca ni azúcar', result: 'sin culpa y rico en proteína', time: '12 minutos' },
+  { topic: 'overnight oats con chía, coco y fruta fresca', result: 'preparado en 2 minutos la noche anterior', time: '2 minutos (noche anterior)' },
+  { topic: 'smoothie bowl antioxidante con açaí, berries y granola', result: 'piel radiante y energía limpia', time: '7 minutos' },
+  { topic: 'huevos revueltos con vegetales y queso cottage', result: 'proteína completa sin esfuerzo', time: '8 minutos' },
+  { topic: 'yogur griego con granola casera, miel y nueces', result: 'probióticos naturales y saciedad real', time: '3 minutos' },
+];
 
-  const productMap = {
-    none:null, vitaxtra:'Vita Xtra T+ (energía natural, antioxidantes)',
-    thermo:'Thermo T3 (quema de grasa, termogénico)',
-    nocarb:'NoCArb (control de carbohidratos, saciedad)',
-    bioprofit:'Bio Profit (probióticos, salud intestinal)',
-    prunex:'Prunex 1 (detox colon, tránsito intestinal)',
+const LUNCH_TOPICS = [
+  { topic: 'bowl de arroz integral con pollo al limón y vegetales asados', result: 'almuerzo completo y sin hinchazón', time: '20 minutos' },
+  { topic: 'ensalada de quinoa con pollo, aguacate y aderezo de limón', result: 'proteína + grasa + fibra en un plato', time: '15 minutos' },
+  { topic: 'wrap integral de atún, vegetales y hummus', result: 'almuerzo rápido que no te pesa', time: '10 minutos' },
+  { topic: 'sopa cremosa de lentejas rojas con cúrcuma y jengibre', result: 'antiinflamatorio natural que sacia', time: '25 minutos' },
+  { topic: 'bowl de legumbres con arroz, aguacate y salsa tahini', result: 'energía sostenida sin bajón de glucosa', time: '15 minutos' },
+  { topic: 'pechuga de pollo con batata asada, brócoli y salsa de mostaza', result: 'masa muscular y quema de grasa', time: '30 minutos' },
+  { topic: 'salteado de vegetales con tofu, jengibre y arroz basmati', result: 'liviano, saciante y antiinflamatorio', time: '18 minutos' },
+  { topic: 'pasta integral con salsa de tomate natural, albahaca y atún', result: 'carbohidratos sin picos de glucosa', time: '20 minutos' },
+];
+
+const EDU_TOPICS = [
+  'energía natural y vitalidad durante el día',
+  'alimentación saludable y nutrición práctica',
+  'pérdida de peso sostenible sin dietas extremas',
+  'metabolismo activo y quema de grasa',
+  'digestión saludable y microbiota intestinal',
+  'hidratación y su impacto en el cuerpo',
+  'sueño reparador y recuperación del cuerpo',
+  'inflamación crónica y cómo reducirla con alimentación',
+  'azúcar en sangre y cómo estabilizarla naturalmente',
+  'antioxidantes, detox y limpieza del organismo',
+  'proteínas, músculos y composición corporal',
+  'hábitos matutinos que transforman el metabolismo',
+  'alimentos que aceleran la pérdida de grasa',
+  'carbohidratos: cuáles comer y cuáles evitar',
+  'grasas saludables y su rol en la energía',
+  'control del apetito y saciedad natural',
+  'estrés, cortisol y su efecto en el peso',
+  'fibra, tránsito intestinal y salud digestiva',
+];
+
+// ── PROMPTS ───────────────────────────────────────────────────
+function buildRecipePrompt(contentType, prod, prodName) {
+  const pool = contentType === 'recipe-breakfast' ? BREAKFAST_TOPICS : LUNCH_TOPICS;
+  const picked = pickWithoutRepeat(pool, contentType);
+  const mealLabel = contentType === 'recipe-breakfast' ? 'desayuno' : 'almuerzo';
+
+  return {
+    picked,
+    prompt: `Sos experto en contenido viral de recetas saludables para Instagram LATAM. Tu objetivo es maximizar la retención en cada segundo del Reel usando la estructura probada de los creadores con más de 1M de seguidores. Respondé SOLO en JSON válido.
+
+Receta: ${picked.topic}
+Resultado clave: ${picked.result}
+Tiempo de preparación: ${picked.time}
+${prod ? `Producto a mencionar SOLO en el CTA: ${prodName}` : 'Sin mencionar marcas ni productos.'}
+
+ESTRUCTURA OBLIGATORIA (patrón viral de retención máxima):
+
+SLIDE 1 — HOOK VISUAL (el plato terminado, no ingredientes):
+Mostrás el resultado final primero — el plato listo y apetitoso. El título debe crear urgencia o aspiración inmediata. NO uses "¿Lo sabías?" ni frases educativas. Usá patrones como: "El ${mealLabel} que cambió mi cuerpo", "Por esto nunca me salto el ${mealLabel}", "Perdí Xkg comiendo ESTO cada día", "El ${mealLabel} de las chicas fit". Subtitle vacío "".
+photo_query: close-up beautiful plated ${mealLabel === 'desayuno' ? 'breakfast bowl food photography' : 'lunch bowl healthy food photography'} natural light — específico y apetitoso.
+
+SLIDE 2 — EL POR QUÉ (beneficio emocional, brevísimo — máx 6 palabras en título):
+Este slide dura solo 2-3 segundos — debe impactar de inmediato. Título: beneficio específico y emocional que nadie esperaba. NO uses genéricos como "es saludable" o "te nutre". Usá frases como "Sin hambre hasta las 3pm", "Perdí 4kg así de fácil", "Adiós hinchazón para siempre". Subtítulo: 1 consecuencia real y cotidiana en menos de 10 palabras.
+photo_query: generá vos un query en inglés distinto cada vez, ligado a la emoción específica de este beneficio (ej: energía, saciedad, piel, humor) — NUNCA reutilices literalmente "energetic woman happy morning lifestyle", variá término y ángulo en cada generación.
+
+SLIDE 3 — INGREDIENTES (con su superpoder):
+Título: "Lo que necesitás" o "Solo X ingredientes". Subtítulo: lista de 4-5 ingredientes, cada uno con su beneficio en 2 palabras separados por · (ej: "Avena · saciedad · Banana · energía · Chía · omega 3"). Que cada ingrediente justifique por qué está.
+photo_query: flat lay healthy ingredients ${picked.topic.split(' ')[0]} food photography overhead — bonita y ordenada.
+
+SLIDE 4 — PREPARACIÓN ULTRA RÁPIDA:
+Título: tiempo y dificultad en 4 palabras (ej: "Listo en 5 minutos", "3 pasos, sin cocina"). Subtítulo: exactamente 3 pasos cortos numerados separados por · que demuestren lo fácil que es. Que suene imposiblemente simple.
+photo_query: generá vos un query en inglés específico a la preparación de ${picked.topic} (ingrediente o técnica concreta de este plato) — NUNCA reutilices literalmente "step by step healthy meal preparation kitchen simple", que sea distinto en cada receta.
+
+SLIDE 5 — CTA POTENTE:
+Título: urgencia para guardar o compartir (ej: "Guardalo 👆 lo vas a necesitar", "Compartilo con quien necesita esto", "Seguinos para más recetas fit"). Subtítulo: social proof + resultado + ${prod ? `mencioná ${prodName} como potenciador natural` : 'cerrá con el beneficio principal'}.
+photo_query: woman enjoying healthy ${mealLabel} happy lifestyle morning — resultado emocional.
+
+CAPTION INSTAGRAM VIRAL (máx 180 palabras):
+- Primer línea: el hook más fuerte (lo que aparece antes del "ver más")
+- Desarrollá el tema con valor real
+- Pregunta que genere comentarios
+- Emojis estratégicos
+- Hashtags: 5 grandes + 8 de nicho específicos de recetas saludables LATAM
+
+CAMPO "teaser" (OBLIGATORIO en slides 1, 2, 3 y 4): frase corta de máx 5 palabras que genera FOMO sobre el slide siguiente. Ej slide 1: "El ingrediente que lo cambia →", slide 2: "Solo 4 ingredientes →", slide 3: "Listo en 5 minutos →", slide 4: "Guardá esto →". Debe crear intriga, no describir.
+
+JSON:
+{
+  "slides":[
+    {"type":"hook","title":"...","subtitle":"","teaser":"...","photo_query":"..."},
+    {"type":"why","title":"...","subtitle":"...","teaser":"...","photo_query":"..."},
+    {"type":"ingredients","title":"...","subtitle":"...","teaser":"...","photo_query":"..."},
+    {"type":"prep","title":"...","subtitle":"...","teaser":"...","photo_query":"..."},
+    {"type":"cta","title":"...","subtitle":"...","photo_query":"..."}
+  ],
+  "caption":"..."
+}`
   };
+}
+
+function buildEduPrompt(contentType, topic, prod, prodName) {
   const typeMap = {
-    educational:'3 tips o datos educativos', myth:'desmontá 1 mito con su realidad',
-    benefits:'3 beneficios clave', routine:'rutina saludable de 3 pasos',
-    question:'pregunta gancho + 2 respuestas sorprendentes',
-    'recipe-breakfast':'receta de desayuno saludable',
-    'recipe-lunch':'receta de almuerzo saludable',
+    educational: '3 tips o datos educativos sorprendentes',
+    myth: 'desmontá 1 mito con su realidad (estructura: el mito falso, la verdad, la consecuencia)',
+    benefits: '3 beneficios clave que la gente no conoce',
+    routine: 'rutina saludable de 3 pasos que cualquiera puede hacer',
+    question: 'pregunta gancho + 2 respuestas que sorprenden',
   };
-  const BREAKFAST_TOPICS = [
-    'batido verde energizante con espinaca y banana',
-    'bowl de avena con frutas y semillas',
-    'tostadas saludables con palta y huevo',
-    'panqueques proteicos sin harina blanca',
-    'yogur natural con granola casera y berries',
-    'smoothie bowl antioxidante para empezar el día',
-    'huevos revueltos con vegetales y queso fresco',
-    'overnight oats: avena preparada la noche anterior',
-  ];
-  const LUNCH_TOPICS = [
-    'bowl de arroz integral con pollo y vegetales asados',
-    'ensalada completa con proteína y grasas saludables',
-    'wrap integral con atún y vegetales frescos',
-    'sopa nutritiva de lentejas y verduras',
-    'salteado de vegetales con quinoa y tofu',
-    'bowl de legumbres con arroz y aguacate',
-    'pechuga de pollo al horno con batata y brócoli',
-    'pasta integral con salsa de tomate natural y albahaca',
-  ];
-  const TOPICS = [
-    'energía natural y vitalidad durante el día',
-    'alimentación saludable y nutrición práctica',
-    'pérdida de peso sostenible sin dietas extremas',
-    'metabolismo activo y quema de grasa',
-    'digestión saludable y microbiota intestinal',
-    'hidratación y su impacto en el cuerpo',
-    'sueño reparador y recuperación del cuerpo',
-    'inflamación crónica y cómo reducirla con alimentación',
-    'azúcar en sangre y cómo estabilizarla naturalmente',
-    'antioxidantes, detox y limpieza del organismo',
-    'proteínas, músculos y composición corporal',
-    'hábitos matutinos que transforman el metabolismo',
-    'alimentos que aceleran la pérdida de grasa',
-    'carbohidratos: cuáles comer y cuáles evitar',
-    'grasas saludables y su rol en la energía',
-    'control del apetito y saciedad natural',
-    'estrés, cortisol y su efecto en el peso',
-    'fibra, tránsito intestinal y salud digestiva',
-    'vitaminas y minerales esenciales para la energía',
-    'rutinas de bienestar que se mantienen en el tiempo',
-    'receta saludable rápida: desayuno nutritivo y energizante',
-    'receta saludable: snack sin culpa alto en proteína',
-    'receta saludable: almuerzo liviano que sacia y nutre',
-    'receta detox: jugo o batido verde depurativo',
-    'receta de meal prep: preparar comida sana para toda la semana',
-    'receta anti-inflamatoria: ingredientes que sanan desde adentro',
-    'receta saludable: cena liviana para dormir mejor y bajar de peso',
-    'receta saludable: bowl nutritivo con proteínas y vegetales',
-  ];
-  const topicPool = contentType==='recipe-breakfast' ? BREAKFAST_TOPICS
-    : contentType==='recipe-lunch' ? LUNCH_TOPICS
-    : TOPICS;
-  const topic = topicPool[Math.floor(Math.random()*topicPool.length)];
-  const prod = productMap[product];
-  const seed = Math.floor(Math.random()*99999);
+  return `Sos experto en marketing de contenido viral para Instagram LATAM especializado en salud y bienestar. Dominás la estructura hook-retención-CTA que usan los mejores creadores. Respondé SOLO en JSON válido, sin markdown, sin texto extra.
 
-  try {
-    const res = await fetch('https://powervita.vercel.app/api/claude', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1200,
-        system: `Sos experto en marketing de contenido viral para Instagram LATAM especializado en salud y bienestar. Dominás la estructura hook-retención-CTA que usan los mejores creadores con millones de seguidores. NUNCA hablés de ciclo menstrual, hormonas reproductivas ni salud ginecológica. Respondé SOLO en JSON válido, sin markdown, sin texto extra.`,
-        messages: [{role:'user', content:`Seed:${seed}
 Tema: ${topic}
-Tarea: ${typeMap[contentType]}
-${prod ? `Producto: ${prod} (mencionarlo solo en el CTA como solución natural)` : 'SIN mencionar productos ni marcas.'}
+Tarea: ${typeMap[contentType] || typeMap.educational}
+${prod ? `Producto: ${prodName} (mencionarlo solo en el CTA como solución natural)` : 'SIN mencionar productos ni marcas.'}
 
-Estructura del Reel (30 segundos, fórmula viral):
+Estructura del Reel (fórmula viral):
 
-SLIDE 1 — HOOK (3 segundos, para el scroll):
-Título: frase corta e impactante, máx 7 palabras. Debe crear urgencia, curiosidad o sorpresa. Ejemplos del estilo: "Esto destruye tu metabolismo sin que lo sepas", "El error que te impide bajar de peso", "Lo que nadie te dice sobre ${topic}". Sin subtítulo.
+SLIDE 1 — HOOK (para el scroll, máx 7 palabras):
+Creá urgencia, curiosidad o sorpresa. NO uses "¿Lo sabías?" — está muy visto. Mejor: "Esto destruye tu metabolismo sin que lo sepas", "El error que te impide bajar de peso", "Nadie te dice esto sobre ${topic}". Sin subtítulo.
 
-${(contentType==='recipe-breakfast'||contentType==='recipe-lunch') ? `SLIDE 2 — INGREDIENTES:
-Título: nombre atractivo y apetitoso de la receta (ej: "Bowl energizante de avena y frutos rojos"). Subtítulo: lista de 4-5 ingredientes clave separados por · .
-SLIDE 3 — PREPARACIÓN:
-Título: "Cómo prepararlo". Subtítulo: 3 pasos muy breves, numerados, cada uno en media línea.
-SLIDE 4 — BENEFICIO:
-Título: el beneficio principal en 3-4 palabras (ej: "Energía por horas"). Subtítulo: por qué este ${contentType==='recipe-breakfast'?'desayuno':'almuerzo'} es ideal para la salud, en 1 línea.` :
-`SLIDES 2, 3 y 4 — RETENCIÓN (contenido de valor):
-Cada slide: dato sorprendente o tip accionable sobre ${topic}. Título corto (3-5 palabras). Subtítulo: explicación en 1 línea que genere "no sabía esto".`}
+SLIDES 2, 3 y 4 — RETENCIÓN:
+Dato sorprendente o tip accionable. Título corto (3-5 palabras). Subtítulo: explicación en 1 línea que haga pensar "no sabía esto" o "esto me pasa a mí".
 
-SLIDE 5 — CTA (potente, crea acción inmediata):
-Título: llamada a la acción directa y urgente. Ejemplos: "Guardá esto antes de olvidarlo 👆", "Compartilo con quien lo necesita hoy", "Seguinos para más secretos de salud". Subtítulo: refuerzo del beneficio${prod ? ` + mención de ${prod}` : ''}.
+SLIDE 5 — CTA:
+Llamada urgente a guardar o compartir. Subtítulo: refuerzo del beneficio${prod ? ` + "${prodName}" como solución natural` : ''}.
 
-Para cada slide: photo_query en inglés para Pexels (alimentos, naturaleza, bienestar — sin personas, sin texto en la imagen).
+photo_query en inglés para Pexels (alimentos, naturaleza, bienestar — sin personas, sin texto).
 
 JSON:
 {
@@ -286,314 +382,717 @@ JSON:
     {"type":"cta","title":"...","subtitle":"...","photo_query":"..."}
   ],
   "caption":"Caption Instagram viral: abrí con el hook, desarrollá el tema, cerrá con pregunta que invite a comentar. Emojis estratégicos. Hashtags mixtos (grandes + nicho). Máx 200 palabras."
-}`}]
+}`;
+}
+
+// ── GENERAR VIDEO ─────────────────────────────────────────────
+async function generateVideo() {
+  const product     = document.getElementById('productSel').value;
+  const contentType = document.getElementById('contentType').value;
+  currentContentType = contentType;
+  stopAnimation();
+  setStatus('⏳ Generando contenido con IA…');
+  ['generateBtn','regenBtn','recordBtn'].forEach(id => document.getElementById(id).disabled = true);
+
+  const productMap = {
+    none: null,
+    vitaxtra: 'Vita Xtra T+ (energía natural, antioxidantes)',
+    thermo:   'Thermo T3 (quema de grasa, termogénico)',
+    nocarb:   'NoCArb (control de carbohidratos, saciedad)',
+    bioprofit:'Bio Profit (probióticos, salud intestinal)',
+    prunex:   'Prunex 1 (detox colon, tránsito intestinal)',
+    nostress: 'No Stress (reduce estrés y ansiedad natural)',
+  };
+  const prod     = product !== 'none' ? product : null;
+  const prodName = prod ? productMap[prod] : null;
+  const isRecipe = contentType.startsWith('recipe-');
+
+  let systemPrompt, userPrompt;
+
+  if (isRecipe) {
+    const { picked, prompt } = buildRecipePrompt(contentType, prod, prodName);
+    systemPrompt = 'Sos experto en contenido viral de recetas saludables para Instagram LATAM. Respondé SOLO en JSON válido, sin markdown, sin texto extra.';
+    userPrompt   = prompt;
+  } else {
+    const pool  = EDU_TOPICS;
+    const topic = pickWithoutRepeat(pool, 'educational');
+    systemPrompt = 'Sos experto en marketing de contenido viral para Instagram LATAM especializado en salud y bienestar. NUNCA hablés de ciclo menstrual, hormonas reproductivas ni salud ginecológica. Respondé SOLO en JSON válido, sin markdown, sin texto extra.';
+    userPrompt   = buildEduPrompt(contentType, topic, prod, prodName);
+  }
+
+  slideDurations = calcDurations(totalVideoDuration, isRecipe);
+
+  try {
+    const res = await fetch('https://powervita.vercel.app/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1400,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
       })
     });
 
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const raw = data.content.map(b=>b.text||'').join('');
-    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
-    slides = parsed.slides;
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    const raw    = data.content.map(b => b.text || '').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    slides  = parsed.slides;
     caption = parsed.caption;
-    slideDurations = calcDurations(totalVideoDuration);
+    _shadowCache.clear();
     document.getElementById('captionBox').textContent = caption;
 
     setStatus('🖼️ Buscando fotos en Pexels…');
-    slideImages = await fetchPexelsImages(slides);
+    slideImages = await fetchPexelsImages(slides, isRecipe);
 
     buildDots(slides.length);
-    slideIndex=0;
+    slideIndex = 0;
     startAnimation();
-    ['generateBtn','regenBtn','recordBtn'].forEach(id=>document.getElementById(id).disabled=false);
+    ['generateBtn','regenBtn','recordBtn'].forEach(id => document.getElementById(id).disabled = false);
     setStatus('✅ Video listo — preview en loop');
   } catch(err) {
     console.error(err);
-    setStatus('❌ Error: '+err.message);
-    ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=false);
+    setStatus('❌ Error: ' + err.message);
+    ['generateBtn','regenBtn'].forEach(id => document.getElementById(id).disabled = false);
   }
 }
 
-async function fetchPexelsImages(slides) {
-  const images=[];
+// ── PEXELS ────────────────────────────────────────────────────
+async function fetchPexelsImages(slides, isRecipe) {
+  const images = [];
   for (const slide of slides) {
     try {
-      const q = encodeURIComponent(slide.photo_query||'wellness nature');
+      // Para recetas usamos queries más específicos de comida
+      let q = slide.photo_query || (isRecipe ? 'healthy food photography' : 'wellness nature');
+      q = encodeURIComponent(q);
+      // Alternamos página de resultados para no pescar siempre las mismas fotos top
+      const page = 1 + Math.floor(Math.random() * 3);
       const res = await fetch(
-        `https://api.pexels.com/v1/search?query=${q}&per_page=8&orientation=portrait`,
+        `https://api.pexels.com/v1/search?query=${q}&per_page=10&page=${page}&orientation=portrait`,
         { headers: { Authorization: PEXELS_KEY } }
       );
-      const data = await res.json();
-      const photos = data.photos||[];
+      const data   = await res.json();
+      const photos = data.photos || [];
       if (photos.length) {
-        const pick = photos[Math.floor(Math.random()*photos.length)];
-        const img = await loadImage(pick.src.large2x||pick.src.large);
+        // Para recetas: preferimos buena resolución pero sorteamos entre las mejores para variar
+        const pick = isRecipe
+          ? photos.slice().sort((a,b) => b.width - a.width).slice(0, 5)[Math.floor(Math.random() * Math.min(5, photos.length))]
+          : photos[Math.floor(Math.random() * photos.length)];
+        const img = await loadImage(pick.src.large2x || pick.src.large);
         images.push(img);
-      } else { images.push(null); }
+      } else {
+        images.push(null);
+      }
     } catch(e) { images.push(null); }
   }
   return images;
 }
 
 function loadImage(url) {
-  return new Promise(resolve=>{
-    const img=new Image();
-    img.crossOrigin='anonymous';
-    img.onload=()=>resolve(img);
-    img.onerror=()=>resolve(null);
-    img.src=url;
+  return new Promise(resolve => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload  = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = url;
   });
 }
 
+// ── ANIMACIÓN ─────────────────────────────────────────────────
 function startAnimation() {
-  stopAnimation(); animating=true; slideStart=performance.now(); slideIndex=0;
-  animFrame=requestAnimationFrame(loop);
+  stopAnimation(); animating = true; slideStart = performance.now(); slideIndex = 0;
+  animFrame = requestAnimationFrame(loop);
 }
 function stopAnimation() {
-  animating=false; if(animFrame) cancelAnimationFrame(animFrame); animFrame=null;
+  animating = false; if (animFrame) cancelAnimationFrame(animFrame); animFrame = null;
 }
 function loop(now) {
-  if(!animating) return;
-  const dur=slideDurations[slideIndex]||6000;
-  const elapsed=now-slideStart;
-  const progress=Math.min(elapsed/dur,1);
+  if (!animating) return;
+  const dur     = slideDurations[slideIndex] || 5000;
+  const elapsed = now - slideStart;
+  const progress = Math.min(elapsed / dur, 1);
   renderSlide(slideIndex, progress);
-  const totalMs=slideDurations.reduce((a,b)=>a+b,0);
-  const elapsedTotal=slideDurations.slice(0,slideIndex).reduce((a,b)=>a+b,0)+elapsed;
-  document.getElementById('progressFill').style.width=Math.min(elapsedTotal/totalMs*100,100)+'%';
+  const totalMs      = slideDurations.reduce((a,b) => a+b, 0);
+  const elapsedTotal = slideDurations.slice(0, slideIndex).reduce((a,b) => a+b, 0) + elapsed;
+  document.getElementById('progressFill').style.width = Math.min(elapsedTotal / totalMs * 100, 100) + '%';
   updateDots(slideIndex);
-  if(progress>=1){
-    slideIndex=(slideIndex+1)%slides.length;
-    if(slideIndex===0) document.getElementById('progressFill').style.width='0%';
-    slideStart=performance.now();
+  if (progress >= 1) {
+    slideIndex = (slideIndex + 1) % slides.length;
+    if (slideIndex === 0) document.getElementById('progressFill').style.width = '0%';
+    slideStart = performance.now();
   }
-  animFrame=requestAnimationFrame(loop);
+  animFrame = requestAnimationFrame(loop);
 }
 
+// ── RENDER SLIDES ─────────────────────────────────────────────
+let _topGradient = null, _bottomGradient = null; // constantes en W/H, se cachean para no rehacerse en cada frame
 function renderSlide(idx, progress) {
-  const canvas=document.getElementById('vc');
-  const ctx=canvas.getContext('2d');
-  const W=1080,H=1920;
-  const slide=slides[idx], img=slideImages[idx];
-  if(!slide) return;
-  const fadeIn=Math.min(progress/0.12,1);
-  const fadeOut=progress>0.88?1-(progress-0.88)/0.12:1;
-  const alpha=Math.min(fadeIn,fadeOut);
-  ctx.clearRect(0,0,W,H);
-  if(img){
+  const canvas = document.getElementById('vc');
+  const ctx    = canvas.getContext('2d');
+  const W = 1080, H = 1920;
+  const slide    = slides[idx];
+  const nextSlide= slides[idx + 1] || null;
+  const img      = slideImages[idx];
+  if (!slide) return;
+
+  // Fade global: entra rápido (8%), sale rápido (92%)
+  const fadeIn  = Math.min(progress / 0.08, 1);
+  const fadeOut = progress > 0.92 ? 1 - (progress - 0.92) / 0.08 : 1;
+  const alpha   = Math.min(fadeIn, fadeOut);
+
+  // Progreso de animación del contenido (0→1 en primeros 30%)
+  const contentP  = Math.min(progress / 0.30, 1);          // texto principal
+  const subtitleP = progress < 0.22 ? 0 : Math.min((progress - 0.22) / 0.25, 1); // subtítulo
+  const teaserP   = progress < 0.68 ? 0 : Math.min((progress - 0.68) / 0.18, 1); // próximo slide
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Imagen de fondo con zoom ken burns
+  if (img) {
     ctx.save();
-    const zoom=1+progress*0.06;
-    ctx.translate(W/2,H/2); ctx.scale(zoom,zoom); ctx.translate(-W/2,-H/2);
-    const iR=img.width/img.height,cR=W/H;
-    let dw,dh,dx,dy;
-    if(iR>cR){dh=H;dw=H*iR;dx=(W-dw)/2;dy=0;}
-    else{dw=W;dh=W/iR;dx=0;dy=(H-dh)/2;}
-    ctx.drawImage(img,dx,dy,dw,dh);
+    const zoom = 1 + progress * 0.035;
+    ctx.translate(W/2, H/2); ctx.scale(zoom, zoom); ctx.translate(-W/2, -H/2);
+    const iR = img.width / img.height, cR = W / H;
+    let dw, dh, dx, dy;
+    if (iR > cR) { dh=H; dw=H*iR; dx=(W-dw)/2; dy=0; }
+    else          { dw=W; dh=W/iR; dx=0; dy=(H-dh)/2; }
+    ctx.drawImage(img, dx, dy, dw, dh);
     ctx.restore();
   } else {
-    const g=ctx.createLinearGradient(0,0,W,H);
-    g.addColorStop(0,'#3a5c3a');g.addColorStop(1,'#1a3020');
-    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#3a5c3a'); g.addColorStop(1, '#1a3020');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
-  const [r,g,b]=OVERLAYS[currentOverlay]||OVERLAYS.sage;
-  ctx.fillStyle=`rgba(${r},${g},${b},${overlayOpacity})`;
-  ctx.fillRect(0,0,W,H);
-  const tg=ctx.createLinearGradient(0,0,0,H*0.4);
-  tg.addColorStop(0,'rgba(0,0,0,0.6)');tg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=tg;ctx.fillRect(0,0,W,H*0.4);
-  const bg2=ctx.createLinearGradient(0,H*0.6,0,H);
-  bg2.addColorStop(0,'rgba(0,0,0,0)');bg2.addColorStop(1,'rgba(0,0,0,0.72)');
-  ctx.fillStyle=bg2;ctx.fillRect(0,H*0.6,W,H*0.4);
-  ctx.globalAlpha=alpha;
-  ctx.textAlign='left';ctx.font='500 34px Inter,Arial,sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillText('@powervita_uy',72,96);
-  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillRect(72,114,300,2);
-  ctx.textAlign='right';ctx.font='500 32px Inter,Arial,sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fillText(`${idx+1}/${slides.length}`,W-72,96);
-  if(slide.type==='hook') renderHook(ctx,slide,W,H);
-  else if(slide.type==='cta') renderCTA(ctx,slide,W,H);
-  else renderPoint(ctx,slide,W,H,idx);
-  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,H-100,W,100);
-  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='500 32px Inter,Arial,sans-serif';
-  ctx.textAlign='center';ctx.fillText('Power Vita · powervita.vercel.app',W/2,H-38);
-  ctx.globalAlpha=1;
+
+  // Overlay de color
+  const [r, g, b] = OVERLAYS[currentOverlay] || OVERLAYS.sage;
+  ctx.fillStyle = `rgba(${r},${g},${b},${overlayOpacity})`;
+  ctx.fillRect(0, 0, W, H);
+
+  // Gradientes top/bottom (cacheados: mismas coordenadas y colores en todos los frames)
+  if (!_topGradient) {
+    _topGradient = ctx.createLinearGradient(0, 0, 0, H * 0.38);
+    _topGradient.addColorStop(0, 'rgba(0,0,0,0.68)'); _topGradient.addColorStop(1, 'rgba(0,0,0,0)');
+  }
+  ctx.fillStyle = _topGradient; ctx.fillRect(0, 0, W, H * 0.38);
+
+  if (!_bottomGradient) {
+    _bottomGradient = ctx.createLinearGradient(0, H * 0.52, 0, H);
+    _bottomGradient.addColorStop(0, 'rgba(0,0,0,0)'); _bottomGradient.addColorStop(1, 'rgba(0,0,0,0.82)');
+  }
+  ctx.fillStyle = _bottomGradient; ctx.fillRect(0, H * 0.52, W, H * 0.48);
+
+  ctx.globalAlpha = alpha;
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.font = '500 34px Inter,Arial,sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText('@powervita_uy', 72, 96);
+  ctx.fillStyle = 'rgba(255,255,255,0.28)';
+  ctx.fillRect(72, 114, 280, 2);
+  ctx.textAlign = 'right';
+  ctx.font = '500 32px Inter,Arial,sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.52)';
+  ctx.fillText(`${idx+1}/${slides.length}`, W - 72, 96);
+
+  const isRecipe = currentContentType.startsWith('recipe-');
+
+  // ── Renderizado por tipo con animaciones ──
+  if (slide.type === 'hook') {
+    if (isRecipe) renderRecipeHook(ctx, slide, W, H, contentP, subtitleP);
+    else          renderEduHook(ctx, slide, W, H, contentP);
+  } else if (slide.type === 'why')         renderWhy(ctx, slide, W, H, contentP, subtitleP);
+  else if (slide.type === 'ingredients')   renderIngredients(ctx, slide, W, H, contentP, subtitleP, progress);
+  else if (slide.type === 'prep')          renderPrep(ctx, slide, W, H, contentP, progress);
+  else if (slide.type === 'cta')           renderCTA(ctx, slide, W, H, isRecipe, contentP, subtitleP);
+  else                                     renderPoint(ctx, slide, W, H, idx, contentP, subtitleP);
+
+  // ── TEASER próximo slide (aparece al 68%) ──
+  if (nextSlide && teaserP > 0 && slide.teaser) {
+    const ta = teaserP * alpha;
+    // Fondo pill
+    ctx.globalAlpha = ta * 0.88;
+    ctx.font = 'bold 36px Inter,Arial,sans-serif';
+    const teaserText = slide.teaser;
+    const tw = ctx.measureText(teaserText).width + 60;
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    roundRect(ctx, W/2 - tw/2, H - 220, tw, 60, 30);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.fillText(teaserText, W/2, H - 182);
+    // Flecha animada
+    const arrowBounce = Math.sin(Date.now() / 280) * 6;
+    ctx.font = '38px Arial';
+    ctx.fillText('↓', W/2, H - 138 + arrowBounce);
+  }
+
+  // Footer
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillRect(0, H - 90, W, 90);
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.font = '500 30px Inter,Arial,sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Power Vita · powervita.vercel.app', W/2, H - 30);
+
+  ctx.globalAlpha = 1;
 }
 
-function renderHook(ctx,slide,W,H){
-  ctx.textAlign='center';
-  ctx.font=`italic 700 52px 'Playfair Display',Georgia,serif`;
-  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.fillText('¿Lo sabías?',W/2,H*0.36);
-  ctx.font=`900 ${fs(slide.title,88,118)}px 'Playfair Display',Georgia,serif`;
-  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=20;
-  wrapText(ctx,slide.title,W/2,H*0.46,W-160,lh(fs(slide.title,88,118)));
-  ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillRect(W/2-60,H*0.66,120,3);
-}
-function renderPoint(ctx,slide,W,H,idx){
-  const icons=['💧','🌿','⚡','🔥','✨'];
-  ctx.textAlign='center';ctx.font='110px Arial';
-  ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=16;
-  ctx.fillText(icons[(idx-1)%icons.length],W/2,H*0.30);ctx.shadowBlur=0;
-  ctx.font=`700 ${fs(slide.title,72,92)}px 'Playfair Display',Georgia,serif`;
-  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=18;
-  wrapText(ctx,slide.title,W/2,H*0.46,W-160,lh(fs(slide.title,72,92)));ctx.shadowBlur=0;
-  if(slide.subtitle){
-    ctx.font='400 44px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.82)';
-    wrapText(ctx,slide.subtitle,W/2,H*0.66,W-200,58);
-  }
-}
-function renderCTA(ctx,slide,W,H){
-  ctx.textAlign='center';
-  ctx.font=`italic 700 54px 'Playfair Display',Georgia,serif`;
-  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.fillText('¡No te lo pierdas!',W/2,H*0.32);
-  ctx.font=`900 ${fs(slide.title,72,96)}px 'Playfair Display',Georgia,serif`;
-  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,0.65)';ctx.shadowBlur=22;
-  wrapText(ctx,slide.title,W/2,H*0.48,W-140,lh(fs(slide.title,72,96)));ctx.shadowBlur=0;
-  if(slide.subtitle){
-    ctx.font='400 44px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.82)';
-    wrapText(ctx,slide.subtitle,W/2,H*0.68,W-200,60);
-  }
-  ctx.font='64px Arial';ctx.fillText('👆',W/2,H*0.80);
+// ── RENDERIZADORES ESPECÍFICOS ────────────────────────────────
+
+// Helper: Y con animación de entrada desde abajo
+function animY(baseY, progress, offsetPx) {
+  return baseY + (1 - easeOut(progress)) * (offsetPx || 70);
 }
 
-function fs(text,min,max){
-  if(!text) return min;
-  return text.length>30?min:text.length>18?Math.round((min+max)/2):max;
-}
-function lh(size){return size*1.28;}
-function wrapText(ctx,text,x,y,maxW,lineHeight){
-  if(!text) return;
-  const words=text.split(' ');let line='',curY=y;
-  for(const word of words){
-    const test=line+(line?' ':'')+word;
-    if(ctx.measureText(test).width>maxW&&line){ctx.fillText(line,x,curY);line=word;curY+=lineHeight;}
-    else{line=test;}
+// Cache de texto con sombra: ctx.shadowBlur es carísimo (rasterizado por software) y
+// antes se recalculaba en cada uno de los 300-900 frames del export aunque el texto
+// no cambia dentro de un mismo slide. Se renderiza una sola vez a un canvas offscreen
+// del tamaño completo y después se compone por frame con drawImage (barato), aplicando
+// el offset de animación y el globalAlpha ya seteado por el caller.
+const _shadowCache = new Map();
+function cachedShadowDraw(ctx, W, H, key, offsetY, drawFn) {
+  let off = _shadowCache.get(key);
+  if (!off) {
+    off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const octx = off.getContext('2d');
+    octx.textAlign = 'center';
+    drawFn(octx);
+    _shadowCache.set(key, off);
   }
-  ctx.fillText(line,x,curY);
+  if (offsetY) ctx.drawImage(off, 0, offsetY);
+  else ctx.drawImage(off, 0, 0);
 }
 
-function buildDots(n){
-  const wrap=document.getElementById('slideDots');wrap.innerHTML='';
-  for(let i=0;i<n;i++){
-    const d=document.createElement('div');
-    d.className='dot'+(i===0?' active':'');wrap.appendChild(d);
+function renderRecipeHook(ctx, slide, W, H, contentP, subtitleP) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  // Badge animado
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.4, 1));
+  ctx.font = 'bold 32px Inter,Arial,sans-serif';
+  const badge = '🍽️ NUEVA RECETA';
+  const bw = ctx.measureText(badge).width + 48;
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  roundRect(ctx, W/2 - bw/2, H*0.34 - 28, bw, 46, 23);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.fillText(badge, W/2, H*0.34 + 8);
+
+  // Título: sube desde abajo
+  const titleA = easeOut(Math.min(contentP / 0.6, 1));
+  ctx.globalAlpha = baseA * titleA;
+  const titleBaseY = H*0.50;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.6, 1), 80);
+  cachedShadowDraw(ctx, W, H, `rHook-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `900 ${fs(slide.title, 80, 108)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.72)'; octx.shadowBlur = 26;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 120, lh(fs(slide.title, 80, 108)));
+  });
+  ctx.globalAlpha = baseA;
+
+  // Separador + swipe hint
+  if (subtitleP > 0) {
+    ctx.globalAlpha = baseA * easeOut(subtitleP);
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    ctx.fillRect(W/2 - 55, H*0.72, 110, 3);
+    ctx.font = '400 34px Inter,Arial,sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.62)';
+    ctx.fillText('Deslizá para ver la receta →', W/2, H*0.78);
+    ctx.globalAlpha = baseA;
   }
 }
-function updateDots(idx){
-  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+
+function renderWhy(ctx, slide, W, H, contentP, subtitleP) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  // Emoji entra primero
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.35, 1));
+  const emojiBaseY = H*0.30;
+  const emojiY = animY(emojiBaseY, Math.min(contentP / 0.35, 1), 50);
+  cachedShadowDraw(ctx, W, H, 'why-emoji', emojiY - emojiBaseY, octx => {
+    octx.font = '110px Arial';
+    octx.shadowColor = 'rgba(0,0,0,0.5)'; octx.shadowBlur = 18;
+    octx.fillText('✨', W/2, emojiBaseY);
+  });
+
+  // Título sube desde abajo
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.7, 1));
+  const titleBaseY = H*0.50;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.7, 1), 65);
+  cachedShadowDraw(ctx, W, H, `why-title-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `700 ${fs(slide.title, 72, 90)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.68)'; octx.shadowBlur = 22;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 130, lh(fs(slide.title, 72, 90)));
+  });
+
+  // Subtítulo fade in
+  if (slide.subtitle && subtitleP > 0) {
+    ctx.globalAlpha = baseA * easeOut(subtitleP);
+    ctx.font = '400 44px Inter,Arial,sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.86)';
+    const subY = animY(H*0.68, subtitleP, 40);
+    wrapText(ctx, slide.subtitle, W/2, subY, W - 170, 58);
+  }
+  ctx.globalAlpha = baseA;
 }
 
-async function loadMuxer(){
-  if(_muxerLoaded) return;
-  await new Promise((resolve,reject)=>{
-    const s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/mp4-muxer@5/build/mp4-muxer.js';
-    s.onload=resolve; s.onerror=reject;
+function renderIngredients(ctx, slide, W, H, contentP, subtitleP, progress) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  // Título
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.5, 1));
+  const titleBaseY = H*0.35;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.5, 1), 60);
+  cachedShadowDraw(ctx, W, H, `ing-title-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `700 ${fs(slide.title, 62, 78)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.65)'; octx.shadowBlur = 18;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 130, lh(fs(slide.title, 62, 78)));
+  });
+  ctx.globalAlpha = baseA;
+
+  if (slide.subtitle) {
+    const items = slide.subtitle.split('·').map(s => s.trim()).filter(Boolean);
+    const totalItems = items.length;
+    // Cada ingrediente aparece escalonado (reveal progresivo)
+    const revealProgress = Math.min(subtitleP * 1.6, 1); // empieza al 22% del slide
+    const itemsToShow = Math.ceil(revealProgress * totalItems);
+
+    ctx.font = '400 40px Inter,Arial,sans-serif';
+    let startY = H * 0.50;
+    items.forEach((item, i) => {
+      if (i >= itemsToShow) return;
+      const itemProgress = Math.min((revealProgress * totalItems - i), 1);
+      const itemAlpha = easeOut(itemProgress);
+      const itemY = startY + (1 - easeOut(itemProgress)) * 40;
+
+      ctx.globalAlpha = baseA * itemAlpha;
+      const tw = Math.min(ctx.measureText(item).width + 52, W - 140);
+      ctx.fillStyle = 'rgba(255,255,255,0.13)';
+      roundRect(ctx, W/2 - tw/2, itemY - 30, tw, 54, 27);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.fillText(item.length > 42 ? item.substring(0,40)+'…' : item, W/2, itemY + 12);
+      startY += 68;
+    });
+    ctx.globalAlpha = baseA;
+  }
+}
+
+function renderPrep(ctx, slide, W, H, contentP, progress) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  // Badge de tiempo animado
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.4, 1));
+  ctx.font = 'bold 36px Inter,Arial,sans-serif';
+  const badgeText = '⏱️ ' + slide.title;
+  const tw = ctx.measureText(badgeText).width + 52;
+  const badgeY = animY(H*0.33, Math.min(contentP / 0.4, 1), 50);
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  roundRect(ctx, W/2 - tw/2, badgeY - 32, tw, 56, 28);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.fillText(badgeText, W/2, badgeY + 10);
+  ctx.globalAlpha = baseA;
+
+  if (slide.subtitle) {
+    const steps = slide.subtitle.split('·').map(s => s.trim()).filter(Boolean);
+    // Reveal: paso 1 a los 25%, paso 2 a los 45%, paso 3 a los 65%
+    const thresholds = [0.25, 0.45, 0.65];
+    let startY = H * 0.48;
+
+    steps.forEach((step, i) => {
+      const threshold = thresholds[i] ?? (0.25 + i * 0.20);
+      if (progress < threshold) { startY += 95; return; }
+      const stepP = Math.min((progress - threshold) / 0.12, 1);
+      const stepA = easeOut(stepP);
+      const stepY = startY + (1 - easeOut(stepP)) * 50;
+
+      ctx.globalAlpha = baseA * stepA;
+
+      // Círculo numerado
+      ctx.beginPath();
+      ctx.arc(105, stepY - 12, 28, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      ctx.fill();
+      ctx.font = 'bold 38px Inter,Arial,sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(i+1), 105, stepY + 2);
+
+      // Texto del paso
+      ctx.font = '400 42px Inter,Arial,sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.textAlign = 'left';
+      wrapText(ctx, step, 158, stepY, W - 270, 50);
+      ctx.textAlign = 'center';
+
+      startY += 95;
+    });
+    ctx.globalAlpha = baseA;
+  }
+}
+
+function renderEduHook(ctx, slide, W, H, contentP) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.35, 1));
+  ctx.font = `italic 700 52px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.72)';
+  ctx.fillText('Atención 👀', W/2, H*0.38);
+
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.7, 1));
+  const titleBaseY = H*0.52;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.7, 1), 75);
+  cachedShadowDraw(ctx, W, H, `eduHook-title-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `900 ${fs(slide.title, 84, 112)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.68)'; octx.shadowBlur = 24;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 130, lh(fs(slide.title, 84, 112)));
+  });
+  ctx.globalAlpha = baseA;
+}
+
+function renderPoint(ctx, slide, W, H, idx, contentP, subtitleP) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.3, 1));
+  const iconEmoji = CONTENT_ICONS[(idx - 1) % CONTENT_ICONS.length];
+  cachedShadowDraw(ctx, W, H, `point-icon-${iconEmoji}`, 0, octx => {
+    octx.font = '110px Arial';
+    octx.shadowColor = 'rgba(0,0,0,0.4)'; octx.shadowBlur = 16;
+    octx.fillText(iconEmoji, W/2, H*0.30);
+  });
+
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.65, 1));
+  const titleBaseY = H*0.48;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.65, 1), 65);
+  cachedShadowDraw(ctx, W, H, `point-title-${idx}-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `700 ${fs(slide.title, 68, 88)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.65)'; octx.shadowBlur = 18;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 145, lh(fs(slide.title, 68, 88)));
+  });
+
+  if (slide.subtitle && subtitleP > 0) {
+    ctx.globalAlpha = baseA * easeOut(subtitleP);
+    ctx.font = '400 44px Inter,Arial,sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.86)';
+    wrapText(ctx, slide.subtitle, W/2, animY(H*0.66, subtitleP, 40), W - 185, 58);
+  }
+  ctx.globalAlpha = baseA;
+}
+
+function renderCTA(ctx, slide, W, H, isRecipe, contentP, subtitleP) {
+  ctx.textAlign = 'center';
+  const baseA = ctx.globalAlpha;
+
+  const label = isRecipe ? '💚 ¡Guardá la receta!' : '¡No te lo pierdas!';
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.3, 1));
+  ctx.font = `italic 700 50px 'Playfair Display',Georgia,serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.fillText(label, W/2, H*0.33);
+
+  ctx.globalAlpha = baseA * easeOut(Math.min(contentP / 0.65, 1));
+  const titleBaseY = H*0.50;
+  const titleY = animY(titleBaseY, Math.min(contentP / 0.65, 1), 70);
+  cachedShadowDraw(ctx, W, H, `cta-title-${slide.title}`, titleY - titleBaseY, octx => {
+    octx.font = `900 ${fs(slide.title, 68, 92)}px 'Playfair Display',Georgia,serif`;
+    octx.fillStyle = '#fff';
+    octx.shadowColor = 'rgba(0,0,0,0.7)'; octx.shadowBlur = 24;
+    wrapText(octx, slide.title, W/2, titleBaseY, W - 125, lh(fs(slide.title, 68, 92)));
+  });
+
+  if (slide.subtitle && subtitleP > 0) {
+    ctx.globalAlpha = baseA * easeOut(subtitleP);
+    ctx.font = '400 42px Inter,Arial,sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.86)';
+    wrapText(ctx, slide.subtitle, W/2, animY(H*0.70, subtitleP, 40), W - 185, 58);
+  }
+
+  ctx.globalAlpha = baseA;
+  const bounce = Math.sin(Date.now() / 380) * 8;
+  ctx.font = '68px Arial';
+  ctx.fillText('👆', W/2, H*0.83 + bounce);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function fs(text, min, max) {
+  if (!text) return min;
+  return text.length > 32 ? min : text.length > 20 ? Math.round((min + max) / 2) : max;
+}
+function lh(size) { return size * 1.28; }
+function wrapText(ctx, text, x, y, maxW, lineHeight) {
+  if (!text) return;
+  const words = text.split(' '); let line = '', curY = y;
+  for (const word of words) {
+    const test = line + (line ? ' ' : '') + word;
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line, x, curY); line = word; curY += lineHeight;
+    } else { line = test; }
+  }
+  ctx.fillText(line, x, curY);
+}
+function buildDots(n) {
+  const wrap = document.getElementById('slideDots'); wrap.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : ''); wrap.appendChild(d);
+  }
+}
+function updateDots(idx) {
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === idx));
+}
+
+// ── EXPORTAR MP4 ──────────────────────────────────────────────
+async function loadMuxer() {
+  if (_muxerLoaded) return;
+  await new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mp4-muxer@5/build/mp4-muxer.js';
+    s.onload = resolve; s.onerror = reject;
     document.head.appendChild(s);
   });
-  _muxerLoaded=true;
+  _muxerLoaded = true;
 }
 
-async function startRecording(){
-  if(!slides.length) return;
-  if(!window.VideoEncoder){
+async function startRecording() {
+  if (!slides.length) return;
+  if (!window.VideoEncoder) {
     setStatus('❌ Necesitás Chrome o Edge para exportar MP4.');
     return;
   }
-  const btn=document.getElementById('recordBtn');
-  const badge=document.getElementById('recBadge');
-  btn.disabled=true;
-  ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=true);
+  const btn   = document.getElementById('recordBtn');
+  const badge = document.getElementById('recBadge');
+  btn.disabled = true;
+  ['generateBtn','regenBtn'].forEach(id => document.getElementById(id).disabled = true);
 
-  try{
+  try {
     setStatus('⏳ Preparando exportación MP4…');
     await loadMuxer();
 
-    const canvas=document.getElementById('vc');
-    const W=canvas.width, H=canvas.height;
-    const fps=30;
-    const totalMs=slideDurations.reduce((a,b)=>a+b,0);
-    const totalFrames=Math.ceil(totalMs/1000*fps);
+    const canvas = document.getElementById('vc');
+    const W = canvas.width, H = canvas.height;
+    const fps = 30;
+    const totalMs     = slideDurations.reduce((a,b) => a+b, 0);
+    const totalFrames = Math.ceil(totalMs / 1000 * fps);
 
-    const {Muxer,ArrayBufferTarget}=window.Mp4Muxer;
-    const target=new ArrayBufferTarget();
-    const muxer=new Muxer({target,video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+    const { Muxer, ArrayBufferTarget } = window.Mp4Muxer;
+    const target = new ArrayBufferTarget();
+    const muxer  = new Muxer({ target, video: { codec: 'avc', width: W, height: H }, fastStart: 'in-memory' });
 
-    const encoder=new VideoEncoder({
-      output:(chunk,meta)=>muxer.addVideoChunk(chunk,meta),
-      error:e=>{throw e;}
+    const encoder = new VideoEncoder({
+      output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+      error:  e => { throw e; }
     });
-    encoder.configure({codec:'avc1.4d002a',width:W,height:H,bitrate:6_000_000,framerate:fps});
+    encoder.configure({ codec: 'avc1.4d002a', width: W, height: H, bitrate: 6_000_000, framerate: fps, hardwareAcceleration: 'prefer-hardware' });
 
     stopAnimation();
-    badge.style.display='flex';
+    badge.style.display = 'flex';
 
-    for(let f=0;f<totalFrames;f++){
-      const timeMs=f*1000/fps;
-      let ms=timeMs, si=0;
-      while(si<slides.length-1 && ms>=slideDurations[si]){ms-=slideDurations[si];si++;}
-      const progress=Math.min(ms/(slideDurations[si]||6000),1);
-      renderSlide(si,progress);
+    for (let f = 0; f < totalFrames; f++) {
+      const timeMs = f * 1000 / fps;
+      let ms = timeMs, si = 0;
+      while (si < slides.length - 1 && ms >= slideDurations[si]) { ms -= slideDurations[si]; si++; }
+      const progress = Math.min(ms / (slideDurations[si] || 5000), 1);
+      renderSlide(si, progress);
       updateDots(si);
 
-      const vf=new VideoFrame(canvas,{timestamp:Math.round(f*1_000_000/fps),duration:Math.round(1_000_000/fps)});
-      encoder.encode(vf,{keyFrame:f%(fps*2)===0});
+      const vf = new VideoFrame(canvas, { timestamp: Math.round(f * 1_000_000 / fps), duration: Math.round(1_000_000 / fps) });
+      encoder.encode(vf, { keyFrame: f % (fps * 2) === 0 });
       vf.close();
 
-      if(f%fps===0){
-        setStatus(`⏳ Generando MP4… ${Math.round(f/totalFrames*100)}%`);
-        await new Promise(r=>setTimeout(r,0));
+      while (encoder.encodeQueueSize > 2) {
+        await new Promise(r => setTimeout(r, 0));
+      }
+
+      if (f % fps === 0) {
+        setStatus(`⏳ Generando MP4… ${Math.round(f / totalFrames * 100)}%`);
+        await new Promise(r => setTimeout(r, 0));
       }
     }
 
     await encoder.flush();
     muxer.finalize();
 
-    const blob=new Blob([target.buffer],{type:'video/mp4'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='powervita-reel.mp4';a.click();
-    URL.revokeObjectURL(url);
+    const blob = new Blob([target.buffer], { type: 'video/mp4' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href = url; a.download = 'powervita-reel.mp4';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
     setStatus('✅ MP4 descargado — listo para subir a Instagram');
-
     startAnimation();
-  }catch(err){
-    console.error('Export error:',err);
-    setStatus('❌ Error al exportar: '+err.message);
+  } catch(err) {
+    console.error('Export error:', err);
+    setStatus('❌ Error al exportar: ' + err.message);
   }
 
-  badge.style.display='none';
-  btn.disabled=false;
-  btn.textContent='⬇️ Descargar MP4';
-  ['generateBtn','regenBtn'].forEach(id=>document.getElementById(id).disabled=false);
+  badge.style.display = 'none';
+  btn.disabled = false;
+  btn.textContent = '⬇️ Descargar MP4';
+  ['generateBtn','regenBtn'].forEach(id => document.getElementById(id).disabled = false);
 }
 
-function copyCaption(btn){
-  const text=document.getElementById('captionBox').textContent;
-  const done=()=>{btn.textContent='✅ Copiado';setTimeout(()=>btn.textContent='📋 Copiar caption',2000);};
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
-  } else { fallbackCopy(text,done); }
+// ── CAPTION ───────────────────────────────────────────────────
+function copyCaption(btn) {
+  const text = document.getElementById('captionBox').textContent;
+  const done = () => { btn.textContent = '✅ Copiado'; setTimeout(() => btn.textContent = '📋 Copiar caption', 2000); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else { fallbackCopy(text, done); }
 }
-function fallbackCopy(text,done){
-  const ta=document.createElement('textarea');
-  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-  document.body.appendChild(ta);ta.focus();ta.select();
-  try{document.execCommand('copy');done();}catch(e){}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); done(); } catch(e) {}
   document.body.removeChild(ta);
 }
-function setStatus(msg){document.getElementById('status').textContent=msg;}
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
-(function init(){
-  const canvas=document.getElementById('vc');
-  const ctx=canvas.getContext('2d');
-  const W=1080,H=1920;
-  const g=ctx.createLinearGradient(0,0,W,H);
-  g.addColorStop(0,'#3a5c3a');g.addColorStop(1,'#1a3020');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='rgba(255,255,255,0.6)';ctx.textAlign='center';
-  ctx.font='500 52px Inter,Arial,sans-serif';
-  ctx.fillText('Ingresá tu API key y Generá ✨',W/2,H/2);
-  ctx.font='400 38px Inter,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.4)';
-  ctx.fillText('@powervita_uy',W/2,H/2+90);
+// ── INIT ──────────────────────────────────────────────────────
+(function init() {
+  totalVideoDuration = 25000;
+  slideDurations = calcDurations(totalVideoDuration, false);
+  const canvas = document.getElementById('vc');
+  const ctx    = canvas.getContext('2d');
+  const W = 1080, H = 1920;
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, '#3a5c3a'); g.addColorStop(1, '#1a3020');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.textAlign = 'center';
+  ctx.font = '500 52px Inter,Arial,sans-serif';
+  ctx.fillText('Seleccioná el tipo y generá ✨', W/2, H/2);
+  ctx.font = '400 36px Inter,Arial,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.fillText('@powervita_uy', W/2, H/2 + 90);
 })();
 </script>
 </body>
