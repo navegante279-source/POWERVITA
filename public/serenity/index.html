@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Serenity Holistic Spa</title>
+<meta name="description" content="Reservá tu turno online en Serenity Holistic Spa, Montevideo. Masajes y experiencias holísticas, individuales o en pareja. Agenda en vivo, turnos de 2 horas.">
+<meta property="og:title" content="Serenity Holistic Spa — Reservá tu turno">
+<meta property="og:description" content="Masajes y experiencias holísticas en Montevideo. Agenda en vivo: elegí tu día y horario al instante.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serenity Holistic Spa">
+<meta name="twitter:description" content="Reservá tu turno online — masajes y experiencias holísticas en Montevideo.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#3F2530; --ink-soft:#7C5C63; --ink-faint:#A9868D;
+    --bg:#FBF0EC; --surface:#FFFFFF; --surface-2:#F3DFDA; --line:#EAD0CB;
+    --sage:#E296AC; --sage-deep:#7C1F3E; --sage-tint:#FBE3EA;
+    --brass:#D98CA3; --brass-deep:#B4667F; --brass-tint:#FBEAEE;
+    --clay:#B98A3E; --clay-tint:#F2E6D2;
+    --success:#4B7A5E; --success-tint:#E1EBE2;
+    --danger:#9C4A3D;
+    --shadow: 0 1px 2px rgba(63,37,48,.08), 0 8px 24px -12px rgba(63,37,48,.22);
+    --radius: 18px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#F5E6E9; --ink-soft:#D8B7BE; --ink-faint:#B0888F;
+      --bg:#26141B; --surface:#301C24; --surface-2:#3B2530; --line:#4C2E3A;
+      --sage:#EBAAC0; --sage-deep:#E2607F; --sage-tint:#3B2430;
+      --brass:#E8A9BC; --brass-deep:#F0C2D0; --brass-tint:#3A2530;
+      --clay:#D9A94F; --clay-tint:#3A2E1C;
+      --success:#7FB894; --success-tint:#20302A;
+      --danger:#E1897A;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#F5E6E9; --ink-soft:#D8B7BE; --ink-faint:#B0888F;
+    --bg:#26141B; --surface:#301C24; --surface-2:#3B2530; --line:#4C2E3A;
+    --sage:#EBAAC0; --sage-deep:#E2607F; --sage-tint:#3B2430;
+    --brass:#E8A9BC; --brass-deep:#F0C2D0; --brass-tint:#3A2530;
+    --clay:#D9A94F; --clay-tint:#3A2E1C;
+    --success:#7FB894; --success-tint:#20302A;
+    --danger:#E1897A;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Karla',system-ui,-apple-system,sans-serif;
+    font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',Georgia,serif; font-weight:600; color:var(--ink);
+    text-wrap:balance; letter-spacing:-0.01em; margin:0;
+  }
+  em{font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:500; color:var(--sage-deep);}
+  p{margin:0;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-size:12.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--sage-deep);
+  }
+  .section{padding:88px 0;}
+  .section-head{max-width:620px; margin:0 0 48px;}
+  .section-head h2{font-size:clamp(28px,4vw,38px); margin-top:10px;}
+  .section-head p{color:var(--ink-soft); margin-top:14px; font-size:17px; max-width:60ch;}
+
+  /* divider */
+  .divider{line-height:0; margin-top:-1px;}
+  .divider svg{display:block; width:100%; height:auto;}
+
+  /* nav */
+  header.top{position:sticky; top:0; z-index:40; backdrop-filter:blur(10px); background:color-mix(in srgb, var(--bg) 82%, transparent); border-bottom:1px solid var(--line);}
+  .navbar{display:flex; align-items:center; justify-content:space-between; padding:10px 28px; max-width:1080px; margin:0 auto;}
+  .brand{display:flex; flex-direction:column; align-items:center; gap:2px;}
+  .brand-mark{width:24px;height:24px; flex:none; color:var(--sage-deep);}
+  .brand-mark svg{width:100%; height:100%; display:block;}
+  .brand-text{display:flex; flex-direction:column; align-items:center; line-height:1.1;}
+  .brand-name{font-family:'Fraunces',serif; font-weight:400; font-size:17px; letter-spacing:.14em; text-transform:uppercase; color:#621425;}
+  .brand-sub{font-family:'Karla',sans-serif; font-weight:500; font-size:8.5px; letter-spacing:.28em; text-transform:uppercase; color:#2A2A28; margin-top:2px;}
+  nav.links{display:flex; gap:28px; font-size:14.5px; font-weight:600;}
+  nav.links a{text-decoration:none; color:var(--ink-soft);}
+  nav.links a:hover, nav.links a:focus-visible{color:var(--sage-deep);}
+  .cta{
+    display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer;
+    background:var(--sage-deep); color:#F6F4EC; padding:12px 22px; border-radius:100px;
+    font-weight:700; font-size:14.5px; text-decoration:none; box-shadow:var(--shadow);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .cta:hover{background:var(--sage); transform:translateY(-1px);}
+  .cta.ghost{background:transparent; color:var(--sage-deep); border:1.5px solid var(--sage-deep); box-shadow:none;}
+  .cta.ghost:hover{background:var(--sage-tint);}
+  .cta.small{padding:9px 16px; font-size:13.5px;}
+  .cta:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--brass); outline-offset:2px;}
+
+  /* hero */
+  .hero{padding:76px 0 0;}
+  .hero-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center;}
+  .hero h1{font-size:clamp(38px,5.4vw,60px); line-height:1.05;}
+  .hero p.lead{margin-top:22px; font-size:18.5px; color:var(--ink-soft); max-width:46ch;}
+  .hero-ctas{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+  .hero-note{margin-top:22px; display:flex; gap:10px; align-items:center; font-size:13.5px; color:var(--ink-faint);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--success); flex:none;}
+
+  .orb-wrap{position:relative; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;}
+  .orb{
+    width:78%; aspect-ratio:1/1; border-radius:50%;
+    background:
+      radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--brass-tint) 90%, transparent), transparent 60%),
+      radial-gradient(circle at 65% 70%, color-mix(in srgb, var(--sage) 55%, transparent), transparent 65%),
+      linear-gradient(160deg, var(--sage-tint), var(--surface-2));
+    box-shadow: 0 30px 70px -30px rgba(34,48,42,.35), inset 0 0 0 1px var(--line);
+    animation: breathe 7s ease-in-out infinite;
+  }
+  .orb-ring{position:absolute; inset:0; border-radius:50%; border:1px solid var(--line); animation: breathe 7s ease-in-out infinite reverse;}
+  @keyframes breathe{0%,100%{transform:scale(.94);}50%{transform:scale(1.03);}}
+  @media (prefers-reduced-motion: reduce){ .orb, .orb-ring{animation:none;} }
+
+  /* services */
+  .service-groups{display:flex; flex-direction:column; gap:40px;}
+  .service-group h3{font-size:20px; display:flex; align-items:center; gap:10px;}
+  .service-group h3 .tag{font-family:'Karla'; font-weight:700; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--sage-deep); background:var(--sage-tint); padding:4px 10px; border-radius:100px;}
+  .service-list{margin-top:18px; display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  .service-item{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+    display:flex; justify-content:space-between; gap:14px; align-items:baseline;
+  }
+  .service-item .name{font-weight:700; font-size:15px;}
+  .service-item .meta{font-size:13px; color:var(--ink-faint); margin-top:4px;}
+  .service-item .price{font-variant-numeric:tabular-nums; font-weight:700; color:var(--sage-deep); white-space:nowrap; font-size:15px;}
+
+  /* about */
+  .about-grid{display:grid; grid-template-columns:.95fr 1.05fr; gap:56px; align-items:center;}
+  .about-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:30px; box-shadow:var(--shadow);}
+  .stat-row{display:flex; gap:28px; margin-top:26px; flex-wrap:wrap;}
+  .stat b{display:block; font-family:'Fraunces',serif; font-size:26px; color:var(--sage-deep);}
+  .stat span{font-size:12.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em;}
+
+  /* agenda */
+  .agenda-shell{background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:32px; box-shadow:var(--shadow);}
+  .agenda-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .next-slot{background:var(--sage-tint); border:1px solid var(--line); border-radius:14px; padding:12px 16px; font-size:13.5px; color:var(--ink-soft); display:flex; align-items:center; gap:10px;}
+  .next-slot b{color:var(--sage-deep); font-variant-numeric:tabular-nums;}
+  .cal-panel{margin-top:22px;}
+  .cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .cal-header h4{font-family:'Fraunces',serif; font-size:17px; font-weight:400; margin:0; color:var(--ink);}
+  .cal-nav{display:flex; gap:8px;}
+  .cal-nav button{
+    border:1px solid var(--line); background:var(--surface); border-radius:10px; width:34px; height:34px;
+    font-size:17px; line-height:1; cursor:pointer; color:var(--ink); display:flex; align-items:center; justify-content:center;
+    transition:all .12s ease;
+  }
+  .cal-nav button:hover:not(:disabled){border-color:var(--sage); background:var(--sage-tint);}
+  .cal-nav button:disabled{opacity:.32; cursor:not-allowed;}
+  .cal-weekdays{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:6px;}
+  .cal-weekdays span{display:block; text-align:center; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint);}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+  .cal-cell{
+    aspect-ratio:1/1; border:1px solid var(--line); background:var(--surface); border-radius:12px;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    cursor:pointer; transition:all .15s ease; font-family:'Fraunces',serif; font-size:15px; color:var(--ink); padding:0;
+  }
+  .cal-cell .dot{width:5px; height:5px; border-radius:50%; background:var(--sage-deep); position:absolute; bottom:7px; left:50%; transform:translateX(-50%);}
+  .cal-cell:hover:not(.is-disabled):not(.is-full){border-color:var(--sage); background:var(--sage-tint);}
+  .cal-cell.is-empty{visibility:hidden; cursor:default; border:none; background:none;}
+  .cal-cell.is-disabled{opacity:.3; cursor:not-allowed; color:var(--ink-faint);}
+  .cal-cell.is-full{opacity:.45; cursor:not-allowed; text-decoration:line-through; color:var(--ink-faint);}
+  .cal-cell.is-today{border-color:var(--ink-faint); font-weight:700;}
+  .cal-cell.is-selected{background:var(--sage-deep); border-color:var(--sage-deep); color:#F6F4EC;}
+  .cal-cell.is-selected .dot{background:#F6F4EC;}
+  .slot-panel-head{margin-top:24px; font-size:13px; font-weight:700; letter-spacing:.02em; color:var(--ink-soft); text-transform:capitalize;}
+
+  .slot-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:10px; margin-top:18px;}
+  .slot{
+    border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:12px 8px;
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:13.5px; cursor:pointer; text-align:center;
+    transition:all .12s ease; color:var(--ink);
+  }
+  .slot:hover:not(:disabled){border-color:var(--sage); background:var(--sage-tint);}
+  .slot[data-state="booked"]{background:var(--surface-2); color:var(--ink-faint); cursor:not-allowed; text-decoration:line-through;}
+  .slot[data-state="blocked"]{background:var(--clay-tint); color:var(--clay); cursor:not-allowed;}
+  .slot[data-state="past"]{opacity:.4; cursor:not-allowed;}
+  .slot[data-state="selected"]{background:var(--sage-deep); border-color:var(--sage-deep); color:#F6F4EC;}
+
+  .book-form{margin-top:20px; border-top:1px dashed var(--line); padding-top:20px; display:none;}
+  .book-form.open{display:block;}
+  .book-form .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .field{display:flex; flex-direction:column; gap:6px; margin-bottom:12px;}
+  .field label{font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+  .field select, .field input{
+    border:1px solid var(--line); border-radius:10px; padding:11px 12px; font-size:14.5px;
+    background:var(--surface); color:var(--ink); font-family:inherit;
+  }
+  .form-actions{display:flex; gap:12px; align-items:center; margin-top:6px; flex-wrap:wrap;}
+  .form-note{font-size:12.5px; color:var(--ink-faint);}
+  .confirm-box{
+    margin-top:20px; background:var(--success-tint); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+    display:none; font-size:14.5px;
+  }
+  .confirm-box.open{display:block;}
+  .confirm-box b{color:var(--sage-deep);}
+
+  .team-link{margin-top:22px; text-align:center;}
+  .team-link button{background:none; border:none; color:var(--ink-faint); font-size:12.5px; text-decoration:underline; cursor:pointer; padding:4px;}
+
+  /* admin */
+  .admin-panel{margin-top:22px; border-top:1px solid var(--line); padding-top:22px; display:none;}
+  .admin-panel.open{display:block;}
+  .admin-panel h4{font-size:15px; margin-bottom:12px;}
+  .booking-row{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 14px;
+    background:var(--surface-2); border-radius:10px; margin-bottom:8px; font-size:13.5px; flex-wrap:wrap;
+  }
+  .booking-row .who{font-weight:700;}
+  .booking-row .when{font-variant-numeric:tabular-nums; color:var(--ink-soft);}
+  .booking-day-label{font-size:12.5px; font-weight:700; color:var(--sage-deep); text-transform:capitalize; margin:16px 0 8px; padding-top:12px; border-top:1px dashed var(--line);}
+  .booking-day-group:first-child .booking-day-label{border-top:none; padding-top:0; margin-top:0;}
+  .admin-panel h4{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .badge-today{font-size:11.5px; font-weight:700; background:var(--sage-tint); color:var(--sage-deep); padding:4px 10px; border-radius:100px; text-transform:none; letter-spacing:0;}
+  .mini-btn{border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer; color:var(--danger);}
+  .mini-btn.block{color:var(--clay);}
+  .gcal-btn{display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:var(--sage-deep);}
+  .gcal-btn svg{width:15px; height:15px; flex:none;}
+  .booking-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .confirm-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .confirm-actions svg{width:16px; height:16px; flex:none;}
+  .empty-note{font-size:13.5px; color:var(--ink-faint); padding:14px 0;}
+
+  /* contact + footer */
+  .contact-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px;}
+  .contact-card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:24px;}
+  .contact-card .eyebrow{margin-bottom:10px; display:block;}
+  .contact-card a{font-weight:700; color:var(--sage-deep); text-decoration:none; word-break:break-word; overflow-wrap:anywhere; font-size:15.5px;}
+  .contact-card a:hover{text-decoration:underline;}
+  .contact-card p.small{color:var(--ink-faint); font-size:13px; margin-top:8px;}
+
+  footer{padding:40px 0; border-top:1px solid var(--line); color:var(--ink-faint); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+
+  /* testimonials */
+  .testimonial-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .testimonial{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px 24px; box-shadow:var(--shadow); margin:0;}
+  .testimonial p{font-family:'Fraunces',serif; font-style:italic; font-weight:500; font-size:16px; color:var(--ink); line-height:1.5; margin:0;}
+  .testimonial cite{display:block; margin-top:16px; font-style:normal; font-weight:700; font-size:13px; color:var(--sage-deep);}
+
+  /* cuponeras */
+  .coupon-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .coupon-card{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:28px 26px; box-shadow:var(--shadow); display:flex; flex-direction:column;}
+  .coupon-card h3{font-size:19px;}
+  .coupon-desc{color:var(--ink-soft); font-size:13.5px; margin-top:10px; min-height:52px;}
+  .coupon-price{font-family:'Fraunces',serif; font-size:26px; color:var(--sage-deep); margin-top:14px;}
+  .coupon-price span{font-family:'Karla',sans-serif; font-size:12px; color:var(--ink-faint); font-weight:600;}
+  .coupon-tiers{list-style:none; margin:18px 0 0; padding:16px 0 0; border-top:1px dashed var(--line); display:flex; flex-direction:column; gap:9px;}
+  .coupon-tiers li{display:flex; justify-content:space-between; font-size:14px;}
+  .coupon-tiers li span{color:var(--ink-soft);}
+  .coupon-tiers li b{color:var(--ink); font-variant-numeric:tabular-nums;}
+  .coupon-note{text-align:center; color:var(--ink-faint); font-size:13.5px; margin-top:30px;}
+
+  @media (max-width:780px){
+    .testimonial-grid, .coupon-grid{grid-template-columns:1fr;}
+  }
+
+  /* app modal (replaces window.prompt/confirm/alert — blocked or flaky inside
+     WhatsApp/Instagram in-app browsers, which is exactly where this link gets opened) */
+  .modal-overlay{position:fixed; inset:0; background:rgba(63,37,48,.5); z-index:200; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .modal-overlay[hidden]{display:none!important;}
+  .modal-box{background:var(--surface); border-radius:18px; padding:26px 24px; max-width:360px; width:100%; box-shadow:var(--shadow);}
+  .modal-message{font-size:15px; color:var(--ink); margin:0 0 16px; line-height:1.5; white-space:pre-line;}
+  .modal-field{margin-bottom:18px;}
+  .modal-field input{width:100%; border:1px solid var(--line); border-radius:10px; padding:11px 12px; font-size:16px; font-family:inherit; background:var(--surface); color:var(--ink);}
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;}
+
+  /* floating social buttons */
+  .social-float{position:fixed; right:20px; bottom:20px; z-index:70; display:flex; flex-direction:column; gap:14px; align-items:center;}
+  .social-float a{
+    width:56px; height:56px; border-radius:50%; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px -8px rgba(0,0,0,.45); transition:transform .15s ease;
+  }
+  .social-float a:hover{transform:scale(1.07);}
+  .social-float svg{width:27px; height:27px; display:block;}
+  .wa-float{background:#25D366;}
+  .ig-float{background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);}
+
+  /* real photography */
+  .hero-photo-wrap{position:relative; max-width:400px; margin-left:auto; aspect-ratio:4/5;}
+  .hero-photo-wrap .orb-ring{position:absolute; width:72%; aspect-ratio:1/1; border-radius:50%; border:1px solid var(--line); right:-14%; bottom:-12%; z-index:1; animation:breathe 7s ease-in-out infinite reverse;}
+  .hero-photo-wrap img{position:relative; z-index:2; width:100%; height:100%; object-fit:cover; border-radius:26px; box-shadow:var(--shadow); display:block;}
+  @media (prefers-reduced-motion: reduce){ .hero-photo-wrap .orb-ring{animation:none;} }
+
+  .about-photo{width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:16px 16px 0 0; display:block;}
+  .about-card{padding:0; overflow:hidden;}
+  .about-card .about-card-body{padding:26px 28px 28px;}
+  .philosophy-photo{width:100%; max-width:340px; aspect-ratio:4/5; object-fit:cover; border-radius:16px; margin-top:22px; box-shadow:var(--shadow);}
+
+  .gallery-strip{padding:0 0 88px;}
+  .gallery-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .gallery-item{margin:0; position:relative; border-radius:20px; overflow:hidden; box-shadow:var(--shadow); aspect-ratio:5/4;}
+  .gallery-item img{width:100%; height:100%; object-fit:cover; display:block;}
+  .gallery-item figcaption{position:absolute; left:0; right:0; bottom:0; padding:16px 18px; font-size:13.5px; font-weight:700; color:#fff; background:linear-gradient(0deg, rgba(63,37,48,.62), rgba(63,37,48,0));}
+
+  .contact-intro{display:grid; grid-template-columns:.85fr 1.15fr; gap:36px; align-items:center; margin-bottom:36px;}
+  .contact-photo{width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:20px; box-shadow:var(--shadow); display:block;}
+
+  @media (max-width:780px){
+    .about-photo, .philosophy-photo{aspect-ratio:16/10;}
+    .contact-intro{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:780px){
+    .hero-grid, .about-grid{grid-template-columns:1fr;}
+    .orb-wrap{max-width:280px; margin:0 auto;}
+    .service-list{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+    nav.links{display:none;}
+    .book-form .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="social-float">
+    <a class="ig-float" href="https://www.instagram.com/serenityholisticspa" target="_blank" rel="noopener" aria-label="Visitá nuestro Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5.5"></rect>
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <circle cx="17.6" cy="6.4" r="0.4" fill="#fff" stroke="none"></circle>
+      </svg>
+    </a>
+    <a class="wa-float" href="https://wa.me/59895565708" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
+      <svg viewBox="0 0 448 512" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-32.1 0-63.6-8.6-91-24.9l-6.5-3.9-67.7 17.8 18-65.9-4.3-6.8c-18-28.5-27.5-61.6-27.5-95.7 0-98.7 80.3-179 179.1-179 47.8 0 92.7 18.6 126.5 52.4s52.4 78.7 52.4 126.5c-.1 98.6-80.4 179.5-179 179.5zm98.4-134.2c-5.4-2.7-31.9-15.8-36.8-17.6-4.9-1.8-8.5-2.7-12.1 2.7-3.6 5.4-13.9 17.6-17 21.2-3.1 3.6-6.3 4-11.7 1.3-31.9-16-52.8-28.5-73.8-64.6-5.6-9.6 5.6-8.9 16-29.6 1.8-3.6.9-6.7-.5-9.4-1.4-2.7-12.1-29.2-16.6-40-4.4-10.6-8.8-9.2-12.1-9.3-3.1-.1-6.7-.1-10.3-.1-3.6 0-9.4 1.3-14.3 6.7-4.9 5.4-18.7 18.3-18.7 44.6 0 26.3 19.2 51.7 21.8 55.3 2.7 3.6 37.6 57.4 91.1 80.5 34 14.7 47.3 15.9 64.3 13.4 10.3-1.5 31.9-13.1 36.4-25.7 4.5-12.6 4.5-23.3 3.1-25.5-1.3-2.3-4.9-3.6-10.3-6.3z"></path></svg>
+    </a>
+  </div>
+  <header class="top">
+    <div class="navbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <defs>
+              <path id="sakura-petal" d="M24,24 C20,22 18.4,17 20,13 C20.8,11 22,10.3 23.3,11.6 C23.7,12 24,12.4 24,12.4 C24,12.4 24.3,12 24.7,11.6 C26,10.3 27.2,11 28,13 C29.6,17 28,22 24,24 Z"></path>
+              <radialGradient id="petalGrad" cx="50%" cy="82%" r="75%">
+                <stop offset="0%" stop-color="#FF8FA8"></stop>
+                <stop offset="100%" stop-color="#FFC7D6"></stop>
+              </radialGradient>
+            </defs>
+            <g stroke="#7A2036" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.85">
+              <path d="M17,17 C14.5,14 13.5,10.5 13.8,7"></path>
+              <circle cx="13.9" cy="6.2" r="1" fill="#7A2036" stroke="none"></circle>
+              <path d="M31,31 C33.5,34 36,35.5 39,36"></path>
+              <circle cx="39.8" cy="36.6" r="1" fill="#7A2036" stroke="none"></circle>
+              <circle cx="36.2" cy="35" r="0.8" fill="#7A2036" stroke="none"></circle>
+            </g>
+            <g fill="url(#petalGrad)">
+              <use href="#sakura-petal" transform="rotate(0 24 24)"></use>
+              <use href="#sakura-petal" transform="rotate(72 24 24)"></use>
+              <use href="#sakura-petal" transform="rotate(144 24 24)"></use>
+              <use href="#sakura-petal" transform="rotate(216 24 24)"></use>
+              <use href="#sakura-petal" transform="rotate(288 24 24)"></use>
+            </g>
+            <circle cx="24" cy="24" r="2" fill="#7A2036"></circle>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Serenity</span>
+          <span class="brand-sub">Holistic Spa</span>
+        </span>
+      </div>
+      <nav class="links">
+        <a href="#servicios">Experiencias</a>
+        <a href="#cuponeras">Cuponeras</a>
+        <a href="#nosotras">Nosotras</a>
+        <a href="#agenda">Reservar</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <a class="cta small" href="#agenda">Reservar turno</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Bienestar integral · Montevideo</p>
+        <h1>Un espacio para <em>volver</em> a vos.</h1>
+        <p class="lead">Masajes, faciales y terapias holísticas pensadas para bajar el ritmo, soltar tensión y salir liviana. Reservá tu turno en segundos, sin llamadas ni esperas.</p>
+        <div class="hero-ctas">
+          <a class="cta" href="#agenda">Ver horarios disponibles</a>
+          <a class="cta ghost" href="#servicios">Conocer los servicios</a>
+        </div>
+        <div class="hero-note"><span class="dot" aria-hidden="true"></span>Cupos limitados por día para una atención tranquila y personalizada.</div>
+      </div>
+      <div class="hero-photo-wrap">
+        <div class="orb-ring" aria-hidden="true"></div>
+        <img src="img/hero.jpg" alt="Pétalos de rosa sobre una camilla de lino en Serenity Holistic Spa">
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C300,70 900,-10 1200,30 L1200,60 L0,60 Z" fill="var(--surface)"></path></svg>
+  </div>
+
+  <section class="section" id="servicios" style="background:var(--surface); padding-top:20px;">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Nuestras experiencias</p>
+        <h2>Vení sola o en compañía</h2>
+        <p>Diseñadas para revitalizar cuerpo y alma. Cada experiencia incluye bienvenida, infusión y sala de descanso.</p>
+      </div>
+      <div class="service-groups">
+        <div class="service-group">
+          <h3>Experiencias individuales <span class="tag">Para vos</span></h3>
+          <div class="service-list">
+            <div class="service-item"><div><div class="name">Jade</div><div class="meta">Masaje holístico, aromaterapia personalizada, reiki con cristales y sonido · 1h 10min</div></div><div class="price">$ 1.890</div></div>
+            <div class="service-item"><div><div class="name">Amatista</div><div class="meta">Masaje profundo descontracturante con piedras calientes, masaje facial, masaje terapéutico en pies · 1h 10min</div></div><div class="price">$ 2.090</div></div>
+            <div class="service-item"><div><div class="name">Mimo al alma</div><div class="meta">Masaje cuerpo completo, armonización energética, spa de pies o manos, aromaterapia · 1h 20min</div></div><div class="price">$ 2.990</div></div>
+            <div class="service-item"><div><div class="name">Cuarzo Rosa</div><div class="meta">Masaje integral profundo con piedras calientes, armonización con sonido y cristales, spa facial, merienda + oráculo de ángeles · 1h 45min</div></div><div class="price">$ 4.290</div></div>
+          </div>
+        </div>
+        <div class="service-group">
+          <h3>Experiencias en pareja <span class="tag">A dos</span></h3>
+          <div class="service-list">
+            <div class="service-item"><div><div class="name">Jade Dúo</div><div class="meta">Masaje holístico, aromaterapia personalizada, reiki con cristales y sonido · 1h 10min</div></div><div class="price">$ 3.690</div></div>
+            <div class="service-item"><div><div class="name">Esmeralda</div><div class="meta">Masaje cuerpo completo consciente, armonización energética, aromaterapia emocional, merienda + oráculo de ángeles · 1h 40min</div></div><div class="price">$ 6.290</div></div>
+            <div class="service-item"><div><div class="name">Cuarzo Rosa Dúo</div><div class="meta">Masaje integral profundo con piedras calientes, armonización con sonido y cristales, spa facial, merienda + oráculo de ángeles · 2h</div></div><div class="price">$ 7.690</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C300,-10 900,70 1200,30 L1200,0 L0,0 Z" fill="var(--surface)"></path></svg>
+  </div>
+
+  <section class="gallery-strip">
+    <div class="wrap gallery-grid">
+      <figure class="gallery-item">
+        <img loading="lazy" src="img/galeria-1.jpg" alt="Masaje descontracturante con aceites esenciales en Serenity">
+        <figcaption>Masajes &amp; terapias corporales</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img loading="lazy" src="img/galeria-2.jpg" alt="Ritual de pies con pétalos y velas en Serenity">
+        <figcaption>Reflexología &amp; ritual de pies</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="nosotras">
+    <div class="wrap about-grid">
+      <div class="about-card">
+        <img loading="lazy" class="about-photo" src="img/nosotras.jpg" alt="Clienta relajándose sobre la camilla de masajes en Serenity">
+        <div class="about-card-body">
+          <p class="eyebrow">Sobre Serenity</p>
+          <h2 style="font-size:26px; margin-top:10px;">Dos manos, un mismo propósito</h2>
+          <p style="color:var(--ink-soft); margin-top:14px;">Serenity nace de la idea de que el bienestar no debería ser un lujo esporádico, sino un hábito accesible. Combinamos técnicas manuales, terapias holísticas y un espacio pensado para desconectar del ruido de la ciudad.</p>
+          <div class="stat-row">
+            <div class="stat"><b>+10</b><span>Tratamientos</span></div>
+            <div class="stat"><b>6</b><span>Días de atención</span></div>
+            <div class="stat"><b>100%</b><span>Turnos con reserva previa</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">Nuestra filosofía</p>
+        <h2>Bienestar sin apuro</h2>
+        <p style="color:var(--ink-soft); margin-top:16px; max-width:52ch;">Cada tratamiento empieza con una charla breve sobre cómo llegás ese día — con tensión, con cansancio, con ganas de silencio — para que la sesión se adapte a vos y no al revés. Trabajamos con cupos acotados por franja horaria para que nunca sientas que te apuramos.</p>
+        <img loading="lazy" class="philosophy-photo" src="img/filosofia.jpg" alt="Meditación guiada entre flores y velas en Serenity">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="testimonios" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="section-head" style="margin-left:auto; margin-right:auto; text-align:center;">
+        <p class="eyebrow">Lo que dicen nuestras clientas</p>
+        <h2>Historias que nos emocionan</h2>
+      </div>
+      <div class="testimonial-grid">
+        <blockquote class="testimonial">
+          <p>"Salí completamente renovada. Es el lugar más tranquilo y acogedor que he visitado."</p>
+          <cite>— Valentina R.</cite>
+        </blockquote>
+        <blockquote class="testimonial">
+          <p>"El masaje holístico transformó mi estado de ánimo. Volveré siempre."</p>
+          <cite>— Camila M.</cite>
+        </blockquote>
+        <blockquote class="testimonial">
+          <p>"Un espacio mágico donde realmente te cuidan. Lo recomiendo con el corazón."</p>
+          <cite>— Sofía L.</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cuponeras">
+    <div class="wrap">
+      <div class="section-head" style="margin-left:auto; margin-right:auto; text-align:center;">
+        <p class="eyebrow">Para regalar o regalarte</p>
+        <h2>Nuestras cuponeras</h2>
+        <p style="margin-left:auto; margin-right:auto;">El regalo perfecto para vos o para quien más querés.</p>
+      </div>
+      <div class="coupon-grid">
+        <div class="coupon-card">
+          <h3>Cuponera Esencial</h3>
+          <p class="coupon-desc">Masaje relax descontracturante con piedras calientes · 50 min</p>
+          <div class="coupon-price">$ 1.290 <span>por sesión</span></div>
+          <ul class="coupon-tiers">
+            <li><span>4 sesiones</span><b>$ 4.800</b></li>
+            <li><span>6 sesiones</span><b>$ 6.900</b></li>
+            <li><span>12 sesiones</span><b>$ 13.200</b></li>
+          </ul>
+        </div>
+        <div class="coupon-card">
+          <h3>Cuponera Bienestar</h3>
+          <p class="coupon-desc">Masaje en espalda y cérvico-craneal con piedras calientes · 50 min</p>
+          <div class="coupon-price">$ 1.490 <span>por sesión</span></div>
+          <ul class="coupon-tiers">
+            <li><span>4 sesiones</span><b>$ 5.600</b></li>
+            <li><span>6 sesiones</span><b>$ 8.100</b></li>
+            <li><span>12 sesiones</span><b>$ 15.300</b></li>
+          </ul>
+        </div>
+        <div class="coupon-card">
+          <h3>Cuponera Premium</h3>
+          <p class="coupon-desc">Relax profundo con piedras calientes · 1h 10min</p>
+          <div class="coupon-price">$ 1.790 <span>por sesión</span></div>
+          <ul class="coupon-tiers">
+            <li><span>4 sesiones</span><b>$ 6.800</b></li>
+            <li><span>6 sesiones</span><b>$ 10.200</b></li>
+            <li><span>12 sesiones</span><b>$ 19.800</b></li>
+          </ul>
+        </div>
+      </div>
+      <p class="coupon-note">Las cuponeras son personalizables — consultanos por WhatsApp para armar la tuya.</p>
+    </div>
+  </section>
+<div id="agenda-mount"></div>
+  <section class="section" id="contacto" style="padding-top:0;">
+    <div class="wrap">
+      <div class="contact-intro">
+        <img loading="lazy" class="contact-photo" src="img/contacto.jpg" alt="Recepción de Serenity Holistic Spa con flores frescas y toallas">
+        <div class="section-head" style="margin-bottom:0;">
+          <p class="eyebrow">Contacto</p>
+          <h2>Te esperamos</h2>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <span class="eyebrow">WhatsApp</span>
+          <a href="https://wa.me/59895565708" target="_blank" rel="noopener">095 565 708</a>
+          <p class="small">También: 095 351 007</p>
+        </div>
+        <div class="contact-card">
+          <span class="eyebrow">Instagram</span>
+          <a href="https://www.instagram.com/serenityholisticspa" target="_blank" rel="noopener">@serenityholisticspa</a>
+          <p class="small">Fotos del spa y novedades.</p>
+        </div>
+        <div class="contact-card">
+          <span class="eyebrow">Email</span>
+          <a href="mailto:serenityholisticspa@hotmail.com">serenityholisticspa@hotmail.com</a>
+          <p class="small">Respondemos dentro del mismo día hábil.</p>
+        </div>
+        <div class="contact-card">
+          <span class="eyebrow">Ubicación</span>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Dr.+Jos%C3%A9+Scoser%C3%ADa+2856+Montevideo" target="_blank" rel="noopener">Dr. José Scosería 2856</a>
+          <p class="small">Entre Roque Graseras y Juan Benito Blanco.</p>
+        </div>
+        <div class="contact-card">
+          <span class="eyebrow">Horario</span>
+          <a href="#agenda" style="font-size:14.5px;">Martes a viernes: 9 a 19 hs<br>Sábados: 9 a 14 hs</a>
+          <p class="small">Domingos y lunes, cerrado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+      <span>© <span id="year">2026</span> Serenity Holistic Spa</span>
+      <span>Agenda en vivo, compartida entre el equipo y las clientas.</span>
+    </div>
+  </footer>
+
+  <div class="modal-overlay" id="app-modal" hidden="">
+    <div class="modal-box">
+      <p class="modal-message" id="modal-message">¿Cancelar esta reserva?</p>
+      <div class="modal-field" id="modal-field-wrap" hidden="">
+        <input type="text" id="modal-input" autocomplete="off" inputmode="text">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cta ghost small" id="modal-cancel">Cancelar</button>
+        <button type="button" class="cta small" id="modal-ok">Sí, confirmar</button>
+      </div>
+    </div>
+  </div>
+<script>
+(function(){
+  "use strict";
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var API = '/api/serenity';
+  var SERVICES = [
+    "Jade","Amatista","Mimo al alma","Cuarzo Rosa",
+    "Jade Dúo (en pareja)","Esmeralda (en pareja)","Cuarzo Rosa Dúo (en pareja)"
+  ];
+  var DAY_NAMES = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  var SLOT_HOURS = 2;
+  var MAX_MONTHS_AHEAD = 2;
+  var SCAN_DAYS = 75;
+  var REFRESH_MS = 60000;
+  function endTime(h){
+    var parts = h.split(':');
+    var hour = (parseInt(parts[0],10) + SLOT_HOURS) % 24;
+    return pad(hour)+':'+parts[1];
+  }
+  // Google Calendar: link de plantilla de evento para que la clienta guarde su turno.
+  var SPA_ADDRESS = "Dr. José Scosería 2856, Montevideo, Uruguay";
+  var GCAL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="17" rx="2.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path></svg>';
+  function gcalStamp(dateStr, timeStr, addHours){
+    var d = new Date(dateStr+'T'+timeStr+':00');
+    d.setHours(d.getHours() + (addHours||0));
+    return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00';
+  }
+  function gcalUrl(b){
+    var details = 'Tu turno de '+b.service+' en Serenity Holistic Spa.\nSi necesitás cancelar o reprogramar, avisanos con al menos 3 horas de anticipación por WhatsApp: https://wa.me/59895565708';
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE'+
+      '&text='+encodeURIComponent('Serenity Holistic Spa · '+b.service)+
+      '&dates='+gcalStamp(b.date,b.time,0)+'/'+gcalStamp(b.date,b.time,SLOT_HOURS)+
+      '&ctz=America/Montevideo'+
+      '&details='+encodeURIComponent(details)+
+      '&location='+encodeURIComponent(SPA_ADDRESS);
+  }
+  // Horario real: martes a viernes 9 a 19 hs, sábados 9 a 14 hs. Domingos y lunes, cerrado.
+  function hoursForDate(d){
+    var day = d.getDay();
+    if(day===0 || day===1) return [];
+    if(day===6) return ["09:00","11:00"];
+    return ["09:00","11:00","13:00","15:00","17:00"];
+  }
+
+  // busy: horarios ocupados según el Google Calendar del spa ("YYYY-MM-DD HH:MM").
+  var busy = {};
+  var loadStatus = 'loading'; // loading | ok | error
+  var selectedDate = null;
+  var selectedSlot = null;
+  var viewYear = null;
+  var viewMonth = null;
+  var adminOpen = false;
+  var adminCode = null;
+  var adminData = {bookings:[], blocked:[]};
+  var lastConfirm = null;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function dateKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function isPastSlot(dateStr, timeStr){
+    var dt = new Date(dateStr+'T'+timeStr+':00');
+    return dt.getTime() < Date.now();
+  }
+  function isPastDay(d){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var dd = new Date(d); dd.setHours(0,0,0,0);
+    return dd.getTime() < today.getTime();
+  }
+  function blockedAt(dateStr, time){
+    return adminData.blocked.some(function(b){ return b.date===dateStr && b.time===time; });
+  }
+  function slotState(dateStr, time){
+    if(isPastSlot(dateStr, time)) return 'past';
+    if(adminOpen && blockedAt(dateStr, time)) return 'blocked';
+    if(busy[dateStr+' '+time]) return 'booked';
+    if(selectedDate===dateStr && selectedSlot===time) return 'selected';
+    return 'open';
+  }
+  function dayStatus(d){
+    var hrs = hoursForDate(d);
+    if(!hrs.length) return 'closed';
+    if(isPastDay(d)) return 'past';
+    var ds = dateKey(d);
+    var anyOpen = hrs.some(function(h){ return slotState(ds,h)==='open'; });
+    return anyOpen ? 'available' : 'full';
+  }
+  function findNextOpen(){
+    var d = new Date(); d.setHours(0,0,0,0);
+    for(var i=0;i<SCAN_DAYS;i++){
+      var cand = new Date(d); cand.setDate(d.getDate()+i);
+      var hrs = hoursForDate(cand);
+      if(!hrs.length) continue;
+      var ds = dateKey(cand);
+      for(var j=0;j<hrs.length;j++){
+        if(slotState(ds, hrs[j])==='open') return {date:ds, time:hrs[j], dayObj:cand};
+      }
+    }
+    return null;
+  }
+  function fmtDate(d){
+    return d.toLocaleDateString('es-UY', {weekday:'short', day:'numeric', month:'short'});
+  }
+  function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  function fmtDateLong(dateStr){
+    var d = new Date(dateStr+'T00:00:00');
+    return capitalize(d.toLocaleDateString('es-UY', {weekday:'long', day:'numeric', month:'long'}));
+  }
+  function monthLabel(y,m){
+    var d = new Date(y, m, 1);
+    return capitalize(d.toLocaleDateString('es-UY', {month:'long', year:'numeric'}));
+  }
+
+  function clampView(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var minM = new Date(today.getFullYear(), today.getMonth(), 1);
+    var maxM = new Date(today.getFullYear(), today.getMonth()+MAX_MONTHS_AHEAD, 1);
+    if(viewYear===null){ viewYear = minM.getFullYear(); viewMonth = minM.getMonth(); return; }
+    var cur = new Date(viewYear, viewMonth, 1);
+    if(cur < minM){ viewYear = minM.getFullYear(); viewMonth = minM.getMonth(); }
+    if(cur > maxM){ viewYear = maxM.getFullYear(); viewMonth = maxM.getMonth(); }
+  }
+
+  function renderCalendarGrid(){
+    clampView();
+    var today = new Date(); today.setHours(0,0,0,0);
+    var todayKey = dateKey(today);
+    var minM = new Date(today.getFullYear(), today.getMonth(), 1);
+    var maxM = new Date(today.getFullYear(), today.getMonth()+MAX_MONTHS_AHEAD, 1);
+    var curM = new Date(viewYear, viewMonth, 1);
+    var startOffset = curM.getDay();
+    var daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+
+    var cells = '';
+    for(var b=0;b<startOffset;b++){ cells += '<div class="cal-cell is-empty"></div>'; }
+    for(var day=1; day<=daysInMonth; day++){
+      var d = new Date(viewYear, viewMonth, day);
+      var ds = dateKey(d);
+      var status = dayStatus(d);
+      var classes = ['cal-cell'];
+      if(status==='closed' || status==='past') classes.push('is-disabled');
+      if(status==='full') classes.push('is-full');
+      if(ds===todayKey) classes.push('is-today');
+      if(ds===selectedDate) classes.push('is-selected');
+      if(status==='available' || (adminOpen && status==='full')){
+        cells += '<button type="button" class="'+classes.join(' ')+'" data-date="'+ds+'">'+day+(status==='available'?'<span class="dot"></span>':'')+'</button>';
+      } else {
+        cells += '<button type="button" class="'+classes.join(' ')+'" disabled>'+day+'</button>';
+      }
+    }
+    return {
+      cells: cells,
+      prevDisabled: curM <= minM,
+      nextDisabled: curM >= maxM
+    };
+  }
+
+  function renderAdminLists(){
+    var todayKeyAdmin = dateKey(new Date());
+    var upcoming = adminData.bookings.slice().sort(function(a,b){ return (a.date+a.time).localeCompare(b.date+b.time); });
+    var todayCount = upcoming.filter(function(b){ return b.date===todayKeyAdmin; }).length;
+    var groupedByDay = {}; var dayOrder = [];
+    upcoming.forEach(function(b){
+      if(!groupedByDay[b.date]){ groupedByDay[b.date] = []; dayOrder.push(b.date); }
+      groupedByDay[b.date].push(b);
+    });
+    var bookingRows = dayOrder.length ? dayOrder.map(function(ds){
+      var label = fmtDateLong(ds) + (ds===todayKeyAdmin ? ' — hoy' : '');
+      var rows = groupedByDay[ds].map(function(b){
+        return '<div class="booking-row">'+
+          '<div><div class="who">'+b.time+'&ndash;'+endTime(b.time)+' · '+escapeHtml(b.name)+' · '+escapeHtml(b.service)+'</div>'+
+          '<div class="when">'+escapeHtml(b.contact)+'</div></div>'+
+          '<button type="button" class="mini-btn" data-cancel="'+escapeHtml(b.id)+'">Cancelar</button></div>';
+      }).join('');
+      return '<div class="booking-day-group"><h5 class="booking-day-label">'+label+'</h5>'+rows+'</div>';
+    }).join('') : '<p class="empty-note">Todavía no hay reservas activas.</p>';
+
+    var blockRows = adminData.blocked.slice().sort(function(a,b){ return (a.date+a.time).localeCompare(b.date+b.time); }).map(function(b){
+      return '<div class="booking-row">'+
+        '<div><div class="who">Horario bloqueado</div><div class="when">'+fmtDateLong(b.date)+' · '+b.time+'&ndash;'+endTime(b.time)+'</div></div>'+
+        '<button type="button" class="mini-btn block" data-unblock="'+escapeHtml(b.id)+'">Liberar</button></div>';
+    }).join('');
+
+    return '<h4>Reservas activas <span class="badge-today">Hoy: '+todayCount+'</span></h4>'+
+      '<div id="booking-list">'+bookingRows+'</div>'+
+      (blockRows ? '<h4 style="margin-top:18px;">Horarios bloqueados</h4><div>'+blockRows+'</div>' : '')+
+      '<p class="form-note" style="margin-top:12px;">Todas las reservas se guardan en el Google Calendar del spa. Para bloquear un horario, tocá un turno libre en la grilla de arriba, o creá un evento en ese mismo horario directamente en Google Calendar.</p>';
+  }
+
+  function renderAgendaSection(){
+    var next = loadStatus==='ok' ? findNextOpen() : null;
+    if(!selectedDate && loadStatus==='ok'){ selectedDate = next ? next.date : dateKey(new Date()); }
+    var shownDate = selectedDate || dateKey(new Date());
+    if(viewYear===null){
+      var sd = new Date(shownDate+'T00:00:00');
+      viewYear = sd.getFullYear(); viewMonth = sd.getMonth();
+    }
+    var cal = renderCalendarGrid();
+    var selDateObj = new Date(shownDate+'T00:00:00');
+    var dayHours = hoursForDate(selDateObj);
+
+    var slots;
+    if(loadStatus==='loading'){
+      slots = '<p class="empty-note">Cargando disponibilidad…</p>';
+    } else if(loadStatus==='error'){
+      slots = '<p class="empty-note">No pudimos cargar la agenda en este momento. Probá de nuevo en unos minutos o escribinos por WhatsApp.</p>';
+    } else {
+      slots = dayHours.length ? dayHours.map(function(h){
+        var st = slotState(shownDate, h);
+        var disabled = (st==='past' || (st==='booked' && !adminOpen) || (st==='blocked' && !adminOpen)) ? ' disabled' : '';
+        return '<button type="button" class="slot" data-time="'+h+'" data-state="'+st+'"'+disabled+'>'+h+'&ndash;'+endTime(h)+'</button>';
+      }).join('') : '<p class="empty-note">Cerrado este día — elegí otra fecha en el calendario.</p>';
+    }
+
+    var nextHtml;
+    if(loadStatus!=='ok') nextHtml = '<div class="next-slot">'+(loadStatus==='loading' ? 'Consultando turnos libres…' : 'Agenda no disponible por el momento.')+'</div>';
+    else nextHtml = next ? '<div class="next-slot">🌸 Próximo turno libre: <b>&nbsp;'+fmtDate(next.dayObj)+' de '+next.time+' a '+endTime(next.time)+'</b></div>' : '<div class="next-slot">Sin turnos libres en los próximos días — escribinos por WhatsApp.</div>';
+
+    return ''+
+    '<section class="section" id="agenda" style="background:var(--surface); padding-top:76px;">'+
+      '<div class="wrap">'+
+        '<div class="section-head" style="margin-bottom:28px;">'+
+          '<p class="eyebrow">Agenda en vivo</p>'+
+          '<h2>Elegí día y horario</h2>'+
+          '<p>La disponibilidad se actualiza al instante. Cada turno queda reservado para una sola persona.</p>'+
+        '</div>'+
+        '<div class="agenda-shell">'+
+          '<div class="agenda-top">'+nextHtml+'</div>'+
+          '<div class="cal-panel">'+
+            '<div class="cal-header"><h4>'+monthLabel(viewYear,viewMonth)+'</h4>'+
+              '<div class="cal-nav">'+
+                '<button type="button" id="cal-prev"'+(cal.prevDisabled?' disabled':'')+' aria-label="Mes anterior">&lsaquo;</button>'+
+                '<button type="button" id="cal-next"'+(cal.nextDisabled?' disabled':'')+' aria-label="Mes siguiente">&rsaquo;</button>'+
+              '</div>'+
+            '</div>'+
+            '<div class="cal-weekdays">'+DAY_NAMES.map(function(n){ return '<span>'+n+'</span>'; }).join('')+'</div>'+
+            '<div class="cal-grid">'+cal.cells+'</div>'+
+          '</div>'+
+          '<div class="slot-panel-head">'+fmtDateLong(shownDate)+'</div>'+
+          '<div class="slot-grid" id="slot-grid">'+slots+'</div>'+
+          '<p class="form-note" style="margin-top:14px;">🕑 Turnos de 2 horas · Martes a viernes de 9 a 19 hs, sábados de 9 a 14 hs. Cerrado domingos y lunes. Te pedimos avisar con al menos 3 horas de anticipación para cancelar o reprogramar tu turno.</p>'+
+
+          '<form class="book-form" id="book-form" novalidate>'+
+            '<div class="grid">'+
+              '<div class="field"><label for="f-name">Nombre y apellido</label><input id="f-name" required autocomplete="name" maxlength="80"></div>'+
+              '<div class="field"><label for="f-contact">WhatsApp o teléfono</label><input id="f-contact" required autocomplete="tel" maxlength="40"></div>'+
+            '</div>'+
+            '<div class="field"><label for="f-service">Experiencia</label><select id="f-service">'+
+              SERVICES.map(function(s){ return '<option value="'+s+'">'+s+'</option>'; }).join('')+
+            '</select></div>'+
+            '<div class="form-actions">'+
+              '<button type="submit" class="cta small" id="f-submit">Confirmar turno</button>'+
+              '<button type="button" class="cta ghost small" id="f-cancel">Cancelar</button>'+
+              '<span class="form-note" id="f-picked"></span>'+
+            '</div>'+
+          '</form>'+
+
+          '<div class="confirm-box" id="confirm-box"></div>'+
+
+          '<div class="team-link"><button type="button" id="team-toggle">'+(adminOpen ? 'Cerrar vista de equipo' : 'Acceso equipo →')+'</button></div>'+
+          '<div class="admin-panel'+(adminOpen?' open':'')+'" id="admin-panel">'+(adminOpen ? renderAdminLists() : '')+'</div>'+
+        '</div>'+
+      '</div>'+
+    '</section>';
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  var modalEl, modalMsgEl, modalFieldWrap, modalInput, modalOkBtn, modalCancelBtn;
+  function initModal(){
+    modalEl = document.getElementById('app-modal');
+    modalMsgEl = document.getElementById('modal-message');
+    modalFieldWrap = document.getElementById('modal-field-wrap');
+    modalInput = document.getElementById('modal-input');
+    modalOkBtn = document.getElementById('modal-ok');
+    modalCancelBtn = document.getElementById('modal-cancel');
+  }
+  function closeModal(){ modalEl.hidden = true; modalOkBtn.onclick = null; modalCancelBtn.onclick = null; modalInput.onkeydown = null; }
+  function showAlert(msg){
+    return new Promise(function(resolve){
+      modalMsgEl.textContent = msg;
+      modalFieldWrap.hidden = true;
+      modalCancelBtn.hidden = true;
+      modalOkBtn.textContent = 'Entendido';
+      modalEl.hidden = false;
+      modalOkBtn.onclick = function(){ closeModal(); resolve(); };
+    });
+  }
+  function showConfirm(msg){
+    return new Promise(function(resolve){
+      modalMsgEl.textContent = msg;
+      modalFieldWrap.hidden = true;
+      modalCancelBtn.hidden = false;
+      modalCancelBtn.textContent = 'Cancelar';
+      modalOkBtn.textContent = 'Sí, confirmar';
+      modalEl.hidden = false;
+      modalOkBtn.onclick = function(){ closeModal(); resolve(true); };
+      modalCancelBtn.onclick = function(){ closeModal(); resolve(false); };
+    });
+  }
+  function showPrompt(msg){
+    return new Promise(function(resolve){
+      modalMsgEl.textContent = msg;
+      modalFieldWrap.hidden = false;
+      modalInput.value = '';
+      modalCancelBtn.hidden = false;
+      modalCancelBtn.textContent = 'Cancelar';
+      modalOkBtn.textContent = 'Aceptar';
+      modalEl.hidden = false;
+      setTimeout(function(){ modalInput.focus(); }, 60);
+      modalOkBtn.onclick = function(){ var v = modalInput.value; closeModal(); resolve(v); };
+      modalCancelBtn.onclick = function(){ closeModal(); resolve(null); };
+      modalInput.onkeydown = function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); modalOkBtn.click(); } };
+    });
+  }
+
+  // --- API ---
+  function api(method, body){
+    var opts = {method: method, headers: {'Content-Type':'application/json'}};
+    if(body) opts.body = JSON.stringify(body);
+    var url = API;
+    if(method==='GET'){
+      var today = new Date(); today.setHours(0,0,0,0);
+      var end = new Date(today.getFullYear(), today.getMonth()+MAX_MONTHS_AHEAD+1, 1);
+      url += '?from='+dateKey(today)+'&to='+dateKey(end);
+    }
+    return fetch(url, opts).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(data){ return {status: r.status, data: data}; });
+    });
+  }
+  function loadAvailability(){
+    return api('GET').then(function(res){
+      if(res.status!==200) throw new Error(res.data.error || 'error');
+      var next = {};
+      (res.data.busy || []).forEach(function(k){ next[k] = true; });
+      busy = next;
+      loadStatus = 'ok';
+    }).catch(function(){
+      if(loadStatus!=='ok') loadStatus = 'error';
+    });
+  }
+  function adminCall(body){
+    body.code = adminCode;
+    return api('POST', body).then(function(res){
+      if(res.status===200){ adminData = {bookings: res.data.bookings||[], blocked: res.data.blocked||[]}; return res; }
+      if(res.status===401){ adminOpen = false; adminCode = null; }
+      return res;
+    });
+  }
+  function refresh(){
+    var form = document.getElementById('book-form');
+    if(form && form.classList.contains('open')) return Promise.resolve(); // no interrumpir a quien está reservando
+    var jobs = [loadAvailability()];
+    if(adminOpen) jobs.push(adminCall({action:'list'}));
+    return Promise.all(jobs).then(mount);
+  }
+
+  function mount(){
+    document.getElementById('agenda-mount').innerHTML = renderAgendaSection();
+    if(lastConfirm) showConfirmBox(lastConfirm);
+    wireAgendaEvents();
+  }
+
+  function wireAgendaEvents(){
+    var mountEl = document.getElementById('agenda-mount');
+
+    mountEl.querySelectorAll('.cal-cell[data-date]').forEach(function(el){
+      el.addEventListener('click', function(){
+        selectedDate = el.getAttribute('data-date');
+        selectedSlot = null;
+        mount();
+      });
+    });
+
+    var prevBtn = document.getElementById('cal-prev');
+    var nextBtn = document.getElementById('cal-next');
+    if(prevBtn) prevBtn.addEventListener('click', function(){
+      viewMonth--; if(viewMonth<0){ viewMonth = 11; viewYear--; }
+      mount();
+    });
+    if(nextBtn) nextBtn.addEventListener('click', function(){
+      viewMonth++; if(viewMonth>11){ viewMonth = 0; viewYear++; }
+      mount();
+    });
+
+    mountEl.querySelectorAll('.slot').forEach(function(el){
+      el.addEventListener('click', function(){
+        var st = el.getAttribute('data-state');
+        var time = el.getAttribute('data-time');
+        if(adminOpen){
+          if(st==='open') blockSlot(selectedDate, time);
+          else if(st==='blocked'){
+            var blk = adminData.blocked.filter(function(b){ return b.date===selectedDate && b.time===time; })[0];
+            if(blk) unblockSlot(blk.id);
+          }
+          return;
+        }
+        if(st!=='open' && st!=='selected') return;
+        selectedSlot = time;
+        lastConfirm = null;
+        mount();
+        openForm(time);
+      });
+    });
+
+    var teamBtn = document.getElementById('team-toggle');
+    teamBtn.addEventListener('click', function(){
+      if(adminOpen){
+        adminOpen = false; adminCode = null; adminData = {bookings:[], blocked:[]};
+        mount();
+        return;
+      }
+      showPrompt('Código de acceso del equipo:').then(function(code){
+        if(code === null || code === '') return;
+        adminCode = code;
+        adminCall({action:'list'}).then(function(res){
+          if(res.status===200){ adminOpen = true; mount(); }
+          else if(res.status===401){ showAlert('Código incorrecto.'); }
+          else { adminCode = null; showAlert('No se pudo abrir la vista de equipo: '+(res.data.error||'error')); }
+        }).catch(function(){ adminCode = null; showAlert('Sin conexión. Probá de nuevo.'); });
+      });
+    });
+
+    mountEl.querySelectorAll('[data-cancel]').forEach(function(el){
+      el.addEventListener('click', function(){ cancelBooking(el.getAttribute('data-cancel')); });
+    });
+    mountEl.querySelectorAll('[data-unblock]').forEach(function(el){
+      el.addEventListener('click', function(){ unblockSlot(el.getAttribute('data-unblock')); });
+    });
+
+    var form = document.getElementById('book-form');
+    form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      submitBooking();
+    });
+    document.getElementById('f-cancel').addEventListener('click', function(){
+      selectedSlot = null;
+      closeForm();
+      mount();
+    });
+  }
+
+  function openForm(time){
+    var form = document.getElementById('book-form');
+    form.classList.add('open');
+    document.getElementById('f-picked').textContent = 'Turno elegido: '+fmtDateLong(selectedDate)+' de '+time+' a '+endTime(time);
+    form.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  function closeForm(){
+    var form = document.getElementById('book-form');
+    if(form) form.classList.remove('open');
+  }
+
+  function showConfirmBox(b){
+    var box = document.getElementById('confirm-box');
+    box.classList.add('open');
+    var waMsg = encodeURIComponent('Hola! Quiero confirmar mi turno en Serenity Holistic Spa: '+b.service+', el '+b.date+' de '+b.time+' a '+endTime(b.time)+'. Mi nombre es '+b.name+'.');
+    box.innerHTML = '✔️ Turno reservado para <b>'+escapeHtml(b.name)+'</b> — '+fmtDateLong(b.date)+', de '+b.time+' a '+endTime(b.time)+' ('+escapeHtml(b.service)+').'+
+      '<div class="confirm-actions">'+
+        '<a class="cta small" target="_blank" rel="noopener" href="https://wa.me/59895565708?text='+waMsg+'">Confirmar por WhatsApp</a>'+
+        '<a class="cta ghost small" target="_blank" rel="noopener" href="'+escapeHtml(gcalUrl(b))+'">'+GCAL_ICON+'Agregar a Google Calendar</a>'+
+      '</div>'+
+      '<p class="form-note" style="margin-top:12px;">Agregalo a tu Google Calendar para recibir un recordatorio, o guardá este mensaje / hacé una captura como comprobante. Recordá avisarnos con al menos 3 horas de anticipación si necesitás cancelar o reprogramar.</p>';
+  }
+
+  function submitBooking(){
+    var name = document.getElementById('f-name').value.trim();
+    var contact = document.getElementById('f-contact').value.trim();
+    var service = document.getElementById('f-service').value;
+    if(!name || !contact){ showAlert('Completá nombre y contacto.'); return; }
+    var date = selectedDate, time = selectedSlot;
+    if(!time) return;
+    var btn = document.getElementById('f-submit');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+
+    api('POST', {action:'book', date:date, time:time, service:service, name:name, contact:contact}).then(function(res){
+      if(res.status===200){
+        busy[date+' '+time] = true;
+        selectedSlot = null;
+        lastConfirm = {date:date, time:time, service:service, name:name};
+        closeForm();
+        mount();
+        document.getElementById('confirm-box').scrollIntoView({behavior:'smooth', block:'nearest'});
+        return;
+      }
+      btn.disabled = false; btn.textContent = 'Confirmar turno';
+      if(res.status===409){
+        selectedSlot = null;
+        closeForm();
+        showAlert('Uy, justo en este instante otra persona reservó ese mismo turno. Actualizamos la disponibilidad — elegí otro horario libre.').then(refresh);
+      } else {
+        showAlert(res.data.error || 'No se pudo guardar la reserva ahora mismo. Probá de nuevo en unos segundos.');
+      }
+    }).catch(function(){
+      btn.disabled = false; btn.textContent = 'Confirmar turno';
+      showAlert('Sin conexión. Revisá tu internet y probá de nuevo.');
+    });
+  }
+
+  function adminAction(body){
+    return adminCall(body).then(function(res){
+      if(res.status===409) showAlert('Ese horario se ocupó recién. Actualizamos la agenda.');
+      else if(res.status===401) showAlert('El código del equipo ya no es válido.');
+      else if(res.status!==200) showAlert(res.data.error || 'No se pudo guardar el cambio.');
+      return loadAvailability();
+    }).catch(function(){ showAlert('Sin conexión. Probá de nuevo.'); }).then(mount);
+  }
+  function cancelBooking(id){
+    showConfirm('¿Cancelar esta reserva? Se borra también del Google Calendar.').then(function(ok){
+      if(ok) adminAction({action:'cancel', id:id});
+    });
+  }
+  function blockSlot(date, time){ adminAction({action:'block', date:date, time:time}); }
+  function unblockSlot(id){ adminAction({action:'unblock', id:id}); }
+
+  initModal();
+  mount();
+  loadAvailability().then(mount);
+  setInterval(function(){ if(!document.hidden && modalEl.hidden) refresh(); }, REFRESH_MS);
+})();
+</script>
+</body>
+</html>
