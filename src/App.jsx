@@ -13,7 +13,7 @@ const INSTAGRAM_POST_URL = "https://www.instagram.com/p/DSGZtksipld/";
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
 const COUNTRY_DATA = {
-  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío express 24-48hs",       note:"Precios en pesos uruguayos con IVA incluido",              popular:["Vita Xtra T+","Thermo T3","Prunex1"],         available:["Vita Xtra T+","Thermo T3","Nocarb-T","Prunex1","Biopro+ Fit"] },
+  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío a partir de 72 hs del pago", note:"Todos los productos a $ 2.150 · Pagás con Mercado Pago",              popular:["Vita Xtra T+","Thermo T3","Prunex1"],         available:["Vita Xtra T+","Thermo T3","Nocarb-T","Prunex1","Biopro+ Fit"] },
   "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["Nutraday","No Stress","Reset"],               unavailable:["Prunex","Xpeed"] },
   "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["Vita Xtra T+","Protein Active Fit","Flora Liv"],unavailable:["Prunex","Pre Sport"] },
   "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["Reset","Thermo T3","Nutraday"],               unavailable:["Prunex"] },
@@ -28,13 +28,13 @@ const PRODUCTS = [
   { id:1,  name:"Rexet",              line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-rexet.jpg",            emoji:"🌿", tag:"Reinicia tu cuerpo",             desc:"Bebida efervescente que desintoxica y protege el hígado frente al exceso de alcohol o comidas grasosas.", benefits:["Desintoxica el hígado","Elimina toxinas","Reactiva el metabolismo"],                               ing:"Tuna roja · Alcachofa · Hierba luisa · Clorofila · Zinc" },
   { id:2,  name:"Liquid Fiber",       line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-liquid-fiber.jpg",                                                emoji:"🍋", tag:"Digestión puntual",               desc:"Fibra prebiótica soluble que regula el ritmo digestivo y reduce la absorción de grasas.", benefits:["Regula la digestión","Nutre la flora intestinal","Reduce absorción de grasas"],                              ing:"Inulina · Oligofructuosa · Raíz de achicoria" },
   { id:3,  name:"Flora Liv",          line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-flora-liv.jpg",                                                emoji:"🫧", tag:"Protege desde adentro",           desc:"Bacterias probióticas vivas para regenerar la microbiota, mantener las defensas y prevenir trastornos digestivos.", benefits:["Regenera la microbiota","Mantiene defensas activas","Previene trastornos digestivos"],           ing:"Cultivos probióticos · Fibra prebiótica · Granadilla · Aguaymanto" },
-  { id:4,  name:"Prunex1",            line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-prunex1.jpg",                                                emoji:"🫐", tag:"Limpieza natural",                desc:"Té herbal de fibras solubles que libera el tránsito intestinal lento y reduce la hinchazón abdominal.", benefits:["Regula el tránsito intestinal","Reduce la hinchazón","Elimina desechos perjudiciales"],              ing:"Psyllium · Inulina · Mucílago de linaza · Guindón · Anís estrella" },
+  { id:4,  name:"Prunex1",            line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/uy/img/prunex.jpg",                                                emoji:"🫐", tag:"Limpieza natural",                desc:"Té herbal de fibras solubles que libera el tránsito intestinal lento y reduce la hinchazón abdominal.", benefits:["Regula el tránsito intestinal","Reduce la hinchazón","Elimina desechos perjudiciales"],              ing:"Psyllium · Inulina · Mucílago de linaza · Guindón · Anís estrella" },
   { id:5,  name:"Alpha Balance",      line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-alpha-balance.jpg",                                                emoji:"🥬", tag:"Cuerpo alcalino",                 desc:"Bebida alcalinizante con vegetales verdes ricos en clorofila que equilibra el pH y elimina toxinas del organismo.", benefits:["Alcaliniza el organismo","Equilibra el pH","Elimina residuos tóxicos"],                       ing:"Alfalfa · Espirulina · Chlorella · Pasto de trigo · Espinaca · Jengibre" },
   { id:6,  name:"Berry Balance",      line:"Detox",   color:"#2d6a4f", bg:"#f0f7f3", img:"/prod-berry-balance.jpg",                                                emoji:"🫒", tag:"Protege el tracto urinario",      desc:"Concentrado de antioxidantes de berries que protege el sistema urinario, previene molestias y evita la retención de líquidos.", benefits:["Protege el tracto urinario","Evita retención de líquidos","Equilibra el pH urinario"], ing:"Cranberry · Berries tropicales · Probióticos · Antocianina · Calcio orgánico" },
   { id:7,  name:"Biopro+ Tect",       line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:"/prod-biopro-tect.jpg",                                                emoji:"🛡️", tag:"Activa tus defensas",            desc:"Batido con Bioprotein+ Colostrum® patentado que activa el sistema de defensas y regenera las células.", benefits:["Eleva defensas inmunitarias","Regeneración celular","Fortalece huesos"],                             ing:"Bioprotein+ Colostrum® · Bioferrín® · Aminoácidos · Calcio lácteo · DHA" },
   { id:8,  name:"Protein Active",     line:"Protein", color:"#1565C0", bg:"#f0f4fb", img:"/prod-protein-active.jpg",                                                emoji:"💪", tag:"Nutrición vegetal avanzada",      desc:"Proteína 100% vegetal de quinua germinada y arroz integral que regenera tejidos y reduce el daño oxidativo.", benefits:["100% vegetal y sin lactosa","Regenera tejidos","Reduce daño oxidativo"],                         ing:"Quinua germinada · Arroz integral · Arveja · Algas · DHA · Aceite de coco" },
   { id:9,  name:"Nutraday",           line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-nutraday.jpg",                                                emoji:"⚡", tag:"Vitalidad familiar",              desc:"Refresco multivitamínico con moringa, camu camu y quinua germinada ideal para toda la familia.", benefits:["12 vitaminas + 5 minerales","Fortalece las defensas","Desarrollo físico y mental"],                    ing:"Moringa · Guayaba · Camu Camu · Açaí · Quinua germinada" },
-  { id:10, name:"Vita Xtra T+",       line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-vita-xtra-t.jpg",          emoji:"🌟", tag:"Elimina la fatiga",              desc:"Energizante con guayusa, ginseng y cordyceps que elimina la fatiga física y mental y reduce la oxidación celular.", benefits:["Energía sostenida todo el día","Alto poder antioxidante","Elimina fatiga física y mental"], ing:"Guayusa · Té verde · Açaí · Goji berry · Cordyceps · Maca · Ginseng" },
+  { id:10, name:"Vita Xtra T+",       line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/uy/img/vita.jpg",          emoji:"🌟", tag:"Elimina la fatiga",              desc:"Energizante con guayusa, ginseng y cordyceps que elimina la fatiga física y mental y reduce la oxidación celular.", benefits:["Energía sostenida todo el día","Alto poder antioxidante","Elimina fatiga física y mental"], ing:"Guayusa · Té verde · Açaí · Goji berry · Cordyceps · Maca · Ginseng" },
   { id:11, name:"Vitaenergia",        line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-vitaenergia.jpg",                                                emoji:"🔥", tag:"Energía y vitalidad",              desc:"Bebida multivitamínica con antocianina de maíz morado y açaí que disipa la fatiga y refuerza el sistema inmune.", benefits:["Disipa la fatiga","Mejora asimilación de proteínas","Refuerza el sistema inmune"],         ing:"Aminoácidos · Vitaminas · Antocianina maíz morado · Açaí · Camu camu · Luteína" },
   { id:12, name:"Xpeed",              line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-xpeed.jpg",                                                emoji:"🚀", tag:"Energía inmediata",               desc:"Bebida energizante natural gasificada con mix ancestral de maca, guaraná y teína. Sin azúcar, lista para consumir.", benefits:["Energía inmediata","Contrarresta la fatiga","Efecto sparkling natural"],                        ing:"Maca · Guaraná · Teína · Taurina · Vitamina C · Vitamina B5" },
   { id:13, name:"Xpeed Citrus Power", line:"Energy",  color:"#7B3FA0", bg:"#f5f0f9", img:"/prod-xpeed-citrus.jpg",                                                emoji:"🍋", tag:"Energía sabor cítrico",           desc:"Versión sin azúcar de Xpeed con sabor a limón y el mismo mix energético ancestral para vivir al máximo.", benefits:["Sin azúcar","Energía natural sostenida","Sabor limón refrescante"],                              ing:"Maca · Guaraná · Teína · Taurina · Vitamina C · Vitamina B5" },
@@ -42,12 +42,12 @@ const PRODUCTS = [
   { id:15, name:"Gano+ T",            line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-gano-t.jpg",                                                emoji:"🍵", tag:"Optimiza tu protección",          desc:"Té de Ganoderma Lucidum y té blanco que modula el sistema inmunológico y neutraliza radicales libres.", benefits:["Mantiene defensas activas","Modula el sistema inmune","Neutraliza radicales libres"],             ing:"Ganoderma Lucidum · Extracto de té blanco · Vitamina C y D" },
   { id:16, name:"Gano+ Cappuccino",   line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-gano-cappuccino.jpg",                                                emoji:"☕", tag:"Cappuccino inmunoprotector",      desc:"Café cappuccino con Ganoderma Lucidum, el hongo milenario del secreto de la longevidad asiática.", benefits:["Antioxidante celular","Modula las defensas naturales","Reduce daño oxidativo"],                     ing:"Ganoderma Lucidum · Quillay · Micronutrientes" },
   { id:17, name:"Café Ganomax",       line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-cafe-ganomax.jpg",                                                emoji:"☕", tag:"Café premium inmunológico",       desc:"Café gourmet colombiano con Ganoderma Lucidum y Uña de Gato amazónica para reforzar y regular el sistema inmune.", benefits:["Refuerza el sistema inmune","Reduce daño oxidativo","Mantiene la vitalidad"],          ing:"Café tostado · Ganoderma Lucidum · Uña de gato" },
-  { id:18, name:"Thermo T3",          line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-thermo-t3.jpg",            emoji:"🔥", tag:"Activa tu metabolismo",          desc:"Mix de tres tés con L-Carnitina y Garcinia Cambogia que transforma la grasa en energía y reduce medidas corporales.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"],          ing:"Té verde · Té negro · Té rojo · Carnitina · Garcinia Cambogia · Café verde" },
-  { id:19, name:"Nocarb-T",           line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-nocarb-t.jpg",                                                emoji:"🌾", tag:"Carbohidratos bajo control",      desc:"Fórmula de fibras solubles, cromo y té verde que reduce la elevación de glucosa tras las comidas y controla el peso.", benefits:["Controla los carbohidratos","Mantiene niveles de glucosa","Reduce acumulación de grasa"], ing:"Fibra de yacón · Acacia · Inulina · Pectina de manzana · Canela · Té verde · Cromo" },
+  { id:18, name:"Thermo T3",          line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/uy/img/thermo.jpg",            emoji:"🔥", tag:"Activa tu metabolismo",          desc:"Mix de tres tés con L-Carnitina y Garcinia Cambogia que transforma la grasa en energía y reduce medidas corporales.", benefits:["Activa la termogénesis","Quema grasa naturalmente","Control de peso efectivo"],          ing:"Té verde · Té negro · Té rojo · Carnitina · Garcinia Cambogia · Café verde" },
+  { id:19, name:"Nocarb-T",           line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/uy/img/nocarb.jpg",                                                emoji:"🌾", tag:"Carbohidratos bajo control",      desc:"Fórmula de fibras solubles, cromo y té verde que reduce la elevación de glucosa tras las comidas y controla el peso.", benefits:["Controla los carbohidratos","Mantiene niveles de glucosa","Reduce acumulación de grasa"], ing:"Fibra de yacón · Acacia · Inulina · Pectina de manzana · Canela · Té verde · Cromo" },
   { id:20, name:"Chocolate Fit",      line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-chocolate-fit.jpg",                                                emoji:"🍫", tag:"Mantente en forma deliciosamente", desc:"Bebida vegetal de cacao puro amazónico con CLA que acelera el metabolismo, reduce medidas y calma la ansiedad.", benefits:["Reduce medidas corporales","Calma la ansiedad por comer","Acelera el metabolismo"],           ing:"Cacao puro amazónico · Proteína vegetal · Café verde · CLA · Cromo orgánico" },
   { id:21, name:"Café & Café Fit",    line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-cafe-fit.jpg",                                                emoji:"☕", tag:"Café sin perder la línea",         desc:"Café gourmet enriquecido con extracto de café verde que apoya el control de peso y reduce el apetito.", benefits:["Apoya control de peso","Reduce sensación de apetito","Reduce cansancio y fatiga"],               ing:"Café tostado liofilizado · Extracto de café verde" },
   { id:22, name:"Café Fit Cappuccino",line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-cafe-fit-cappuccino.jpg",                                                emoji:"☕", tag:"Cappuccino sin culpa",            desc:"Cappuccino gourmet bajo en calorías con café verde Svetol® para controlar el peso sin renunciar al placer.", benefits:["Bajo en calorías","Controla peso y medidas","Reduce el apetito"],                              ing:"Café tostado · Café verde Svetol® · Leche descremada · Crema para café" },
-  { id:23, name:"Biopro+ Fit",        line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-biopro-fit.jpg",                                                emoji:"⚖️", tag:"Nutrición y reduce medidas",      desc:"Batido proteico con Prolibra® clínicamente probado que acelera el metabolismo de la grasa y tonifica el músculo.", benefits:["Acelera metabolismo de grasa","Tonifica la masa muscular","Reduce sensación de apetito"],  ing:"Bioprotein+ Colostrum® · Prolibra® · Aminoácidos · Tamarindo Malabar · DHA" },
+  { id:23, name:"Biopro+ Fit",        line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/uy/img/biopro.jpg",                                                emoji:"⚖️", tag:"Nutrición y reduce medidas",      desc:"Batido proteico con Prolibra® clínicamente probado que acelera el metabolismo de la grasa y tonifica el músculo.", benefits:["Acelera metabolismo de grasa","Tonifica la masa muscular","Reduce sensación de apetito"],  ing:"Bioprotein+ Colostrum® · Prolibra® · Aminoácidos · Tamarindo Malabar · DHA" },
   { id:24, name:"Protein Active Fit", line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-protein-active-fit.jpg",           emoji:"💪", tag:"Proteína vegetal fit",           desc:"Proteína 100% vegetal con L-Carnitina y Tamarindo Malabar para controlar el peso, tonificar y reducir medidas.", benefits:["100% vegetal y sin lactosa","Controla peso y medidas","Tonifica los músculos"],              ing:"Quinua germinada · Arveja · Arroz integral · L-Carnitina · Cromo · Zinc orgánico" },
   { id:25, name:"Protein Xoup",       line:"Control", color:"#E65100", bg:"#fdf4ef", img:"/prod-protein-xoup.jpg",                                                emoji:"🍲", tag:"Sopas proteicas fit",              desc:"Sopas instantáneas de proteína vegetal con Slendesta® que aumenta la saciedad y CLA que previene acumulación de grasa.", benefits:["Alta saciedad con Slendesta®","Previene acumulación de grasa","Nutrición muscular activa"], ing:"Bioprotein Active® · Slendesta® · CLA · Hierro · Zinc · Magnesio" },
   { id:26, name:"Probal",             line:"Immunity",color:"#00897B", bg:"#f0faf8", img:"/prod-probal.jpg",                                                emoji:"🌸", tag:"Salud femenina integral",         desc:"Té herbal con aguaje y ashwagandha que controla las molestias del período y balancea la menopausia.", benefits:["Refuerza la salud femenina","Controla molestias del período","Balance durante la menopausia"],    ing:"Aguaje · Dong Quai · Orégano · Triptófano · Magnesio · Camu-camu · Luteína" },
@@ -75,27 +75,7 @@ const RECIPES = [
   { id:8, cat:"Beauty",  name:"Collagen Glow Drink",   img:"✨", product:"YOUTH ELIXIR HGH",  ingredients:["agua de rosas","jugo de granada","1 sobre YOUTH ELIXIR HGH","aloe vera","menta"],    prep:"Mezcla sin licuadora. Agita bien. Toma 2x día para piel radiante." },
 ];
 
-const TESTIMONIALS = [
-  { name:"Elena García",   country:"España",    flag:"🇪🇸", role:"Cliente verificada",  text:"Increíble el cambio en mi digestión. ¡El envío a Madrid fue súper rápido!", pack:"Transform Kit",  days:45, color:"#2d6a4f" },
-  { name:"Camila Rojas",   country:"Chile",     flag:"🇨🇱", role:"Usuaria Premium",     text:"Desde que uso FuXion Energy tengo una vitalidad que no sentía desde mis 20s.", pack:"Elite Program",  days:90, color:"#7B3FA0" },
-  { name:"André Santos",   country:"Brasil",    flag:"🇧🇷", role:"Cliente verificado",  text:"O sistema Immuno me ajudou a passar o inverno sem adoecer uma única vez!", pack:"Starter Pack",  days:30, color:"#1565C0" },
-  { name:"María López",    country:"México",    flag:"🇲🇽", role:"Usuaria Premium",     text:"Perdí 8 kilos en 3 meses con el plan detox. Me siento renovada y con energía.", pack:"Transform Kit", days:90, color:"#2d6a4f" },
-  { name:"James Wilson",   country:"USA",       flag:"🇺🇸", role:"Verified Customer",   text:"Clean, effective, and actually tastes good. FuXion is the real deal.", pack:"Starter Pack",  days:30, color:"#E65100" },
-  { name:"Valentina Cruz", country:"Colombia",  flag:"🇨🇴", role:"Embajadora",          text:"El Aloe Plus transformó mi piel. Todos preguntan mi secreto: Power Vita 🌿", pack:"Elite Program", days:60, color:"#C9A84C" },
-  { name:"Marcus Johnson", country:"USA",       flag:"🇺🇸", role:"Diamond Partner",     text:"Llevar Power Vita a mi país ha sido la mejor decisión financiera de mi vida.", pack:"Elite Program", days:90, color:"#1a2e1a" },
-  { name:"Sofía Morales",  country:"Argentina", flag:"🇦🇷", role:"Gold Partner",        text:"En 8 meses construí un equipo en 5 países. El soporte del sistema es incomparable.", pack:"Elite Program", days:90, color:"#C9A84C" },
-  { name:"Pedro Fernandes",country:"Portugal",  flag:"🇵🇹", role:"Diamond Partner",     text:"Comecei do zero e hoje tenho renda passiva de 6 dígitos. Revolucionário.", pack:"Elite Program", days:90, color:"#1565C0" },
-];
-
-const BEFORE_AFTER = [
-  { name:"María G.", age:34, country:"Uruguay", flag:"🇺🇾", pack:"Transform Kit", days:60, goal:"Bajar de peso", color:"#2d6a4f", before:{Peso:"Con sobrepeso",Energía:"⬇️ Baja",Digestión:"⬇️ Lenta",Sueño:"⬇️ Irregular"}, after:{Peso:"Peso saludable",Energía:"⬆️ Alta",Digestión:"⬆️ Fluida",Sueño:"⬆️ Profundo"}, diff:{Peso:"Notable mejora",Energía:"Muy mejorada",Digestión:"Muy mejorada",Sueño:"Mucho mejor"}, quote:"En 2 meses cambié completamente. Tengo energía para todo.", products:["REXET","THERMO T3","NO STRESS"] },
-  { name:"Carlos R.", age:41, country:"Argentina", flag:"🇦🇷", pack:"Elite Program", days:90, goal:"Más energía y músculo", color:"#1565C0", before:{Peso:"Sin tono muscular",Energía:"⬇️ Agotado",Digestión:"⬇️ Pesada",Rendimiento:"⬇️ Bajo"}, after:{Peso:"Masa muscular ganada",Energía:"⬆️ Máxima",Digestión:"⬆️ Perfecta",Rendimiento:"⬆️ Alto"}, diff:{Peso:"Masa muscular↑",Energía:"Muy mejorada",Digestión:"Excelente",Rendimiento:"Alto nivel"}, quote:"El Elite Program fue lo mejor que hice. Gané músculo y energía.", products:["BIOPRO+ TECT","PROTEIN ACTIVE FIT","VITA XTRA T+"] },
-  { name:"Ana P.", age:29, country:"España", flag:"🇪🇸", pack:"Starter Pack", days:30, goal:"Detox y digestión", color:"#7B3FA0", before:{Peso:"Hinchazón frecuente",Energía:"⬇️ Cansada",Digestión:"⬇️ Hinchada",Piel:"⬇️ Opaca"}, after:{Peso:"Sin hinchazón",Energía:"⬆️ Activa",Digestión:"⬆️ Plana",Piel:"⬆️ Radiante"}, diff:{Peso:"Visible mejora",Energía:"Mejorada",Digestión:"Muy mejorada",Piel:"Radiante"}, quote:"Solo 30 días y mi digestión cambió completamente.", products:["REXET","FLORA LIV","LIQUID FIBER"] },
-];
-
-
-const PACK_COLOR = { "Starter Pack":"#2d6a4f", "Transform Kit":"#C9A84C", "Elite Program":"#1565C0" };
-const CERTS = ["Clean Label","FDA Registered","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","+15,000 Socios","Ingredientes Naturales","Sin Conservantes"];
+const CERTS = ["Clean Label","GMP Certified","Non-GMO","HACCP","Biotecnología Avanzada","37 Países","Ingredientes Naturales","Sin Conservantes"];
 const LINE_COLORS = { Detox:"#2d6a4f", Energy:"#7B3FA0", Protein:"#1565C0", Immunity:"#00897B", Sport:"#546E7A", Control:"#E65100", Mental:"#E53935" };
 
 function detectCountry() {
@@ -119,68 +99,17 @@ function waHref(phone, text, ref) {
     : `https://web.whatsapp.com/send?phone=${phone}&text=${msg}`;
 }
 
-function useCountdown() {
-  const [t, setT] = useState({h:0,m:0,s:0});
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const end = new Date(now); end.setHours(24,0,0,0);
-      const d = end - now;
-      setT({ h:Math.floor(d/3600000), m:Math.floor((d%3600000)/60000), s:Math.floor((d%60000)/1000) });
-    };
-    tick(); const id = setInterval(tick, 1000); return () => clearInterval(id);
-  }, []);
-  return t;
-}
-
 function AnnouncementBar({ country }) {
-  const t = useCountdown();
-  const pad = n => String(n).padStart(2,'0');
-  const loc = country === "Argentina" ? "🇦🇷 Envío gratis a Argentina"
-            : country === "Colombia"  ? "🇨🇴 Envío gratis a Colombia"
-            : country === "Uruguay"   ? "🇺🇾 Envío express 24-48hs"
-            : "🚚 Envío gratis en tu primer pedido";
+  const loc = country === "Uruguay" || !country
+    ? "🇺🇾 Todos los productos a $ 2.150 con envío incluido · Pagás con Mercado Pago"
+    : "🚚 Pedidos online con entrega a domicilio · Consultanos por WhatsApp";
   return (
-    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:200,background:"linear-gradient(90deg,#1a2e1a,#2d6a4f,#1a2e1a)",padding:"9px 20px",display:"flex",alignItems:"center",justifyContent:"center",gap:16,flexWrap:"wrap"}}>
-      <span className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:11,fontWeight:700}}>🔥 OFERTA HOY · {loc} · Termina en:</span>
-      <div style={{display:"flex",gap:4,alignItems:"center"}}>
-        {[{v:t.h,l:"hs"},{v:t.m,l:"min"},{v:t.s,l:"seg"}].map(({v,l},i)=>(
-          <span key={i} style={{display:"flex",alignItems:"center",gap:3}}>
-            <span className="int" style={{background:"rgba(255,255,255,0.15)",color:"#fff",borderRadius:5,padding:"2px 7px",fontSize:12,fontWeight:800,minWidth:28,textAlign:"center"}}>{pad(v)}</span>
-            <span className="int" style={{color:"rgba(255,255,255,0.55)",fontSize:9}}>{l}</span>
-            {i<2&&<span style={{color:"#C9A84C",fontWeight:800,fontSize:12,marginLeft:2}}>:</span>}
-          </span>
-        ))}
-      </div>
-      <span className="int" style={{color:"#C9A84C",fontSize:10,fontWeight:800,letterSpacing:1}}>↑ PRECIO ESPECIAL SOLO HOY</span>
+    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:200,background:"linear-gradient(90deg,#1a2e1a,#2d6a4f,#1a2e1a)",height:40,padding:"0 16px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+      <span className="int" style={{color:"rgba(255,255,255,0.95)",fontSize:11,fontWeight:700,textAlign:"center",lineHeight:1.3}}>{loc}</span>
     </div>
   );
 }
 
-
-// ── INITIALS AVATAR ───────────────────────────────────────────────────────────
-function Avatar({ name, color="#2d6a4f", size=52 }) {
-  const initials = name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
-  const pairs = { "#2d6a4f":["#2d6a4f","#52b788"], "#7B3FA0":["#7B3FA0","#9d4edd"], "#1565C0":["#1565C0","#1976D2"], "#E65100":["#E65100","#ff7043"], "#C9A84C":["#C9A84C","#e8c86a"], "#1a2e1a":["#1a2e1a","#2d6a4f"] };
-  const [c1,c2] = pairs[color] || ["#2d6a4f","#52b788"];
-  return (
-    <div style={{ width:size, height:size, borderRadius:"50%", background:`linear-gradient(135deg,${c1},${c2})`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:`0 3px 12px ${c1}40` }}>
-      <span style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:size*0.34, fontWeight:700, color:"#fff" }}>{initials}</span>
-    </div>
-  );
-}
-
-// ── COUNTER ───────────────────────────────────────────────────────────────────
-function Counter({ target, duration=2000 }) {
-  const [v, setV] = useState(0); const ref = useRef(); const done = useRef(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting && !done.current) { done.current=true; const s=Date.now(); const tick=()=>{ const p=Math.min((Date.now()-s)/duration,1); setV(Math.floor(p*target)); if(p<1)requestAnimationFrame(tick); }; requestAnimationFrame(tick); } }, { threshold:0.4 });
-    if (ref.current) obs.observe(ref.current); return () => obs.disconnect();
-  }, [target, duration]);
-  return <span ref={ref}>{v.toLocaleString()}</span>;
-}
-
-// ── NUTRI PLAN IA ─────────────────────────────────────────────────────────────
 function NutriPlan() {
   const T = useContext(LangCtx);
   const [selGoal,setSelGoal]=useState(""); const [selDiet,setSelDiet]=useState(""); const [selSymptoms,setSelSymptoms]=useState([]);
@@ -392,69 +321,6 @@ SOLO JSON: {"titulo":"nombre","tagline":"frase","perfil":"1 oración","resultado
 }
 
 // ── CONTADOR TIEMPO REAL ──────────────────────────────────────────────────────
-function ContadorTiempoReal() {
-  const T = useContext(LangCtx);
-  const NAMES = [{name:"María G.",country:"Uruguay",flag:"🇺🇾",product:"Transform Kit"},{name:"Carlos R.",country:"Argentina",flag:"🇦🇷",product:"Elite Program"},{name:"Laura M.",country:"Colombia",flag:"🇨🇴",product:"REXET"},{name:"Diego F.",country:"México",flag:"🇲🇽",product:"Starter Pack"},{name:"Ana P.",country:"España",flag:"🇪🇸",product:"THERMO T3"},{name:"Pedro L.",country:"Brasil",flag:"🇧🇷",product:"Transform Kit"},{name:"Sofía V.",country:"Chile",flag:"🇨🇱",product:"Elite Program"},{name:"James W.",country:"USA",flag:"🇺🇸",product:"BIOPRO+ TECT"}];
-  const [count,setCount]=useState(0); const [joins,setJoins]=useState([]);
-  const getBase = () => { const h=new Date().getHours(); if(h<6)return 8; if(h<9)return 22; if(h<12)return 47; if(h<15)return 74; if(h<18)return 93; if(h<21)return 78; return 41; };
-  useEffect(() => {
-    setCount(getBase()); setJoins(Array.from({length:3},(_,i)=>({...NAMES[i],mins:3+i*7,id:i})));
-    const ci = setInterval(()=>{const h=new Date().getHours();if(h>=9&&h<21)setCount(p=>p+Math.floor(Math.random()*3)+1);},60000);
-    let ji=3; const jt=setInterval(()=>{setJoins(p=>[{...NAMES[ji%NAMES.length],mins:1,id:Date.now()},...p.slice(0,4)]);ji++;},10000);
-    return()=>{clearInterval(ci);clearInterval(jt);};
-  }, []);
-  const h = new Date().getHours();
-  const bars = [8,12,18,25,34,42,56,74,89,98,106,98,84,74,67,58,47,39,28,19,14,10,8,6];
-  return (
-    <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,overflow:"hidden",boxShadow:"0 6px 24px rgba(45,106,79,0.07)"}}>
-      <div style={{background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",padding:"13px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:"#fff",marginBottom:1}}>Actividad en tiempo real</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.88)"}}>Últimas 24 horas · Global</div></div>
-        <div style={{display:"flex",alignItems:"center",gap:5,background:"rgba(37,211,102,0.14)",border:"1px solid rgba(37,211,102,0.28)",borderRadius:999,padding:"3px 9px"}}><div style={{width:5,height:5,borderRadius:"50%",background:"#25D366",animation:"pulse 1.5s ease-in-out infinite"}}/><span style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366"}}>EN VIVO</span></div>
-      </div>
-      <div style={{padding:"14px 16px 10px",borderBottom:"1px solid rgba(45,106,79,0.06)"}}>
-        <div style={{display:"flex",alignItems:"flex-end",gap:10,marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:44,fontWeight:700,color:"#1a2e1a",lineHeight:1}}>{count}</div><div style={{paddingBottom:5,fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#2d6a4f",lineHeight:1.3}}>{T.counterJoined}</div></div>
-        <div style={{marginBottom:7}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af",marginBottom:3,fontWeight:600}}>ACTIVIDAD HOY POR HORA</div><div style={{display:"flex",gap:2,alignItems:"flex-end",height:24}}>{bars.map((v,i)=>{const isNow=i===h,isPast=i<h;return(<div key={i} style={{flex:1,background:isNow?"#2d6a4f":isPast?"rgba(45,106,79,0.32)":"rgba(45,106,79,0.08)",borderRadius:"2px 2px 0 0",height:`${(v/106)*100}%`,position:"relative"}}>{isNow&&<div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:"#2d6a4f",color:"#fff",borderRadius:3,padding:"1px 3px",fontFamily:"'Inter',sans-serif",fontSize:6,whiteSpace:"nowrap"}}>ahora</div>}</div>);})}</div><div style={{display:"flex",justifyContent:"space-between",marginTop:2}}>{["00:00","12:00","23:00"].map(t=><span key={t} style={{fontFamily:"'Inter',sans-serif",fontSize:10,color:"#9ca3af"}}>{t}</span>)}</div></div>
-        <div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#4a7c5e",fontWeight:600}}>{h>=9&&h<21?T.counterHighActivity:T.counterNormalActivity}</div>
-      </div>
-      <div style={{padding:"9px 14px"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",letterSpacing:1,marginBottom:6}}>ÚLTIMAS INCORPORACIONES</div>{joins.map((j,i)=><div key={j.id} style={{display:"flex",alignItems:"center",gap:9,padding:"4px 0",borderBottom:i<joins.length-1?"1px solid rgba(45,106,79,0.05)":"none"}}><div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#E8F0E9,#2d6a4f)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{j.flag}</div><div style={{flex:1}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:10,fontWeight:700,color:"#1a2e1a"}}>{j.name} <span style={{color:"#9ca3af",fontWeight:400}}>{T.counterFrom} {j.country}</span></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#7a9a7a"}}>{T.counterJoinedWith} <span style={{color:"#2d6a4f",fontWeight:700}}>{j.product}</span></div></div><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:"#9ca3af"}}>{j.mins}{T.counterMins}</div></div>)}</div>
-    </div>
-  );
-}
-
-// ── ANTES / DESPUÉS ───────────────────────────────────────────────────────────
-function AntesDespues() {
-  const T = useContext(LangCtx);
-  const [active,setActive]=useState(0); const [showAfter,setShowAfter]=useState(false);
-  useEffect(()=>{setShowAfter(false);},[active]);
-  const c=BEFORE_AFTER[active]; const metrics=Object.keys(c.before); const color=PACK_COLOR[c.pack]||"#2d6a4f";
-  return (
-    <div style={{background:"#fff",border:"1.5px solid rgba(45,106,79,0.1)",borderRadius:20,overflow:"hidden",boxShadow:"0 6px 24px rgba(45,106,79,0.07)"}}>
-      <div style={{background:"linear-gradient(135deg,#1a2e1a,#2d6a4f)",padding:"13px 16px"}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:"#fff",marginBottom:1}}>Transformaciones reales</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"rgba(255,255,255,0.88)"}}>Casos verificados</div></div>
-      <div style={{display:"flex",borderBottom:"1px solid rgba(45,106,79,0.06)"}}>
-        {BEFORE_AFTER.map((cas,i)=><button key={i} onClick={()=>setActive(i)} style={{flex:1,padding:"9px 6px",background:active===i?"rgba(45,106,79,0.06)":"transparent",border:"none",borderBottom:active===i?`2px solid ${PACK_COLOR[cas.pack]}`:"2px solid transparent",cursor:"pointer",transition:"all .2s",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-          <Avatar name={cas.name} color={cas.color} size={32}/>
-          <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:active===i?PACK_COLOR[cas.pack]:"#9ca3af"}}>{cas.name.split(" ")[0]}</div>
-        </button>)}
-      </div>
-      <div style={{padding:"13px 14px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:11}}>
-          <Avatar name={c.name} color={c.color} size={48}/>
-          <div style={{flex:1}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:13,fontWeight:700,color:"#1a2e1a",marginBottom:1}}>{c.name}, {c.age} años</div><div style={{fontFamily:"'Inter',sans-serif",fontSize:12,color:"#9ca3af",marginBottom:3}}>{c.country} {c.flag} · {c.goal}</div><div style={{display:"flex",gap:4}}><div style={{background:`${color}10`,border:`1px solid ${color}25`,borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color}}>{c.pack}</div><div style={{background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:600,color:"#4a7c5e"}}>⏱ {c.days} días</div></div></div>
-        </div>
-        <div style={{display:"flex",background:"rgba(45,106,79,0.05)",borderRadius:10,padding:3,marginBottom:10,gap:3}}>
-          {[false,true].map(isAfter=><button key={String(isAfter)} onClick={()=>setShowAfter(isAfter)} style={{flex:1,padding:"6px 0",borderRadius:8,border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,transition:"all .25s",background:showAfter===isAfter?(isAfter?color:"#e53e3e"):"transparent",color:showAfter===isAfter?"#fff":"#9ca3af"}}>{isAfter?T.antesAfter:T.antesBefore}</button>)}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginBottom:9}}>
-          {metrics.map(key=>{const val=showAfter?c.after[key]:c.before[key];return(<div key={key} style={{background:showAfter?`${color}07`:"rgba(229,57,53,0.04)",border:`1px solid ${showAfter?color+"18":"rgba(229,57,53,0.1)"}`,borderRadius:8,padding:"7px 9px",transition:"all .3s"}}><div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",marginBottom:2}}>{key}</div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:12,fontWeight:700,color:showAfter?color:"#e53e3e"}}>{val}</div>{showAfter&&<div style={{fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,color:"#25D366",marginTop:1}}>{c.diff[key]}</div>}</div>);})}
-        </div>
-        <div style={{background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.16)",borderRadius:9,padding:"7px 9px",marginBottom:9}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:16,color:"#C9A84C",lineHeight:0.8,marginBottom:3}}>"</div><p style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.6}}>{c.quote}</p></div>
-        <a href={waHref(WA, `¡Hola! Vi el caso de ${c.name} y quiero resultados similares con Power Vita 🌿`, "AntesDespues")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"AntesDespues_WA"})} style={{display:"block",width:"100%",background:`linear-gradient(135deg,#1a2e1a,${color})`,color:"#fff",borderRadius:9,padding:"9px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:11,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>{T.antesWant} {c.name.split(" ")[0]} →</a>
-      </div>
-    </div>
-  );
-}
-
-// ── CHAT ──────────────────────────────────────────────────────────────────────
 function Chat({ open, onClose }) {
   const T = useContext(LangCtx);
   const [msgs,setMsgs]=useState([]);
@@ -509,13 +375,13 @@ function FaqItem({ q, a }) {
 // ── TRANSLATIONS ─────────────────────────────────────────────────────────────
 const TRANSLATIONS = {
   es: {
-    nav:["Inicio","Sistema","IA Tools","Testimonios","Contacto"],
+    nav:["Inicio","Sistema","IA Tools","Cómo comprar","Contacto"],
     navCta:"Empezar →",
     heroBadge:"FuXion Global · 37 Países",
     heroTitle1:"Nutrición que", heroTitleEm:"transforma", heroTitle2:"desde adentro.",
     heroSub:"Biotecnología avanzada en cada producto FuXion. Certificado, natural y con entrega directa en 37 países.",
     heroCta1:"Ver productos", heroCta2:"💬 WhatsApp",
-    heroStats:[["37","países"],["15K+","socios"],["100%","natural"]],
+    heroStats:[["$2.150","por producto"],["72 hs","despacho"],["MP","pago seguro"]],
     sistemaBadge:"Sistema FuXion",
     sistemaTitle1:"Salud plena en", sistemaTitleEm:"3 pasos",
     sistemaSub:"Un sistema progresivo diseñado por biotecnólogos. Cada paso potencia al siguiente.",
@@ -546,15 +412,14 @@ const TRANSLATIONS = {
     faqSub:"Todo lo que necesitás saber",
     faqMoreQ:"💬 Tengo otra pregunta",
     faqQA:[
-      {q:"¿Los productos FuXion son seguros?",a:"Sí. FuXion cuenta con certificaciones internacionales: GMP, FDA Registered, HACCP y Clean Label. Todos los ingredientes son naturales y sin conservantes artificiales. Son aptos para toda la familia."},
-      {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. Los tiempos varían: Uruguay 24-48hs, Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
+      {q:"¿Los productos FuXion son seguros?",a:"Sí. FuXion cuenta con certificaciones internacionales: GMP, HACCP y Clean Label. Todos los ingredientes son naturales y sin conservantes artificiales. Son aptos para toda la familia."},
+      {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. En Uruguay el envío sale a partir de las 72 hs de confirmado el pago; Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
       {q:"¿Qué pasa si no me gustan los productos?",a:"FuXion ofrece garantía de satisfacción. Si los productos no cumplen tus expectativas, te asesoramos para encontrar la combinación correcta o gestionamos una solución."},
       {q:"¿Puedo comprar solo como cliente o también hacer el negocio?",a:"Las dos opciones están disponibles. Podés registrarte como Cliente Preferente para precios especiales, o como Emprendedor si querés construir un negocio."},
       {q:"¿Están disponibles todos los productos en mi país?",a:"FuXion opera en 37 países pero el catálogo varía por región. Consultanos por WhatsApp con tu país y te decimos qué productos están disponibles y a qué precio."},
       {q:"¿Las herramientas de IA tienen algún costo?",a:"No, son 100% gratuitas. El Plan Nutricional, Analizador de Síntomas, ROI Predictor y Elite Program son exclusivos de Power Vita sin costo adicional."},
     ],
     statsImpact:"Vidas impactadas en 37 países",
-    statsItems:[["37","Países"],["15K+","Socios"],["98%","Satisfacción"]],
     leadTitle:"Recibí tu Plan Personalizado",
     leadSub:"Dejanos tus datos y te enviamos por WhatsApp un plan adaptado a tus objetivos — sin costo.",
     leadError:"Por favor completá todos los campos.",
@@ -624,13 +489,13 @@ const TRANSLATIONS = {
     leadFormAnother:"Enviar otro →",
   },
   en: {
-    nav:["Home","System","AI Tools","Testimonials","Contact"],
+    nav:["Home","System","AI Tools","How to buy","Contact"],
     navCta:"Get started →",
     heroBadge:"FuXion Global · 37 Countries",
     heroTitle1:"Nutrition that", heroTitleEm:"transforms", heroTitle2:"from within.",
     heroSub:"Advanced biotechnology in every FuXion product. Certified, natural and delivered in 37 countries.",
     heroCta1:"View products", heroCta2:"💬 WhatsApp",
-    heroStats:[["37","countries"],["15K+","partners"],["100%","natural"]],
+    heroStats:[["$2.150","per product"],["72 h","dispatch"],["MP","secure payment"]],
     sistemaBadge:"FuXion System",
     sistemaTitle1:"Full health in", sistemaTitleEm:"3 steps",
     sistemaSub:"A progressive system designed by biotechnologists. Each step enhances the next.",
@@ -661,15 +526,14 @@ const TRANSLATIONS = {
     faqSub:"Everything you need to know",
     faqMoreQ:"💬 I have another question",
     faqQA:[
-      {q:"Are FuXion products safe?",a:"Yes. FuXion holds international certifications: GMP, FDA Registered, HACCP and Clean Label. All ingredients are natural with no artificial preservatives, suitable for the whole family."},
-      {q:"How long does delivery take?",a:"FuXion delivers directly in your country. Times vary: Uruguay 24-48h, Argentina and Colombia 2-5 business days, rest of Latin America 3-7 days. We confirm exact timing via WhatsApp."},
+      {q:"Are FuXion products safe?",a:"Yes. FuXion holds international certifications: GMP, HACCP and Clean Label. All ingredients are natural with no artificial preservatives, suitable for the whole family."},
+      {q:"How long does delivery take?",a:"FuXion delivers directly in your country. In Uruguay orders ship from 72 hours after payment; Argentina and Colombia 2-5 business days, rest of Latin America 3-7 days. We confirm exact timing via WhatsApp."},
       {q:"What if I don't like the products?",a:"FuXion offers a satisfaction guarantee. If products don't meet your expectations, we advise you to find the right combination or manage a solution."},
       {q:"Can I buy just as a customer or also do the business?",a:"Both options are available. You can register as a Preferred Customer for special prices, or as an Entrepreneur if you want to build a business."},
       {q:"Are all products available in my country?",a:"FuXion operates in 37 countries but the catalog varies by region. Message us on WhatsApp with your country and we'll tell you exactly what's available and at what price."},
       {q:"Do the AI tools have any cost?",a:"No, they're 100% free. The Nutrition Plan, Symptom Analyzer, ROI Predictor and Elite Program are exclusive to Power Vita at no additional cost."},
     ],
     statsImpact:"Lives impacted in 37 countries",
-    statsItems:[["37","Countries"],["15K+","Partners"],["98%","Satisfaction"]],
     leadTitle:"Get your Personalized Plan",
     leadSub:"Leave your info and we'll send you a custom plan on WhatsApp — free of charge.",
     leadError:"Please fill in all required fields.",
@@ -739,13 +603,13 @@ const TRANSLATIONS = {
     leadFormAnother:"Send another →",
   },
   pt: {
-    nav:["Início","Sistema","IA Tools","Depoimentos","Contato"],
+    nav:["Início","Sistema","IA Tools","Como comprar","Contato"],
     navCta:"Começar →",
     heroBadge:"FuXion Global · 37 Países",
     heroTitle1:"Nutrição que", heroTitleEm:"transforma", heroTitle2:"por dentro.",
     heroSub:"Biotecnologia avançada em cada produto FuXion. Certificado, natural e com entrega direta em 37 países.",
     heroCta1:"Ver produtos", heroCta2:"💬 WhatsApp",
-    heroStats:[["37","países"],["15K+","parceiros"],["100%","natural"]],
+    heroStats:[["$2.150","por produto"],["72 h","despacho"],["MP","pagamento seguro"]],
     sistemaBadge:"Sistema FuXion",
     sistemaTitle1:"Saúde plena em", sistemaTitleEm:"3 passos",
     sistemaSub:"Um sistema progressivo criado por biotecnólogos. Cada passo potencializa o seguinte.",
@@ -776,15 +640,14 @@ const TRANSLATIONS = {
     faqSub:"Tudo que você precisa saber",
     faqMoreQ:"💬 Tenho outra dúvida",
     faqQA:[
-      {q:"Os produtos FuXion são seguros?",a:"Sim. FuXion tem certificações internacionais: GMP, FDA Registered, HACCP e Clean Label. Todos os ingredientes são naturais, sem conservantes artificiais, adequados para toda a família."},
-      {q:"Quanto tempo leva a entrega?",a:"FuXion entrega diretamente no seu país. Os prazos variam: Uruguai 24-48h, Argentina e Colômbia 2-5 dias úteis, resto da América Latina 3-7 dias. Confirmamos o prazo exato pelo WhatsApp."},
+      {q:"Os produtos FuXion são seguros?",a:"Sim. FuXion tem certificações internacionais: GMP, HACCP e Clean Label. Todos os ingredientes são naturais, sem conservantes artificiais, adequados para toda a família."},
+      {q:"Quanto tempo leva a entrega?",a:"FuXion entrega diretamente no seu país. No Uruguai o envio sai a partir de 72 h após o pagamento; Argentina e Colômbia 2-5 dias úteis, resto da América Latina 3-7 dias. Confirmamos o prazo exato pelo WhatsApp."},
       {q:"E se eu não gostar dos produtos?",a:"FuXion oferece garantia de satisfação. Se os produtos não atenderem suas expectativas, orientamos você a encontrar a combinação certa ou gerenciamos uma solução."},
       {q:"Posso comprar só como cliente ou também fazer o negócio?",a:"As duas opções estão disponíveis. Você pode se registrar como Cliente Preferencial para preços especiais, ou como Empreendedor se quiser construir um negócio."},
       {q:"Todos os produtos estão disponíveis no meu país?",a:"FuXion opera em 37 países, mas o catálogo varia por região. Nos envie uma mensagem no WhatsApp com seu país e diremos exatamente o que está disponível e a que preço."},
       {q:"As ferramentas de IA têm algum custo?",a:"Não, são 100% gratuitas. O Plano Nutricional, Analisador de Sintomas, Preditor de ROI e Elite Program são exclusivos do Power Vita sem custo adicional."},
     ],
     statsImpact:"Vidas impactadas em 37 países",
-    statsItems:[["37","Países"],["15K+","Parceiros"],["98%","Satisfação"]],
     leadTitle:"Receba seu Plano Personalizado",
     leadSub:"Deixe seus dados e enviamos pelo WhatsApp um plano adaptado aos seus objetivos — sem custo.",
     leadError:"Por favor preencha todos os campos.",
@@ -855,6 +718,124 @@ const TRANSLATIONS = {
   },
 };
 
+// ── COMPRA DIRECTA URUGUAY (Mercado Pago) ─────────────────────────────────────
+const PRECIO_UY = 2150;
+const fmtUY = n => "$ " + n.toLocaleString("es-UY");
+// clave = la que espera api/pagar.js · id = PRODUCTS[].id
+const PRODUCTOS_UY = [
+  { key:"vita",   id:10, para:"Energía y defensas" },
+  { key:"thermo", id:18, para:"Quemar grasa" },
+  { key:"nocarb", id:19, para:"Controlar carbohidratos" },
+  { key:"prunex", id:4,  para:"Digestión e hinchazón" },
+  { key:"biopro", id:23, para:"Bajar medidas sin perder músculo" },
+].map(p => ({ ...p, ...PRODUCTS.find(x => x.id === p.id) }));
+const UY_KEY_BY_ID = Object.fromEntries(PRODUCTOS_UY.map(p => [p.id, p.key]));
+const DEPARTAMENTOS = ["Montevideo","Canelones","Maldonado","Colonia","San José","Florida","Durazno","Lavalleja","Rocha","Treinta y Tres","Cerro Largo","Rivera","Tacuarembó","Artigas","Salto","Paysandú","Río Negro","Soriano","Flores"];
+
+function ComprarUY({ cant, setCant }) {
+  const [paso, setPaso] = useState(1);
+  const [form, setForm] = useState({ nombre:"", telefono:"", direccion:"", departamento:"Montevideo", email:"" });
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState(new URLSearchParams(window.location.search).get("pago")==="error" ? "El pago no se completó. Podés intentarlo de nuevo." : "");
+  const ref = useRef(null);
+
+  const items = PRODUCTOS_UY.filter(p => cant[p.key] > 0).map(p => ({ prod:p.key, q:cant[p.key], name:p.name }));
+  const unidades = items.reduce((s,i)=>s+i.q,0);
+  const total = unidades * PRECIO_UY;
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const mover = (key, d) => setCant(c => ({ ...c, [key]: Math.min(Math.max((c[key]||0)+d, 0), 10) }));
+
+  const continuar = () => {
+    if (!unidades) return;
+    trackEvent("AddToCart", { value:total, currency:"UYU", num_items:unidades, content_ids:items.map(i=>i.prod), content_type:"product" });
+    setPaso(2);
+  };
+
+  const pagar = async (e) => {
+    e.preventDefault();
+    if (!form.nombre.trim() || form.telefono.replace(/\D/g,"").length < 8 || !form.direccion.trim()) {
+      setError("Completá nombre, celular y dirección para el envío."); return;
+    }
+    setError(""); setEnviando(true);
+    trackEvent("InitiateCheckout", { value:total, currency:"UYU", num_items:unidades, content_ids:items.map(i=>i.prod), content_type:"product" });
+    try {
+      const r = await fetch("/api/pagar", {
+        method:"POST", headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ items: items.map(({prod,q})=>({prod,q})), buyer: form }),
+      });
+      const data = await r.json();
+      if (!r.ok || !data.url) throw new Error(data.error || "No se pudo iniciar el pago");
+      window.location.href = data.url;
+    } catch {
+      setError("No pudimos abrir Mercado Pago. Probá de nuevo o escribinos por WhatsApp.");
+      setEnviando(false);
+    }
+  };
+
+  const input = { width:"100%", padding:"12px 14px", borderRadius:10, border:"1.5px solid rgba(45,106,79,0.2)", fontFamily:"'Inter',sans-serif", fontSize:14, background:"#fff", color:"#1a2e1a" };
+
+  return (
+    <section id="comprar" ref={ref} style={{padding:"56px 16px",background:"#fff",scrollMarginTop:100}}>
+      <div style={{maxWidth:760,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:28}}>
+          <span className="int" style={{display:"inline-block",background:"rgba(45,106,79,0.08)",color:"#2d6a4f",borderRadius:999,padding:"5px 14px",fontSize:10,fontWeight:800,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>🇺🇾 Comprá online · Envío incluido a todo Uruguay</span>
+          <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.3rem)",fontWeight:700,lineHeight:1.15,marginBottom:10}}>Cualquier producto a <em style={{color:"#2d6a4f"}}>{fmtUY(PRECIO_UY)}</em></h2>
+          <p className="int" style={{color:"#5a7a5a",fontSize:14,lineHeight:1.6}}>Pagás seguro con Mercado Pago: tarjeta de crédito, débito o efectivo en Abitab / Red Pagos.<br/>🚚 El envío sale a partir de las 72 hs de confirmado el pago.</p>
+        </div>
+
+        {paso === 1 && (<>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:12,marginBottom:20}}>
+            {PRODUCTOS_UY.map(p => {
+              const n = cant[p.key] || 0;
+              return (
+                <div key={p.key} style={{border:`2px solid ${n?p.color:"rgba(0,0,0,0.07)"}`,borderRadius:16,padding:"14px 10px",textAlign:"center",background:n?p.bg:"#fff",transition:"all .2s",display:"flex",flexDirection:"column"}}>
+                  <img src={p.img} alt={p.name} style={{height:78,objectFit:"contain",margin:"0 auto 8px"}}/>
+                  <div className="pf" style={{fontWeight:700,fontSize:14,lineHeight:1.2}}>{p.name}</div>
+                  <div className="int" style={{fontSize:10,color:p.color,fontWeight:600,margin:"4px 0 8px",flex:1}}>{p.para}</div>
+                  <div className="int" style={{fontWeight:800,fontSize:15,marginBottom:8}}>{fmtUY(PRECIO_UY)}</div>
+                  {n === 0
+                    ? <button onClick={()=>mover(p.key,1)} className="int" style={{background:p.color,color:"#fff",border:"none",borderRadius:9,padding:"9px 0",fontWeight:700,fontSize:12,cursor:"pointer"}}>Agregar</button>
+                    : <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"#fff",borderRadius:9,border:`1.5px solid ${p.color}`}}>
+                        <button onClick={()=>mover(p.key,-1)} aria-label="Quitar uno" style={{background:"none",border:"none",fontSize:18,fontWeight:700,color:p.color,cursor:"pointer",padding:"5px 12px"}}>−</button>
+                        <span className="int" style={{fontWeight:800}}>{n}</span>
+                        <button onClick={()=>mover(p.key,1)} aria-label="Agregar uno" style={{background:"none",border:"none",fontSize:18,fontWeight:700,color:p.color,cursor:"pointer",padding:"5px 12px"}}>+</button>
+                      </div>}
+                </div>
+              );
+            })}
+          </div>
+          <button onClick={continuar} disabled={!unidades} className="int" style={{width:"100%",background:unidades?"#009ee3":"#cbd5e1",color:"#fff",border:"none",borderRadius:14,padding:"16px 0",fontWeight:800,fontSize:16,cursor:unidades?"pointer":"default",boxShadow:unidades?"0 8px 24px rgba(0,158,227,0.3)":"none"}}>
+            {unidades ? `Comprar ${unidades} producto${unidades>1?"s":""} · ${fmtUY(total)} →` : "Elegí al menos un producto"}
+          </button>
+        </>)}
+
+        {paso === 2 && (
+          <form onSubmit={pagar} style={{maxWidth:460,margin:"0 auto",display:"flex",flexDirection:"column",gap:10}}>
+            <div className="int" style={{background:"#f0f7f3",borderRadius:12,padding:"12px 14px",fontSize:13,color:"#2d6a4f"}}>
+              {items.map(i=><div key={i.prod}>{i.q} × {i.name}</div>)}
+              <div style={{fontWeight:800,marginTop:6,fontSize:15,color:"#1a2e1a"}}>Total: {fmtUY(total)}</div>
+            </div>
+            <input style={input} placeholder="Nombre y apellido" value={form.nombre} onChange={e=>set("nombre",e.target.value)} autoComplete="name"/>
+            <input style={input} placeholder="Celular (ej: 099 123 456)" inputMode="tel" value={form.telefono} onChange={e=>set("telefono",e.target.value)} autoComplete="tel"/>
+            <input style={input} placeholder="Dirección de entrega (calle, número, apto)" value={form.direccion} onChange={e=>set("direccion",e.target.value)} autoComplete="street-address"/>
+            <select style={input} value={form.departamento} onChange={e=>set("departamento",e.target.value)}>
+              {DEPARTAMENTOS.map(d=><option key={d}>{d}</option>)}
+            </select>
+            <input style={input} placeholder="Email (opcional)" type="email" value={form.email} onChange={e=>set("email",e.target.value)} autoComplete="email"/>
+            {error && <div className="int" style={{color:"#c0392b",fontSize:13}}>{error}</div>}
+            <button type="submit" disabled={enviando} className="int" style={{background:"#009ee3",color:"#fff",border:"none",borderRadius:14,padding:"16px 0",fontWeight:800,fontSize:16,cursor:"pointer",opacity:enviando?.7:1}}>
+              {enviando ? "Abriendo Mercado Pago…" : `💳 Pagar ${fmtUY(total)} con Mercado Pago`}
+            </button>
+            <div className="int" style={{fontSize:11,color:"#7a9a7a",textAlign:"center"}}>🔒 Pago procesado por Mercado Pago · 🚚 Envío a partir de las 72 hs del pago</div>
+            <button type="button" onClick={()=>setPaso(1)} className="int" style={{background:"none",border:"none",color:"#7a9a7a",fontSize:12,cursor:"pointer",textDecoration:"underline"}}>← Cambiar productos</button>
+          </form>
+        )}
+        {paso === 1 && error && <div className="int" style={{color:"#c0392b",fontSize:13,textAlign:"center",marginTop:10}}>{error}</div>}
+      </div>
+    </section>
+  );
+}
+
 // ── APP PRINCIPAL ─────────────────────────────────────────────────────────────
 export default function App() {
   const [scrollY,setScrollY]=useState(0); const [loaded,setLoaded]=useState(false);
@@ -862,6 +843,7 @@ export default function App() {
   const [hovCard,setHovCard]=useState(null); const [chatOpen,setChatOpen]=useState(false);
   const [selectedCountry,setSelectedCountry]=useState(()=>detectCountry()||"");
   const [modalProduct,setModalProduct]=useState(null); const [catalogOpen,setCatalogOpen]=useState(true);
+  const [cantUY,setCantUY]=useState({});
   const [lang,setLang]=useState("es");
   const T=TRANSLATIONS[lang];
   const adVariant = new URLSearchParams(window.location.search).get('v') || '';
@@ -879,8 +861,7 @@ export default function App() {
     : `¡Hola! Quiero información sobre Power Vita FuXion 🌿 Soy de ${selCountry||"mi país"}. ¿Cuáles son los precios y cómo empiezo?`, ref);
   const waLink = waLinkFor("nav");
   const certDouble = [...CERTS,...CERTS];
-  const testDouble = [...TESTIMONIALS,...TESTIMONIALS];
-  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
+    const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
   const lineKeys   = ["","Detox","Protein","Energy","Immunity","Control","Mental","Sport"];
   const lineLabels = ["Todos","Detox","Proteína","Energía","Inmunidad","Control Peso","Mental","Sport"];
   const cdAvail = selectedCountry && COUNTRY_DATA[selectedCountry]?.available;
@@ -892,7 +873,7 @@ export default function App() {
     popular: ["REXET","VITA XTRA T+","NUTRADAY"]
   } : null);
 
-  const navSections = ["inicio","sistema","iatools","testimonios","contacto"].map((id,i)=>[id,T.nav[i]]);
+  const navSections = ["inicio","sistema","iatools","comocomprar","contacto"].map((id,i)=>[id,T.nav[i]]);
 
   return (
     <LangCtx.Provider value={T}>
@@ -957,6 +938,7 @@ export default function App() {
                 : T.heroSub}
           </p>
           <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
+            <button onClick={()=>{trackEvent("ViewContent",{content_name:"Hero_Comprar"});scrollTo("comprar");}} className="int" style={{background:"#009ee3",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:700,fontSize:13,border:"none",cursor:"pointer",boxShadow:"0 8px 22px rgba(0,158,227,0.3)"}}>💳 Comprar ahora · {fmtUY(PRECIO_UY)}</button>
             <button onClick={()=>scrollTo("sistema")} className="int" style={{background:"#1a2e1a",color:"#fff",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>{T.heroCta1}</button>
             <a href={waLinkFor("hero")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:"Hero_WA"})} className="int" style={{background:"transparent",color:"#1a2e1a",border:"1.5px solid rgba(26,46,26,0.22)",padding:"13px 28px",borderRadius:100,fontWeight:600,fontSize:13,textDecoration:"none"}}>{T.heroCta2}</a>
           </div>
@@ -976,6 +958,8 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      <ComprarUY cant={cantUY} setCant={setCantUY}/>
 
       {/* VIDEO SECTION */}
       {(INSTAGRAM_POST_URL || YOUTUBE_VIDEO_ID) && (
@@ -1218,72 +1202,28 @@ export default function App() {
         </div>
       </section>
 
-      {/* TESTIMONIOS + CONTADOR + ANTES/DESPUÉS */}
-      <section id="testimonios" style={{padding:"80px 0",background:"#FAFAF7"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",padding:"0 40px"}}>
-          <div style={{textAlign:"center",marginBottom:48}}>
-            <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>{T.testimoniosBadge}</span>
-            <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a"}}>{T.testimoniosTitle1} <em style={{color:"#2d6a4f",fontStyle:"italic"}}>{T.testimoniosTitleEm}</em></h2>
-          </div>
-        </div>
-        {/* Marquee fila 1 */}
-        <div style={{overflow:"hidden",marginBottom:14}}>
-          <div style={{display:"flex",gap:14,animation:"marquee 44s linear infinite",width:"max-content",paddingLeft:40}}>
-            {testDouble.map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
-              <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{position:"relative",flexShrink:0}}>
-                    <Avatar name={t.name} color={t.color} size={46}/>
-                    <div style={{position:"absolute",bottom:-2,right:-2,width:16,height:16,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,boxShadow:"0 1px 4px rgba(0,0,0,0.18)"}}>{t.flag}</div>
-                  </div>
-                  <div style={{flex:1}}><div className="int" style={{fontWeight:700,color:"#1a2e1a",fontSize:12}}>{t.name}</div><div className="int" style={{fontSize:9,color:"#9ca3af"}}>{t.country}</div><div className="int" style={{fontSize:8,fontWeight:700,color:"#C9A84C",textTransform:"uppercase",marginTop:1}}>{t.role}</div></div>
-                  <div style={{background:"rgba(45,106,79,0.06)",border:"1px solid rgba(45,106,79,0.12)",borderRadius:999,padding:"2px 6px",fontFamily:"'Inter',sans-serif",fontSize:7,fontWeight:700,color:"#2d6a4f",alignSelf:"flex-start"}}>✓</div>
+      {/* CÓMO COMPRAR */}
+      <section id="comocomprar" style={{padding:"72px 16px",background:"#FAFAF7"}}>
+        <div style={{maxWidth:960,margin:"0 auto",textAlign:"center"}}>
+          <span className="int" style={{display:"block",marginBottom:10,fontSize:11,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"#2d6a4f"}}>Así de simple</span>
+          <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.4rem)",fontWeight:700,color:"#1a2e1a",marginBottom:36}}>Cómo <em style={{color:"#2d6a4f",fontStyle:"italic"}}>comprar</em> en Uruguay</h2>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16,marginBottom:32}}>
+            {[
+              ["1","🛒","Elegís tus productos","Cualquiera de los 5 a $ 2.150. ¿No sabés cuál? Escribinos y te asesoramos gratis."],
+              ["2","💳","Pagás con Mercado Pago","Tarjeta de crédito, débito o efectivo en Abitab / Red Pagos. Pago 100% procesado por Mercado Pago."],
+              ["3","🚚","Te llega a tu casa","El envío sale a partir de las 72 hs de confirmado el pago, a cualquier departamento."],
+            ].map(([n,ic,t,d])=>(
+              <div key={n} style={{background:"#fff",borderRadius:18,padding:"24px 20px",border:"1px solid rgba(45,106,79,0.1)",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",textAlign:"left"}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+                  <div className="int" style={{width:30,height:30,borderRadius:"50%",background:"#2d6a4f",color:"#fff",fontWeight:800,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>{n}</div>
+                  <span style={{fontSize:22}}>{ic}</span>
                 </div>
-                <div style={{display:"flex",gap:1}}>{[1,2,3,4,5].map(s=><span key={s} style={{color:"#C9A84C",fontSize:11}}>★</span>)}</div>
-                <div><div className="pf" style={{fontSize:20,color:"#2d6a4f",lineHeight:0.8,marginBottom:4}}>"</div><p className="pf" style={{fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.65}}>{t.text}</p></div>
-                <div style={{display:"flex",gap:4,marginTop:"auto"}}>
-                  <div style={{background:`${color}09`,border:`1px solid ${color}24`,borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:8,fontWeight:700,color}}>{t.pack==="Elite Program"?"👑":t.pack==="Transform Kit"?"⚡":"🌱"} {t.pack}</div>
-                  <div style={{background:"rgba(45,106,79,0.05)",border:"1px solid rgba(45,106,79,0.1)",borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:8,fontWeight:600,color:"#4a7c5e"}}>⏱ {t.days}d</div>
-                </div>
+                <div className="pf" style={{fontWeight:700,fontSize:16,color:"#1a2e1a",marginBottom:6}}>{t}</div>
+                <p className="int" style={{fontSize:13,color:"#5a7a5a",lineHeight:1.6}}>{d}</p>
               </div>
-            );})}
+            ))}
           </div>
-        </div>
-        {/* Marquee fila 2 inversa */}
-        <div style={{overflow:"hidden",marginBottom:52}}>
-          <div style={{display:"flex",gap:14,animation:"marquee2 54s linear infinite",width:"max-content",paddingLeft:40}}>
-            {[...testDouble.slice(5),...testDouble.slice(0,5)].map((t,i)=>{const color=PACK_COLOR[t.pack]||"#2d6a4f";return(
-              <div key={i} style={{minWidth:275,maxWidth:275,background:"#fff",border:"1px solid rgba(26,46,26,0.06)",borderRadius:18,padding:"17px",flexShrink:0,boxShadow:"0 2px 14px rgba(0,0,0,0.05)",display:"flex",flexDirection:"column",gap:9}}>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{position:"relative",flexShrink:0}}>
-                    <Avatar name={t.name} color={t.color} size={46}/>
-                    <div style={{position:"absolute",bottom:-2,right:-2,width:16,height:16,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,boxShadow:"0 1px 4px rgba(0,0,0,0.18)"}}>{t.flag}</div>
-                  </div>
-                  <div style={{flex:1}}><div className="int" style={{fontWeight:700,color:"#1a2e1a",fontSize:12}}>{t.name}</div><div className="int" style={{fontSize:9,color:"#9ca3af"}}>{t.country}</div><div className="int" style={{fontSize:8,fontWeight:700,color:"#C9A84C",textTransform:"uppercase",marginTop:1}}>{t.role}</div></div>
-                </div>
-                <div style={{display:"flex",gap:1}}>{[1,2,3,4,5].map(s=><span key={s} style={{color:"#C9A84C",fontSize:11}}>★</span>)}</div>
-                <div><div className="pf" style={{fontSize:20,color:"#2d6a4f",lineHeight:0.8,marginBottom:4}}>"</div><p className="pf" style={{fontSize:11,fontStyle:"italic",color:"#1a2e1a",lineHeight:1.65}}>{t.text}</p></div>
-                <div style={{display:"flex",gap:4,marginTop:"auto"}}>
-                  <div style={{background:`${color}09`,border:`1px solid ${color}24`,borderRadius:999,padding:"2px 7px",fontFamily:"'Inter',sans-serif",fontSize:8,fontWeight:700,color}}>{t.pack==="Elite Program"?"👑":t.pack==="Transform Kit"?"⚡":"🌱"} {t.pack}</div>
-                </div>
-              </div>
-            );})}
-          </div>
-        </div>
-        {/* Contador + Antes/Después */}
-        <div style={{maxWidth:1100,margin:"0 auto",padding:"0 40px"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:22,marginBottom:48}}>
-            <ContadorTiempoReal/>
-            <AntesDespues/>
-          </div>
-          {/* Stats */}
-          <div style={{textAlign:"center",background:"linear-gradient(135deg,rgba(45,106,79,0.06),rgba(201,168,76,0.06))",border:"1px solid rgba(45,106,79,0.1)",borderRadius:18,padding:"32px 20px"}}>
-            <div className="pf" style={{fontSize:"clamp(1.8rem,4vw,3rem)",fontWeight:700,color:"#1a2e1a",marginBottom:3}}>+<Counter target={15000}/></div>
-            <div className="int" style={{fontSize:13,color:"#7a9a7a",fontWeight:600,marginBottom:18}}>{T.statsImpact}</div>
-            <div style={{display:"flex",justifyContent:"center",gap:32,flexWrap:"wrap"}}>
-              {T.statsItems.map(([v,l])=>(<div key={l}><div className="pf" style={{fontSize:20,fontWeight:700,color:"#C9A84C"}}>{v}</div><div className="int" style={{fontSize:9,color:"#7a9a7a",fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>{l}</div></div>))}
-            </div>
-          </div>
+          <button onClick={()=>document.getElementById("comprar")?.scrollIntoView({behavior:"smooth",block:"start"})} className="int" style={{background:"#009ee3",color:"#fff",border:"none",borderRadius:100,padding:"14px 32px",fontWeight:800,fontSize:14,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,158,227,0.3)"}}>💳 Comprar ahora</button>
         </div>
       </section>
 
@@ -1356,6 +1296,7 @@ export default function App() {
               </div>
               <hr style={{border:"none",borderTop:"1px solid rgba(0,0,0,0.07)",marginBottom:14}}/>
               <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                {UY_KEY_BY_ID[modalProduct.id] && <button onClick={()=>{const k=UY_KEY_BY_ID[modalProduct.id];setModalProduct(null);setCantUY(c=>({...c,[k]:Math.max(c[k]||0,1)}));setTimeout(()=>scrollTo("comprar"),50);}} className="int" style={{display:"block",width:"100%",background:"#009ee3",color:"#fff",border:"none",borderRadius:11,padding:"13px 0",fontWeight:800,fontSize:13,cursor:"pointer"}}>💳 Comprar en Uruguay · {fmtUY(PRECIO_UY)}</button>}
                 <a href={waHref(WA, `Hola! Me interesa ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cuál es el precio?`, `Modal_${modalProduct.name.replace(/\s+/g,"_")}_Precio`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Lead",{content_name:`${modalProduct.name}_Precio`})} style={{display:"block",width:"100%",background:"#25D366",color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>💬 Consultar precio en mi país</a>
                 <a href={waHref(WA, `Hola! Quiero comprar ${modalProduct.name} de FuXion 🌿 Soy de [escribí tu país]. ¿Cómo lo pido?`, `Modal_${modalProduct.name.replace(/\s+/g,"_")}_Comprar`)} target="_blank" rel="noreferrer" onClick={()=>trackEvent("InitiateCheckout",{content_name:modalProduct.name,content_type:"product",content_ids:[String(modalProduct.id)],currency:"USD"})} style={{display:"block",width:"100%",background:modalProduct.color,color:"#fff",borderRadius:11,padding:"13px 0",fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:13,textAlign:"center",textDecoration:"none",boxSizing:"border-box"}}>🛒 Lo quiero · ¿Cómo lo pido?</a>
               </div>

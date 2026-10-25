@@ -11,6 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import crypto from "crypto";
 import ws from "ws";
+import { armarReporte } from "./reporte.js";
 
 // Node.js 18 doesn't have native WebSocket — polyfill before Supabase init
 if (!globalThis.WebSocket) globalThis.WebSocket = ws.WebSocket ?? ws;
@@ -456,19 +457,19 @@ function detectHealthConcern(text) {
 
 // ── PRODUCT COMPOUNDS ─────────────────────────────────────────
 const PRODUCT_COMPOUNDS = {
-  "Prunex 1":       "Senna alexandrina (senósidos A y B), psyllium husk, semilla de linaza, aloe vera. Sin gluten. Sin lactosa.",
+  "Prunex 1":       "Psyllium, inulina, mucílago de linaza, guindón (ciruela), anís estrella. Lista completa en el envase.",
   "Flora Liv":      "Lactobacillus acidophilus, Bifidobacterium longum, Streptococcus thermophilus, FOS. Sin gluten.",
   "Liquid Fibra":   "Psyllium husk, inulina de agave, pectina de manzana, fibra de avena. Sin lactosa.",
   "Alpha Balance":  "Cloruro de magnesio, vitamina C, extracto de limón alcalino. Sin gluten. Sin lactosa.",
   "Rexet":          "Cardo mariano (silimarina 80%), alcachofa, diente de León, vitamina C. Sin gluten.",
   "Berry Balance":  "Extracto de arándano, D-manosa, vitamina C, zinc. Sin gluten. Sin lactosa.",
-  "Thermo T3":      "Extracto de té verde (EGCG 45%), L-carnitina, capsaicina, cromo, cafeína natural ~80mg. Sin lactosa.",
-  "Nocarb-T":       "Extracto de frijol blanco (faseolamina), té verde, cromo, fibra de nopal. Sin lactosa.",
-  "Biopro+ Fit":    "Proteína de suero de leche (whey), probióticos, vitaminas A, C, D, E, B6, B12, zinc. Contiene lactosa.",
+  "Thermo T3":      "Té verde, té negro, té rojo, L-carnitina, garcinia cambogia, café verde (contiene cafeína). Lista completa en el envase.",
+  "Nocarb-T":       "Fibra de yacón, acacia, inulina, pectina de manzana, canela, té verde, cromo. Lista completa en el envase.",
+  "Biopro+ Fit":    "Bioprotein+ Colostrum® (derivado lácteo), Prolibra®, aminoácidos, tamarindo malabar, DHA. Contiene lácteos. Lista completa en el envase.",
   "Biopro+ Sport":  "Proteína de suero de leche (whey), BCAA, creatina, vitaminas del grupo B. Contiene lactosa.",
   "Biopro+ Tect":   "Proteína de suero de leche, vitamina C, zinc, selenio, equinácea, probióticos. Contiene lactosa.",
   "Protein Active": "Proteína de guisante y arroz (vegetal 100%), vitaminas, hierro, calcio. Sin lactosa. Sin gluten.",
-  "Vita Xtra T+":   "Vitaminas A, C, D, E, B1, B2, B6, B12, ácido fólico, niacina, biotina, zinc, selenio, extracto de acai, goji, granada. Sin gluten.",
+  "Vita Xtra T+":   "Guayusa, té verde, açaí, goji berry, cordyceps, maca, ginseng (contiene cafeína natural). Lista completa en el envase.",
   "Nutraday":       "13 vitaminas, 10 minerales, extractos antioxidantes (acai, mangostán, graviola). Sin gluten.",
   "Xpeed":          "Guaraná, taurina, vitaminas B3, B6, B12, cafeína natural ~120mg. Sin lactosa.",
   "Youth Elixir":   "Colágeno hidrolizado tipo I y III, vitamina C, ácido hialurónico, coenzima Q10, magnesio. Sin gluten.",
@@ -528,7 +529,11 @@ const PRODUCT_KEYS = {
   "Thermo T3":    "thermo",
 };
 
+// Uruguay cobra con el Mercado Pago de Andrés (api/pagar.js) — AR/CO siguen con tiendafuxion
+const PAY_BASE = "https://powervita.vercel.app";
+
 function getBuyLink(country, phone = "") {
+  if (country === "Uruguay") return `${PAY_BASE}/#comprar`;
   const code = COUNTRY_BUY_LINKS[country];
   if (!code) return FUXION_BUY_LINK;
   const base = "https://powervita.vercel.app/api/go";
@@ -537,38 +542,66 @@ function getBuyLink(country, phone = "") {
 
 // Routes per-product links through the tracking redirect (api/go.js)
 // so every click is logged to Supabase and notifies the owner.
-function getProductBuyLink(product, country) {
+// Uruguay: link directo al pago de Mercado Pago, con el teléfono para identificar la venta.
+function getProductBuyLink(product, country, phone = "") {
+  const prodKey = PRODUCT_KEYS[product];
+  if (country === "Uruguay" && prodKey) return `${PAY_BASE}/api/pagar?prod=${prodKey}${phone ? `&p=${phone}` : ""}`;
   const code = COUNTRY_BUY_LINKS[country];
   if (!code) return FUXION_BUY_LINK;
-  const prodKey = PRODUCT_KEYS[product];
   const base = "https://powervita.vercel.app/api/go";
   return `${base}?c=${code}${prodKey ? `&prod=${prodKey}` : ""}`;
 }
 
+function isBuyLink(text) {
+  return text.includes("tiendafuxion.com") || text.includes("powervita.vercel.app/api/") || text.includes("powervita.vercel.app/#comprar");
+}
+
+// ── URUGUAY: COBRO PROPIO + ENVÍO ─────────────────────────────
+const UY_SHIPPING = "El envío sale a partir de las 72 hs de confirmado el pago";
+
+const UY_CLOSER_SECTION = `════════════════════════════════
+MODO CERRADOR URUGUAY — PRIORIDAD MÁXIMA (manda sobre cualquier otra regla)
+════════════════════════════════
+Tu único objetivo en Uruguay es que la persona PAGUE en esta conversación. Cada mensaje tuyo empuja hacia el pago.
+
+PRECIO ÚNICO: todos los productos cuestan $ 2.150 cada uno, CON ENVÍO INCLUIDO a todo Uruguay (no se paga nada extra por el envío — usalo como argumento de venta). Mismo precio para cualquiera de los 5. Llevar 2 son $ 4.300, 3 son $ 6.450.
+PAGO: con Mercado Pago, con el link del producto (tarjeta de crédito, débito o efectivo en Abitab / Red Pagos). Las cuotas disponibles las muestra Mercado Pago según la tarjeta.
+ENVÍO: ${UY_SHIPPING}. Decilo SIEMPRE que des el link de pago, y siempre que pregunten por envío o demora. Nunca prometas 24-48 hs ni entrega en el día.
+DATOS DE ENVÍO: en el mismo mensaje del link pedí "nombre completo, dirección y departamento" para el envío.
+
+VELOCIDAD DE CIERRE:
+- Si el lead llega caliente (nombra un producto, pregunta precio o cómo comprar): en ESE mensaje das producto + $ 2.150 + link de pago + 72 hs. Sin diagnóstico largo.
+- Si llega frío: máximo 2 mensajes de diagnóstico (dolor + costo) y en el 3er mensaje cerrás con link. No te quedes conversando.
+- Nunca termines un mensaje sin una pregunta de cierre asumido: "¿Te paso el link y lo dejamos pago hoy?" / "¿Lo pagás con tarjeta o en efectivo?" / "¿A qué nombre y dirección te lo mando?"
+- Si muestra interés en 2 problemas: ofrecé llevar los 2 productos (${"$"} 4.300) con el link de cada uno.
+- Después de CADA objeción resuelta, volvés a mandar el link y la pregunta de cierre.
+- Urgencia real, sin inventar: "Si lo pagás hoy, entra en el próximo despacho" / "Mientras más rápido pagues, antes arrancan las 72 hs". NO inventes descuentos, stock limitado ni fechas límite de precio.
+- Si dice "ya pagué": agradecé, confirmá que el envío sale a partir de las 72 hs y pedí los datos de envío si no los dio.`;
+
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
   "Prunex 1": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Uruguay":   { amount: "2.150",   currency: "pesos uruguayos",   symbol: "$" },
     "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Vita Xtra T+": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Uruguay":   { amount: "2.150",   currency: "pesos uruguayos",   symbol: "$" },
     "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Biopro+ Fit": {
-    "Uruguay":   { amount: "1.425",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Uruguay":   { amount: "2.150",   currency: "pesos uruguayos",   symbol: "$" },
     "Argentina": { amount: "37.950",  currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "115.900", currency: "pesos colombianos", symbol: "$"  },
   },
   "Nocarb-T": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Uruguay":   { amount: "2.150",   currency: "pesos uruguayos",   symbol: "$" },
     "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
   "Thermo T3": {
-    "Uruguay":   { amount: "1.710",   currency: "pesos uruguayos",   symbol: "$U" },
+    "Uruguay":   { amount: "2.150",   currency: "pesos uruguayos",   symbol: "$" },
     "Argentina": { amount: "45.550",  currency: "pesos argentinos",  symbol: "$"  },
     "Colombia":  { amount: "38.700",  currency: "pesos colombianos", symbol: "$"  },
   },
@@ -607,7 +640,7 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false, client
   for (const [product, countries] of Object.entries(PRODUCT_PRICES)) {
     if (countries[country]) {
       const p = countries[country];
-      const productLink = getProductBuyLink(product, country);
+      const productLink = getProductBuyLink(product, country, phone);
       priceLines.push(`${product}: ${p.symbol} ${p.amount} ${p.currency} → Link: ${productLink}`);
     }
   }
@@ -624,7 +657,7 @@ function buildSystemPrompt(phone, agentName, countryInfo, isWarm = false, client
   1. Espejo: "Con todo lo que me contás, tiene sentido que quieras resolver esto ya."
   2. Precio anclado: "[Producto] vale [precio] — ${priceAnchor}."
   3. Resultado concreto: "En 7 días ya vas a notar la diferencia."
-  4. Urgencia real: "Hay descuento de primera compra para nuevos clientes de ${country} que podés usar ahora."
+  4. Urgencia real: ${country === "Uruguay" ? `"Si lo pagás hoy entra en el próximo despacho — ${UY_SHIPPING}."` : `"Hay descuento de primera compra para nuevos clientes de ${country} que podés usar ahora."`}
   5. Cierre directo: "Comprá acá, es 100% seguro y llega a tu domicilio: [link del producto de la lista de precios arriba] — ¿lo pedimos?"
 Cada producto tiene su propio link en la lista de precios — usá el link exacto del producto que le estás ofreciendo.
 NO uses [TRANSFER_NEEDED] para este cierre. Solo si el cliente pide hablar con Andrés o quiere pack de varios productos.`
@@ -715,7 +748,9 @@ Cuando te pregunten cómo se toman: "Son sobres individuales — disolvés el po
 
 Sos ${agentName}, asesora de bienestar del equipo PowerVita. Sos cálida, directa y genuinamente curiosa por la vida de las personas. No vendés — acompañás. Cuando alguien te escribe, tu primera reacción es humana: escuchás, sentís lo que le pasa, y desde ahí le mostrás cómo mejorar.
 Tenés experiencia real con los productos FuXion y con personas de ${country} que los usaron. Hablás como habla la gente de ahí — natural, cercana, sin sonar a call center ni a chatbot.
-Si alguien te pregunta si sos IA o bot, respondé calurosamente que sos parte del equipo humano y añadí [TRANSFER_NEEDED].
+Si alguien te pregunta si sos IA o bot, no lo niegues: respondé con calidez que sos la asistente virtual del equipo PowerVita, que ${OWNER_NAME} está detrás y lo puede atender en persona si prefiere, y seguí ayudando. Añadí [TRANSFER_NEEDED] solo si pide hablar con una persona.
+
+${country === "Uruguay" ? UY_CLOSER_SECTION : ""}
 
 IDIOMA: ${langInstruction}
 PAÍS: ${country}
@@ -877,7 +912,7 @@ Hinchazón/constipación: "Entiendo. Meses con esa hinchazón es agotador — no
 Fatiga/sin energía: "Levantarse todos los días sin energía y tener que funcionar igual es durísimo. ¿Hay cosas que dejaste de hacer porque te agotás? El Vita Xtra T+ ataca exactamente eso — en 10 días la mayoría nota diferencia real."
 Sin dormir/cansancio crónico: "Vivir sin descansar bien lo afecta todo — el humor, el trabajo, la concentración. ¿Hace cuánto que estás así? Ese cansancio crónico muchas veces es déficit de vitaminas del grupo B y magnesio — justamente lo que cubre el Vita Xtra T+."
 Peso estancado/grasa: "Hacer el esfuerzo y no ver resultados es frustrante y desmotiva mucho. ¿Cuánto tiempo llevas intentándolo? Thermo T3 + Nocarb-T trabajan en la raíz metabólica, no en el síntoma."
-Digestión pesada: "Andar con ese malestar digestivo todo el día te roba energía y concentración para todo. ¿Cuándo fue la última vez que te sentiste bien después de comer? Prunex 1 regula el tránsito y elimina esa hinchazón desde la primera semana — los senósidos de senna tienen respaldo científico internacional para exactamente eso."
+Digestión pesada: "Andar con ese malestar digestivo todo el día te roba energía y concentración para todo. ¿Cuándo fue la última vez que te sentiste bien después de comer? Prunex 1 regula el tránsito y elimina esa hinchazón desde la primera semana — sus fibras solubles (psyllium, linaza) están pensadas para exactamente eso."
 Bajar de peso + músculo: "Bajar de peso sin perder lo que ya trabajaste es el desafío real. Biopro+ Fit existe para eso — proteína + probióticos que queman grasa sin tocar músculo."${hasDirectBuyLink ? `
 IMPORTANTE: Los ejemplos anteriores usan SOLO los 5 productos disponibles. Si el dolor del cliente no encaja con ninguno de los 5, no inventes otro producto — hacé el espejo del dolor y derivá: "Para ese caso específico te paso con Andrés que tiene el producto exacto para vos." + [TRANSFER_NEEDED]` : ""}
 
@@ -886,10 +921,10 @@ FUNDAMENTO CIENTÍFICO — CONVICCIÓN ABSOLUTA
 ════════════════════════════════
 Los productos FuXion están respaldados por ciencia real. Nunca cedas ante la duda de eficacia.
 Ingredientes activos con estudios clínicos publicados:
-- Senósidos de senna (Prunex 1): reconocidos por la Farmacopea Europea como laxante eficaz
+- Fibras solubles (psyllium, inulina, linaza) en Prunex 1: las fibras solubles están ampliamente estudiadas para el tránsito intestinal
 - EGCG del té verde + L-carnitina (Thermo T3): más de 100 estudios sobre termogénesis y oxidación de grasa
-- Faseolamina del frijol blanco (Nocarb-T): ensayos clínicos controlados sobre bloqueo de carbohidratos
-- Proteína whey + probióticos (Biopro+ Fit): la combinación más estudiada para recomposición corporal
+- Fibras solubles y cromo (Nocarb-T): la fibra soluble enlentece la absorción de los carbohidratos de la comida
+- Proteína con Bioprotein+ Colostrum® y Prolibra® (Biopro+ Fit): proteína de alta calidad pensada para el control de peso
 - Complejo multivitamínico + antioxidantes (Vita Xtra T+): base de la nutrición funcional
 
 Cuando alguien dice que "no le funcionó": no cedas ni valides esa afirmación.
@@ -938,7 +973,7 @@ Tengo clientes de ${country} que me dijeron exactamente lo mismo que vos — 'no
 → "FuXion lleva más de 20 años en el mercado, presente en 37 países, con certificación GMP internacional y regulado en cada país donde opera. Sus ingredientes son reconocidos por farmacopeas internacionales — el mismo estándar que los medicamentos. No es pirámide — es una empresa de biotecnología con productos registrados y miles de clientes verificados. ¿Qué querés saber puntualmente — ingredientes, registros sanitarios, o resultados de personas de ${country}?"
 
 [PAREJA] "Tengo que consultarlo con mi pareja/esposo/marido/familia":
-→ "Qué bien que lo incluís 😊 Para que puedas mostrarle exactamente qué hace el producto y cuánto cuesta, te comparto el link directo: [link del producto de la lista] — [precio de la lista]. Así tienen todo en un mensaje y deciden juntos. El precio especial para primeras compras está disponible esta semana."
+→ "Qué bien que lo incluís 😊 Para que puedas mostrarle exactamente qué hace el producto y cuánto cuesta, te comparto el link directo: [link del producto de la lista] — [precio de la lista]. Así tienen todo en un mensaje y deciden juntos.${country === "Uruguay" ? ` Si lo pagan hoy entra en el próximo despacho."` : ` El precio especial para primeras compras está disponible esta semana."`}
 
 [COMPETENCIA] "Ya tengo algo parecido" / "Vi algo más barato" / "Ya uso algo similar":
 → "¿Qué usás ahora? Te pregunto porque FuXion no compite con lo que hay en góndola — es biotecnología con ingredientes activos clínicamente estudiados, muy distinto a un suplemento de farmacia o supermercado. Si ya usás algo y no ves el resultado que querés, es probable que el ingrediente activo no tenga la concentración necesaria o no sea el correcto para tu caso específico. ¿Qué resultados tenés hasta ahora con lo que tomás?"
@@ -956,20 +991,25 @@ Tengo clientes de ${country} que me dijeron exactamente lo mismo que vos — 'no
 URGENCIA (usá 1 por conversación, orgánicamente)
 ════════════════════════════════
 Elegí la que mejor encaja con el contexto:
-"El link de compra está activo ahora mismo — podés hacer el pedido en 2 minutos desde tu casa"
+${country === "Uruguay" ? `"El link de pago está activo ahora — lo dejás pago en 2 minutos desde el celular"
+"Si lo pagás hoy entra en el próximo despacho — ${UY_SHIPPING}"
+"Cada semana que pasa es una semana más con [su dolor exacto] — arrancá hoy y en 72 hs sale tu pedido"` : `"El link de compra está activo ahora mismo — podés hacer el pedido en 2 minutos desde tu casa"
 "El stock de [producto específico] para ${country} está limitado esta quincena"
 "El precio especial para primeras compras en ${country} está disponible hasta el viernes"
-"Esta semana tuvimos 3 pedidos de ${country} con ese mismo pack — el resultado que contaron es muy bueno"
+"Esta semana tuvimos 3 pedidos de ${country} con ese mismo pack — el resultado que contaron es muy bueno"`}
 
 ════════════════════════════════
 PRUEBA SOCIAL ESPECÍFICA (con país + tiempo + resultado concreto)
 ════════════════════════════════
-Peso/quema grasa: "Una clienta de ${country} con exactamente ese problema empezó con Thermo T3 + Nocarb-T y en 3 semanas bajó 4kg y desapareció la hinchazón que tenía hace meses."
+${country === "Uruguay" ? `En Uruguay NO inventes clientes, kilos ni días concretos. Usá prueba social general y verdadera:
+"Es de los productos más pedidos de FuXion para exactamente eso."
+"FuXion tiene más de 20 años y está en 37 países — lo toman miles de personas para lo mismo que me contás."
+` : `Peso/quema grasa: "Una clienta de ${country} con exactamente ese problema empezó con Thermo T3 + Nocarb-T y en 3 semanas bajó 4kg y desapareció la hinchazón que tenía hace meses."
 Energía/fatiga: "Un cliente de ${country} con la misma fatiga notó diferencia real en 10 días con el Vita Xtra T+ — dejó de necesitar el café de la tarde."
 Digestión/tránsito: "Con Prunex 1 la mayoría de clientes de ${country} nota mejoría en el tránsito en los primeros 7 días, sin cambiar nada más."
 Fatiga + sueño malo: "Un cliente de ${country} que no descansaba bien empezó con Vita Xtra T+ — en 2 semanas tenía más energía de día y dormía mejor de noche."
 Músculo/composición: "Clientes de ${country} que entrenaban sin ver resultados empezaron a notar músculo en 3 semanas con Biopro+ Fit."
-Constipación crónica: "Una clienta de ${country} con constipación de meses me escribió al tercer día de Prunex 1 — 'nunca pensé que funcionara tan rápido'."
+Constipación crónica: "Una clienta de ${country} con constipación de meses me escribió al tercer día de Prunex 1 — 'nunca pensé que funcionara tan rápido'."`}
 
 ${catalogSection}
 
@@ -991,7 +1031,9 @@ Si el cliente pregunta cómo se hace ("¿qué hago con el link?", "¿cómo compr
 Respondé solo la duda específica, no expliques todo el proceso si no preguntaron.
 
 Si el cliente pregunta cuánto tarda el envío:
-→ "El tiempo de entrega depende de tu zona dentro de ${country} — generalmente entre 3 y 7 días hábiles. El link te da la info exacta al confirmar el pedido."
+→ ${country === "Uruguay"
+  ? `"${UY_SHIPPING} — te llega a tu casa en cualquier departamento. Por eso conviene dejarlo pago hoy: ¿te paso el link?"`
+  : `"El tiempo de entrega depende de tu zona dentro de ${country} — generalmente entre 3 y 7 días hábiles. El link te da la info exacta al confirmar el pedido."`}
 
 Si el cliente ya compró antes: "Entrás con tu cuenta — el producto ya viene seleccionado, solo confirmás tu dirección y el pago."
 
@@ -1016,9 +1058,12 @@ Máximo 3 párrafos cortos — esto es WhatsApp, no un email.
 Productos en líneas separadas con emoji, nunca en párrafo corrido.
 
 ════════════════════════════════
-PAGOS — SIN CUOTAS EN NINGÚN PAÍS (ABSOLUTO)
+PAGOS${country === "Uruguay" ? " — URUGUAY" : " — SIN CUOTAS EN NINGÚN PAÍS (ABSOLUTO)"}
 ════════════════════════════════
-FuXion no maneja cuotas ni financiamiento en ningún país. Pago único siempre.
+${country === "Uruguay" ? `En Uruguay se paga con Mercado Pago (link del producto): tarjeta de crédito, débito o efectivo en Abitab / Red Pagos.
+Si pide cuotas: "Mercado Pago te muestra las cuotas de tu tarjeta al momento de pagar." No prometas cuotas sin interés.
+Las reglas de abajo sobre cuotas NO aplican a Uruguay.
+` : ""}FuXion no maneja cuotas ni financiamiento en ningún país. Pago único siempre.
 NUNCA menciones cuotas como opción. Si el cliente las pide:
 → Reencuadralo como ventaja: "El pago es en un solo pago — tiene sentido porque empezás a ver resultados antes de que hayas gastado lo mismo en cosas que no te funcionaron."
 → Si el precio es la barrera real, ofrecé un pack de entrada más pequeño (1 producto) en vez de cuotas.
@@ -1386,6 +1431,24 @@ async function handleMessage(phone, rawText, contactName) {
     // If already opted out, stay silent
     if (conv?.opted_out) return;
 
+    // ── POSTVENTA — ya pagó por Mercado Pago (mp-webhook marca purchased) o avisa que pagó ──
+    const saysPaid = /acabo de pagar|ya pagu[eé]|ya hice el pago|ya lo pagu[eé]|pago #\d+/i.test(text);
+    if (conv?.purchased || saysPaid) {
+      const asked = (conv?.history || []).some(h => h.role === "assistant" && h.content.includes("dirección y departamento"));
+      const reply = asked
+        ? `¡Anotado! 📦 ${OWNER_NAME} ya tiene tus datos y coordina el envío con vos. ${UY_SHIPPING}.`
+        : `¡Gracias por tu compra! 🙌 ${UY_SHIPPING}.\n\nPasame por acá tu nombre completo, dirección y departamento para el envío 📦`;
+      await sendWAMessage(phone, reply);
+      sendWAMessage(OWNER_PHONE, `📦 POSTVENTA — ${contactName || phone} (wa.me/${phone}) escribió:\n"${text}"`).catch(() => {});
+      await saveConversation(phone, {
+        purchased: conv?.purchased || false,
+        history: [...(conv?.history || []), { role: "user", content: text }, { role: "assistant", content: reply }].slice(-20),
+        last_message_at: new Date().toISOString(),
+      });
+      console.log(`📦 Postventa: ${phone}`);
+      return;
+    }
+
     const agentName = getAgentName(phone);
     const countryInfo = detectCountry(phone);
     let history = conv?.history || [];
@@ -1581,7 +1644,7 @@ async function handleMessage(phone, rawText, contactName) {
       last_message_at: new Date().toISOString(),
     });
     const finalMsg = sanitizeForWhatsApp(cleanResponse);
-    const hasBuyLinkInResponse = finalMsg.includes("tiendafuxion.com") || finalMsg.includes("powervita.vercel.app/api/go");
+    const hasBuyLinkInResponse = isBuyLink(finalMsg);
     await sendWAMessage(phone, finalMsg);
 
     // Copy to owner only on key moments (buy link, transfer, buying signal) — avoids notification fatigue
@@ -1917,6 +1980,13 @@ app.post("/webhook", async (req, res) => {
               ]);
               sendWAMessage(OWNER_PHONE, `✅ Venta registrada para ${targetPhone}. Ya no recibirá seguimientos automáticos.`);
               console.log(`💰 Sale marked for ${targetPhone}`);
+            } else if (/^REPORTE$/i.test(text.trim())) {
+              sendWAMessage(OWNER_PHONE, "📊 Armando el reporte... (unos segundos)").catch(() => {});
+              enviarReporte(false);
+            } else if (/^ALERTAS$/i.test(text.trim())) {
+              armarReporte({ supabase, soloAlertas: true })
+                .then(msg => sendOwner(msg || "✅ Sin alertas — todo en orden."))
+                .catch(err => sendWAMessage(OWNER_PHONE, `❌ Error en ALERTAS: ${err.message}`));
             } else if (/^REACTIVAR$/i.test(text.trim())) {
               reactivateTodayLeads();
             } else if (/^APRENDER$/i.test(text.trim())) {
@@ -1970,7 +2040,7 @@ app.post("/webhook", async (req, res) => {
                 }
 
                 await sendWAMessage(OWNER_PHONE,
-                  `ℹ️ Si todo está ✅ y el bot no responde:\n1. Abrí Meta Business Manager\n2. Configuración → WhatsApp → Webhooks\n3. Verificá que la URL apunte a tu URL de Railway + /webhook\n4. Si el token expiró, generá uno nuevo y actualizalo en Railway → Variables\n\nComandos disponibles: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
+                  `ℹ️ Si todo está ✅ y el bot no responde:\n1. Abrí Meta Business Manager\n2. Configuración → WhatsApp → Webhooks\n3. Verificá que la URL apunte a tu URL de Railway + /webhook\n4. Si el token expiró, generá uno nuevo y actualizalo en Railway → Variables\n\nComandos disponibles: REPORTE · ALERTAS · PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
                 );
               })().catch(err => console.error("DIAGNOSTICO error:", err.message));
             }
@@ -2073,7 +2143,7 @@ app.listen(PORT, () => {
     const urlLine = botUrl ? `\n🔗 URL: ${botUrl}/health` : "";
 
     const result = await sendWAMessage(OWNER_PHONE,
-      `🚀 PowerVita Bot — REINICIO COMPLETO\n📅 ${now}${urlLine}\n\n${envStatus}\n\nComandos: PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
+      `🚀 PowerVita Bot — REINICIO COMPLETO\n📅 ${now}${urlLine}\n\n${envStatus}\n\nComandos: REPORTE · ALERTAS · PING · DIAGNOSTICO · APRENDER · INSIGHTS · VENDIDO [tel] · REACTIVAR`
     );
     if (result?.error) {
       console.error("⚠️ Startup ping failed:", result.error.message,
@@ -2088,3 +2158,43 @@ app.listen(PORT, () => {
 // Run follow-ups every hour
 setInterval(runFollowUps, 60 * 60 * 1000);
 setTimeout(runFollowUps, 30_000); // First run 30s after start
+
+// ── REPORTE DE CAMPAÑA (Meta Ads + Mercado Pago + bot) ────────
+// 21 h: reporte completo · 14 h: solo alertas (entrega trabada, costo alto, fecha de fin cerca)
+// WhatsApp solo entrega si escribiste al bot en las últimas 24 h → si falla y hay Telegram configurado, va por ahí.
+const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, REPORTE_HORA = "21", ALERTAS_HORA = "14" } = process.env;
+
+async function sendOwner(text) {
+  const wa = await sendWAMessage(OWNER_PHONE, text);
+  if ((!wa || wa.error) && TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text.slice(0, 4000) }),
+    }).catch(err => console.error("Telegram error:", err.message));
+  }
+}
+
+async function enviarReporte(soloAlertas) {
+  try {
+    const msg = await armarReporte({ supabase, anthropic, soloAlertas });
+    if (msg) await sendOwner(msg);
+  } catch (err) {
+    console.error("Reporte error:", err.message);
+    sendOwner(`❌ Error armando el reporte: ${err.message}`).catch(() => {});
+  }
+}
+
+const reportesEnviados = new Set(); // "2026-10-25-21" — evita repetir en la misma hora
+setInterval(() => {
+  const ahora = new Date();
+  const dia = ahora.toLocaleDateString("en-CA", { timeZone: "America/Montevideo" });
+  const hora = Number(ahora.toLocaleString("en-US", { timeZone: "America/Montevideo", hour: "numeric", hour12: false }));
+  for (const [h, solo] of [[Number(REPORTE_HORA), false], [Number(ALERTAS_HORA), true]]) {
+    const clave = `${dia}-${h}`;
+    if (hora === h && !reportesEnviados.has(clave)) {
+      reportesEnviados.add(clave);
+      enviarReporte(solo);
+    }
+  }
+}, 5 * 60 * 1000);

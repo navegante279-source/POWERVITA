@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>¡Gracias por tu compra! | Power Vita</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,#FAFAF7,#E8F0E9);color:#1a2e1a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+    .card{background:#fff;border-radius:22px;box-shadow:0 16px 48px rgba(45,106,79,.15);max-width:440px;width:100%;padding:36px 26px;text-align:center}
+    .icon{font-size:54px;margin-bottom:12px}
+    h1{font-family:Georgia,serif;font-size:26px;margin-bottom:10px}
+    p{color:#5a7a5a;line-height:1.6;font-size:15px;margin-bottom:12px}
+    .box{background:#f0f7f3;border-radius:14px;padding:14px;margin:18px 0;font-size:14px;color:#2d6a4f;font-weight:600}
+    a.btn{display:block;background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:12px;margin-top:10px}
+    a.sec{display:block;color:#7a9a7a;font-size:13px;margin-top:14px}
+  </style>
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    fbq("init","2212676212813152");
+    fbq("track","PageView");
+  </script>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="icon">✅</div>
+    <h1>¡Gracias por tu compra!</h1>
+    <p>Tu pago fue aprobado. Ya recibimos tu pedido.</p>
+    <div class="box">🚚 El envío sale a partir de las 72 hs de confirmado el pago.</div>
+    <p>Si no completaste tu dirección, escribinos por WhatsApp y coordinamos la entrega.</p>
+    <a class="btn" id="wa" href="https://wa.me/59898950206" target="_blank" rel="noreferrer">💬 Coordinar envío por WhatsApp</a>
+    <a class="sec" href="/">Volver a Power Vita</a>
+  </div>
+  <script>
+    (function(){
+      var q = new URLSearchParams(location.search);
+      var status = q.get("collection_status") || q.get("status");
+      var id = q.get("payment_id") || q.get("collection_id");
+      var valor = Number(q.get("v")) || 0;
+      var card = document.getElementById("card");
+      if (status === "pending" || status === "in_process") {
+        card.querySelector(".icon").textContent = "⏳";
+        card.querySelector("h1").textContent = "Pago pendiente";
+        card.querySelector("p").textContent = "Cuando Mercado Pago confirme el pago te avisamos y preparamos tu pedido.";
+      } else if (status === "approved" && id) {
+        // Mismo event_id que manda el servidor (api/mp-webhook.js) → Meta no cuenta la compra dos veces
+        fbq("track", "Purchase", { value: valor, currency: "UYU" }, { eventID: "mp_" + id });
+      }
+      var msg = "Hola! Acabo de pagar mi pedido de Power Vita" + (id ? " (pago #" + id + ")" : "") + ". Te paso mis datos para el envío:";
+      document.getElementById("wa").href = "https://wa.me/59898950206?text=" + encodeURIComponent(msg);
+    })();
+  </script>
+</body>
+</html>
