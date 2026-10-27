@@ -557,7 +557,7 @@ function isBuyLink(text) {
 }
 
 // ── URUGUAY: COBRO PROPIO + ENVÍO ─────────────────────────────
-const UY_SHIPPING = "El envío sale a partir de las 72 hs de confirmado el pago";
+const UY_SHIPPING = "Lo recibís dentro de las 72 horas hábiles de acreditado el pago";
 
 const UY_CLOSER_SECTION = `════════════════════════════════
 MODO CERRADOR URUGUAY — PRIORIDAD MÁXIMA (manda sobre cualquier otra regla)
@@ -570,13 +570,13 @@ ENVÍO: ${UY_SHIPPING}. Decilo SIEMPRE que des el link de pago, y siempre que pr
 DATOS DE ENVÍO: en el mismo mensaje del link pedí "nombre completo, dirección y departamento" para el envío.
 
 VELOCIDAD DE CIERRE:
-- Si el lead llega caliente (nombra un producto, pregunta precio o cómo comprar): en ESE mensaje das producto + $ 2.150 + link de pago + 72 hs. Sin diagnóstico largo.
+- Si el lead llega caliente (nombra un producto, pregunta precio o cómo comprar): en ESE mensaje das producto + $ 2.150 + link de pago + entrega en 72 hs hábiles. Sin diagnóstico largo.
 - Si llega frío: máximo 2 mensajes de diagnóstico (dolor + costo) y en el 3er mensaje cerrás con link. No te quedes conversando.
 - Nunca termines un mensaje sin una pregunta de cierre asumido: "¿Te paso el link y lo dejamos pago hoy?" / "¿Lo pagás con tarjeta o en efectivo?" / "¿A qué nombre y dirección te lo mando?"
 - Si muestra interés en 2 problemas: ofrecé llevar los 2 productos (${"$"} 4.300) con el link de cada uno.
 - Después de CADA objeción resuelta, volvés a mandar el link y la pregunta de cierre.
-- Urgencia real, sin inventar: "Si lo pagás hoy, entra en el próximo despacho" / "Mientras más rápido pagues, antes arrancan las 72 hs". NO inventes descuentos, stock limitado ni fechas límite de precio.
-- Si dice "ya pagué": agradecé, confirmá que el envío sale a partir de las 72 hs y pedí los datos de envío si no los dio.`;
+- Urgencia real, sin inventar: "Si lo pagás hoy, entra en el próximo despacho" / "Mientras más rápido pagues, antes arrancan las 72 hs hábiles". NO inventes descuentos, stock limitado ni fechas límite de precio.
+- Si dice "ya pagué": agradecé, confirmá que lo recibe dentro de las 72 hs hábiles y pedí los datos de envío si no los dio.`;
 
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
@@ -993,7 +993,7 @@ URGENCIA (usá 1 por conversación, orgánicamente)
 Elegí la que mejor encaja con el contexto:
 ${country === "Uruguay" ? `"El link de pago está activo ahora — lo dejás pago en 2 minutos desde el celular"
 "Si lo pagás hoy entra en el próximo despacho — ${UY_SHIPPING}"
-"Cada semana que pasa es una semana más con [su dolor exacto] — arrancá hoy y en 72 hs sale tu pedido"` : `"El link de compra está activo ahora mismo — podés hacer el pedido en 2 minutos desde tu casa"
+"Cada semana que pasa es una semana más con [su dolor exacto] — arrancá hoy y en 72 hs hábiles lo tenés"` : `"El link de compra está activo ahora mismo — podés hacer el pedido en 2 minutos desde tu casa"
 "El stock de [producto específico] para ${country} está limitado esta quincena"
 "El precio especial para primeras compras en ${country} está disponible hasta el viernes"
 "Esta semana tuvimos 3 pedidos de ${country} con ese mismo pack — el resultado que contaron es muy bueno"`}

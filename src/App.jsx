@@ -13,7 +13,7 @@ const INSTAGRAM_POST_URL = "https://www.instagram.com/p/DSGZtksipld/";
 const COUNTRIES = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela","Alemania","Australia","Bélgica","Canadá","Francia","Italia","Japón","Portugal","Reino Unido","Suiza","Sudáfrica","Emiratos Árabes","Singapur","Nueva Zelanda","Países Bajos","Austria","Israel"];
 
 const COUNTRY_DATA = {
-  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Envío a partir de 72 hs del pago", note:"Todos los productos a $ 2.150 · Pagás con Mercado Pago",              popular:["Vita Xtra T+","Thermo T3","Prunex1"],         available:["Vita Xtra T+","Thermo T3","Nocarb-T","Prunex1","Biopro+ Fit"] },
+  "Uruguay":        { flag:"🇺🇾", currency:"UYU", shipping:"Lo recibís en 72 hs hábiles", note:"Todos los productos a $ 2.150 · Pagás con Mercado Pago",              popular:["Vita Xtra T+","Thermo T3","Prunex1"],         available:["Vita Xtra T+","Thermo T3","Nocarb-T","Prunex1","Biopro+ Fit"] },
   "Argentina":      { flag:"🇦🇷", currency:"ARS", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos argentinos. Aceptamos transferencia y MP", popular:["Nutraday","No Stress","Reset"],               unavailable:["Prunex","Xpeed"] },
   "Colombia":       { flag:"🇨🇴", currency:"COP", shipping:"Envío nacional en 2-4 días",  note:"Precios en pesos colombianos con IVA incluido",             popular:["Vita Xtra T+","Protein Active Fit","Flora Liv"],unavailable:["Prunex","Pre Sport"] },
   "México":         { flag:"🇲🇽", currency:"MXN", shipping:"Envío en 3-5 días hábiles",   note:"Precios en pesos mexicanos. Envío gratis sobre $500 MXN",   popular:["Reset","Thermo T3","Nutraday"],               unavailable:["Prunex"] },
@@ -381,7 +381,7 @@ const TRANSLATIONS = {
     heroTitle1:"Nutrición que", heroTitleEm:"transforma", heroTitle2:"desde adentro.",
     heroSub:"Biotecnología avanzada en cada producto FuXion. Certificado, natural y con entrega directa en 37 países.",
     heroCta1:"Ver productos", heroCta2:"💬 WhatsApp",
-    heroStats:[["$2.150","por producto"],["72 hs","despacho"],["MP","pago seguro"]],
+    heroStats:[["$2.150","por producto"],["72 hs","hábiles de entrega"],["MP","pago seguro"]],
     sistemaBadge:"Sistema FuXion",
     sistemaTitle1:"Salud plena en", sistemaTitleEm:"3 pasos",
     sistemaSub:"Un sistema progresivo diseñado por biotecnólogos. Cada paso potencia al siguiente.",
@@ -413,7 +413,7 @@ const TRANSLATIONS = {
     faqMoreQ:"💬 Tengo otra pregunta",
     faqQA:[
       {q:"¿Los productos FuXion son seguros?",a:"Sí. FuXion cuenta con certificaciones internacionales: GMP, HACCP y Clean Label. Todos los ingredientes son naturales y sin conservantes artificiales. Son aptos para toda la familia."},
-      {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. En Uruguay el envío sale a partir de las 72 hs de confirmado el pago; Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
+      {q:"¿Cuánto tarda la entrega?",a:"FuXion entrega directamente en tu país. En Uruguay lo recibís dentro de las 72 horas hábiles de acreditado el pago; Argentina y Colombia 2-5 días hábiles, resto de Latinoamérica 3-7 días. Te confirmamos el plazo exacto por WhatsApp."},
       {q:"¿Qué pasa si no me gustan los productos?",a:"FuXion ofrece garantía de satisfacción. Si los productos no cumplen tus expectativas, te asesoramos para encontrar la combinación correcta o gestionamos una solución."},
       {q:"¿Puedo comprar solo como cliente o también hacer el negocio?",a:"Las dos opciones están disponibles. Podés registrarte como Cliente Preferente para precios especiales, o como Emprendedor si querés construir un negocio."},
       {q:"¿Están disponibles todos los productos en mi país?",a:"FuXion opera en 37 países pero el catálogo varía por región. Consultanos por WhatsApp con tu país y te decimos qué productos están disponibles y a qué precio."},
@@ -641,7 +641,7 @@ const TRANSLATIONS = {
     faqMoreQ:"💬 Tenho outra dúvida",
     faqQA:[
       {q:"Os produtos FuXion são seguros?",a:"Sim. FuXion tem certificações internacionais: GMP, HACCP e Clean Label. Todos os ingredientes são naturais, sem conservantes artificiais, adequados para toda a família."},
-      {q:"Quanto tempo leva a entrega?",a:"FuXion entrega diretamente no seu país. No Uruguai o envio sai a partir de 72 h após o pagamento; Argentina e Colômbia 2-5 dias úteis, resto da América Latina 3-7 dias. Confirmamos o prazo exato pelo WhatsApp."},
+      {q:"Quanto tempo leva a entrega?",a:"FuXion entrega diretamente no seu país. No Uruguai você recebe em até 72 horas úteis após o pagamento; Argentina e Colômbia 2-5 dias úteis, resto da América Latina 3-7 dias. Confirmamos o prazo exato pelo WhatsApp."},
       {q:"E se eu não gostar dos produtos?",a:"FuXion oferece garantia de satisfação. Se os produtos não atenderem suas expectativas, orientamos você a encontrar a combinação certa ou gerenciamos uma solução."},
       {q:"Posso comprar só como cliente ou também fazer o negócio?",a:"As duas opções estão disponíveis. Você pode se registrar como Cliente Preferencial para preços especiais, ou como Empreendedor se quiser construir um negócio."},
       {q:"Todos os produtos estão disponíveis no meu país?",a:"FuXion opera em 37 países, mas o catálogo varia por região. Nos envie uma mensagem no WhatsApp com seu país e diremos exatamente o que está disponível e a que preço."},
@@ -780,7 +780,7 @@ function ComprarUY({ cant, setCant }) {
         <div style={{textAlign:"center",marginBottom:28}}>
           <span className="int" style={{display:"inline-block",background:"rgba(45,106,79,0.08)",color:"#2d6a4f",borderRadius:999,padding:"5px 14px",fontSize:10,fontWeight:800,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>🇺🇾 Comprá online · Envío incluido a todo Uruguay</span>
           <h2 className="pf" style={{fontSize:"clamp(1.6rem,3.5vw,2.3rem)",fontWeight:700,lineHeight:1.15,marginBottom:10}}>Cualquier producto a <em style={{color:"#2d6a4f"}}>{fmtUY(PRECIO_UY)}</em></h2>
-          <p className="int" style={{color:"#5a7a5a",fontSize:14,lineHeight:1.6}}>Pagás seguro con Mercado Pago: tarjeta de crédito, débito o efectivo en Abitab / Red Pagos.<br/>🚚 El envío sale a partir de las 72 hs de confirmado el pago.</p>
+          <p className="int" style={{color:"#5a7a5a",fontSize:14,lineHeight:1.6}}>Pagás seguro con Mercado Pago: tarjeta de crédito hasta en 10 cuotas sin interés, débito o efectivo en Abitab / Red Pagos.<br/>🚚 Lo recibís dentro de las 72 horas hábiles de acreditado el pago.</p>
         </div>
 
         {paso === 1 && (<>
@@ -826,7 +826,7 @@ function ComprarUY({ cant, setCant }) {
             <button type="submit" disabled={enviando} className="int" style={{background:"#009ee3",color:"#fff",border:"none",borderRadius:14,padding:"16px 0",fontWeight:800,fontSize:16,cursor:"pointer",opacity:enviando?.7:1}}>
               {enviando ? "Abriendo Mercado Pago…" : `💳 Pagar ${fmtUY(total)} con Mercado Pago`}
             </button>
-            <div className="int" style={{fontSize:11,color:"#7a9a7a",textAlign:"center"}}>🔒 Pago procesado por Mercado Pago · 🚚 Envío a partir de las 72 hs del pago</div>
+            <div className="int" style={{fontSize:11,color:"#7a9a7a",textAlign:"center"}}>🔒 Pago procesado por Mercado Pago · 🚚 Lo recibís en 72 hs hábiles</div>
             <button type="button" onClick={()=>setPaso(1)} className="int" style={{background:"none",border:"none",color:"#7a9a7a",fontSize:12,cursor:"pointer",textDecoration:"underline"}}>← Cambiar productos</button>
           </form>
         )}
@@ -1211,7 +1211,7 @@ export default function App() {
             {[
               ["1","🛒","Elegís tus productos","Cualquiera de los 5 a $ 2.150. ¿No sabés cuál? Escribinos y te asesoramos gratis."],
               ["2","💳","Pagás con Mercado Pago","Tarjeta de crédito, débito o efectivo en Abitab / Red Pagos. Pago 100% procesado por Mercado Pago."],
-              ["3","🚚","Te llega a tu casa","El envío sale a partir de las 72 hs de confirmado el pago, a cualquier departamento."],
+              ["3","🚚","Te llega a tu casa","Lo recibís dentro de las 72 horas hábiles de acreditado el pago, en cualquier departamento."],
             ].map(([n,ic,t,d])=>(
               <div key={n} style={{background:"#fff",borderRadius:18,padding:"24px 20px",border:"1px solid rgba(45,106,79,0.1)",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",textAlign:"left"}}>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>

@@ -117,7 +117,7 @@ export default async function handler(req, res) {
       (tel ? `📱 wa.me/${tel}\n` : "") +
       (m.direccion ? `🏠 ${m.direccion}${m.departamento ? `, ${m.departamento}` : ""}\n` : "🏠 Sin dirección — pedírsela por WhatsApp\n") +
       (email ? `✉️ ${email}\n` : "") +
-      `\n🚚 Despachar a partir de 72 hs del pago.`
+      `\n🚚 Entregar dentro de 72 hs hábiles del pago.`
     );
 
     // 2. Confirmación al cliente (solo llega si escribió al WhatsApp en las últimas 24h)
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
       await sendWA(tel,
         `¡Recibimos tu pago! 🙌 Gracias${m.nombre ? ` ${m.nombre.split(" ")[0]}` : ""}.\n\n` +
         `${items.join("\n")}\n\n` +
-        `🚚 El envío sale a partir de las 72 hs de confirmado el pago.` +
+        `🚚 Lo recibís dentro de las 72 horas hábiles de acreditado el pago.` +
         (m.direccion ? "" : `\n\nPasame por acá tu nombre completo, dirección y departamento para el envío 📦`)
       );
     }
