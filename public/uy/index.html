@@ -104,8 +104,32 @@
     .elegir button small{display:block;font-size:10px;font-weight:600;color:var(--texto)}
     .elegir button.on{border-color:var(--verde);background:var(--verde);color:#fff}
     .elegir button.on small{color:rgba(255,255,255,.8)}
-    .promo{margin-top:10px;font-size:13px;font-weight:700;color:var(--verde);background:rgba(45,106,79,.08);border-radius:10px;padding:8px 10px}
-    .ahorro{display:flex;justify-content:space-between;font-size:14px;color:var(--verde);font-weight:700;padding-top:8px}
+    .promo{margin-top:14px;background:#fff;border:1.5px dashed var(--verde);border-radius:16px;padding:12px 10px 10px}
+    .promo h3{font-family:Inter,sans-serif;font-size:14px;font-weight:800;margin-bottom:8px}
+    .escala{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .escala button{position:relative;background:var(--suave);border:1.5px solid transparent;border-radius:12px;padding:10px 4px 8px;font:inherit;color:inherit;cursor:pointer}
+    .escala button:hover{border-color:var(--verde)}
+    .escala .u{display:block;font-size:12px;font-weight:700;color:var(--texto)}
+    .escala .t{display:block;font-size:17px;font-weight:800}
+    .escala s{display:block;font-size:11px;color:#9aa59a}
+    .escala .a{display:inline-block;margin-top:4px;font-size:11px;font-weight:800;color:#fff;background:#e4572e;border-radius:999px;padding:2px 7px}
+    .escala .cu{display:block;font-size:10px;color:var(--texto);margin-top:3px}
+    .promo .mix{font-size:12px;color:var(--texto);margin-top:8px}
+    .combos{display:grid;gap:10px}
+    .combo{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--borde);border-radius:16px;padding:12px}
+    .combo .fotos{flex:none;display:flex}
+    .combo .fotos img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--borde)}
+    .combo .fotos img+img{margin-left:-14px}
+    .combo .tx{flex:1;min-width:0}
+    .combo b{display:block;font-size:15px}
+    .combo p{font-size:13px;color:var(--texto)}
+    .combo .pr{font-size:13px;font-weight:800;margin-top:2px}
+    .combo .pr s{color:#9aa59a;font-weight:600;margin-right:4px}
+    .combo button{flex:none;background:var(--verde);color:#fff;border:0;border-radius:10px;padding:10px 12px;font:800 13px Inter,sans-serif;cursor:pointer}
+    .ahorro{display:flex;justify-content:space-between;font-size:14px;color:#e4572e;font-weight:800;padding-top:8px}
+    .total s{color:#9aa59a;font-size:14px;font-weight:600;margin-right:6px}
+    .empuje{margin-top:6px;background:#fff7e6;border:1px solid #f5c26b;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600;text-align:center}
+    .empuje.ok{background:rgba(45,106,79,.08);border-color:rgba(45,106,79,.3);color:var(--verde)}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -125,7 +149,11 @@
       <p class="sub" id="bajada"></p>
       <img id="foto" alt="" height="190" fetchpriority="high" />
       <div class="precio">$ 2.150 <small id="nombreProd"></small></div>
-      <div class="promo">🎁 Llevando 2 o más: $ 250 menos en cada producto desde el 2º</div>
+      <div class="promo">
+        <h3>🎁 Cuantos más llevás, menos pagás</h3>
+        <div class="escala" id="escala"></div>
+        <p class="mix">Podés combinar productos distintos · Envío incluido siempre</p>
+      </div>
       <div style="margin-top:16px">
         <button class="btn btn-mp" id="ctaHero">Comprar ahora</button>
         <a class="btn btn-wa" id="waHero" href="#" target="_blank" rel="noreferrer">💬 Tengo una duda antes de comprar</a>
@@ -139,6 +167,13 @@
       <h2 id="tituloBenef">Por qué lo eligen</h2>
       <div class="benef" id="benef"></div>
       <p class="ing" id="ing"></p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2>Combinalo y ahorrá</h2>
+      <div class="combos" id="combos"></div>
     </div>
   </section>
 
@@ -165,7 +200,8 @@
       <h2>Tu pedido</h2>
       <div id="carrito"></div>
       <div class="ahorro" id="ahorroBox" hidden><span>Descuento por llevar más</span><span id="ahorro"></span></div>
-      <div class="total" id="totalBox"><span>Total</span><span id="total">$ 0</span></div>
+      <div class="total" id="totalBox"><span>Total</span><span><s id="totalSin"></s><span id="total">$ 0</span></span></div>
+      <div class="empuje" id="empuje" hidden></div>
       <form id="form" novalidate>
         <input id="nombre" placeholder="Nombre y apellido" autocomplete="name" />
         <input id="telefono" placeholder="Celular (ej: 099 123 456)" inputmode="tel" autocomplete="tel" />
@@ -177,7 +213,7 @@
         <p class="nota">🔒 El pago lo procesa Mercado Pago · 🚚 Envío a partir de las 72 hs del pago</p>
       </form>
 
-      <h3 style="font-size:18px;text-align:center;margin:28px 0 12px">¿Sumás otro producto?</h3>
+      <h3 style="font-size:18px;text-align:center;margin:28px 0 12px" id="tituloOtros">¿Sumás otro producto?</h3>
       <div class="otros" id="otros"></div>
     </div>
   </section>
@@ -205,7 +241,7 @@
 
   <div class="barra">
     <div class="wrap">
-      <div class="p" id="barraPrecio">$ 2.150<small>Envío incluido</small></div>
+      <div class="p" id="barraPrecio">$ 2.150<small>2 por $ 4.050 · envío incluido</small></div>
       <button class="btn btn-mp" id="ctaBarra">Comprar ahora</button>
     </div>
   </div>
@@ -218,6 +254,13 @@
     // Textos por producto (?p=vita|thermo|nocarb|prunex|biopro). Lenguaje apto para anuncios de Meta:
     // sin promesas de resultados, sin "elimina"/"cura", sin apuntar a defectos de la persona.
     var PRODUCTOS = {
+      prunex: {
+        nombre: "Prunex 1", img: "/uy/img/prunex.jpg", para: "Digestión",
+        titulo: "Para la <em>hinchazón</em> y el tránsito lento",
+        bajada: "Un té de fibras naturales con psyllium, linaza y ciruela para ayudar a tu digestión.",
+        benef: [["🌿","Fibras naturales","Psyllium, inulina y mucílago de linaza ayudan a regular el tránsito."],["🍑","Con ciruela y anís","Ingredientes tradicionales para la digestión."],["🌙","Fácil de tomar","Un sobre disuelto en agua, como un té."]],
+        ing: "Psyllium · Inulina · Mucílago de linaza · Guindón (ciruela) · Anís estrella"
+      },
       vita: {
         nombre: "Vita Xtra T+", img: "/uy/img/vita.jpg", para: "Energía",
         titulo: "Energía para <em>todo el día</em>, sin bajones de la tarde",
@@ -239,13 +282,6 @@
         benef: [["🌾","Fibras solubles","Yacón, acacia, inulina y pectina de manzana aportan saciedad."],["🧂","Cromo y canela","Ingredientes asociados al metabolismo de los carbohidratos."],["🍽️","Con las comidas","Un sobre en agua antes de las comidas principales."]],
         ing: "Fibra de yacón · Acacia · Inulina · Pectina de manzana · Canela · Té verde · Cromo"
       },
-      prunex: {
-        nombre: "Prunex 1", img: "/uy/img/prunex.jpg", para: "Digestión",
-        titulo: "Para la <em>hinchazón</em> y el tránsito lento",
-        bajada: "Un té de fibras naturales con psyllium, linaza y ciruela para ayudar a tu digestión.",
-        benef: [["🌿","Fibras naturales","Psyllium, inulina y mucílago de linaza ayudan a regular el tránsito."],["🍑","Con ciruela y anís","Ingredientes tradicionales para la digestión."],["🌙","Fácil de tomar","Un sobre disuelto en agua, como un té."]],
-        ing: "Psyllium · Inulina · Mucílago de linaza · Guindón (ciruela) · Anís estrella"
-      },
       biopro: {
         nombre: "Biopro+ Fit", img: "/uy/img/biopro.jpg", para: "Proteína",
         titulo: "El batido proteico para <em>cuidar tu figura</em>",
@@ -258,6 +294,15 @@
     // Reseñas reales de clientes (con su permiso). Mientras esté vacío, la sección no se muestra.
     // Formato: { texto: "...", autor: "Ana, Montevideo" }  o  { img: "/resenas/ana.jpg", autor: "Ana" }
     var RESENAS = [];
+
+    // Combos sugeridos (sin promesas de resultados: solo para qué momento o rutina se piensan)
+    var COMBOS = [
+      { p: ["prunex", "vita"], nombre: "Liviana y con energía", txt: "Digestión + energía para tu día" },
+      { p: ["thermo", "nocarb"], nombre: "Dúo metabolismo", txt: "Para acompañar tu plan de alimentación" },
+      { p: ["biopro", "thermo"], nombre: "Dúo entrenamiento", txt: "Proteína + metabolismo para tus días de actividad" },
+      { p: ["vita", "thermo"], nombre: "Energía + metabolismo", txt: "Para tus días más exigentes" },
+      { p: ["prunex", "nocarb"], nombre: "Dúo digestión", txt: "Fibras para el tránsito y las comidas con harinas" }
+    ];
 
     var DEPARTAMENTOS = ["Montevideo","Canelones","Maldonado","Colonia","San José","Florida","Durazno","Lavalleja","Rocha","Treinta y Tres","Cerro Largo","Rivera","Tacuarembó","Artigas","Salto","Paysandú","Río Negro","Soriano","Flores"];
 
@@ -294,6 +339,20 @@
         return '<button type="button" role="tab" data-ver="' + x + '"' + (x === k ? ' class="on" aria-selected="true"' : "") + '>' +
           PRODUCTOS[x].nombre + "<small>" + PRODUCTOS[x].para + "</small></button>";
       }).join("");
+      $("escala").innerHTML = [1, 2, 3].map(function (n) {
+        var ah = n * PRECIO - totalDe(n);
+        return '<button type="button" data-pack="' + n + '"><span class="u">' + (n === 1 ? "1 producto" : n + " productos") + "</span>" +
+          (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "<s>&nbsp;</s>") + '<span class="t">' + fmt(totalDe(n)) + "</span>" +
+          (ah ? '<span class="a">Ahorrás ' + fmt(ah) + "</span>" : '<span class="cu">envío incluido</span>') +
+          (n > 1 ? '<span class="cu">' + fmt(Math.round(totalDe(n) / n)) + " c/u</span>" : "") + "</button>";
+      }).join("");
+      // Primero los combos que incluyen el producto que está viendo
+      $("combos").innerHTML = COMBOS.slice().sort(function (a, b) { return (b.p.indexOf(k) >= 0) - (a.p.indexOf(k) >= 0); }).slice(0, 3).map(function (c) {
+        return '<div class="combo"><div class="fotos">' + c.p.map(function (x) { return '<img src="' + PRODUCTOS[x].img + '" alt="" loading="lazy">'; }).join("") + "</div>" +
+          '<div class="tx"><b>' + c.nombre + "</b><p>" + c.p.map(function (x) { return PRODUCTOS[x].nombre; }).join(" + ") + " · " + c.txt + "</p>" +
+          '<div class="pr"><s>' + fmt(2 * PRECIO) + "</s>" + fmt(totalDe(2)) + "</div></div>" +
+          '<button type="button" data-combo="' + c.p.join(",") + '">Lo quiero</button></div>';
+      }).join("");
     }
     mostrar(clave);
     $("departamento").innerHTML = DEPARTAMENTOS.map(function (d) { return "<option>" + d + "</option>"; }).join("");
@@ -318,8 +377,16 @@
       }).join("") : '<div class="vacio">Tu pedido está vacío. Elegí un producto abajo 👇</div>';
       var n = unidades();
       $("total").textContent = fmt(totalDe(n));
+      $("totalSin").textContent = n > 1 ? fmt(n * PRECIO) : "";
       $("ahorroBox").hidden = n < 2;
       $("ahorro").textContent = "− " + fmt((n - 1) * DESCUENTO);
+      var emp = $("empuje");
+      emp.hidden = !n;
+      emp.className = "empuje" + (n > 1 ? " ok" : "");
+      emp.textContent = n === 1 ? "🎁 Sumá un 2º producto y pagalo " + fmt(PRECIO - DESCUENTO) + ": ahorrás " + fmt(DESCUENTO) + " 👇"
+        : n === 2 ? "🎉 ¡Ahorrás " + fmt(DESCUENTO) + "! Con un 3º ahorrás " + fmt(2 * DESCUENTO) + " en total"
+        : "🎉 ¡Estás ahorrando " + fmt((n - 1) * DESCUENTO) + " en tu pedido!";
+      $("tituloOtros").textContent = n ? "Sumá otro y pagalo " + fmt(PRECIO - DESCUENTO) : "Elegí un producto";
       $("btnPagar").textContent = n ? "💳 Pagar " + fmt(totalDe(n)) + " con Mercado Pago" : "Elegí al menos un producto";
       $("btnPagar").disabled = !n;
       // Lo que se suma ya tiene el descuento (el carrito siempre tiene al menos 1 al ofrecerlo)
@@ -341,6 +408,20 @@
         try { history.replaceState(null, "", "?" + new URLSearchParams(Object.assign(Object.fromEntries(q), { p: k })).toString()); } catch (_) {}
         track("ViewContent", { content_ids: [k], content_name: P.nombre, content_type: "product", value: PRECIO, currency: "UYU" });
         render();
+        return;
+      }
+      var pk = e.target.closest("[data-pack]");
+      if (pk) {
+        var n = Number(pk.dataset.pack);
+        // Pedido de un solo producto: lo lleva a N unidades. Si ya combinó varios, no se lo pisa.
+        if (Object.keys(cant).length <= 1) { cant = {}; cant[clave] = n; }
+        render(); irAPagar();
+        return;
+      }
+      var cb = e.target.closest("[data-combo]");
+      if (cb) {
+        cb.dataset.combo.split(",").forEach(function (x) { if (!cant[x]) cant[x] = 1; });
+        render(); irAPagar();
         return;
       }
       var b = e.target.closest("[data-k],[data-add]");
