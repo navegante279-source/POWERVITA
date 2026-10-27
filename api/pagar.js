@@ -1,5 +1,5 @@
 // Crea un pago de Mercado Pago (Checkout Pro) con la cuenta de Andrés.
-// Solo Uruguay: todos los productos a $2.150 UYU c/u.
+// Solo Uruguay: todos los productos a $2.150 UYU; desde la 2ª unidad (de cualquier producto) $250 menos c/u.
 //
 // GET  /api/pagar?prod=vita&p=598XXXXXXXX&q=1   → link que manda el bot (redirige a MP)
 // POST /api/pagar { items:[{prod,q}], buyer:{nombre,telefono,direccion,departamento,email} }
@@ -8,7 +8,11 @@
 // Variables en Vercel: MP_ACCESS_TOKEN (obligatoria), PRECIO_UY (opcional, default 2150)
 
 const PRECIO = Number(process.env.PRECIO_UY || 2150);
+const DESCUENTO_EXTRA = Number(process.env.DESCUENTO_UY || 250); // por cada unidad desde la 2ª
 const SITE = "https://powervita.vercel.app";
+
+// Total de un pedido de n unidades: la 1ª a precio lleno, el resto con descuento.
+export const totalUY = (n) => (n > 0 ? n * PRECIO - (n - 1) * DESCUENTO_EXTRA : 0);
 
 export const PRODUCTOS_UY = {
   vita:   "Vita Xtra T+",
@@ -27,18 +31,23 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
   if (!lineas.length) throw new Error("Producto inválido");
 
   const telefono = clean(buyer.telefono, 20).replace(/\D/g, "");
-  const total = lineas.reduce((s, l) => s + l.q * PRECIO, 0);
+  const total = totalUY(lineas.reduce((s, l) => s + l.q, 0));
   // pv| identifica las ventas de Power Vita dentro de la cuenta MP (el reporte filtra por esto)
   const ref = `pv|${lineas.map(l => `${l.prod}x${l.q}`).join(",")}|${telefono}|${origen}|${Date.now()}`;
 
+  // MP no acepta precios negativos: la 1ª unidad va a precio lleno y las demás ya con el descuento.
+  const mpItems = [];
+  lineas.forEach((l, i) => {
+    const llenas = i === 0 ? 1 : 0;
+    const base = { id: l.prod, title: `${PRODUCTOS_UY[l.prod]} — FuXion`, currency_id: "UYU" };
+    if (llenas) mpItems.push({ ...base, quantity: 1, unit_price: PRECIO });
+    if (l.q - llenas > 0) {
+      mpItems.push({ ...base, title: `${base.title} (2ª unidad en adelante)`, quantity: l.q - llenas, unit_price: PRECIO - DESCUENTO_EXTRA });
+    }
+  });
+
   const body = {
-    items: lineas.map(l => ({
-      id: l.prod,
-      title: `${PRODUCTOS_UY[l.prod]} — FuXion`,
-      quantity: l.q,
-      unit_price: PRECIO,
-      currency_id: "UYU",
-    })),
+    items: mpItems,
     payer: buyer.email ? { email: clean(buyer.email, 100) } : undefined,
     external_reference: ref,
     metadata: {

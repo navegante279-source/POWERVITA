@@ -98,6 +98,14 @@
     .barra .p{font-weight:800;font-size:18px;white-space:nowrap}
     .barra .p small{display:block;font-size:11px;font-weight:600;color:var(--texto)}
     .barra .btn{padding:13px;font-size:15px}
+    .elegir{margin:14px -16px 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+    .elegir::-webkit-scrollbar{display:none}
+    .elegir button{flex:none;background:#fff;border:1.5px solid var(--borde);border-radius:999px;padding:7px 12px;font:600 13px Inter,sans-serif;color:var(--oscuro);cursor:pointer;white-space:nowrap}
+    .elegir button small{display:block;font-size:10px;font-weight:600;color:var(--texto)}
+    .elegir button.on{border-color:var(--verde);background:var(--verde);color:#fff}
+    .elegir button.on small{color:rgba(255,255,255,.8)}
+    .promo{margin-top:10px;font-size:13px;font-weight:700;color:var(--verde);background:rgba(45,106,79,.08);border-radius:10px;padding:8px 10px}
+    .ahorro{display:flex;justify-content:space-between;font-size:14px;color:var(--verde);font-weight:700;padding-top:8px}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -112,10 +120,12 @@
   <div class="hero">
     <div class="wrap">
       <span class="chip">🇺🇾 Envío incluido a todo Uruguay</span>
+      <div class="elegir" id="elegir" role="tablist" aria-label="Elegí el producto"></div>
       <h1 id="titulo"></h1>
       <p class="sub" id="bajada"></p>
       <img id="foto" alt="" height="190" fetchpriority="high" />
       <div class="precio">$ 2.150 <small id="nombreProd"></small></div>
+      <div class="promo">🎁 Llevando 2 o más: $ 250 menos en cada producto desde el 2º</div>
       <div style="margin-top:16px">
         <button class="btn btn-mp" id="ctaHero">Comprar ahora</button>
         <a class="btn btn-wa" id="waHero" href="#" target="_blank" rel="noreferrer">💬 Tengo una duda antes de comprar</a>
@@ -154,6 +164,7 @@
     <div class="wrap">
       <h2>Tu pedido</h2>
       <div id="carrito"></div>
+      <div class="ahorro" id="ahorroBox" hidden><span>Descuento por llevar más</span><span id="ahorro"></span></div>
       <div class="total" id="totalBox"><span>Total</span><span id="total">$ 0</span></div>
       <form id="form" novalidate>
         <input id="nombre" placeholder="Nombre y apellido" autocomplete="name" />
@@ -174,6 +185,7 @@
   <section>
     <div class="wrap">
       <h2>Preguntas frecuentes</h2>
+      <details><summary>¿Hay descuento si llevo más de uno?</summary><p>Sí: el primero sale $ 2.150 y cada producto desde el 2º tiene $ 250 de descuento ($ 1.900), sean iguales o distintos. Por ejemplo, 2 productos te quedan en $ 4.050 con envío incluido.</p></details>
       <details><summary>¿Cuánto sale el envío?</summary><p>Nada extra: el envío ya está incluido en el precio de $ 2.150, a cualquier departamento.</p></details>
       <details><summary>¿Cuándo me llega?</summary><p>El envío sale a partir de las 72 hs de confirmado el pago y llega a cualquier departamento. Te avisamos por WhatsApp cuando sale.</p></details>
       <details><summary>¿Cómo puedo pagar?</summary><p>Con Mercado Pago: tarjeta de crédito, débito o efectivo en Abitab / Red Pagos. Las cuotas disponibles te las muestra Mercado Pago según tu tarjeta.</p></details>
@@ -200,6 +212,7 @@
 
   <script>
     var PRECIO = 2150;
+    var DESCUENTO = 250; // por cada unidad desde la 2ª (igual que api/pagar.js)
     var WA = "59898950206";
 
     // Textos por producto (?p=vita|thermo|nocarb|prunex|biopro). Lenguaje apto para anuncios de Meta:
@@ -250,6 +263,7 @@
 
     var q = new URLSearchParams(location.search);
     var clave = PRODUCTOS[q.get("p")] ? q.get("p") : "vita";
+    var origenProd = clave; // producto del anuncio, para medir de qué link vino la venta
     var P = PRODUCTOS[clave];
     var utm = (q.get("utm_content") || q.get("utm_campaign") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 20);
     var cant = {}; cant[clave] = 1;
@@ -259,20 +273,29 @@
     var track = function (n, d) { if (window.fbq) fbq("track", n, d, { eventID: evId(n) }); };
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
     var waLink = function (txt) { return "https://wa.me/" + WA + "?text=" + encodeURIComponent(txt + "\n\n[ref:uy_" + clave + "]"); };
+    var totalDe = function (n) { return n > 0 ? n * PRECIO - (n - 1) * DESCUENTO : 0; };
 
-    // Contenido del producto
-    document.title = P.nombre + " · $ 2.150 | Power Vita Uruguay";
-    $("titulo").innerHTML = P.titulo;
-    $("bajada").textContent = P.bajada;
-    $("foto").src = P.img; $("foto").alt = P.nombre;
-    $("nombreProd").textContent = P.nombre + " · envío incluido";
-    $("tituloBenef").textContent = "Por qué elegir " + P.nombre;
-    $("benef").innerHTML = P.benef.map(function (b) {
-      return '<div class="card"><div class="ic">' + b[0] + '</div><div><b>' + b[1] + '</b><p>' + b[2] + '</p></div></div>';
-    }).join("");
-    $("ing").textContent = "Ingredientes: " + P.ing;
-    var consulta = "Hola! Vi " + P.nombre + " en la web y tengo una consulta antes de comprar";
-    $("waTop").href = $("waHero").href = $("waFooter").href = waLink(consulta);
+    // Contenido del producto (se puede cambiar desde los botones de arriba sin recargar)
+    function mostrar(k) {
+      clave = k; P = PRODUCTOS[k];
+      document.title = P.nombre + " · $ 2.150 | Power Vita Uruguay";
+      $("titulo").innerHTML = P.titulo;
+      $("bajada").textContent = P.bajada;
+      $("foto").src = P.img; $("foto").alt = P.nombre;
+      $("nombreProd").textContent = P.nombre + " · envío incluido";
+      $("tituloBenef").textContent = "Por qué elegir " + P.nombre;
+      $("benef").innerHTML = P.benef.map(function (b) {
+        return '<div class="card"><div class="ic">' + b[0] + '</div><div><b>' + b[1] + '</b><p>' + b[2] + '</p></div></div>';
+      }).join("");
+      $("ing").textContent = "Ingredientes: " + P.ing;
+      var consulta = "Hola! Vi " + P.nombre + " en la web y tengo una consulta antes de comprar";
+      $("waTop").href = $("waHero").href = $("waFooter").href = waLink(consulta);
+      $("elegir").innerHTML = Object.keys(PRODUCTOS).map(function (x) {
+        return '<button type="button" role="tab" data-ver="' + x + '"' + (x === k ? ' class="on" aria-selected="true"' : "") + '>' +
+          PRODUCTOS[x].nombre + "<small>" + PRODUCTOS[x].para + "</small></button>";
+      }).join("");
+    }
+    mostrar(clave);
     $("departamento").innerHTML = DEPARTAMENTOS.map(function (d) { return "<option>" + d + "</option>"; }).join("");
 
     if (RESENAS.length) {
@@ -290,19 +313,36 @@
       var keys = Object.keys(cant).filter(function (k) { return cant[k] > 0; });
       $("carrito").innerHTML = keys.length ? keys.map(function (k) {
         var x = PRODUCTOS[k];
-        return '<div class="linea"><img src="' + x.img + '" alt=""><div class="nom">' + x.nombre + '<small>' + fmt(PRECIO) + ' c/u</small></div>' +
+        return '<div class="linea"><img src="' + x.img + '" alt=""><div class="nom">' + x.nombre + '<small>' + x.para + '</small></div>' +
           '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + cant[k] + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Agregar uno">+</button></div></div>';
       }).join("") : '<div class="vacio">Tu pedido está vacío. Elegí un producto abajo 👇</div>';
       var n = unidades();
-      $("total").textContent = fmt(n * PRECIO);
-      $("btnPagar").textContent = n ? "💳 Pagar " + fmt(n * PRECIO) + " con Mercado Pago" : "Elegí al menos un producto";
+      $("total").textContent = fmt(totalDe(n));
+      $("ahorroBox").hidden = n < 2;
+      $("ahorro").textContent = "− " + fmt((n - 1) * DESCUENTO);
+      $("btnPagar").textContent = n ? "💳 Pagar " + fmt(totalDe(n)) + " con Mercado Pago" : "Elegí al menos un producto";
       $("btnPagar").disabled = !n;
+      // Lo que se suma ya tiene el descuento (el carrito siempre tiene al menos 1 al ofrecerlo)
+      var extra = n ? PRECIO - DESCUENTO : PRECIO;
       $("otros").innerHTML = Object.keys(PRODUCTOS).filter(function (k) { return !cant[k]; }).map(function (k) {
         var x = PRODUCTOS[k];
-        return '<button type="button" class="otro" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + '</b><span>' + x.para + ' · + ' + fmt(PRECIO) + '</span></button>';
+        return '<button type="button" class="otro" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + '</b><span>' + x.para + ' · + ' + fmt(extra) + '</span></button>';
       }).join("");
     }
     document.addEventListener("click", function (e) {
+      var v = e.target.closest("[data-ver]");
+      if (v) {
+        var antes = clave, k = v.dataset.ver;
+        if (k === antes) return;
+        // Si solo tenía el producto que estaba viendo, lo reemplaza; si armó un pedido, no se lo toca
+        var soloAnterior = Object.keys(cant).length === 1 && cant[antes] === 1;
+        mostrar(k);
+        if (soloAnterior) { delete cant[antes]; cant[k] = 1; }
+        try { history.replaceState(null, "", "?" + new URLSearchParams(Object.assign(Object.fromEntries(q), { p: k })).toString()); } catch (_) {}
+        track("ViewContent", { content_ids: [k], content_name: P.nombre, content_type: "product", value: PRECIO, currency: "UYU" });
+        render();
+        return;
+      }
       var b = e.target.closest("[data-k],[data-add]");
       if (!b) return;
       if (b.dataset.add) {
@@ -318,7 +358,7 @@
 
     var irAPagar = function () {
       if (!unidades()) cant[clave] = 1, render();
-      track("AddToCart", { content_ids: Object.keys(cant), content_type: "product", value: unidades() * PRECIO, currency: "UYU" });
+      track("AddToCart", { content_ids: Object.keys(cant), content_type: "product", value: totalDe(unidades()), currency: "UYU" });
       $("pagar").scrollIntoView({ behavior: "smooth" });
       setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 600);
     };
@@ -346,11 +386,11 @@
       }
       $("error").textContent = "";
       var items = Object.keys(cant).map(function (k) { return { prod: k, q: cant[k] }; });
-      track("InitiateCheckout", { content_ids: Object.keys(cant), num_items: unidades(), value: unidades() * PRECIO, currency: "UYU" });
+      track("InitiateCheckout", { content_ids: Object.keys(cant), num_items: unidades(), value: totalDe(unidades()), currency: "UYU" });
       $("btnPagar").disabled = true; $("btnPagar").textContent = "Abriendo Mercado Pago…";
       fetch("/api/pagar", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: items, buyer: buyer, origen: "uy-" + clave + (utm ? "-" + utm : "") })
+        body: JSON.stringify({ items: items, buyer: buyer, origen: "uy-" + origenProd + (utm ? "-" + utm : "") })
       }).then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.url) throw new Error(d.error); return d; }); })
         .then(function (d) { location.href = d.url; })
         .catch(function () {
