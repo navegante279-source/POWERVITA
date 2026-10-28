@@ -98,7 +98,7 @@
     .barra .p{font-weight:800;font-size:18px;white-space:nowrap}
     .barra .p small{display:block;font-size:11px;font-weight:600;color:var(--texto)}
     .barra .btn{padding:13px;font-size:15px}
-    .elegir{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+    .elegir{margin:14px -16px 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
     .elegir::-webkit-scrollbar{display:none}
     .elegir button{flex:none;background:#fff;border:1.5px solid var(--borde);border-radius:999px;padding:7px 12px;font:600 13px Inter,sans-serif;color:var(--oscuro);cursor:pointer;white-space:nowrap}
     .elegir button small{display:block;font-size:10px;font-weight:600;color:var(--texto)}
@@ -160,6 +160,7 @@
   <div class="hero">
     <div class="wrap">
       <span class="chip">🇺🇾 Envío incluido a todo Uruguay</span>
+      <div class="elegir" id="elegir" role="tablist" aria-label="Elegí el producto"></div>
       <h1 id="titulo"></h1>
       <p class="sub" id="bajada"></p>
       <img id="foto" alt="" height="190" fetchpriority="high" />
@@ -204,13 +205,6 @@
     <div class="wrap">
       <h2>Combinalo y ahorrá</h2>
       <div class="combos" id="combos"></div>
-    </div>
-  </section>
-
-  <section style="padding-top:0">
-    <div class="wrap">
-      <h2>¿Buscás otra cosa?</h2>
-      <div class="elegir" id="elegir" role="tablist" aria-label="Elegí el producto"></div>
     </div>
   </section>
 
