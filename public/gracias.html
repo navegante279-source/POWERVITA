@@ -40,6 +40,8 @@
   </div>
   <script>
     (function(){
+      // Compra hecha: se vacía el carrito guardado de /uy
+      try { localStorage.removeItem("pv_carrito"); } catch (_) {}
       var q = new URLSearchParams(location.search);
       var status = q.get("collection_status") || q.get("status");
       var id = q.get("payment_id") || q.get("collection_id");

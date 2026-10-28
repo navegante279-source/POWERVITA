@@ -11,7 +11,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" />
   <!-- Meta Pixel -->
   <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -23,254 +23,229 @@
     fbq("track","PageView");
   </script>
   <style>
-    :root{--verde:#2d6a4f;--oscuro:#1a2e1a;--suave:#f0f7f3;--texto:#4a5a4a;--mp:#009ee3;--borde:rgba(45,106,79,.14)}
+    :root{--verde:#2d6a4f;--oscuro:#1a2e1a;--texto:#5a6a5a;--borde:#e3e8e3;--suave:#f4f7f4;--mp:#009ee3;--rojo:#d9480f}
     *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:Inter,system-ui,sans-serif;color:var(--oscuro);background:#fafaf7;line-height:1.55;padding-bottom:80px}
-    h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.15}
+    body{font-family:Inter,system-ui,sans-serif;color:var(--oscuro);background:#fff;line-height:1.5}
+    body.bloqueo{overflow:hidden}
     a{color:inherit}
-    .wrap{max-width:560px;margin:0 auto;padding:0 16px}
-    .top{position:sticky;top:0;z-index:20;background:rgba(250,250,247,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--borde)}
-    .top .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
-    .logo{font-family:"Playfair Display",serif;font-weight:700;font-size:18px;text-decoration:none;display:flex;align-items:center;gap:8px}
-    .logo span{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--verde),var(--oscuro));display:inline-flex;align-items:center;justify-content:center;font-size:13px}
-    .wa-top{font-size:13px;font-weight:700;color:#128c4a;text-decoration:none;border:1.5px solid #25d366;border-radius:999px;padding:6px 12px}
-    .hero{padding:16px 0 26px;text-align:center;background:linear-gradient(180deg,#fafaf7,#eef4ef)}
-    .chip{display:inline-block;background:rgba(45,106,79,.08);color:var(--verde);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-    .hero h1{font-size:clamp(27px,7.2vw,40px);margin:12px 0 8px}
-    .hero h1 em{color:var(--verde)}
-    .hero p.sub{color:var(--texto);font-size:15px;margin-bottom:10px}
-    .hero img{width:auto;max-width:78vw;height:190px;object-fit:contain;border-radius:16px;box-shadow:0 10px 26px rgba(0,0,0,.1);margin:6px auto 12px;display:block;background:#fff}
-    .precio{font-size:34px;font-weight:800;letter-spacing:-.5px}
-    .precio small{display:block;font-size:13px;font-weight:600;color:var(--texto);letter-spacing:0}
-    .btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font:800 16px Inter,sans-serif;cursor:pointer;text-align:center;text-decoration:none}
-    .btn-mp{background:var(--mp);color:#fff;box-shadow:0 8px 22px rgba(0,158,227,.3)}
-    .btn-wa{background:#fff;color:#128c4a;border:1.5px solid #25d366;margin-top:10px;font-size:14px;padding:13px}
-    .trust{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
-    .trust span{font-size:12px;font-weight:600;color:var(--texto);background:#fff;border:1px solid var(--borde);border-radius:999px;padding:5px 10px}
-    section{padding:34px 0}
-    section h2{font-size:clamp(23px,6vw,30px);text-align:center;margin-bottom:18px}
-    .card{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:16px}
-    .benef{display:grid;gap:10px}
-    .benef .card{display:flex;gap:12px;align-items:flex-start}
-    .benef .ic{font-size:24px;line-height:1}
-    .benef b{display:block;font-size:15px;margin-bottom:2px}
-    .benef p{font-size:14px;color:var(--texto)}
-    .ing{font-size:14px;color:var(--texto);text-align:center;margin-top:12px}
-    .pasos{display:grid;gap:10px;counter-reset:p}
-    .pasos .card{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--texto)}
-    .pasos .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--verde);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
-    .pasos b{color:var(--oscuro)}
-    .resenas{display:grid;gap:10px}
-    .resenas .card p{font-size:14px;font-style:italic}
-    .resenas .card small{display:block;margin-top:6px;font-size:12px;color:var(--texto);font-style:normal;font-weight:600}
-    .resenas img{width:100%;border-radius:12px;display:block}
-    .otros{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .otro{background:#fff;border:1.5px solid var(--borde);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;font:inherit;color:inherit}
-    .otro img{width:70px;height:70px;object-fit:contain}
-    .otro b{display:block;font-size:13px}
-    .otro span{display:block;font-size:11px;color:var(--verde);font-weight:600;margin-top:2px}
-    #pagar{background:#fff;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde)}
-    .linea{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--borde)}
-    .linea img{width:44px;height:44px;object-fit:contain}
-    .linea .nom{flex:1;font-size:14px;font-weight:700}
-    .linea .nom small{display:block;font-weight:500;color:var(--texto)}
-    .qty{display:flex;align-items:center;border:1.5px solid var(--verde);border-radius:10px}
-    .qty button{background:none;border:0;font:700 18px Inter;color:var(--verde);width:34px;height:34px;cursor:pointer}
-    .qty span{min-width:20px;text-align:center;font-weight:800}
-    .total{display:flex;justify-content:space-between;font-weight:800;font-size:18px;padding:12px 0 6px}
-    .vacio{text-align:center;color:var(--texto);font-size:14px;padding:12px 0}
-    form{display:grid;gap:10px;margin-top:12px}
-    input,select{width:100%;padding:13px 14px;border-radius:11px;border:1.5px solid var(--borde);font:16px Inter,sans-serif;background:#fff;color:var(--oscuro)}
-    input:focus,select:focus{outline:2px solid var(--verde);border-color:transparent}
-    .nota{font-size:12px;color:var(--texto);text-align:center}
-    .error{color:#c0392b;font-size:14px;text-align:center;min-height:0}
-    details{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:14px 16px;margin-bottom:8px}
-    summary{font-weight:700;cursor:pointer;font-size:15px;list-style:none;display:flex;justify-content:space-between;gap:10px}
-    summary::after{content:"+";color:var(--verde);font-weight:800}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+    .anuncio{background:var(--oscuro);color:#fff;font-size:12px;font-weight:600;text-align:center;padding:8px 12px}
+    .aviso{background:#fdecea;color:#b42318;font-size:14px;text-align:center;padding:10px 16px}
+    .top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--borde)}
+    .top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .logo{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:20px;text-decoration:none}
+    .acc{display:flex;gap:2px;margin-right:-8px}
+    .ico{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:0;background:none;border-radius:50%;cursor:pointer;color:var(--oscuro)}
+    .ico:hover{background:var(--suave)}
+    .badge{position:absolute;top:3px;right:1px;min-width:18px;height:18px;border-radius:9px;background:var(--verde);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px}
+    .elegir{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 16px;max-width:1080px;margin:0 auto}
+    .elegir::-webkit-scrollbar{display:none}
+    .elegir button{flex:none;background:#fff;border:1px solid var(--borde);border-radius:999px;padding:7px 14px;font:600 13px Inter,sans-serif;color:var(--oscuro);cursor:pointer;white-space:nowrap}
+    .elegir button.on{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
+    .prod{display:grid;gap:20px;padding-top:4px;padding-bottom:40px}
+    .galeria{background:var(--suave);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .galeria img{width:100%;height:100%;object-fit:contain;padding:16px}
+    @media(min-width:860px){.prod{grid-template-columns:1fr 1fr;gap:48px;padding-top:16px}.galeria{position:sticky;top:76px;align-self:start}}
+    .cat{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--verde)}
+    h1{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.5px;line-height:1.15;margin:4px 0 6px}
+    .gancho{font-size:16px;color:var(--texto)}
+    .gancho em{font-style:normal;color:var(--verde);font-weight:600}
+    .precio{margin:14px 0 2px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .precio b{font-size:28px;font-weight:800}
+    .precio span{font-size:14px;color:var(--texto)}
+    .detalle{font-size:13px;color:var(--verde);font-weight:600}
+    .packs{display:grid;gap:8px;margin:16px 0 6px}
+    .pack{display:flex;align-items:center;gap:12px;width:100%;border:1.5px solid var(--borde);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff;font:inherit;color:inherit;text-align:left}
+    .pack .rd{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid #b9c4b9}
+    .pack.on{border-color:var(--oscuro);background:var(--suave)}
+    .pack.on .rd{border:5px solid var(--oscuro)}
+    .pack .tx{flex:1;font-weight:700;font-size:14px}
+    .pack .tx small{display:block;font-weight:500;font-size:12px;color:var(--texto)}
+    .pack .pr{text-align:right;font-weight:800;font-size:15px;white-space:nowrap}
+    .pack .pr s{display:block;font-weight:500;font-size:12px;color:#9aa59a}
+    .tag{display:inline-block;margin-left:6px;background:var(--rojo);color:#fff;font-size:10px;font-weight:800;border-radius:999px;padding:2px 7px;vertical-align:2px}
+    .mix{font-size:12px;color:var(--texto);margin-bottom:16px}
+    .btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:700 15px Inter,sans-serif;cursor:pointer;text-align:center;text-decoration:none}
+    .btn+.btn{margin-top:10px}
+    .btn-borde{background:#fff;color:var(--oscuro);border:1.5px solid var(--oscuro)}
+    .btn-ok{background:var(--verde);color:#fff}
+    .btn-mp{background:var(--mp);color:#fff}
+    .btn:disabled{opacity:.6;cursor:default}
+    .trust{list-style:none;display:grid;gap:8px;margin:18px 0 20px;font-size:13px;color:var(--texto)}
+    .trust li{display:flex;gap:10px;align-items:center}
+    details{border-top:1px solid var(--borde)}
+    details:last-of-type{border-bottom:1px solid var(--borde)}
+    summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-weight:700;font-size:15px}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"+";font-weight:400;font-size:22px;line-height:1}
     details[open] summary::after{content:"−"}
-    details p{margin-top:8px;font-size:14px;color:var(--texto)}
-    footer{background:var(--oscuro);color:rgba(255,255,255,.8);font-size:12px;text-align:center;padding:26px 16px 20px}
-    footer b{color:#fff;font-family:"Playfair Display",serif;font-size:16px;display:block;margin-bottom:6px}
-    footer p{margin-top:8px;opacity:.75;max-width:520px;margin-left:auto;margin-right:auto}
-    .barra{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--borde);box-shadow:0 -6px 20px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
-    .barra .wrap{display:flex;align-items:center;gap:12px;padding:0}
-    .barra .p{font-weight:800;font-size:18px;white-space:nowrap}
-    .barra .p small{display:block;font-size:11px;font-weight:600;color:var(--texto)}
-    .barra .btn{padding:13px;font-size:15px}
+    .cont{padding-bottom:16px;font-size:14px;color:var(--texto);display:grid;gap:10px}
+    .cont b{color:var(--oscuro)}
+    .cont ul{padding-left:18px;display:grid;gap:4px}
+    .fuente{font-size:11px}
+    section{padding:8px 0 48px}
+    h2{font-size:22px;font-weight:800;margin-bottom:16px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 12px}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(4,1fr)}}
+    .card-p{background:none;border:0;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
+    .card-p .im{background:var(--suave);border-radius:12px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px}
+    .card-p img{width:100%;height:100%;object-fit:contain;padding:10px}
+    .card-p b{display:block;font-size:14px}
+    .card-p span{display:block;font-size:13px;color:var(--texto)}
+    .resenas{display:grid;gap:12px}
+    @media(min-width:860px){.resenas{grid-template-columns:repeat(3,1fr)}}
+    .resena{border:1px solid var(--borde);border-radius:12px;padding:16px;font-size:14px}
+    .resena small{display:block;margin-top:6px;font-size:12px;color:var(--texto);font-weight:600}
+    .resena img{width:100%;border-radius:10px;display:block}
+    footer{border-top:1px solid var(--borde);padding:28px 16px 100px;text-align:center;font-size:12px;color:var(--texto)}
+    footer b{display:block;font-family:"Playfair Display",Georgia,serif;font-size:17px;color:var(--oscuro);margin-bottom:6px}
+    footer p{max-width:560px;margin:8px auto 0}
+    /* Barra fija de compra (solo celular) */
+    .barra{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--borde);box-shadow:0 -6px 20px rgba(0,0,0,.06);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px}
+    .barra .p{flex:1;min-width:0;font-size:13px;line-height:1.3;color:var(--texto)}
+    .barra .p b{display:block;font-size:15px;color:var(--oscuro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .barra .btn{width:auto;padding:12px 18px}
     .wa-float{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:31;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.2);transition:bottom .2s}
     body.con-barra .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
-    .elegir{margin:14px -16px 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
-    .elegir::-webkit-scrollbar{display:none}
-    .elegir button{flex:none;background:#fff;border:1.5px solid var(--borde);border-radius:999px;padding:7px 12px;font:600 13px Inter,sans-serif;color:var(--oscuro);cursor:pointer;white-space:nowrap}
-    .elegir button small{display:block;font-size:10px;font-weight:600;color:var(--texto)}
-    .elegir button.on{border-color:var(--verde);background:var(--verde);color:#fff}
-    .elegir button.on small{color:rgba(255,255,255,.8)}
-    .promo{margin-top:14px;background:#fff;border:1.5px dashed var(--verde);border-radius:16px;padding:12px 10px 10px}
-    .promo h3{font-family:Inter,sans-serif;font-size:14px;font-weight:800;margin-bottom:8px}
-    .escala{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-    .escala button.regalo{background:#fff4ec;border-color:#e4572e}
-    .escala button{position:relative;background:var(--suave);border:1.5px solid transparent;border-radius:12px;padding:10px 4px 8px;font:inherit;color:inherit;cursor:pointer}
-    .escala button:hover{border-color:var(--verde)}
-    .escala .u{display:block;font-size:12px;font-weight:700;color:var(--texto)}
-    .escala .t{display:block;font-size:15px;font-weight:800}
-    .escala s{display:block;font-size:11px;color:#9aa59a}
-    .escala .a{display:inline-block;margin-top:4px;font-size:10px;font-weight:800;color:#fff;background:#e4572e;border-radius:999px;padding:2px 7px}
-    .escala .cu{display:block;font-size:10px;color:var(--texto);margin-top:3px}
-    .promo .mix{font-size:12px;color:var(--texto);margin-top:8px}
-    .marca{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .marca .card{display:flex;flex-direction:column;gap:6px}
-    .marca .ic{font-size:24px;line-height:1}
-    .marca b{font-size:14px;display:block}
-    .marca p{font-size:13px;color:var(--texto)}
-    .fuente{font-size:11px;color:var(--texto);text-align:center;margin-top:10px}
-    .cuotas{font-size:15px;color:var(--texto);margin-top:2px}
-    .cuotas b{color:var(--oscuro)}
-    .cuotasTotal{text-align:right;font-size:13px;color:var(--texto);margin-top:-2px}
-    .quien{margin-bottom:10px;background:var(--suave);border-color:transparent}
-    .quien b{font-size:15px}
-    .quien ul{margin:8px 0 0 18px;font-size:14px;color:var(--texto);display:grid;gap:4px}
-    .garantia{margin-top:10px}
-    .garantia b{display:block;font-size:15px;margin-bottom:4px}
-    .garantia p{font-size:14px;color:var(--texto)}
-    .combos{display:grid;gap:10px}
-    .combo{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--borde);border-radius:16px;padding:12px}
-    .combo .fotos{flex:none;display:flex}
-    .combo .fotos img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--borde)}
-    .combo .fotos img+img{margin-left:-14px}
-    .combo .tx{flex:1;min-width:0}
-    .combo b{display:block;font-size:15px}
-    .combo p{font-size:13px;color:var(--texto)}
-    .combo .pr{font-size:13px;font-weight:800;margin-top:2px}
-    .combo .pr s{color:#9aa59a;font-weight:600;margin-right:4px}
-    .combo button{flex:none;background:var(--verde);color:#fff;border:0;border-radius:10px;padding:10px 12px;font:800 13px Inter,sans-serif;cursor:pointer}
-    .ahorro{display:flex;justify-content:space-between;font-size:14px;color:#e4572e;font-weight:800;padding-top:8px}
-    .total s{color:#9aa59a;font-size:14px;font-weight:600;margin-right:6px}
-    .empuje{margin-top:6px;background:#fff7e6;border:1px solid #f5c26b;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600;text-align:center}
-    .empuje.ok{background:rgba(45,106,79,.08);border-color:rgba(45,106,79,.3);color:var(--verde)}
+    /* Carrito lateral */
+    .velo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+    .velo.on{opacity:1;pointer-events:auto}
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:41;display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
+    .drawer.on{transform:none;visibility:visible;transition:transform .25s}
+    .dh{display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 16px;border-bottom:1px solid var(--borde)}
+    .dh b{font-size:17px}
+    .db{flex:1;overflow-y:auto;padding:0 16px}
+    .df{border-top:1px solid var(--borde);padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
+    .empuje{margin-top:14px;background:#fff7e6;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;text-align:center}
+    .empuje.ok{background:rgba(45,106,79,.08);color:var(--verde)}
+    .linea{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--borde)}
+    .linea img{flex:none;width:64px;height:64px;object-fit:contain;background:var(--suave);border-radius:10px;padding:4px}
+    .linea .nom{flex:1;font-size:14px;font-weight:700}
+    .linea .nom small{display:block;font-weight:500;color:var(--texto);font-size:12px}
+    .linea .pu{font-size:14px;font-weight:700;white-space:nowrap}
+    .qty{display:inline-flex;align-items:center;border:1px solid var(--borde);border-radius:8px;margin-top:8px}
+    .qty button{background:none;border:0;font:600 16px Inter,sans-serif;width:32px;height:30px;cursor:pointer;color:var(--oscuro)}
+    .qty span{min-width:22px;text-align:center;font-weight:700;font-size:14px}
+    .vacio{text-align:center;color:var(--texto);padding:48px 0;font-size:14px}
+    .vacio .btn{margin-top:14px}
+    .sumar{padding:16px 0}
+    .sumar p{font-weight:700;font-size:14px;margin-bottom:10px}
+    .sumar-fila{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+    .sumar-fila::-webkit-scrollbar{display:none}
+    .mini{flex:none;width:118px;border:1px solid var(--borde);border-radius:12px;padding:8px;text-align:center;background:#fff;font:inherit;color:inherit;cursor:pointer}
+    .mini img{width:100%;height:70px;object-fit:contain}
+    .mini b{display:block;font-size:12px}
+    .mini span{display:block;font-size:11px;color:var(--verde);font-weight:700;margin-top:2px}
+    .fila{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}
+    .fila.ahorro{color:var(--rojo);font-weight:700}
+    .fila.total{font-size:17px;font-weight:800;padding-top:6px}
+    .cuotasTotal{text-align:right;font-size:12px;color:var(--texto);margin-bottom:10px}
+    .nota{font-size:12px;color:var(--texto);text-align:center;margin-top:8px}
+    .volver{background:none;border:0;font:600 14px Inter,sans-serif;color:var(--verde);cursor:pointer;padding-top:14px}
+    form{display:grid;gap:10px;padding:14px 0 16px}
+    input,select{width:100%;padding:13px 14px;border-radius:10px;border:1px solid #cfd8cf;font:16px Inter,sans-serif;background:#fff;color:var(--oscuro)}
+    input:focus,select:focus{outline:2px solid var(--verde);border-color:transparent}
+    .error{color:#c0392b;font-size:13px;text-align:center}
     [hidden]{display:none!important}
   </style>
 </head>
 <body>
+  <div class="anuncio">🇺🇾 Envío gratis a todo Uruguay · Hasta 10 cuotas sin interés</div>
+  <div class="aviso" id="aviso" hidden>El pago no se completó. Podés intentarlo de nuevo.</div>
+
   <header class="top">
     <div class="wrap">
-      <a class="logo" href="/uy/"><span>🌿</span>Power Vita</a>
-      <a class="wa-top" id="waTop" href="#" target="_blank" rel="noreferrer">💬 Consultas</a>
+      <a class="logo" href="/uy/">Power Vita</a>
+      <div class="acc">
+        <a class="ico" id="waTop" href="#" target="_blank" rel="noreferrer" aria-label="Consultas por WhatsApp"><svg viewBox="0 0 24 24" width="24" height="24" fill="#25d366" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
+        <button class="ico" id="btnCarrito" type="button" aria-label="Ver carrito"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 13H6.2L5 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="badge" id="badge" hidden>0</span></button>
+      </div>
     </div>
   </header>
 
-  <div class="hero">
-    <div class="wrap">
-      <span class="chip">🇺🇾 Envío incluido a todo Uruguay</span>
-      <div class="elegir" id="elegir" role="tablist" aria-label="Elegí el producto"></div>
-      <h1 id="titulo"></h1>
-      <p class="sub" id="bajada"></p>
-      <img id="foto" alt="" height="190" fetchpriority="high" />
-      <div class="precio">$ 2.150 <small id="nombreProd"></small></div>
-      <div class="cuotas">o <b>10 cuotas de $ 215</b> sin interés</div>
-      <div class="promo">
-        <h3>🎁 Cuantos más llevás, menos pagás</h3>
-        <div class="escala" id="escala"></div>
-        <p class="mix">Llevando 5, <b>el 5º es de regalo</b> · Podés combinar productos distintos</p>
-      </div>
-      <div style="margin-top:16px">
-        <button class="btn btn-mp" id="ctaHero">Comprar ahora</button>
-        <a class="btn btn-wa" id="waHero" href="#" target="_blank" rel="noreferrer">💬 Tengo una duda antes de comprar</a>
-      </div>
-      <div class="trust"><span>💳 10 cuotas sin interés</span><span>🚚 Llega en 72 hs hábiles</span><span>🔁 5 días para arrepentirte</span></div>
-    </div>
-  </div>
+  <nav class="elegir" id="elegir" aria-label="Productos"></nav>
 
-  <section>
-    <div class="wrap">
-      <h2 id="tituloBenef">Por qué lo eligen</h2>
-      <div class="card quien"><b>Es para vos si…</b><ul id="quien"></ul></div>
-      <div class="benef" id="benef"></div>
-      <p class="ing" id="ing"></p>
-    </div>
-  </section>
+  <main class="wrap prod">
+    <div class="galeria"><img id="foto" alt="" fetchpriority="high" /></div>
+    <div class="info">
+      <p class="cat" id="cat"></p>
+      <h1 id="nombreProd"></h1>
+      <p class="gancho" id="gancho"></p>
+      <div class="precio"><b>$ 2.150</b><span>o 10 cuotas de $ 215 sin interés</span></div>
+      <p class="detalle" id="detalle"></p>
 
-  <section style="padding-top:0">
-    <div class="wrap">
-      <h2>Una marca con respaldo</h2>
-      <div class="marca">
-        <div class="card"><div class="ic">🌎</div><div><b>Presente en 14 países</b><p>FuXion opera en Latinoamérica y Estados Unidos, y está llegando a Europa.</p></div></div>
-        <div class="card"><div class="ic">🌱</div><div><b>Superalimentos de la Amazonía</b><p>Marca nacida en Perú, creada por Álvaro Zúñiga a partir de ingredientes naturales de la región.</p></div></div>
-        <div class="card"><div class="ic">🧪</div><div><b>Fórmulas propias</b><p>Algunas patentadas, como Bioprotein+ Colostrum®, presente en Biopro+ Fit.</p></div></div>
-        <div class="card"><div class="ic">📦</div><div><b>Originales y sellados</b><p>Te llegan en su caja de fábrica, con sobres individuales.</p></div></div>
-      </div>
-      <p class="fuente">Fuente: Forbes Colombia, octubre de 2024. Power Vita es distribuidor independiente de FuXion en Uruguay.</p>
-    </div>
-  </section>
+      <div class="packs" id="escala" role="radiogroup" aria-label="Cantidad"></div>
+      <p class="mix">Podés combinar productos distintos en el carrito: el descuento se aplica igual.</p>
 
-  <section style="padding-top:0">
-    <div class="wrap">
-      <h2>Combinalo y ahorrá</h2>
-      <div class="combos" id="combos"></div>
-    </div>
-  </section>
+      <button class="btn btn-borde" id="btnAgregar" type="button">Agregar al carrito</button>
+      <button class="btn btn-ok" id="btnComprar" type="button">Comprar ahora</button>
 
-  <section style="padding-top:0">
-    <div class="wrap">
-      <h2>Cómo funciona</h2>
-      <div class="pasos">
-        <div class="card"><div class="n">1</div><div><b>Pagás con Mercado Pago.</b> Con tarjeta de crédito hasta en 10 cuotas sin interés, o débito o efectivo en Abitab / Red Pagos.</div></div>
-        <div class="card"><div class="n">2</div><div><b>Preparamos tu pedido.</b> Lo recibís dentro de las 72 horas hábiles de acreditado el pago.</div></div>
-        <div class="card"><div class="n">3</div><div><b>Lo recibís en tu casa,</b> en cualquier departamento. Cada caja trae sobres individuales que se disuelven en agua.</div></div>
-      </div>
-      <div class="card garantia"><b>🔁 Comprá sin riesgo</b><p>Tenés 5 días hábiles desde que lo recibís para arrepentirte de la compra: nos avisás, devolvés el producto como lo recibiste y te reintegramos el dinero, sin costo. Y si te llega vencido, te lo cambiamos.</p></div>
-      <div class="card garantia"><b>👋 Te atiende una persona</b><p>Soy Andrés, distribuidor independiente de FuXion en Uruguay. Te acompaño antes y después de tu compra.</p></div>
-    </div>
-  </section>
+      <ul class="trust">
+        <li>🚚 Envío gratis a todo Uruguay · llega en 72 hs hábiles</li>
+        <li>💳 Hasta 10 cuotas sin interés con Mercado Pago</li>
+        <li>🔁 5 días para arrepentirte de la compra</li>
+        <li>📦 FuXion original, en su caja sellada</li>
+      </ul>
 
-  <section id="secResenas" hidden style="padding-top:0">
+      <details open>
+        <summary>Descripción</summary>
+        <div class="cont">
+          <p id="bajada"></p>
+          <div><b>Es para vos si…</b><ul id="quien"></ul></div>
+          <ul id="benef"></ul>
+        </div>
+      </details>
+      <details>
+        <summary>Ingredientes y modo de uso</summary>
+        <div class="cont"><p id="ing"></p><p>Disolvé un sobre en agua y seguí la indicación del envase.</p></div>
+      </details>
+      <details>
+        <summary>Envío y pago</summary>
+        <div class="cont">
+          <p><b>Envío gratis</b> a cualquier departamento. Lo recibís dentro de las 72 horas hábiles de acreditado el pago y te avisamos cuando sale.</p>
+          <p><b>Pagás con Mercado Pago:</b> tarjeta de crédito hasta en 10 cuotas sin interés, débito o efectivo en Abitab / Red Pagos.</p>
+          <p><b>Descuento por cantidad:</b> el primero sale $ 2.150 y cada producto desde el 2º tiene $ 250 de descuento ($ 1.900), sean iguales o distintos. Si llevás 5, el 5º es de regalo: pagás 4 ($ 7.850).</p>
+        </div>
+      </details>
+      <details>
+        <summary>Devoluciones</summary>
+        <div class="cont"><p>Tenés 5 días hábiles desde que lo recibís para arrepentirte de la compra (Ley 17.250): nos avisás, devolvés el producto como lo recibiste y te reintegramos el dinero, sin costo. Si te llega vencido, te lo cambiamos o te devolvemos el dinero.</p></div>
+      </details>
+      <details>
+        <summary>Sobre FuXion y Power Vita</summary>
+        <div class="cont">
+          <p>FuXion nació en Perú a partir de superalimentos de la Amazonía y hoy está presente en 14 países de Latinoamérica y Estados Unidos. Tiene fórmulas propias, algunas patentadas, como Bioprotein+ Colostrum®.</p>
+          <p>Soy Andrés, distribuidor independiente de FuXion en Uruguay. Te acompaño antes y después de tu compra.</p>
+          <p class="fuente">Fuente: Forbes Colombia, octubre de 2024.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Preguntas frecuentes</summary>
+        <div class="cont">
+          <p><b>¿Qué trae cada caja?</b> Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres individuales. Biopro+ Fit trae 24.</p>
+          <p><b>¿Los productos son originales?</b> Sí, son productos FuXion originales y sellados.</p>
+          <p><b>¿Puedo tomarlo si estoy embarazada o con medicación?</b> Son suplementos alimenticios, no medicamentos. Si estás embarazada, en lactancia, con alguna enfermedad o tomando medicación, consultá antes con tu médico.</p>
+        </div>
+      </details>
+    </div>
+  </main>
+
+  <section id="secResenas" hidden>
     <div class="wrap">
       <h2>Lo que dicen nuestros clientes</h2>
       <div class="resenas" id="resenas"></div>
     </div>
   </section>
 
-  <section id="pagar">
-    <div class="wrap">
-      <h2>Tu pedido</h2>
-      <div id="carrito"></div>
-      <div class="ahorro" id="ahorroBox" hidden><span>Descuento por llevar más</span><span id="ahorro"></span></div>
-      <div class="total" id="totalBox"><span>Total</span><span><s id="totalSin"></s><span id="total">$ 0</span></span></div>
-      <div class="cuotasTotal" id="cuotasTotal"></div>
-      <div class="empuje" id="empuje" hidden></div>
-      <form id="form" novalidate>
-        <input id="nombre" placeholder="Nombre y apellido" autocomplete="name" />
-        <input id="telefono" placeholder="Celular (ej: 099 123 456)" inputmode="tel" autocomplete="tel" />
-        <input id="direccion" placeholder="Dirección (calle, número, apto)" autocomplete="street-address" />
-        <select id="departamento"></select>
-        <input id="email" type="email" placeholder="Email (opcional)" autocomplete="email" />
-        <div class="error" id="error"></div>
-        <button class="btn btn-mp" id="btnPagar" type="submit">💳 Pagar con Mercado Pago</button>
-        <p class="nota">🔒 El pago lo procesa Mercado Pago · 🚚 Lo recibís en 72 hs hábiles · 🔁 5 días para arrepentirte</p>
-      </form>
-
-      <h3 style="font-size:18px;text-align:center;margin:28px 0 12px" id="tituloOtros">¿Sumás otro producto?</h3>
-      <div class="otros" id="otros"></div>
-    </div>
-  </section>
-
   <section>
     <div class="wrap">
-      <h2>Preguntas frecuentes</h2>
-      <details><summary>¿Hay descuento si llevo más de uno?</summary><p>Sí: el primero sale $ 2.150 y cada producto desde el 2º tiene $ 250 de descuento ($ 1.900), sean iguales o distintos. Por ejemplo, 2 productos te quedan en $ 4.050 con envío incluido. Y si llevás 5, el 5º es de regalo: pagás 4 ($ 7.850).</p></details>
-      <details><summary>¿Cuánto sale el envío?</summary><p>Nada extra: el envío ya está incluido en el precio, a cualquier departamento.</p></details>
-      <details><summary>¿Cuándo me llega?</summary><p>Dentro de las 72 horas hábiles de acreditado el pago, en cualquier departamento. Te avisamos cuando sale tu pedido.</p></details>
-      <details><summary>¿Cómo puedo pagar?</summary><p>Con Mercado Pago: tarjeta de crédito hasta en 10 cuotas sin interés, débito o efectivo en Abitab / Red Pagos.</p></details>
-      <details><summary>¿Qué trae cada caja?</summary><p>Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres individuales. Biopro+ Fit trae 24 sobres. Cada sobre se disuelve en agua; seguí la indicación del envase.</p></details>
-      <details><summary>¿Los productos son originales?</summary><p>Sí, son productos FuXion originales y sellados. Power Vita es distribuidor independiente de FuXion en Uruguay.</p></details>
-      <details><summary>¿Puedo devolverlo?</summary><p>Sí. Tenés 5 días hábiles desde que lo recibís para arrepentirte de la compra (Ley 17.250): nos avisás, devolvés el producto como lo recibiste y te reintegramos el dinero, sin costo. Si te llega vencido, te lo cambiamos o te devolvemos el dinero.</p></details>
-      <details><summary>¿Puedo tomarlo si estoy embarazada o con medicación?</summary><p>Son suplementos alimenticios, no medicamentos. Si estás embarazada, en lactancia, con alguna enfermedad o tomando medicación, consultá antes con tu médico.</p></details>
-      <p class="fuente" id="contacto">¿Otra duda? Escribinos por Instagram a <a href="https://www.instagram.com/powervita_uy/" target="_blank" rel="noreferrer">@powervita_uy</a>.</p>
+      <h2>También te puede interesar</h2>
+      <div class="grid" id="otros"></div>
     </div>
   </section>
 
   <footer>
-    <b>🌿 Power Vita</b>
+    <b>Power Vita</b>
     Distribuidor independiente FuXion · Uruguay<br />
     <span id="waFooterBox"><a id="waFooter" href="#" target="_blank" rel="noreferrer"></a> · </span><a href="https://www.instagram.com/powervita_uy/" target="_blank" rel="noreferrer">Instagram @powervita_uy</a>
     <p>Suplementos alimenticios. No son medicamentos ni reemplazan una alimentación equilibrada. Los resultados pueden variar según cada persona.</p>
@@ -278,12 +253,43 @@
 
   <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noreferrer" aria-label="Escribinos por WhatsApp"><svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
-  <div class="barra">
-    <div class="wrap">
-      <div class="p" id="barraPrecio">$ 2.150<small>10 cuotas de $ 215 · 2 por $ 4.050</small></div>
-      <button class="btn btn-mp" id="ctaBarra">Comprar ahora</button>
-    </div>
+  <div class="barra" id="barra" hidden>
+    <div class="p"><b id="barraNombre"></b>$ 2.150 · envío gratis</div>
+    <button class="btn btn-ok" id="ctaBarra" type="button">Agregar al carrito</button>
   </div>
+
+  <div class="velo" id="velo" data-cerrar></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitulo">
+    <div class="dh"><b id="dTitulo">Tu carrito</b><button class="ico" type="button" data-cerrar aria-label="Cerrar">✕</button></div>
+    <div class="db">
+      <div id="paso1">
+        <div class="empuje" id="empuje" hidden></div>
+        <div id="carrito"></div>
+        <div class="sumar" id="sumarBox"><p id="tituloOtros"></p><div class="sumar-fila" id="sumar"></div></div>
+      </div>
+      <div id="paso2" hidden>
+        <button class="volver" type="button" id="volver">← Volver al carrito</button>
+        <form id="form" novalidate>
+          <input id="nombre" placeholder="Nombre y apellido" autocomplete="name" />
+          <input id="telefono" placeholder="Celular (ej: 099 123 456)" inputmode="tel" autocomplete="tel" />
+          <input id="direccion" placeholder="Dirección (calle, número, apto)" autocomplete="street-address" />
+          <select id="departamento"></select>
+          <input id="email" type="email" placeholder="Email (opcional)" autocomplete="email" />
+          <div class="error" id="error"></div>
+        </form>
+      </div>
+    </div>
+    <div class="df" id="dPie">
+      <div class="fila"><span>Subtotal</span><span id="subtotal"></span></div>
+      <div class="fila ahorro" id="ahorroBox" hidden><span>Descuento por cantidad</span><span id="ahorro"></span></div>
+      <div class="fila"><span>Envío</span><span>Gratis</span></div>
+      <div class="fila total"><span>Total</span><span id="total"></span></div>
+      <div class="cuotasTotal" id="cuotasTotal"></div>
+      <button class="btn btn-ok" id="btnSeguir" type="button">Finalizar compra</button>
+      <button class="btn btn-mp" id="btnPagar" type="submit" form="form" hidden>Pagar con Mercado Pago</button>
+      <p class="nota">🔒 El pago lo procesa Mercado Pago</p>
+    </div>
+  </aside>
 
   <script>
     var PRECIO = 2150;
@@ -340,15 +346,6 @@
     // Formato: { texto: "...", autor: "Ana, Montevideo" }  o  { img: "/resenas/ana.jpg", autor: "Ana" }
     var RESENAS = [];
 
-    // Combos sugeridos (sin promesas de resultados: solo para qué momento o rutina se piensan)
-    var COMBOS = [
-      { p: ["prunex", "vita"], nombre: "Liviana y con energía", txt: "Digestión + energía para tu día" },
-      { p: ["thermo", "nocarb"], nombre: "Dúo metabolismo", txt: "Para acompañar tu plan de alimentación" },
-      { p: ["biopro", "thermo"], nombre: "Dúo entrenamiento", txt: "Proteína + metabolismo para tus días de actividad" },
-      { p: ["vita", "thermo"], nombre: "Energía + metabolismo", txt: "Para tus días más exigentes" },
-      { p: ["prunex", "nocarb"], nombre: "Dúo digestión", txt: "Fibras para el tránsito y las comidas con harinas" }
-    ];
-
     var DEPARTAMENTOS = ["Montevideo","Canelones","Maldonado","Colonia","San José","Florida","Durazno","Lavalleja","Rocha","Treinta y Tres","Cerro Largo","Rivera","Tacuarembó","Artigas","Salto","Paysandú","Río Negro","Soriano","Flores"];
 
     var q = new URLSearchParams(location.search);
@@ -356,7 +353,6 @@
     var origenProd = clave; // producto del anuncio, para medir de qué link vino la venta
     var P = PRODUCTOS[clave];
     var utm = (q.get("utm_content") || q.get("utm_campaign") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 20);
-    var cant = {}; cant[clave] = 1;
     var $ = function (id) { return document.getElementById(id); };
     var fmt = function (n) { return "$ " + n.toLocaleString("es-UY"); };
     var evId = function (n) { return n + "_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8); };
@@ -367,43 +363,54 @@
     var pagasDe = function (n) { return n - Math.floor(n / 5); };
     var totalDe = function (n) { var p = pagasDe(n); return p > 0 ? p * PRECIO - (p - 1) * DESCUENTO : 0; };
 
-    // Contenido del producto (se puede cambiar desde los botones de arriba sin recargar)
+    // El carrito se guarda en el navegador para que no se pierda si vuelve de Mercado Pago
+    function leerCarrito() {
+      try {
+        var c = JSON.parse(localStorage.getItem("pv_carrito") || "{}"), r = {};
+        Object.keys(c).forEach(function (k) { var n = Math.floor(c[k]); if (PRODUCTOS[k] && n > 0) r[k] = Math.min(n, 10); });
+        return r;
+      } catch (_) { return {}; }
+    }
+    function guardarCarrito() { try { localStorage.setItem("pv_carrito", JSON.stringify(cant)); } catch (_) {} }
+    var cant = leerCarrito();
+    var pack = 1; // cantidad elegida en la ficha
+
+    // Ficha del producto (se cambia desde los botones de arriba o las tarjetas de abajo sin recargar)
     function mostrar(k) {
-      clave = k; P = PRODUCTOS[k];
+      clave = k; P = PRODUCTOS[k]; pack = 1;
       document.title = P.nombre + " · $ 2.150 | Power Vita Uruguay";
-      $("titulo").innerHTML = P.titulo;
-      $("bajada").textContent = P.bajada;
+      $("cat").textContent = P.para;
+      $("nombreProd").textContent = P.nombre;
+      $("gancho").innerHTML = P.titulo;
       $("foto").src = P.img; $("foto").alt = P.nombre;
-      $("nombreProd").textContent = P.nombre + " · caja de " + P.sobres + " sobres · envío incluido";
+      $("detalle").textContent = "Caja de " + P.sobres + " sobres · envío gratis";
+      $("bajada").textContent = P.bajada;
       $("quien").innerHTML = P.quien.map(function (x) { return "<li>" + x + "</li>"; }).join("");
-      $("tituloBenef").textContent = "Por qué elegir " + P.nombre;
-      $("benef").innerHTML = P.benef.map(function (b) {
-        return '<div class="card"><div class="ic">' + b[0] + '</div><div><b>' + b[1] + '</b><p>' + b[2] + '</p></div></div>';
-      }).join("");
+      $("benef").innerHTML = P.benef.map(function (b) { return "<li><b>" + b[1] + ":</b> " + b[2] + "</li>"; }).join("");
       $("ing").textContent = "Ingredientes: " + P.ing;
+      $("barraNombre").textContent = P.nombre;
       var consulta = "Hola! Vi " + P.nombre + " en la web y tengo una consulta antes de comprar";
       if (WA) {
-        $("waTop").href = $("waHero").href = $("waFooter").href = $("waFloat").href = waLink(consulta);
+        $("waTop").href = $("waFooter").href = $("waFloat").href = waLink(consulta);
         $("waFooter").textContent = "WhatsApp +" + WA.replace(/^598(\d{2})(\d{3})(\d{3})$/, "598 $1 $2 $3");
       }
-      $("waTop").hidden = $("waHero").hidden = $("waFooterBox").hidden = $("waFloat").hidden = !WA;
+      $("waTop").hidden = $("waFooterBox").hidden = $("waFloat").hidden = !WA;
       $("elegir").innerHTML = Object.keys(PRODUCTOS).map(function (x) {
-        return '<button type="button" role="tab" data-ver="' + x + '"' + (x === k ? ' class="on" aria-selected="true"' : "") + '>' +
-          PRODUCTOS[x].nombre + "<small>" + PRODUCTOS[x].para + "</small></button>";
+        return '<button type="button" data-ver="' + x + '"' + (x === k ? ' class="on" aria-current="true"' : "") + ">" + PRODUCTOS[x].nombre + "</button>";
       }).join("");
+      $("otros").innerHTML = Object.keys(PRODUCTOS).filter(function (x) { return x !== k; }).map(function (x) {
+        var o = PRODUCTOS[x];
+        return '<button type="button" class="card-p" data-ver="' + x + '"><div class="im"><img src="' + o.img + '" alt="" loading="lazy"></div><b>' + o.nombre + "</b><span>" + o.para + " · " + fmt(PRECIO) + "</span></button>";
+      }).join("");
+      renderPacks();
+    }
+    function renderPacks() {
       $("escala").innerHTML = [1, 2, 3, 5].map(function (n) {
         var ah = n * PRECIO - totalDe(n);
-        return '<button type="button" data-pack="' + n + '"' + (n === 5 ? ' class="regalo"' : "") + '><span class="u">' + (n === 1 ? "1 producto" : n + " productos") + "</span>" +
-          (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "<s>&nbsp;</s>") + '<span class="t">' + fmt(totalDe(n)) + "</span>" +
-          (n === 5 ? '<span class="a">¡El 5º gratis!</span>' : ah ? '<span class="a">Ahorrás ' + fmt(ah) + "</span>" : '<span class="a" style="visibility:hidden">-</span>') +
-          '<span class="cu">' + CUOTAS + " x " + fmt(Math.round(totalDe(n) / CUOTAS)) + "</span>" + "</button>";
-      }).join("");
-      // Primero los combos que incluyen el producto que está viendo
-      $("combos").innerHTML = COMBOS.slice().sort(function (a, b) { return (b.p.indexOf(k) >= 0) - (a.p.indexOf(k) >= 0); }).slice(0, 2).map(function (c) {
-        return '<div class="combo"><div class="fotos">' + c.p.map(function (x) { return '<img src="' + PRODUCTOS[x].img + '" alt="" loading="lazy">'; }).join("") + "</div>" +
-          '<div class="tx"><b>' + c.nombre + "</b><p>" + c.p.map(function (x) { return PRODUCTOS[x].nombre; }).join(" + ") + " · " + c.txt + "</p>" +
-          '<div class="pr"><s>' + fmt(2 * PRECIO) + "</s>" + fmt(totalDe(2)) + "</div></div>" +
-          '<button type="button" data-combo="' + c.p.join(",") + '">Lo quiero</button></div>';
+        return '<button type="button" role="radio" aria-checked="' + (n === pack) + '" class="pack' + (n === pack ? " on" : "") + '" data-pack="' + n + '"><span class="rd"></span>' +
+          '<span class="tx">' + (n === 1 ? "1 caja" : n + " cajas") + (n === 5 ? '<span class="tag">El 5º gratis</span>' : ah ? '<span class="tag">Ahorrás ' + fmt(ah) + "</span>" : "") +
+          "<small>" + CUOTAS + " cuotas de " + fmt(Math.round(totalDe(n) / CUOTAS)) + "</small></span>" +
+          '<span class="pr">' + (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "") + fmt(totalDe(n)) + "</span></button>";
       }).join("");
     }
     mostrar(clave);
@@ -412,7 +419,7 @@
     if (RESENAS.length) {
       $("secResenas").hidden = false;
       $("resenas").innerHTML = RESENAS.map(function (r) {
-        return '<div class="card">' + (r.img ? '<img src="' + esc(r.img) + '" alt="Reseña de ' + esc(r.autor) + '" loading="lazy">' : "<p>“" + esc(r.texto) + "”</p>") + "<small>— " + esc(r.autor) + "</small></div>";
+        return '<div class="resena">' + (r.img ? '<img src="' + esc(r.img) + '" alt="Reseña de ' + esc(r.autor) + '" loading="lazy">' : "<p>“" + esc(r.texto) + "”</p>") + "<small>— " + esc(r.autor) + "</small></div>";
       }).join("");
     }
 
@@ -420,96 +427,105 @@
 
     // Carrito
     function unidades() { return Object.keys(cant).reduce(function (s, k) { return s + cant[k]; }, 0); }
+    function agregar(k, n) {
+      cant[k] = Math.min((cant[k] || 0) + n, 10);
+      track("AddToCart", { content_ids: [k], content_type: "product", value: totalDe(unidades()), currency: "UYU" });
+      render();
+    }
     function render() {
-      var keys = Object.keys(cant).filter(function (k) { return cant[k] > 0; });
+      var keys = Object.keys(cant), n = unidades(), total = totalDe(n), ahorroTotal = n * PRECIO - total;
+      $("badge").textContent = n; $("badge").hidden = !n;
       $("carrito").innerHTML = keys.length ? keys.map(function (k) {
         var x = PRODUCTOS[k];
-        return '<div class="linea"><img src="' + x.img + '" alt=""><div class="nom">' + x.nombre + '<small>' + x.para + '</small></div>' +
-          '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + cant[k] + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Agregar uno">+</button></div></div>';
-      }).join("") : '<div class="vacio">Tu pedido está vacío. Elegí un producto abajo 👇</div>';
-      var n = unidades();
-      $("total").textContent = fmt(totalDe(n));
-      $("totalSin").textContent = n > 1 ? fmt(n * PRECIO) : "";
-      $("cuotasTotal").textContent = n ? "o " + CUOTAS + " cuotas de " + fmt(Math.round(totalDe(n) / CUOTAS)) + " sin interés" : "";
-      var regalos = n - pagasDe(n), ahorroTotal = n * PRECIO - totalDe(n);
-      $("ahorroBox").hidden = n < 2;
+        return '<div class="linea"><img src="' + x.img + '" alt=""><div class="nom">' + x.nombre + "<small>" + x.para + " · caja de " + x.sobres + " sobres</small>" +
+          '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + cant[k] + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Agregar uno">+</button></div></div>' +
+          '<div class="pu">' + fmt(cant[k] * PRECIO) + "</div></div>";
+      }).join("") : '<div class="vacio">Tu carrito está vacío<button class="btn btn-borde" type="button" data-cerrar>Seguir comprando</button></div>';
+      $("dPie").hidden = !n;
+      $("subtotal").textContent = fmt(n * PRECIO);
+      $("ahorroBox").hidden = !ahorroTotal;
       $("ahorro").textContent = "− " + fmt(ahorroTotal);
+      $("total").textContent = fmt(total);
+      $("cuotasTotal").textContent = "o " + CUOTAS + " cuotas de " + fmt(Math.round(total / CUOTAS)) + " sin interés";
       // El próximo que sume, ¿cuánto le sale?
-      var siguiente = totalDe(n + 1) - totalDe(n);
+      var siguiente = totalDe(n + 1) - total, regalos = n - pagasDe(n);
       var emp = $("empuje");
       emp.hidden = !n;
       emp.className = "empuje" + (n > 1 && (n + 1) % 5 ? " ok" : "");
-      emp.textContent = n === 1 ? "🎁 Sumá un 2º producto y pagalo " + fmt(PRECIO - DESCUENTO) + ": ahorrás " + fmt(DESCUENTO) + " 👇"
-        : (n + 1) % 5 === 0 ? "🎁 ¡Sumá 1 producto más y te lo regalamos! 👇"
+      emp.textContent = n === 1 ? "🎁 Sumá un 2º producto y pagalo " + fmt(PRECIO - DESCUENTO) + ": ahorrás " + fmt(DESCUENTO)
+        : (n + 1) % 5 === 0 ? "🎁 ¡Sumá 1 producto más y te lo regalamos!"
         : regalos ? "🎉 ¡" + (regalos > 1 ? regalos + " productos" : "1 producto") + " de regalo y ahorrás " + fmt(ahorroTotal) + " en total!"
-        : n === 2 ? "🎉 ¡Ahorrás " + fmt(DESCUENTO) + "! Llevando 5, el 5º es gratis"
         : "🎉 ¡Estás ahorrando " + fmt(ahorroTotal) + "! Llevando 5, el 5º es gratis";
-      $("tituloOtros").textContent = !n ? "Elegí un producto" : siguiente === 0 ? "Elegí tu producto de regalo 🎁" : "Sumá otro y pagalo " + fmt(siguiente);
-      $("btnPagar").textContent = n ? "💳 Pagar " + fmt(totalDe(n)) + " con Mercado Pago" : "Elegí al menos un producto";
-      $("btnPagar").disabled = !n;
-      var extra = siguiente;
-      $("otros").innerHTML = Object.keys(PRODUCTOS).filter(function (k) { return !cant[k]; }).map(function (k) {
+      var faltan = Object.keys(PRODUCTOS).filter(function (k) { return !cant[k]; });
+      $("sumarBox").hidden = !n || !faltan.length;
+      $("tituloOtros").textContent = siguiente === 0 ? "Elegí tu producto de regalo 🎁" : "Sumá otro y pagalo " + fmt(siguiente);
+      $("sumar").innerHTML = faltan.map(function (k) {
         var x = PRODUCTOS[k];
-        return '<button type="button" class="otro" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + '</b><span>' + x.para + ' · ' + (extra ? '+ ' + fmt(extra) : '¡Gratis! 🎁') + '</span></button>';
+        return '<button type="button" class="mini" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + "</b><span>" + (siguiente ? "+ " + fmt(siguiente) : "¡Gratis! 🎁") + "</span></button>";
       }).join("");
+      $("btnSeguir").textContent = "Finalizar compra · " + fmt(total);
+      $("btnPagar").textContent = "💳 Pagar " + fmt(total) + " con Mercado Pago";
+      $("btnPagar").disabled = !n;
+      if (!n) paso(1);
+      guardarCarrito();
     }
+
+    // Panel lateral: paso 1 = carrito, paso 2 = datos de envío
+    function paso(p) {
+      if (p === 2 && !unidades()) p = 1;
+      $("paso1").hidden = p !== 1; $("paso2").hidden = p !== 2;
+      $("btnSeguir").hidden = p !== 1; $("btnPagar").hidden = p !== 2;
+      $("dTitulo").textContent = p === 1 ? "Tu carrito" : "Datos de envío";
+      if (p === 2) setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 300);
+    }
+    function abrir(p) {
+      paso(p);
+      $("drawer").classList.add("on"); $("velo").classList.add("on");
+      document.body.classList.add("bloqueo");
+      barra();
+    }
+    function cerrar() {
+      $("drawer").classList.remove("on"); $("velo").classList.remove("on");
+      document.body.classList.remove("bloqueo");
+      barra();
+    }
+
     document.addEventListener("click", function (e) {
+      if (e.target.closest("[data-cerrar]")) { cerrar(); return; }
       var v = e.target.closest("[data-ver]");
       if (v) {
-        var antes = clave, k = v.dataset.ver;
-        if (k === antes) return;
-        // Si solo tenía el producto que estaba viendo, lo reemplaza; si armó un pedido, no se lo toca
-        var soloAnterior = Object.keys(cant).length === 1 && cant[antes] === 1;
+        var k = v.dataset.ver;
+        if (k === clave) return;
         mostrar(k);
-        if (soloAnterior) { delete cant[antes]; cant[k] = 1; }
         try { history.replaceState(null, "", "?" + new URLSearchParams(Object.assign(Object.fromEntries(q), { p: k })).toString()); } catch (_) {}
         track("ViewContent", { content_ids: [k], content_name: P.nombre, content_type: "product", value: PRECIO, currency: "UYU" });
-        render();
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
       var pk = e.target.closest("[data-pack]");
-      if (pk) {
-        var n = Number(pk.dataset.pack);
-        // Pedido de un solo producto: lo lleva a N unidades. Si ya combinó varios, no se lo pisa.
-        if (Object.keys(cant).length <= 1) { cant = {}; cant[clave] = n; }
-        render(); irAPagar();
-        return;
-      }
-      var cb = e.target.closest("[data-combo]");
-      if (cb) {
-        cb.dataset.combo.split(",").forEach(function (x) { if (!cant[x]) cant[x] = 1; });
-        render(); irAPagar();
-        return;
-      }
-      var b = e.target.closest("[data-k],[data-add]");
-      if (!b) return;
-      if (b.dataset.add) {
-        cant[b.dataset.add] = 1;
-        track("AddToCart", { content_ids: [b.dataset.add], content_type: "product", value: PRECIO, currency: "UYU" });
-      } else {
+      if (pk) { pack = Number(pk.dataset.pack); renderPacks(); return; }
+      var a = e.target.closest("[data-add]");
+      if (a) { agregar(a.dataset.add, 1); return; }
+      var b = e.target.closest("[data-k]");
+      if (b) {
         cant[b.dataset.k] = Math.min(Math.max(cant[b.dataset.k] + Number(b.dataset.d), 0), 10);
         if (!cant[b.dataset.k]) delete cant[b.dataset.k];
+        render();
       }
-      render();
     });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") cerrar(); });
+    $("btnCarrito").onclick = function () { abrir(1); };
+    $("btnAgregar").onclick = $("ctaBarra").onclick = function () { agregar(clave, pack); abrir(1); };
+    $("btnComprar").onclick = function () { agregar(clave, pack); abrir(2); };
+    $("btnSeguir").onclick = function () { paso(2); };
+    $("volver").onclick = function () { paso(1); };
     render();
 
-    var irAPagar = function () {
-      if (!unidades()) cant[clave] = 1, render();
-      track("AddToCart", { content_ids: Object.keys(cant), content_type: "product", value: totalDe(unidades()), currency: "UYU" });
-      $("pagar").scrollIntoView({ behavior: "smooth" });
-      setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 600);
-    };
-    $("ctaHero").onclick = irAPagar;
-    $("ctaBarra").onclick = irAPagar;
-
-    // La barra de abajo solo aparece cuando no se ve ni el botón del inicio ni el formulario de pago
+    // La barra de abajo aparece en el celular cuando ya pasó (scrolleando) el botón "Agregar al carrito"
+    var celular = window.matchMedia("(max-width: 859px)");
     function barra() {
-      var h = window.innerHeight;
-      var visible = function (el) { var r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < h; };
-      var oculta = visible($("ctaHero")) || visible($("pagar"));
-      document.querySelector(".barra").hidden = oculta;
+      var oculta = !celular.matches || $("drawer").classList.contains("on") || $("btnAgregar").getBoundingClientRect().bottom > 0;
+      $("barra").hidden = oculta;
       // El botón flotante de WhatsApp sube para no tapar la barra
       document.body.classList.toggle("con-barra", !oculta);
     }
@@ -536,12 +552,15 @@
       }).then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.url) throw new Error(d.error); return d; }); })
         .then(function (d) { location.href = d.url; })
         .catch(function () {
-          $("error").textContent = "No pudimos abrir Mercado Pago. Probá de nuevo en un minuto o escribinos por Instagram @powervita_uy.";
+          $("error").textContent = "No pudimos abrir Mercado Pago. Probá de nuevo en un minuto o escribinos por WhatsApp.";
           render();
         });
     };
 
-    if (q.get("pago") === "error") $("error").textContent = "El pago no se completó. Podés intentarlo de nuevo.";
+    if (q.get("pago") === "error") {
+      $("aviso").hidden = false;
+      if (unidades()) abrir(2);
+    }
   </script>
 </body>
 </html>
