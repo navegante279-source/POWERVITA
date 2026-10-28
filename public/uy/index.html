@@ -43,8 +43,8 @@
     .elegir button{flex:none;background:#fff;border:1px solid var(--borde);border-radius:999px;padding:7px 14px;font:600 13px Inter,sans-serif;color:var(--oscuro);cursor:pointer;white-space:nowrap}
     .elegir button.on{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
     .prod{display:grid;gap:20px;padding-top:4px;padding-bottom:40px}
-    .galeria{background:var(--suave);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .galeria img{width:100%;height:100%;object-fit:contain;padding:16px}
+    .galeria{background:#ececec;border-radius:16px;aspect-ratio:800/484;overflow:hidden}
+    .galeria img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.18)}
     @media(min-width:860px){.prod{grid-template-columns:1fr 1fr;gap:48px;padding-top:16px}.galeria{position:sticky;top:76px;align-self:start}}
     .cat{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--verde)}
     h1{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.5px;line-height:1.15;margin:4px 0 6px}
@@ -54,7 +54,7 @@
     .precio b{font-size:28px;font-weight:800}
     .precio span{font-size:14px;color:var(--texto)}
     .detalle{font-size:13px;color:var(--verde);font-weight:600}
-    .packs{display:grid;gap:8px;margin:16px 0 6px}
+    .packs{display:grid;gap:8px;margin:0 0 16px}
     .pack{display:flex;align-items:center;gap:12px;width:100%;border:1.5px solid var(--borde);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff;font:inherit;color:inherit;text-align:left}
     .pack .rd{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid #b9c4b9}
     .pack.on{border-color:var(--oscuro);background:var(--suave)}
@@ -64,7 +64,8 @@
     .pack .pr{text-align:right;font-weight:800;font-size:15px;white-space:nowrap}
     .pack .pr s{display:block;font-weight:500;font-size:12px;color:#9aa59a}
     .tag{display:inline-block;margin-left:6px;background:var(--rojo);color:#fff;font-size:10px;font-weight:800;border-radius:999px;padding:2px 7px;vertical-align:2px}
-    .mix{font-size:12px;color:var(--texto);margin-bottom:16px}
+    .mix{margin:16px 0 10px;background:#fff7e6;border:1px solid #f5c26b;border-radius:12px;padding:10px 12px;font-size:13px;color:var(--oscuro)}
+    .mix>b:first-child{display:block;font-size:14px;margin-bottom:2px}
     .btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:700 15px Inter,sans-serif;cursor:pointer;text-align:center;text-decoration:none}
     .btn+.btn{margin-top:10px}
     .btn-borde{background:#fff;color:var(--oscuro);border:1.5px solid var(--oscuro)}
@@ -88,8 +89,8 @@
     .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 12px}
     @media(min-width:860px){.grid{grid-template-columns:repeat(4,1fr)}}
     .card-p{background:none;border:0;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
-    .card-p .im{background:var(--suave);border-radius:12px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px}
-    .card-p img{width:100%;height:100%;object-fit:contain;padding:10px}
+    .card-p .im{background:#ececec;border-radius:12px;aspect-ratio:800/484;overflow:hidden;margin-bottom:8px}
+    .card-p img{width:100%;height:100%;object-fit:cover;display:block}
     .card-p b{display:block;font-size:14px}
     .card-p span{display:block;font-size:13px;color:var(--texto)}
     .resenas{display:grid;gap:12px}
@@ -119,7 +120,7 @@
     .empuje{margin-top:14px;background:#fff7e6;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;text-align:center}
     .empuje.ok{background:rgba(45,106,79,.08);color:var(--verde)}
     .linea{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--borde)}
-    .linea img{flex:none;width:64px;height:64px;object-fit:contain;background:var(--suave);border-radius:10px;padding:4px}
+    .linea img{flex:none;width:64px;height:64px;object-fit:cover;background:#ececec;border-radius:10px}
     .linea .nom{flex:1;font-size:14px;font-weight:700}
     .linea .nom small{display:block;font-weight:500;color:var(--texto);font-size:12px}
     .linea .pu{font-size:14px;font-weight:700;white-space:nowrap}
@@ -133,7 +134,7 @@
     .sumar-fila{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
     .sumar-fila::-webkit-scrollbar{display:none}
     .mini{flex:none;width:118px;border:1px solid var(--borde);border-radius:12px;padding:8px;text-align:center;background:#fff;font:inherit;color:inherit;cursor:pointer}
-    .mini img{width:100%;height:70px;object-fit:contain}
+    .mini img{width:100%;height:62px;object-fit:cover;border-radius:8px;background:#ececec}
     .mini b{display:block;font-size:12px}
     .mini span{display:block;font-size:11px;color:var(--verde);font-weight:700;margin-top:2px}
     .fila{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}
@@ -174,8 +175,8 @@
       <div class="precio"><b>$ 2.150</b><span>o 10 cuotas de $ 215 sin interés</span></div>
       <p class="detalle" id="detalle"></p>
 
+      <div class="mix"><b>🎁 Llevá más y ahorrá</b>Podés <b>mezclar productos distintos</b>: por ejemplo 1 Thermo T3 + 1 Nocarb-T = $ 4.050. El descuento vale igual.</div>
       <div class="packs" id="escala" role="radiogroup" aria-label="Cantidad"></div>
-      <p class="mix">Podés combinar productos distintos en el carrito: el descuento se aplica igual.</p>
 
       <button class="btn btn-borde" id="btnAgregar" type="button">Agregar al carrito</button>
       <button class="btn btn-ok" id="btnComprar" type="button">Comprar ahora</button>
@@ -408,8 +409,8 @@
       $("escala").innerHTML = [1, 2, 3, 5].map(function (n) {
         var ah = n * PRECIO - totalDe(n);
         return '<button type="button" role="radio" aria-checked="' + (n === pack) + '" class="pack' + (n === pack ? " on" : "") + '" data-pack="' + n + '"><span class="rd"></span>' +
-          '<span class="tx">' + (n === 1 ? "1 caja" : n + " cajas") + (n === 5 ? '<span class="tag">El 5º gratis</span>' : ah ? '<span class="tag">Ahorrás ' + fmt(ah) + "</span>" : "") +
-          "<small>" + CUOTAS + " cuotas de " + fmt(Math.round(totalDe(n) / CUOTAS)) + "</small></span>" +
+          '<span class="tx">' + (n === 1 ? "1 producto" : n + " productos") + (n === 5 ? '<span class="tag">El 5º gratis</span>' : ah ? '<span class="tag">Ahorrás ' + fmt(ah) + "</span>" : "") +
+          "<small>" + (n === 1 ? "" : "Iguales o combinados · ") + CUOTAS + " cuotas de " + fmt(Math.round(totalDe(n) / CUOTAS)) + "</small></span>" +
           '<span class="pr">' + (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "") + fmt(totalDe(n)) + "</span></button>";
       }).join("");
     }
