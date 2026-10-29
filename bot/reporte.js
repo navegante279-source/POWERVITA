@@ -95,7 +95,7 @@ async function ventasMP(desde) {
       unidades,
       monto: pv.reduce((s, p) => s + (p.transaction_amount || 0), 0),
       neto: pv.reduce((s, p) => s + (p.transaction_details?.net_received_amount ?? p.transaction_amount ?? 0), 0),
-      bot: pv.filter(p => String(p.external_reference).split("|")[3] === "bot").length,
+      bot: pv.filter(p => /^bot$|-wa$/.test(String(p.external_reference).split("|")[3])).length,
     };
   } catch (e) {
     return { error: e.message };

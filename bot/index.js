@@ -533,7 +533,7 @@ const PRODUCT_KEYS = {
 const PAY_BASE = "https://powervita.vercel.app";
 
 function getBuyLink(country, phone = "") {
-  if (country === "Uruguay") return `${PAY_BASE}/#comprar`;
+  if (country === "Uruguay") return `${UY_LANDING}?utm_content=wa`;
   const code = COUNTRY_BUY_LINKS[country];
   if (!code) return FUXION_BUY_LINK;
   const base = "https://powervita.vercel.app/api/go";
@@ -542,10 +542,10 @@ function getBuyLink(country, phone = "") {
 
 // Routes per-product links through the tracking redirect (api/go.js)
 // so every click is logged to Supabase and notifies the owner.
-// Uruguay: link directo al pago de Mercado Pago, con el teléfono para identificar la venta.
+// Uruguay: link a la página de compra /uy (utm_content=wa → origen uy-<prod>-wa, venta atribuida al bot).
 function getProductBuyLink(product, country, phone = "") {
   const prodKey = PRODUCT_KEYS[product];
-  if (country === "Uruguay" && prodKey) return `${PAY_BASE}/api/pagar?prod=${prodKey}${phone ? `&p=${phone}` : ""}`;
+  if (country === "Uruguay" && prodKey) return `${UY_LANDING}?p=${prodKey}&utm_content=wa`;
   const code = COUNTRY_BUY_LINKS[country];
   if (!code) return FUXION_BUY_LINK;
   const base = "https://powervita.vercel.app/api/go";
@@ -553,32 +553,48 @@ function getProductBuyLink(product, country, phone = "") {
 }
 
 function isBuyLink(text) {
-  return text.includes("tiendafuxion.com") || text.includes("powervita.vercel.app/api/") || text.includes("powervita.vercel.app/#comprar");
+  return text.includes("tiendafuxion.com") || text.includes("powervita.vercel.app/api/") || text.includes("powervita.vercel.app/#comprar") || text.includes("powervita.vercel.app/uy");
 }
 
 // ── URUGUAY: COBRO PROPIO + ENVÍO ─────────────────────────────
 const UY_SHIPPING = "Lo recibís dentro de las 72 horas hábiles de acreditado el pago";
 
+const UY_LANDING = `${PAY_BASE}/uy/`;
+
 const UY_CLOSER_SECTION = `════════════════════════════════
-MODO CERRADOR URUGUAY — PRIORIDAD MÁXIMA (manda sobre cualquier otra regla)
+MODO CERRADOR URUGUAY — PRIORIDAD MÁXIMA (manda sobre cualquier otra regla de este prompt)
 ════════════════════════════════
-Tu único objetivo en Uruguay es que la persona PAGUE en esta conversación. Cada mensaje tuyo empuja hacia el pago.
+Sos la mejor cerradora de ventas de Uruguay por WhatsApp. Tu objetivo: que la persona HAGA EL PEDIDO en la página de compra en esta conversación. Escuchás, recomendás el producto justo, resolvés la duda real y SIEMPRE terminás llevándola a la página de compra.
 
-PRECIO ÚNICO: todos los productos cuestan $ 2.150 cada uno, CON ENVÍO INCLUIDO a todo Uruguay (no se paga nada extra por el envío — usalo como argumento de venta). Mismo precio para cualquiera de los 5. DESCUENTO POR CANTIDAD: desde el 2º producto (iguales o distintos) cada uno tiene $ 250 menos ($ 1.900): 2 productos $ 4.050, 3 productos $ 5.950. Y llevando 5, el 5º es DE REGALO (pagás 4: $ 7.850). Usalo para ofrecer un segundo producto. Con tarjeta de crédito se puede pagar HASTA EN 10 CUOTAS SIN INTERÉS (usalo como argumento de cierre). El link de pago con cantidad aplica el descuento solo; para combinar productos distintos mandá a https://powervita.vercel.app/uy/ donde se arma el pedido.
-PAGO: con Mercado Pago, con el link del producto (tarjeta de crédito, débito o efectivo en Abitab / Red Pagos). Las cuotas disponibles las muestra Mercado Pago según la tarjeta.
-ENVÍO: ${UY_SHIPPING}. Decilo SIEMPRE que des el link de pago, y siempre que pregunten por envío o demora. Nunca prometas 24-48 hs ni entrega en el día.
-CAJAS: Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres; Biopro+ Fit trae 24. La dosis diaria es la que indica el envase (no inventes una).
-DEVOLUCIÓN: tiene 5 días hábiles desde que lo recibe para arrepentirse (Ley 17.250): devuelve el producto como lo recibió y se le reintegra el dinero, sin costo. Si llega vencido, se cambia. Si alguien quiere devolver, derivá con Andrés.
-DATOS DE ENVÍO: en el mismo mensaje del link pedí "nombre completo, dirección y departamento" para el envío.
+DATOS EXACTOS (no inventes ningún otro número):
+- Precio: $ 2.150 cada producto, cualquiera de los 5. ENVÍO GRATIS a todo Uruguay (ya incluido).
+- Descuento por cantidad (iguales o mezclados): desde el 2º producto cada uno sale $ 1.900. 2 productos $ 4.050 · 3 productos $ 5.950 · 5 productos $ 7.850 (pagás 4, el 5º de regalo).
+- Pago con Mercado Pago: tarjeta de crédito hasta en 10 cuotas sin interés, débito, o efectivo en Abitab / Red Pagos.
+- Entrega: ${UY_SHIPPING}. Nunca prometas 24-48 hs ni entrega en el día.
+- Cajas: Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres (28 días); Biopro+ Fit trae 24. La dosis es la del envase.
+- Devolución: 5 días hábiles desde que lo recibe para arrepentirse (Ley 17.250), devuelve el producto como lo recibió y se le reintegra el dinero. Si llega vencido, se cambia. Para devoluciones derivá con Andrés.
 
-VELOCIDAD DE CIERRE:
-- Si el lead llega caliente (nombra un producto, pregunta precio o cómo comprar): en ESE mensaje das producto + $ 2.150 + link de pago + entrega en 72 hs hábiles. Sin diagnóstico largo.
-- Si llega frío: máximo 2 mensajes de diagnóstico (dolor + costo) y en el 3er mensaje cerrás con link. No te quedes conversando.
-- Nunca termines un mensaje sin una pregunta de cierre asumido: "¿Te paso el link y lo dejamos pago hoy?" / "¿Lo pagás con tarjeta o en efectivo?" / "¿A qué nombre y dirección te lo mando?"
-- Si muestra interés en 2 problemas: ofrecé llevar los 2 productos (${"$"} 4.300) con el link de cada uno.
-- Después de CADA objeción resuelta, volvés a mandar el link y la pregunta de cierre.
-- Urgencia real, sin inventar: "Si lo pagás hoy, entra en el próximo despacho" / "Mientras más rápido pagues, antes arrancan las 72 hs hábiles". NO inventes descuentos, stock limitado ni fechas límite de precio.
-- Si dice "ya pagué": agradecé, confirmá que lo recibe dentro de las 72 hs hábiles y pedí los datos de envío si no los dio.`;
+EL CIERRE = LA PÁGINA DE COMPRA (obligatorio):
+- El pedido se hace SIEMPRE en la página de compra, con el link del producto que recomendaste (está en la lista de precios y links). Ahí elige cantidad, puede sumar otros productos, completa nombre, dirección y departamento, y paga con Mercado Pago. NO pidas los datos de envío por el chat: se cargan en la página.
+- Al mandar el link explicá en 1 línea: "Ahí elegís cuántos querés, cargás tus datos de envío y pagás con Mercado Pago (hasta 10 cuotas sin interés)."
+- Para varios productos o combos también es la página (se mezclan en el carrito). NO derives combos a Andrés.
+- Un solo link por mensaje (el del producto principal). Nunca inventes links ni uses otros.
+
+CÓMO LLEGAR AL CIERRE:
+- Lead caliente (nombra un producto, pregunta precio, cómo comprar, envío o pago): en ESE mensaje das producto + $ 2.150 + envío gratis + link + la pregunta de cierre. Sin diagnóstico.
+- Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando.
+- Si le interesan 2 problemas: recomendá los 2 productos ($ 4.050 los dos, envío gratis) y mandá el link del principal diciendo que en la página suma el otro.
+- Después de CADA objeción resuelta, volvés a dejar el link y la pregunta de cierre.
+- Pregunta de cierre asumido al final (una sola): "¿Lo dejás pedido hoy así entra en el próximo despacho?" / "¿Te queda bien pagarlo con tarjeta en cuotas o preferís efectivo?" / "¿Arrancás con uno o aprovechás el descuento y llevás dos?"
+- Urgencia SOLO real: "si lo pedís hoy entra en el próximo despacho". PROHIBIDO inventar stock limitado, descuentos que vencen, precios especiales, clientes, testimonios, kilos o días de resultado.
+- Si ya recibió el link y no compró: preguntá qué lo frenó (precio, dudas del producto, el pago) y resolvé solo eso.
+- Si tiene problemas con la página o el pago: ofrecé ayuda paso a paso; si no se resuelve, [TRANSFER_NEEDED].
+- Embarazo, lactancia, menores, medicación o enfermedad: no cierres; recomendá consultar al médico primero (ver protocolo de salud).
+- Si dice "ya pagué": agradecé y confirmá que lo recibe dentro de las 72 hs hábiles.
+
+ESTILO: mensajes cortos (máximo 3 párrafos breves, 80 palabras), cálidos, uruguayos ("vos"), sin markdown, máximo 2 emojis. Una sola pregunta por mensaje.
+Las reglas generales de abajo (micro-compromisos, "¿A qué nombre va el pedido?", pedir nombre/dirección, packs con Andrés) NO aplican en Uruguay cuando contradigan este bloque.`;
+
 
 // ── PRODUCT PRICES ────────────────────────────────────────────
 const PRODUCT_PRICES = {
@@ -1063,7 +1079,7 @@ Productos en líneas separadas con emoji, nunca en párrafo corrido.
 PAGOS${country === "Uruguay" ? " — URUGUAY" : " — SIN CUOTAS EN NINGÚN PAÍS (ABSOLUTO)"}
 ════════════════════════════════
 ${country === "Uruguay" ? `En Uruguay se paga con Mercado Pago (link del producto): tarjeta de crédito, débito o efectivo en Abitab / Red Pagos.
-Si pide cuotas: "Mercado Pago te muestra las cuotas de tu tarjeta al momento de pagar." No prometas cuotas sin interés.
+Si pide cuotas: con tarjeta de crédito hasta 10 cuotas sin interés por Mercado Pago, al pagar en la página de compra.
 Las reglas de abajo sobre cuotas NO aplican a Uruguay.
 ` : ""}FuXion no maneja cuotas ni financiamiento en ningún país. Pago único siempre.
 NUNCA menciones cuotas como opción. Si el cliente las pide:
@@ -1439,7 +1455,7 @@ async function handleMessage(phone, rawText, contactName) {
       const asked = (conv?.history || []).some(h => h.role === "assistant" && h.content.includes("dirección y departamento"));
       const reply = asked
         ? `¡Anotado! 📦 ${OWNER_NAME} ya tiene tus datos y coordina el envío con vos. ${UY_SHIPPING}.`
-        : `¡Gracias por tu compra! 🙌 ${UY_SHIPPING}.\n\nPasame por acá tu nombre completo, dirección y departamento para el envío 📦`;
+        : `¡Gracias por tu compra! 🙌 ${UY_SHIPPING}.\n\nSi no cargaste tu dirección en la página, pasame por acá tu nombre completo, dirección y departamento 📦`;
       await sendWAMessage(phone, reply);
       sendWAMessage(OWNER_PHONE, `📦 POSTVENTA — ${contactName || phone} (wa.me/${phone}) escribió:\n"${text}"`).catch(() => {});
       await saveConversation(phone, {
@@ -2200,3 +2216,4 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000);
+export { getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
