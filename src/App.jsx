@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 
 const LangCtx = createContext(null);
 
-const WA = "59898950206";
+const WA = "59892423078";
 const FUXION_LINK = "https://ifuxion.com/andresvarela/enrollment/chooseperson";
 const META_PIXEL_ID = "2212676212813152";
 // Pegá acá el ID del video de YouTube cuando esté listo (ej: "dQw4w9WgXcQ")
@@ -1266,7 +1266,7 @@ export default function App() {
           <a href={waLinkFor("footer")} target="_blank" rel="noreferrer" onClick={()=>trackEvent("Contact",{content_name:"Footer_WA"})} className="int" style={{background:"#25D366",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>💬 WhatsApp</a>
           <a href="https://instagram.com/powervita_uy" target="_blank" rel="noreferrer" className="int" style={{background:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",color:"#fff",padding:"9px 18px",borderRadius:10,fontWeight:700,textDecoration:"none",fontSize:12}}>📸 @powervita_uy</a>
         </div>
-        <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 98 950 206</div>
+        <div className="int" style={{color:"rgba(255,255,255,0.16)",fontSize:9}}>© 2025 Power Vita · @powervita_uy · +598 92 423 078</div>
       </footer>
 
       {/* MODAL DETALLE PRODUCTO */}
