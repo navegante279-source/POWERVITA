@@ -552,6 +552,14 @@ function getProductBuyLink(product, country, phone = "") {
   return `${base}?c=${code}${prodKey ? `&prod=${prodKey}` : ""}`;
 }
 
+// Uruguay: desde el 3er mensaje del bot, si todavía no mandó el link de la página, este mensaje tiene que cerrar
+function closeNowTag(history, country) {
+  if (country !== "Uruguay") return "";
+  const sent = history.filter(h => h.role === "assistant");
+  if (sent.length < 2 || sent.some(h => isBuyLink(h.content))) return "";
+  return "[HORA DE CERRAR — en este mensaje recomendá el producto según lo que contó + precio + link de la página de ese producto + pregunta de cierre. No hagas más preguntas de diagnóstico]";
+}
+
 function isBuyLink(text) {
   return text.includes("tiendafuxion.com") || text.includes("powervita.vercel.app/api/") || text.includes("powervita.vercel.app/#comprar") || text.includes("powervita.vercel.app/uy");
 }
@@ -582,7 +590,7 @@ EL CIERRE = LA PÁGINA DE COMPRA (obligatorio):
 
 CÓMO LLEGAR AL CIERRE:
 - Lead caliente (nombra un producto, pregunta precio, cómo comprar, envío o pago): en ESE mensaje das producto + $ 2.150 + envío gratis + link + la pregunta de cierre. Sin diagnóstico.
-- Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando.
+- Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando. En ese 3er mensaje van SIEMPRE juntos: producto(s) recomendado(s) + precio + link + pregunta de cierre. Nunca preguntes "¿cuándo querés que te llegue?" ni "¿a qué nombre va el pedido?": eso se resuelve en la página.
 - Si le interesan 2 problemas: recomendá los 2 productos ($ 4.050 los dos, envío gratis) y mandá el link del principal diciendo que en la página suma el otro.
 - Después de CADA objeción resuelta, volvés a dejar el link y la pregunta de cierre.
 - Pregunta de cierre asumido al final (una sola): "¿Lo dejás pedido hoy así entra en el próximo despacho?" / "¿Te queda bien pagarlo con tarjeta en cuotas o preferís efectivo?" / "¿Arrancás con uno o aprovechás el descuento y llevás dos?"
@@ -592,6 +600,9 @@ CÓMO LLEGAR AL CIERRE:
 - Embarazo, lactancia, menores, medicación o enfermedad: no cierres; recomendá consultar al médico primero (ver protocolo de salud).
 - Si dice "ya pagué": agradecé y confirmá que lo recibe dentro de las 72 hs hábiles.
 
+No asumas el género de la persona (nada de "bienvenida", "segura", "cansada" referido a ella) hasta que lo sepas.
+Si preguntan si sos un bot: decí que sos la asistente virtual de PowerVita y que Andrés la puede atender si prefiere, y seguí ayudando. NO añadas [TRANSFER_NEEDED] salvo que pida hablar con una persona.
+Modo de uso: decí solo "un sobre disuelto en agua, la dosis que indica el envase"; no inventes horarios ni reemplazos de comidas.
 ESTILO: mensajes cortos (máximo 3 párrafos breves, 80 palabras), cálidos, uruguayos ("vos"), sin markdown, máximo 2 emojis. Una sola pregunta por mensaje.
 Las reglas generales de abajo (micro-compromisos, "¿A qué nombre va el pedido?", pedir nombre/dirección, packs con Andrés) NO aplican en Uruguay cuando contradigan este bloque.`;
 
@@ -1189,7 +1200,6 @@ Emojis: máximo 2-3 por mensaje, solo para reforzar emoción, no de adorno.
 ${hasDirectBuyLink
   ? `[TRANSFER_NEEDED]: en ${country} SOLO añadís este tag cuando:
 - el cliente pide hablar con una persona / pide hablar con Andrés,
-- si pregunta si sos IA o bot,
 - quiere un combo/pack personalizado con varios productos,
 - consulta sobre ser distribuidor o unirse al negocio,
 - o si no pudiste resolver una objeción grave después de 2 intentos.
@@ -1625,6 +1635,7 @@ async function handleMessage(phone, rawText, contactName) {
         ? "[SEÑAL DE COMPRA — dar precio + link del producto de la lista AHORA, cierre directo, NO añadás TRANSFER_NEEDED]"
         : "[SEÑAL DE COMPRA — cierre condicional + TRANSFER_NEEDED]") : "",
       !healthConcern && thirdParty ? "[COMPRA PARA TERCERO — preguntar para quién y qué problema tiene esa persona]" : "",
+      !healthConcern ? closeNowTag(history, countryInfo.country) : "",
     ].filter(Boolean).join(" ");
 
     const enrichedText = contextTags ? `${contextTags} ${text}` : text;
@@ -2216,4 +2227,4 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000);
-export { getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
+export { closeNowTag, getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
