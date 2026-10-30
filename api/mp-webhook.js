@@ -1,5 +1,5 @@
 // Webhook de Mercado Pago: cuando un pago de Power Vita queda aprobado
-//  1. avisa a Andrés por WhatsApp con los datos de envío
+//  1. avisa a Andrés por WhatsApp con los datos de envío + push a la app ntfy de su celular
 //  2. confirma al cliente por WhatsApp (si tiene la ventana de 24h abierta)
 //  3. manda el evento Purchase a Meta (Conversions API) — mismo event_id que el pixel de /gracias.html
 //  4. marca el lead como vendido en Supabase (corta los seguimientos del bot)
@@ -32,6 +32,27 @@ async function sendWA(to, text) {
       body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { body: text } }),
     });
     return await r.json();
+  } catch { return null; }
+}
+
+// Notificación push a la app ntfy del celular de Andrés (no depende de Meta ni de la ventana de 24h).
+// El repo es público: el canal sale de NTFY_TOPIC o, si no está, de un hash del token de MP (secreto).
+function ntfyTopic() {
+  if (process.env.NTFY_TOPIC) return process.env.NTFY_TOPIC;
+  const tok = process.env.MP_ACCESS_TOKEN;
+  return tok ? "pv-ventas-" + sha("ntfy|" + tok).slice(0, 20) : "";
+}
+
+async function sendPush(title, message) {
+  const topic = ntfyTopic();
+  if (!topic) return null;
+  try {
+    const r = await fetch("https://ntfy.sh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic, title, message, priority: 5, tags: ["moneybag"] }),
+    });
+    return r.ok;
   } catch { return null; }
 }
 
@@ -118,6 +139,15 @@ export default async function handler(req, res) {
       (m.direccion ? `🏠 ${m.direccion}${m.departamento ? `, ${m.departamento}` : ""}\n` : "🏠 Sin dirección — pedírsela por WhatsApp\n") +
       (email ? `✉️ ${email}\n` : "") +
       `\n🚚 Entregar dentro de 72 hs hábiles del pago.`
+    );
+
+    // 1b. Push al celular (sin dirección ni teléfono: el detalle completo está en MP y en el WhatsApp)
+    await sendPush(
+      `💰 Venta $${monto.toLocaleString("es-UY")} — Power Vita`,
+      `${items.join("\n")}\n` +
+      `👤 ${m.nombre || pago.payer?.first_name || "Sin nombre"}${m.departamento ? ` · ${m.departamento}` : ""}\n` +
+      `📍 ${origen === "bot" ? "Bot de WhatsApp" : origen || "Landing"} · MP #${pago.id}\n` +
+      `🚚 Entregar dentro de 72 hs hábiles`
     );
 
     // 2. Confirmación al cliente (solo llega si escribió al WhatsApp en las últimas 24h)
