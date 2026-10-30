@@ -9,6 +9,7 @@
 
 import crypto from "crypto";
 import { PRODUCTOS_UY } from "./pagar.js";
+import { linkPedido } from "./pedido.js";
 
 const PIXEL_ID = "2212676212813152";
 const sha = (s) => crypto.createHash("sha256").update(String(s).trim().toLowerCase()).digest("hex");
@@ -43,14 +44,18 @@ function ntfyTopic() {
   return tok ? "pv-ventas-" + sha("ntfy|" + tok).slice(0, 20) : "";
 }
 
-async function sendPush(title, message) {
+// Los datos personales NO van en el push (ntfy.sh es un servidor público): solo un link firmado a /api/pedido.
+async function sendPush(title, message, link) {
   const topic = ntfyTopic();
   if (!topic) return null;
   try {
     const r = await fetch("https://ntfy.sh/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic, title, message, priority: 5, tags: ["moneybag"] }),
+      body: JSON.stringify({
+        topic, title, message, priority: 5, tags: ["moneybag"],
+        ...(link ? { click: link, actions: [{ action: "view", label: "📦 Ver datos de envío", url: link }] } : {}),
+      }),
     });
     return r.ok;
   } catch { return null; }
@@ -141,13 +146,14 @@ export default async function handler(req, res) {
       `\n🚚 Entregar dentro de 72 hs hábiles del pago.`
     );
 
-    // 1b. Push al celular (sin dirección ni teléfono: el detalle completo está en MP y en el WhatsApp)
+    // 1b. Push al celular (sin dirección ni teléfono: se ven en el link privado /api/pedido)
     await sendPush(
       `💰 Venta $${monto.toLocaleString("es-UY")} — Power Vita`,
       `${items.join("\n")}\n` +
       `👤 ${m.nombre || pago.payer?.first_name || "Sin nombre"}${m.departamento ? ` · ${m.departamento}` : ""}\n` +
       `📍 ${origen === "bot" ? "Bot de WhatsApp" : origen || "Landing"} · MP #${pago.id}\n` +
-      `🚚 Entregar dentro de 72 hs hábiles`
+      `🚚 Entregar dentro de 72 hs hábiles · tocá para ver los datos de envío`,
+      linkPedido(pago.id)
     );
 
     // 2. Confirmación al cliente (solo llega si escribió al WhatsApp en las últimas 24h)
