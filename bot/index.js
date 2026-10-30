@@ -1083,6 +1083,8 @@ Si el cliente pregunta cómo se toma: "Viene en sobres individuales — disolvé
 REGLAS DE FORMATO (CRÍTICO)
 ════════════════════════════════
 Texto plano únicamente. NUNCA asteriscos (*), guiones bajos (_) ni markdown.
+NUNCA uses guion largo (—) ni guion medio (–): separá con coma, punto o dos puntos.
+Escribí el nombre del cliente con mayúscula inicial (Lea, no lea). Ortografía y tildes impecables.
 Máximo 3 párrafos cortos — esto es WhatsApp, no un email.
 Productos en líneas separadas con emoji, nunca en párrafo corrido.
 
@@ -1241,6 +1243,25 @@ function sanitizeForWhatsApp(text) {
     .trim();
 }
 
+// Guion largo (— / –) como signo de puntuación: Andrés no lo quiere en los mensajes a clientes.
+// "resolver — algo con el peso" → "resolver, algo con el peso"
+function quitarGuiones(text) {
+  return String(text)
+    .replace(/^[ \t]*[—–][ \t]*/gm, "")          // al principio de una línea
+    .replace(/[ \t]*[—–][ \t]*/g, ", ")          // en el medio de una frase
+    .replace(/,\s*([,.;:!?)])/g, "$1")           // ", ." → "."
+    .replace(/,\s*$/gm, "");                     // coma colgando al final de línea
+}
+
+// Nombre de perfil de WhatsApp → nombre de pila prolijo ("lea" → "Lea", "JUAN PÉREZ" → "Juan").
+// Si no parece un nombre (emojis, números, 1 letra), devuelve "" y el bot no lo usa.
+function nombrePila(raw) {
+  const m = String(raw || "").match(/\p{L}+/u);
+  if (!m || m[0].length < 2) return "";
+  const n = m[0].toLocaleLowerCase("es");
+  return n.charAt(0).toLocaleUpperCase("es") + n.slice(1);
+}
+
 // ── WHATSAPP API ──────────────────────────────────────────────
 let lastWAError = null; // track most recent send error for /health
 
@@ -1249,6 +1270,7 @@ async function sendWAMessage(to, text) {
     console.error("❌ sendWAMessage: WHATSAPP_TOKEN or WHATSAPP_PHONE_ID missing");
     return null;
   }
+  if (to !== OWNER_PHONE) text = quitarGuiones(text);
   try {
     const res = await fetch(
       `https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`,
@@ -1735,7 +1757,7 @@ function scheduleReadNudge(phone) {
       const lang = lead.lang || "es";
       const msgFn = READ_NUDGE_MSGS[lang] || READ_NUDGE_MSGS.es;
       const buyLink = getBuyLink(lead.country, phone);
-      const msg = msgFn(lead.name, agentName, buyLink);
+      const msg = msgFn(nombrePila(lead.name), agentName, buyLink);
 
       await sendWAMessage(phone, msg);
       await saveLead(phone, { status: "followup_1" }); // sigue la cadena normal desde stage 1
@@ -1855,7 +1877,7 @@ async function reactivateTodayLeads() {
       const lang = lead.lang || "es";
       const buyLink = getBuyLink(lead.country, lead.phone);
       const country = lead.country || "tu país";
-      const name = lead.name || "";
+      const name = nombrePila(lead.name);
 
       const msgs = {
         es: `Hola${name ? ` ${name}` : ""} 😊 Soy ${agentName} de PowerVita.\nQuería saber si tuviste algún problema para completar el pedido — estoy acá para ayudarte.\nAcá está el link directo para ${country}: ${buyLink}\n\nSolo tenés que: 1. Tocar Comprar. 2. Completar tus datos. 3. Elegir el método de pago. ¡Listo, confirmación por correo! ¿Tenés alguna duda?`,
@@ -1899,7 +1921,7 @@ async function runFollowUps() {
         const lang = lead.lang || "es";
         const msgFn = stage.msgs[lang] || stage.msgs.es;
         const buyLink = getBuyLink(lead.country, lead.phone);
-        const msg = msgFn(lead.name, agentName, OWNER_NAME, lead.country || "tu país", buyLink);
+        const msg = msgFn(nombrePila(lead.name), agentName, OWNER_NAME, lead.country || "tu país", buyLink);
 
         await sendWAMessage(lead.phone, msg);
         await saveLead(lead.phone, { status: stage.nextStatus });
@@ -1956,7 +1978,7 @@ app.post("/webhook", async (req, res) => {
             continue;
           }
           const phone = msg.from;
-          const name = contacts?.[0]?.profile?.name || "";
+          const name = nombrePila(contacts?.[0]?.profile?.name);
 
           if (msg.type === "audio" || msg.type === "voice") {
             const countryInfo = detectCountry(phone);
