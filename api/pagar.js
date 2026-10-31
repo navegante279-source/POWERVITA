@@ -40,7 +40,8 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
 
   const telefono = clean(buyer.telefono, 20).replace(/\D/g, "");
   const unidades = lineas.reduce((s, l) => s + l.q, 0);
-  const total = totalUY(unidades);
+  const esPrueba = origen.endsWith("-21df205b70e8d467"); // TEMPORAL: compra de prueba a $50, se quita después
+  const total = esPrueba ? 50 : totalUY(unidades);
   // pv| identifica las ventas de Power Vita dentro de la cuenta MP (el reporte filtra por esto).
   // Lleva las cantidades completas (regalos incluidos): el webhook arma el envío con esto.
   const ref = `pv|${lineas.map(l => `${l.prod}x${l.q}`).join(",")}|${telefono}|${origen}|${Date.now()}`;
@@ -60,6 +61,7 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
     if (primera && resto > 0) { mpItems.push({ ...base, title: nombre, quantity: 1, unit_price: PRECIO }); resto--; primera = false; }
     if (resto > 0) mpItems.push({ ...base, title: `${nombre} (desde la 2ª unidad)`, quantity: resto, unit_price: PRECIO - DESCUENTO_EXTRA });
   }
+  if (esPrueba) { mpItems.splice(1); mpItems[0].quantity = 1; mpItems[0].unit_price = 50; }
   const regalos = porLinea.filter(l => l.regalo).map(l => `${l.regalo} ${PRODUCTOS_UY[l.prod]}`);
   if (regalos.length) mpItems[mpItems.length - 1].title += ` · + ${regalos.join(", ")} de regalo`;
 
