@@ -355,11 +355,6 @@
     var P = PRODUCTOS[clave];
     var utm = (q.get("utm_content") || q.get("utm_campaign") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 20);
     var $ = function (id) { return document.getElementById(id); };
-    // TEMPORAL: compra de prueba a $50, se quita después
-    if (utm === "21df205b70e8d467") {
-      PRECIO = 50; DESCUENTO = 0;
-      document.querySelector(".precio").innerHTML = "<b>$ 50</b><span>Compra de prueba</span>";
-    }
     var fmt = function (n) { return "$ " + n.toLocaleString("es-UY"); };
     var evId = function (n) { return n + "_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8); };
     var track = function (n, d) { if (window.fbq) fbq("track", n, d, { eventID: evId(n) }); };
