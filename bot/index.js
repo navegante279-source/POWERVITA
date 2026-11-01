@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // POWERVITA FUXION BOT — Sistema Completo
 // Stack: Node.js + Express + Anthropic Claude + Supabase
 // WhatsApp: Meta Business API
@@ -576,7 +576,10 @@ Sos la mejor cerradora de ventas de Uruguay por WhatsApp. Tu objetivo: que la pe
 
 DATOS EXACTOS (no inventes ningún otro número):
 - Precio: $ 2.150 cada producto, cualquiera de los 5. ENVÍO GRATIS a todo Uruguay (ya incluido).
-- Descuento por cantidad (iguales o mezclados): desde el 2º producto cada uno sale $ 1.900. 2 productos $ 4.050 · 3 productos $ 5.950 · 5 productos $ 7.850 (pagás 4, el 5º de regalo).
+- Descuento por cantidad (iguales o mezclados). TOTALES EXACTOS, copiá el de esta tabla y NUNCA hagas la cuenta vos ni expliques el desglose:
+  1 producto $ 2.150 · 2 productos $ 4.050 · 3 productos $ 5.950 · 4 productos $ 7.850 · 5 productos $ 7.850 (el 5º de regalo) · 6 productos $ 9.750 · 7 productos $ 11.650 · 8 productos $ 13.550 · 9 productos $ 15.450 · 10 productos $ 15.450 (2 de regalo).
+  El primero siempre sale $ 2.150 y cada uno de los siguientes $ 1.900: nunca digas que "cada uno" sale $ 1.900 ni que el total es cantidad x $ 1.900. Si pide 4, avisale que por el mismo total lleva 5. Más de 10: [TRANSFER_NEEDED].
+- Si menciona otro precio o promo que vio (por ejemplo en Instagram): decí que es un precio anterior que ya no está vigente, sin negar que fuera nuestro, y dale el precio actual de la tabla.
 - Pago con Mercado Pago: tarjeta de crédito hasta en 10 cuotas sin interés, débito, o efectivo en Abitab / Red Pagos.
 - Entrega: ${UY_SHIPPING}. Nunca prometas 24-48 hs ni entrega en el día.
 - Cajas: Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres (28 días); Biopro+ Fit trae 24. La dosis es la del envase.
@@ -588,19 +591,49 @@ EL CIERRE = LA PÁGINA DE COMPRA (obligatorio):
 - Para varios productos o combos también es la página (se mezclan en el carrito). NO derives combos a Andrés.
 - Un solo link por mensaje (el del producto principal). Nunca inventes links ni uses otros.
 
+CÓMO VENDÉS (el mejor vendedor del mundo no presiona: ayuda a decidir, y la persona siente que eligió sola):
+- Primero respondé exactamente lo que preguntó. Nunca esquives una pregunta para hacer otra, ni repitas una pregunta que ya hiciste.
+- Usá sus palabras: si dijo "me siento un globo", hablá de ese globo. Una sola razón concreta de por qué ese producto encaja con lo que contó vale más que cinco beneficios.
+- Sacale el miedo a comprar, según lo que le preocupe: envío gratis, llega en 72 hs hábiles, 10 cuotas de $ 215 sin interés, paga por Mercado Pago, 5 días hábiles para arrepentirse con reintegro. Una o dos cosas, las que correspondan, no todas.
+- Si le parece caro: no discutas. Mostrá el precio en chico con datos reales: 10 cuotas de $ 215, o unos $ 77 por día (28 sobres; Biopro+ Fit, 24 sobres, unos $ 90). Si sigue siendo mucho, decí que lo entendés y que puede empezar con un solo producto.
+- Si duda si funciona: sé honesto. Contá para qué está pensado y qué trae; es un suplemento, el resultado varía según la persona y acompaña la alimentación y el movimiento. La honestidad vende más que una promesa.
+- Si dice "lo pienso": decí que está perfecto, preguntá una sola vez si le quedó alguna duda puntual y dejá el link para cuando quiera. Si dice que no, o no le interesa: agradecé con buena onda y no insistas.
+- Si dice "quiero comprar" y no sabés qué producto: no le hagas un diagnóstico. Preguntale cuál quiere o para qué lo busca, una sola vez; apenas lo sepas, mandá el link.
+- Si escribe "tengo una consulta": invitala a contar la duda en una línea, sin venderle todavía.
+- Cerrá con una pregunta fácil, que no se sienta como un examen, y variala. Ejemplos: "¿Te sirve con uno o preferís combinar dos?" / "¿Te queda mejor en cuotas o en un pago?" / "¿Te quedó alguna duda?". Si ya resolvió todo y tiene el link, podés no preguntar nada.
+- Sonás como una persona real de Uruguay: natural y breve. Sin frases de vendedor, sin halagos ("qué ojo tenés", "excelente elección") y sin arrancar siempre con "Uf".
+
+PROHIBIDO EN URUGUAY, aunque aparezca más abajo en este prompt:
+- Agrandar el problema o meter miedo: espejo amplificado, "Esperate", "no se va solo", "cada semana es una semana más con eso", "en 3 meses seguís igual", "¿qué dejaste de hacer por esto?".
+- Prometer resultados o plazos ("en 7 días notás", "va a la raíz", "quema grasa", "bloquea", "reduce la ansiedad"). Decí "está pensado para acompañar...", y nunca presentes un producto como tratamiento.
+- Decirle a alguien que no le funcionó porque lo usó mal, inventarle errores de uso o discutirle su experiencia. Si no le funcionó: creele, preguntá si quiere que Andrés lo revise y [TRANSFER_NEEDED] si dice que sí.
+- Afirmar cosas que no están en este bloque: "de los más pedidos", "miles de clientes", "clínicamente probado", "mismo estándar que los medicamentos", comparaciones con médicos, farmacias o café.
+- Dar por hecha la compra o apurar: "¿a qué nombre va el pedido?", "¿cuándo querés que te llegue?", "¿cuánto llevás gastando?", "¿Lo pedimos?", "Comprá acá". Para el link decí "Lo podés ver y pedir acá:".
+- Hablar mal de la farmacia o de otras marcas, o inventar cómo funcionan. Si compara precios, reconocelo y contá qué incluye lo nuestro: envío gratis, cuotas sin interés y producto original.
+- Decir "tratamiento", "menos que un café" o "con certeza", dar por hecho el género ("bienvenida", "cansada", "segura") o decir que Mercado Pago es "el más usado".
+- Dar consejos médicos o de dosis, o decir que algo es seguro o compatible. Si pregunta por café o cafeína: Thermo T3 trae té verde, y si es sensible a la cafeína o toma mucho café, que lo consulte con su médico.
+
+QUÉ VENDÉS (solo estos datos):
+- Prunex 1: fibras solubles (psyllium, inulina, linaza). Pensado para acompañar el tránsito intestinal. Para digestión pesada, hinchazón, constipación.
+- Vita Xtra T+: complejo multivitamínico y antioxidantes. Pensado para acompañar la energía diaria. Para cansancio o falta de energía.
+- Thermo T3: té verde y L-carnitina. Termogénico pensado para acompañar un plan de descenso de peso.
+- Nocarb-T: fibras solubles y cromo. Pensado para tomar con comidas con muchos carbohidratos.
+- Biopro+ Fit: proteína con Bioprotein+ Colostrum y Prolibra, caja de 24 sobres (no 28). Pensado para el control de peso cuidando el músculo.
+- Quién es: FuXion tiene más de 20 años y está en 37 países. Decilo solo si preguntan si es confiable, junto con que el pago es por Mercado Pago.
+- Si quiere bajar de peso: Thermo T3, y sumá Nocarb-T si come muchos carbohidratos. Otros productos de FuXion: [TRANSFER_NEEDED].
+
 CÓMO LLEGAR AL CIERRE:
 - Lead caliente (nombra un producto, pregunta precio, cómo comprar, envío o pago): en ESE mensaje das producto + $ 2.150 + envío gratis + link + la pregunta de cierre. Sin diagnóstico.
 - Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando. En ese 3er mensaje van SIEMPRE juntos: producto(s) recomendado(s) + precio + link + pregunta de cierre. Nunca preguntes "¿cuándo querés que te llegue?" ni "¿a qué nombre va el pedido?": eso se resuelve en la página.
 - Si le interesan 2 problemas: recomendá los 2 productos ($ 4.050 los dos, envío gratis) y mandá el link del principal diciendo que en la página suma el otro.
-- Después de CADA objeción resuelta, volvés a dejar el link y la pregunta de cierre.
-- Pregunta de cierre asumido al final (una sola): "¿Lo dejás pedido hoy así entra en el próximo despacho?" / "¿Te queda bien pagarlo con tarjeta en cuotas o preferís efectivo?" / "¿Arrancás con uno o aprovechás el descuento y llevás dos?"
-- Urgencia SOLO real: "si lo pedís hoy entra en el próximo despacho". PROHIBIDO inventar stock limitado, descuentos que vencen, precios especiales, clientes, testimonios, kilos o días de resultado.
-- Si ya recibió el link y no compró: preguntá qué lo frenó (precio, dudas del producto, el pago) y resolvé solo eso.
+- Después de resolver una duda, recordá que el link es el mismo; no lo reenvíes en cada mensaje si ya lo tiene, salvo que lo pida o esté por comprar.
+- Urgencia SOLO real y como mucho una vez por conversación: "si lo pedís hoy entra en el próximo despacho". PROHIBIDO inventar stock limitado, descuentos que vencen, precios especiales, clientes, testimonios, kilos o días de resultado.
+- Si ya recibió el link y no compró: preguntá una sola vez, sin reproche, si algo la frenó, y resolvé solo eso.
 - Si tiene problemas con la página o el pago: ofrecé ayuda paso a paso; si no se resuelve, [TRANSFER_NEEDED].
 - Embarazo, lactancia, menores, medicación o enfermedad: no cierres; recomendá consultar al médico primero (ver protocolo de salud).
 - Si dice "ya pagué": agradecé y confirmá que lo recibe dentro de las 72 hs hábiles.
 
-No asumas el género de la persona (nada de "bienvenida", "segura", "cansada" referido a ella) hasta que lo sepas.
+No asumas el género de la persona (nada de "segura", "cansada" referido a ella) hasta que lo sepas. Saludá solo con "Hola" y el nombre: NUNCA escribas "bienvenida", "bienvenido" ni "al equipo PowerVita".
 Si preguntan si sos un bot: decí que sos la asistente virtual de PowerVita y que Andrés la puede atender si prefiere, y seguí ayudando. NO añadas [TRANSFER_NEEDED] salvo que pida hablar con una persona.
 Modo de uso: decí solo "un sobre disuelto en agua, la dosis que indica el envase"; no inventes horarios ni reemplazos de comidas.
 ESTILO: mensajes cortos (máximo 3 párrafos breves, 80 palabras), cálidos, uruguayos ("vos"), sin markdown, máximo 2 emojis. Una sola pregunta por mensaje.
@@ -642,7 +675,7 @@ function getPriceInfo(product, country) {
 
 // ── PRICE ANCHORS (comparación para anclar el valor) ─────────
 const PRICE_ANCHORS = {
-  "Uruguay":   "menos que una consulta médica privada en Montevideo",
+  "Uruguay":   "con envío gratis incluido",
   "Argentina": "menos que una semana de delivery",
   "Colombia":  "menos que dos consultas con nutricionista",
 };
@@ -827,6 +860,9 @@ Si no probaron nada: "¿Qué te frenó hasta ahora para buscarle solución?"
 
 ${insightsSection}
 
+════════════════════════════════
+PRODUCTOS, PRECIOS Y LINKS
+════════════════════════════════
 ${availabilityText}
 
 ${priceSection}
@@ -1119,7 +1155,7 @@ Cuando el mensaje incluya [PROBLEMA DE SALUD DETECTADO] con los compuestos del p
   1. Validación empática breve: "Gracias por contarme eso, es importante saberlo."
   2. Compuestos del producto (usá los que vienen en el tag, literalmente): "Los ingredientes de [producto] son: [compuestos del tag]."
   3. Recomendación de consulta médica sin alarmar: "Lo ideal es que lo confirmes con tu médico antes de empezar, así arrancás con total tranquilidad."
-  4. Puerta abierta sin presión: "En unos días te escribo para ver cómo seguiste. Si ya consultaste y querés arrancar, estoy acá."
+  4. Puerta abierta sin presión: "Si ya consultaste y querés arrancar, estoy acá."
 → Tono: cálido, sin presión, profesional. Este cliente necesita confianza, no urgencia.
 
 ════════════════════════════════
@@ -1215,8 +1251,26 @@ o si no pudiste resolver una objeción.`
 }
 
 // ── AI RESPONSE ───────────────────────────────────────────────
+// En Uruguay se vende sin presión ni promesas (ver MODO CERRADOR URUGUAY): estas secciones del prompt general
+// piden lo contrario, y dejarlas hace que el modelo vuelva a usarlas aunque el bloque de Uruguay las prohíba.
+const SECCIONES_FUERA_DE_URUGUAY = [
+  "INTELIGENCIA DE CAMPO", "PRODUCTOS QUE OFRECÉS", "MENTALIDAD DE ELITE", "EL SISTEMA DE VENTA", "LENGUAJE PRESUPUESTO",
+  "ESCALERA DE MICRO", "ESPEJO DEL DOLOR", "FUNDAMENTO CIENTÍFICO", "MANEJO DE OBJECIONES", "URGENCIA", "PRUEBA SOCIAL",
+  "CIERRE BASADO EN DOLOR", "SEÑALES DE COMPRA", "COMPRA PARA TERCERO", "CIERRE DIRECTO VS", "POST-OBJECIÓN",
+];
+
+function limpiarPromptUruguay(prompt) {
+  const partes = prompt.split(/(═{10,}\n[^\n]*\n═{10,}\n)/);
+  return partes.filter((parte, i) => {
+    if (i % 2 === 1) return !SECCIONES_FUERA_DE_URUGUAY.some(t => parte.split("\n")[1].startsWith(t));
+    if (i === 0) return true;
+    return !SECCIONES_FUERA_DE_URUGUAY.some(t => partes[i - 1].split("\n")[1].startsWith(t));
+  }).join("");
+}
+
 async function getAIResponse(phone, userMessage, history, agentName, countryInfo, isWarm = false, clientName = "") {
-  const systemPrompt = buildSystemPrompt(phone, agentName, countryInfo, isWarm, clientName);
+  const promptBase = buildSystemPrompt(phone, agentName, countryInfo, isWarm, clientName);
+  const systemPrompt = countryInfo.country === "Uruguay" ? limpiarPromptUruguay(promptBase) : promptBase;
 
   const messages = [
     ...history.filter(h => h.role !== "system").map((h) => ({ role: h.role, content: h.content })),
@@ -1395,6 +1449,48 @@ async function notifyOwner(clientPhone, clientName, summary, extra = {}, history
   return sendWAMessage(OWNER_PHONE, lines.join("\n"));
 }
 
+// Push a la app ntfy de Andrés: no depende de la ventana de 24h de WhatsApp.
+// ntfy.sh es público: el teléfono no viaja en claro, el link lo lleva cifrado y /contacto abre el chat.
+function contactoKey() {
+  return crypto.createHash("sha256").update(`contacto|${process.env.MP_ACCESS_TOKEN}`).digest();
+}
+
+function linkContacto(phone) {
+  const domain = process.env.RAILWAY_PUBLIC_DOMAIN;
+  if (!domain || !process.env.MP_ACCESS_TOKEN) return "";
+  const iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv("aes-256-gcm", contactoKey(), iv);
+  const enc = Buffer.concat([c.update(String(phone), "utf8"), c.final()]);
+  return `https://${domain}/contacto?c=${Buffer.concat([iv, c.getAuthTag(), enc]).toString("base64url")}`;
+}
+
+function telDeContacto(token) {
+  const b = Buffer.from(String(token || ""), "base64url");
+  const d = crypto.createDecipheriv("aes-256-gcm", contactoKey(), b.subarray(0, 12));
+  d.setAuthTag(b.subarray(12, 28));
+  return Buffer.concat([d.update(b.subarray(28)), d.final()]).toString("utf8");
+}
+
+async function pushOwner(title, message, phone) {
+  const tok = process.env.MP_ACCESS_TOKEN;
+  const topic = process.env.NTFY_TOPIC || (tok
+    ? "pv-ventas-" + crypto.createHash("sha256").update(`ntfy|${tok}`.trim().toLowerCase()).digest("hex").slice(0, 20)
+    : "");
+  if (!topic) return;
+  const link = phone ? linkContacto(phone) : "";
+  try {
+    const r = await fetch("https://ntfy.sh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic, title, message, priority: 5, tags: ["speech_balloon"],
+        ...(link ? { click: link, actions: [{ action: "view", label: "💬 Abrir WhatsApp", url: link }] } : {}),
+      }),
+    });
+    if (!r.ok) console.error("pushOwner:", r.status);
+  } catch (e) { console.error("pushOwner:", e.message); }
+}
+
 async function copyToOwner(phone, contactName, countryInfo, botMessage) {
   const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
     España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
@@ -1490,6 +1586,7 @@ async function handleMessage(phone, rawText, contactName) {
         : `¡Gracias por tu compra! 🙌 ${UY_SHIPPING}.\n\nSi no cargaste tu dirección en la página, pasame por acá tu nombre completo, dirección y departamento 📦`;
       await sendWAMessage(phone, reply);
       sendWAMessage(OWNER_PHONE, `📦 POSTVENTA — ${contactName || phone} (wa.me/${phone}) escribió:\n"${text}"`).catch(() => {});
+      pushOwner("📦 Postventa — Power Vita", `${contactName || "Un cliente"} volvió a escribir después de comprar`, phone);
       await saveConversation(phone, {
         purchased: conv?.purchased || false,
         history: [...(conv?.history || []), { role: "user", content: text }, { role: "assistant", content: reply }].slice(-20),
@@ -1576,6 +1673,7 @@ async function handleMessage(phone, rawText, contactName) {
           product: productMatch?.[0] || "",
           country: countryInfo.country,
         }, cleanHistory);
+        await pushOwner("🤝 Te pasaron un cliente — Power Vita", `${contactName || "Un cliente"} quiere hablar con una persona. El bot ya no le responde.`, phone);
         console.log(`🤝 Transfer confirmed: ${phone}`);
         return;
       }
@@ -1602,6 +1700,7 @@ async function handleMessage(phone, rawText, contactName) {
         lang: countryInfo.lang,
         status: "transferred",
       });
+      await pushOwner("🤝 Te pasaron un cliente — Power Vita", `${contactName || "Un cliente"}: el bot no le entendió y dejó de responderle.`, phone);
       return;
     }
 
@@ -1627,6 +1726,7 @@ async function handleMessage(phone, rawText, contactName) {
         status: "distributor_lead",
         last_objective: "distributor",
       });
+      await pushOwner("💼 Interesado en el negocio — Power Vita", `${contactName || "Un contacto"} pregunta por ser distribuidor. El bot ya no le responde.`, phone);
       console.log(`💼 Distributor lead transferred: ${phone}`);
       return;
     }
@@ -1725,124 +1825,124 @@ async function handleMessage(phone, rawText, contactName) {
   }
 }
 
-// ── NUDGE POR "LEÍDO SIN RESPUESTA" ───────────────────────────
-// Meta manda un evento de status "read" cuando el lead ve nuestro mensaje.
-// Si pasan 25 min y sigue sin responder (status sigue "active"), le mandamos
-// un empujón corto antes de esperar a las 8hs del seguimiento normal.
-const READ_NUDGE_DELAY_MS = 25 * 60 * 1000;
-const pendingReadNudges = new Set();
+// ── DEMORA DE RESPUESTA (para que no parezca automático) ──────
+// Espera 1 a 2 min desde el primer mensaje y junta todo lo que el cliente escriba en ese rato en una
+// sola respuesta. Si sigue escribiendo, deja al menos 20 s desde su último mensaje.
+// Queda en memoria: si el bot se reinicia durante la espera, ese mensaje no se contesta.
+const REPLY_DELAY_MIN_MS = Number(process.env.REPLY_DELAY_MIN_MS || 60_000);
+const REPLY_DELAY_MAX_MS = Number(process.env.REPLY_DELAY_MAX_MS || 120_000);
+const REPLY_QUIET_MS = Number(process.env.REPLY_QUIET_MS || 20_000);
+const pendingReplies = new Map(); // phone → { texts, name, deadline, timer }
+const replyChains = new Map();    // phone → última respuesta en curso, para no pisar el historial
 
-const READ_NUDGE_MSGS = {
-  es: (name, agent, buyLink) => `¡Vi que leíste mi mensaje! 👀${name ? ` ${name}` : ""} ¿Tenés alguna duda, o hacemos el pedido directo ahora? Acá está el link: ${buyLink} — Soy ${agent} 🌿`,
-  pt: (name, agent, buyLink) => `Vi que você leu minha mensagem! 👀${name ? ` ${name}` : ""} Ficou alguma dúvida, ou fazemos o pedido agora? O link direto: ${buyLink} — Sou ${agent} 🌿`,
-  en: (name, agent, buyLink) => `Saw you read my message! 👀${name ? ` ${name}` : ""} Any questions, or shall we place the order now? Direct link: ${buyLink} — It's ${agent} 🌿`,
-  fr: (name, agent, buyLink) => `J'ai vu que vous avez lu mon message! 👀${name ? ` ${name}` : ""} Des questions, ou on passe la commande maintenant? Lien direct: ${buyLink} — C'est ${agent} 🌿`,
-  it: (name, agent, buyLink) => `Ho visto che hai letto il mio messaggio! 👀${name ? ` ${name}` : ""} Hai dubbi, o facciamo l'ordine adesso? Link diretto: ${buyLink} — Sono ${agent} 🌿`,
-  de: (name, agent, buyLink) => `Ich habe gesehen, dass Sie meine Nachricht gelesen haben! 👀${name ? ` ${name}` : ""} Noch Fragen, oder bestellen wir jetzt? Direktlink: ${buyLink} — Hier ist ${agent} 🌿`,
-};
-
-function scheduleReadNudge(phone) {
-  if (pendingReadNudges.has(phone)) return; // ya hay un chequeo programado, no duplicar
-  pendingReadNudges.add(phone);
-  setTimeout(async () => {
-    pendingReadNudges.delete(phone);
-    try {
-      const lead = await getLead(phone);
-      if (!lead || lead.status !== "active") return; // ya respondió o cambió de estado
-
-      const conv = await getConversation(phone);
-      if (!conv || conv.transferred || conv.purchased || conv.opted_out) return;
-
-      const agentName = getAgentName(phone);
-      const lang = lead.lang || "es";
-      const msgFn = READ_NUDGE_MSGS[lang] || READ_NUDGE_MSGS.es;
-      const buyLink = getBuyLink(lead.country, phone);
-      const msg = msgFn(nombrePila(lead.name), agentName, buyLink);
-
-      await sendWAMessage(phone, msg);
-      await saveLead(phone, { status: "followup_1" }); // sigue la cadena normal desde stage 1
-      console.log(`👀 Read-nudge sent to ${phone}`);
-    } catch (err) {
-      console.error("Read-nudge error:", err.message);
-    }
-  }, READ_NUDGE_DELAY_MS);
+function replyDelayMs() {
+  return REPLY_DELAY_MIN_MS + Math.random() * (REPLY_DELAY_MAX_MS - REPLY_DELAY_MIN_MS);
 }
 
-// ── SEGUIMIENTO INTELIGENTE (4 etapas) ────────────────────────
-// Etapa 0: 8hs   → red de seguridad si no hubo recibo de lectura
-// Etapa 1: 24hs  → recordatorio suave (o antes, via nudge de lectura)
-// Etapa 2: 4 días → mensaje de valor + urgencia
-// Etapa 3: seguimiento de consulta de salud a las 96hs
+function runInOrder(phone, rawText, name) {
+  const run = (replyChains.get(phone) || Promise.resolve()).then(() => handleMessage(phone, rawText, name));
+  replyChains.set(phone, run);
+  run.finally(() => { if (replyChains.get(phone) === run) replyChains.delete(phone); });
+}
+
+function flushReply(phone) {
+  const pending = pendingReplies.get(phone);
+  if (!pending) return;
+  clearTimeout(pending.timer);
+  pendingReplies.delete(phone);
+  // El [ref:...] de la landing tiene que quedar al final del texto, que es donde lo busca extractRef
+  const parts = pending.texts.map(extractRef);
+  const ref = parts.find(p => p.ref)?.ref;
+  const joined = parts.map(p => p.clean).filter(Boolean).join("\n");
+  runInOrder(phone, ref ? `${joined}\n\n[ref:${ref}]` : joined, pending.name);
+}
+
+function queueReply(phone, text, name) {
+  // STOP no espera y descarta lo pendiente: no le mandamos una venta a quien acaba de pedir que no le escriban
+  if (isStopMessage(extractRef(text).clean)) {
+    clearTimeout(pendingReplies.get(phone)?.timer);
+    pendingReplies.delete(phone);
+    runInOrder(phone, text, name);
+    return;
+  }
+  const now = Date.now();
+  const pending = pendingReplies.get(phone) || { texts: [], name, deadline: now + replyDelayMs() };
+  pending.texts.push(text);
+  pending.deadline = Math.max(pending.deadline, now + REPLY_QUIET_MS);
+  clearTimeout(pending.timer);
+  pending.timer = setTimeout(() => flushReply(phone), pending.deadline - now);
+  pendingReplies.set(phone, pending);
+}
+
+// ── SEGUIMIENTO SI NO RESPONDE ────────────────────────────────
+// 1º a las 2 h y 2º a las 20 h del último mensaje. Si contesta, la cuenta vuelve a empezar.
+// Horario: nunca entre las 22 y las 9 de Uruguay; lo que caiga ahí sale a las 9.
+// WhatsApp solo deja escribir hasta 24 h después del último mensaje del cliente: si esperar a las 9
+// se pasa de ese plazo, sale a las 21:30 de antes, y si el plazo ya pasó no se manda nada.
+const HORA_MS = 60 * 60 * 1000;
+const UY_OFFSET_MS = 3 * HORA_MS; // Uruguay es UTC-3 todo el año
+const VENTANA_WA_MS = 23.5 * HORA_MS;
+
+function ajustarAHorario(fecha) {
+  const local = new Date(fecha.getTime() - UY_OFFSET_MS);
+  const hora = local.getUTCHours();
+  if (hora >= 9 && hora < 22) return fecha;
+  if (hora >= 22) local.setUTCDate(local.getUTCDate() + 1);
+  local.setUTCHours(9, 0, 0, 0);
+  return new Date(local.getTime() + UY_OFFSET_MS);
+}
+
+function momentoDeEnvio(ultimoMensaje, horasDespues) {
+  const limite = ultimoMensaje.getTime() + VENTANA_WA_MS;
+  const envio = ajustarAHorario(new Date(ultimoMensaje.getTime() + horasDespues * HORA_MS));
+  // De las 9:00 a las 21:30 de la noche anterior hay 11,5 h
+  if (envio.getTime() > limite) return new Date(envio.getTime() - 11.5 * HORA_MS);
+  return envio;
+}
+
+function debeEnviar(ultimoMensaje, horasDespues, ahora = new Date()) {
+  if (ahora.getTime() > ultimoMensaje.getTime() + VENTANA_WA_MS) return false;
+  return ahora >= momentoDeEnvio(ultimoMensaje, horasDespues);
+}
+
+const PRODUCTOS_EN_CHAT = [
+  [/thermo/i, "Thermo T3"], [/nocarb/i, "Nocarb-T"], [/prunex/i, "Prunex 1"], [/vita\s*xtra/i, "Vita Xtra T+"], [/biopro/i, "Biopro+ Fit"],
+];
+
+// El producto del que se habló más recientemente en el chat
+function productoDelChat(history = []) {
+  for (let i = history.length - 1; i >= 0; i--) {
+    const hallado = PRODUCTOS_EN_CHAT.find(([re]) => re.test(String(history[i].content || "")));
+    if (hallado) return hallado[1];
+  }
+  return null;
+}
 
 const FOLLOWUP_STAGES = [
   {
-    stage: 0,
-    hoursAfter: 8,
-    statusRequired: "active",
+    statuses: ["active", "link_sent"],
+    hoursAfter: 2,
     nextStatus: "followup_1",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, te escribí antes sobre lo que me contaste.\nQuería saber cómo estás — ¿pudiste avanzar con algo? El link para ${country} sigue disponible cuando estés lista: ${buyLink}\n\n¿Qué te frenó? Cualquier duda que tengas, acá estoy.`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, te escrevi antes.\nQueria saber como você está — conseguiu avançar? O link para ${country} continua disponível: ${buyLink}\n\nQual foi o que travou? Pode me dizer que estou aqui.`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — I reached out before.\nJust checking in — how are you doing? The link for ${country} is still available when you're ready: ${buyLink}\n\nWhat got in the way? I'm here for any questions.`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}, je vous ai écrit avant.\nJe voulais juste savoir comment vous allez — avez-vous pu avancer? Le lien pour ${country} est toujours disponible: ${buyLink}\n\nQu'est-ce qui vous a arrêté(e)? Je suis là pour toute question.`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}, ti ho scritto prima.\nVolevo solo sapere come stai — sei riuscito/a ad andare avanti? Il link per ${country} è ancora disponibile: ${buyLink}\n\nCosa ti ha fermato? Sono qui per qualsiasi domanda.`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}, ich hatte Ihnen vorher geschrieben.\nIch wollte nur fragen, wie es Ihnen geht — konnten Sie vorankommen? Der Link für ${country} ist noch verfügbar: ${buyLink}\n\nWas hat Sie aufgehalten? Ich bin für jede Frage da.`,
+      es: (n, p) => `Hola${n ? ` ${n}` : ""}, ¿pudiste ver lo ${p ? `del ${p}` : "que hablamos"}? Cualquier duda me decís.`,
+      pt: (n, p) => `Oi${n ? ` ${n}` : ""}, conseguiu ver ${p ? `o ${p}` : "o que conversamos"}? Qualquer dúvida, é só me dizer.`,
+      en: (n, p) => `Hi${n ? ` ${n}` : ""}, did you get a chance to look at ${p || "what we talked about"}? Let me know if you have any questions.`,
+      fr: (n, p) => `Bonjour${n ? ` ${n}` : ""}, avez-vous pu regarder ${p || "ce dont nous avons parlé"} ? N'hésitez pas si vous avez une question.`,
+      it: (n, p) => `Ciao${n ? ` ${n}` : ""}, sei riuscito a vedere ${p || "quello di cui abbiamo parlato"}? Per qualsiasi dubbio scrivimi.`,
+      de: (n, p) => `Hallo${n ? ` ${n}` : ""}, konnten Sie sich ${p || "das Besprochene"} ansehen? Melden Sie sich gern bei Fragen.`,
     },
   },
   {
-    stage: 1,
-    hoursAfter: 24,
-    statusRequired: "followup_1",
-    nextStatus: "followup_2",
-    msgs: {
-      es: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}soy ${agent} 😊\nHace unos días me contaste lo que estabas pasando — quería saber si algo cambió.\nEso que sentías no se va solo, lo sabés. Cuando estés lista, acá tenés el link directo para ${country}: ${buyLink}\n\n¿Qué necesitás para dar el paso?`,
-      pt: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}sou ${agent} 😊\nHá alguns dias você me contou o que estava passando — queria saber se algo mudou.\nO que você sentia não some sozinho. Quando estiver pronto/a, o link para ${country}: ${buyLink}\n\nO que precisa para dar o próximo passo?`,
-      en: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}it's ${agent} 😊\nA few days ago you told me what you were going through — I wanted to check if anything changed.\nWhat you were feeling doesn't go away on its own. When you're ready, here's the link for ${country}: ${buyLink}\n\nWhat do you need to take the next step?`,
-      fr: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}c'est ${agent} 😊\nIl y a quelques jours vous m'avez parlé de ce que vous viviez — je voulais savoir si quelque chose avait changé.\nCe que vous ressentiez ne disparaît pas tout seul. Quand vous êtes prêt(e), voici le lien pour ${country}: ${buyLink}\n\nDe quoi avez-vous besoin pour passer à l'étape suivante?`,
-      it: (name, agent, owner, country, buyLink) => `${name ? `${name}, ` : ""}sono ${agent} 😊\nAlcuni giorni fa mi hai raccontato quello che stavi passando — volevo sapere se qualcosa è cambiato.\nQuello che sentivi non scompare da solo. Quando sei pronto/a, ecco il link per ${country}: ${buyLink}\n\nDi cosa hai bisogno per fare il passo successivo?`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""}, hier ist ${agent} nochmal 😊\nDas Problem, das Sie mir erzählt haben, löst sich nicht von allein — der Link für ${country} ist noch aktiv:\n${buyLink}\n\nWas hat Sie aufgehalten? Fragen zum Prozess oder zum Produkt?`,
-    },
-  },
-  {
-    stage: 2,
-    hoursAfter: 96,
-    statusRequired: "followup_2",
+    statuses: ["followup_1"],
+    hoursAfter: 20,
     nextStatus: "cold",
     msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}, último mensaje de mi parte.\nEl problema que me contaste no se va solo. Cada semana sin hacer algo es una semana más con eso.\nSi decidís arrancar, acá podés hacer el pedido directo para ${country} — llega a tu casa: ${buyLink} 🌿`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}, última mensagem da minha parte.\nO problema que você me contou não some sozinho. Cada semana sem agir é mais uma semana com isso.\nQuando decidir, faça seu pedido direto para ${country} aqui: ${buyLink} 🌿`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent} — last message from me.\nThe problem you told me about doesn't go away on its own. Every week without action is another week with it.\nWhen you're ready, order directly for ${country} here: ${buyLink} 🌿`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent} — dernier message de ma part.\nLe problème dont vous m'avez parlé ne disparaît pas seul. Chaque semaine sans agir est une semaine de plus avec ça.\nQuand vous êtes prêt(e), commandez directement pour ${country} ici: ${buyLink} 🌿`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent} — ultimo messaggio da parte mia.\nIl problema che mi hai raccontato non scompare da solo. Ogni settimana senza fare nulla è un'altra settimana con quello.\nQuando sei pronto/a, ordina direttamente per ${country} qui: ${buyLink} 🌿`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent} — letzte Nachricht von mir.\nDas Problem, das Sie mir erzählt haben, verschwindet nicht von alleine. Jede Woche ohne Handeln ist eine weitere Woche damit.\nWenn Sie bereit sind, bestellen Sie direkt für ${country} hier: ${buyLink} 🌿`,
-    },
-  },
-  {
-    stage: 3,
-    hoursAfter: 96,
-    statusRequired: "health_check",
-    nextStatus: "health_check_followed",
-    msgs: {
-      es: (name, agent, owner, country) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}.\nHace unos días hablamos y me contaste sobre tu situación de salud. Quería saber cómo seguiste — ¿tuviste oportunidad de consultarlo con tu médico?\nSi ya tenés más claridad y querés saber qué opciones hay para tu caso, estoy acá para orientarte sin apuro 🌿`,
-      pt: (name, agent, owner, country) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}.\nHá alguns dias conversamos e você me contou sobre sua situação de saúde. Queria saber como você está — conseguiu consultar seu médico?\nSe já tem mais clareza e quer saber as opções para o seu caso, estou aqui para te orientar 🌿`,
-      en: (name, agent, owner, country) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}.\nA few days ago you mentioned your health situation. I wanted to check in — did you get a chance to speak with your doctor?\nIf you have more clarity now and want to know what options might work for you, I'm here to help without any pressure 🌿`,
-      fr: (name, agent, owner, country) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}.\nIl y a quelques jours vous m'avez parlé de votre situation de santé. Je voulais savoir comment vous allez — avez-vous pu consulter votre médecin?\nSi vous avez plus de clarté maintenant, je suis là pour vous orienter 🌿`,
-      it: (name, agent, owner, country) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}.\nQualche giorno fa mi hai parlato della tua situazione di salute. Volevo sapere come stai — hai avuto modo di parlare con il tuo medico?\nSe hai più chiarezza ora e vuoi sapere le opzioni per il tuo caso, sono qui 🌿`,
-      de: (name, agent, owner, country) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}.\nVor ein paar Tagen haben Sie mir von Ihrer Gesundheitssituation erzählt. Ich wollte fragen, wie es Ihnen geht — hatten Sie Gelegenheit, Ihren Arzt zu konsultieren?\nWenn Sie mehr Klarheit haben und wissen möchten, welche Optionen für Ihren Fall passen, bin ich hier 🌿`,
-    },
-  },
-  {
-    stage: 4,
-    hoursAfter: 4,
-    statusRequired: "link_sent",
-    nextStatus: "followup_1",
-    msgs: {
-      es: (name, agent, owner, country, buyLink) => `Hola${name ? ` ${name}` : ""} 😊 Soy ${agent}. Te mandé el link para tu pedido de ${country} — ¿pudiste abrirlo?\nAcá lo tenés de nuevo: ${buyLink}\n\n¿Tuviste algún problema con el formulario? Si necesitás que te guíe paso a paso, avisame y lo hacemos juntos.`,
-      pt: (name, agent, owner, country, buyLink) => `Olá${name ? ` ${name}` : ""} 😊 Sou ${agent}. Te mandei o link do pedido para ${country} — conseguiste abrir?\nAqui está de novo: ${buyLink}\n\nTeve algum problema no formulário? Se precisar de ajuda, é só falar.`,
-      en: (name, agent, owner, country, buyLink) => `Hey${name ? ` ${name}` : ""} 😊 It's ${agent}. I sent you the order link for ${country} — were you able to open it?\nHere it is again: ${buyLink}\n\nDid anything go wrong with the form? Just let me know and I'll walk you through it.`,
-      fr: (name, agent, owner, country, buyLink) => `Bonjour${name ? ` ${name}` : ""} 😊 C'est ${agent}. Je vous ai envoyé le lien de commande pour ${country} — avez-vous pu l'ouvrir?\nLe voici à nouveau: ${buyLink}\n\nAvez-vous eu un problème avec le formulaire? Je suis là pour vous guider.`,
-      it: (name, agent, owner, country, buyLink) => `Ciao${name ? ` ${name}` : ""} 😊 Sono ${agent}. Ti ho mandato il link dell'ordine per ${country} — sei riuscito/a ad aprirlo?\nEccolo di nuovo: ${buyLink}\n\nHai avuto problemi con il modulo? Sono qui per guidarti passo dopo passo.`,
-      de: (name, agent, owner, country, buyLink) => `Hallo${name ? ` ${name}` : ""} 😊 Hier ist ${agent}. Ich habe Ihnen den Bestelllink für ${country} geschickt — konnten Sie ihn öffnen?\nHier nochmal: ${buyLink}\n\nHatten Sie Probleme mit dem Formular? Ich helfe Ihnen Schritt für Schritt.`,
+      es: (n, p, link) => `Hola${n ? ` ${n}` : ""}, te dejo el link ${p ? `del ${p}` : "de la página"} por si querés hacer el pedido: ${link}\n\nSi te quedó alguna duda, contame.`,
+      pt: (n, p, link) => `Oi${n ? ` ${n}` : ""}, deixo o link ${p ? `do ${p}` : "da página"} caso queira fazer o pedido: ${link}\n\nSe ficou alguma dúvida, me conta.`,
+      en: (n, p, link) => `Hi${n ? ` ${n}` : ""}, here's the link ${p ? `for ${p}` : "to the page"} in case you'd like to order: ${link}\n\nIf you have any questions, just tell me.`,
+      fr: (n, p, link) => `Bonjour${n ? ` ${n}` : ""}, voici le lien ${p ? `pour ${p}` : "de la page"} si vous souhaitez commander : ${link}\n\nSi vous avez une question, dites-le-moi.`,
+      it: (n, p, link) => `Ciao${n ? ` ${n}` : ""}, ti lascio il link ${p ? `per ${p}` : "della pagina"} se vuoi ordinare: ${link}\n\nSe hai dubbi, dimmelo.`,
+      de: (n, p, link) => `Hallo${n ? ` ${n}` : ""}, hier ist der Link ${p ? `für ${p}` : "zur Seite"}, falls Sie bestellen möchten: ${link}\n\nBei Fragen melden Sie sich gern.`,
     },
   },
 ];
@@ -1902,30 +2002,34 @@ async function reactivateTodayLeads() {
 async function runFollowUps() {
   if (!supabase) return;
   try {
+    // Solo leads recientes: los chats viejos no se tocan
+    const desde = new Date(Date.now() - 48 * HORA_MS).toISOString();
     for (const stage of FOLLOWUP_STAGES) {
-      const cutoff = new Date(Date.now() - stage.hoursAfter * 60 * 60 * 1000).toISOString();
       const { data: leads, error } = await supabase
         .from("leads")
         .select("*")
-        .eq("status", stage.statusRequired)
-        .lt("updated_at", cutoff);
+        .in("status", stage.statuses)
+        .gte("updated_at", desde);
 
-      if (error) { console.error(`Follow-up stage ${stage.stage} error:`, error.message); continue; }
-      if (!leads?.length) continue;
+      if (error) { console.error("Follow-up error:", error.message); continue; }
 
-      for (const lead of leads) {
+      for (const lead of leads || []) {
+        if (pendingReplies.has(lead.phone)) continue; // escribió y su respuesta está en espera
         const conv = await getConversation(lead.phone);
-        if (!conv || conv.transferred || conv.purchased || conv.opted_out) continue;
+        if (!conv?.last_message_at || conv.transferred || conv.purchased || conv.opted_out) continue;
+        if (!debeEnviar(new Date(conv.last_message_at), stage.hoursAfter)) continue;
 
-        const agentName = getAgentName(lead.phone);
-        const lang = lead.lang || "es";
-        const msgFn = stage.msgs[lang] || stage.msgs.es;
-        const buyLink = getBuyLink(lead.country, lead.phone);
-        const msg = msgFn(nombrePila(lead.name), agentName, OWNER_NAME, lead.country || "tu país", buyLink);
+        const history = conv.history || [];
+        const producto = productoDelChat(history);
+        const link = (producto && getProductBuyLink(producto, lead.country, lead.phone)) || getBuyLink(lead.country, lead.phone);
+        const msgFn = stage.msgs[lead.lang] || stage.msgs.es;
+        const msg = msgFn(nombrePila(lead.name), producto, link);
 
         await sendWAMessage(lead.phone, msg);
+        // Queda en el historial para que el bot sepa qué le escribió. last_message_at no cambia: el plazo corre desde el cliente.
+        await saveConversation(lead.phone, { history: [...history, { role: "assistant", content: msg }].slice(-20) });
         await saveLead(lead.phone, { status: stage.nextStatus });
-        console.log(`📩 Follow-up stage ${stage.stage + 1} sent to ${lead.phone}`);
+        console.log(`📩 Seguimiento ${stage.nextStatus === "cold" ? "2" : "1"} enviado a ${lead.phone}`);
       }
     }
   } catch (err) {
@@ -1962,13 +2066,7 @@ app.post("/webhook", async (req, res) => {
 
     for (const e of entry || []) {
       for (const change of e.changes || []) {
-        const { messages, contacts, statuses } = change.value || {};
-
-        for (const st of statuses || []) {
-          if (st.status === "read" && st.recipient_id && st.recipient_id !== OWNER_PHONE) {
-            scheduleReadNudge(st.recipient_id);
-          }
-        }
+        const { messages, contacts } = change.value || {};
 
         if (!messages?.length) continue;
 
@@ -1991,7 +2089,7 @@ app.post("/webhook", async (req, res) => {
               de: "Hallo! 😊 Ich konnte das Audio nicht hören. Könnten Sie schreiben? Ich helfe Ihnen sofort 📝",
             };
             const reply = audioReplies[countryInfo.lang] || audioReplies.es;
-            sendWAMessage(phone, reply);
+            setTimeout(() => sendWAMessage(phone, reply), replyDelayMs());
             continue;
           }
 
@@ -2007,7 +2105,7 @@ app.post("/webhook", async (req, res) => {
               de: "Ich habe Ihr Bild erhalten 😊 Um Ihnen besser zu helfen, könnten Sie mir sagen, was Sie interessiert?",
             };
             const reply = imgReplies[countryInfo.lang] || imgReplies.es;
-            sendWAMessage(phone, reply);
+            setTimeout(() => sendWAMessage(phone, reply), replyDelayMs());
             continue;
           }
 
@@ -2099,7 +2197,7 @@ app.post("/webhook", async (req, res) => {
             continue;
           }
 
-          handleMessage(phone, text, name); // async, no await
+          queueReply(phone, text, name); // responde a los 1-2 min, juntando lo que escriba en ese rato
         }
       }
     }
@@ -2109,6 +2207,15 @@ app.post("/webhook", async (req, res) => {
 });
 
 // Health check — shows env var status, last WA error, insights state
+// Link del push de ntfy: abre el chat del cliente sin dejar el teléfono en ntfy.sh
+app.get("/contacto", (req, res) => {
+  try {
+    res.redirect(302, `https://wa.me/${telDeContacto(req.query.c)}`);
+  } catch {
+    res.status(404).end();
+  }
+});
+
 app.get("/health", (_req, res) => res.json({
   status: "ok",
   ts: new Date().toISOString(),
@@ -2206,8 +2313,8 @@ app.listen(PORT, () => {
   }, 10_000);
 });
 
-// Run follow-ups every hour
-setInterval(runFollowUps, 60 * 60 * 1000);
+// Revisa cada 5 min para respetar las 9:00 y las 21:30
+setInterval(runFollowUps, 5 * 60 * 1000);
 setTimeout(runFollowUps, 30_000); // First run 30s after start
 
 // ── REPORTE DE CAMPAÑA (Meta Ads + Mercado Pago + bot) ────────
@@ -2249,4 +2356,4 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000);
-export { closeNowTag, getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
+export { buildSystemPrompt, limpiarPromptUruguay, momentoDeEnvio, debeEnviar, productoDelChat, runFollowUps, closeNowTag, getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
