@@ -38,6 +38,7 @@
     <a class="btn" id="wa" href="https://wa.me/59892423078" target="_blank" rel="noreferrer">💬 Coordinar envío por WhatsApp</a>
     <a class="sec" href="/">Volver a Power Vita</a>
   </div>
+  <script src="/seg.js"></script>
   <script>
     (function(){
       // Compra hecha: se vacía el carrito guardado de /uy
@@ -54,6 +55,7 @@
       } else if (status === "approved" && id) {
         // Mismo event_id que manda el servidor (api/mp-webhook.js) → Meta no cuenta la compra dos veces
         fbq("track", "Purchase", { value: valor, currency: "UYU" }, { eventID: "mp_" + id });
+        if (window.pvSeg) window.pvSeg("compra", { valor: valor });
       }
       var msg = "Hola! Acabo de pagar mi pedido de Power Vita" + (id ? " (pago #" + id + ")" : "") + ". Te paso mis datos para el envío:";
       document.getElementById("wa").href = "https://wa.me/59892423078?text=" + encodeURIComponent(msg);

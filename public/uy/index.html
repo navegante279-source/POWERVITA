@@ -248,7 +248,7 @@
   <footer>
     <b>Power Vita</b>
     Distribuidor independiente FuXion · Uruguay<br />
-    <span id="waFooterBox"><a id="waFooter" href="#" target="_blank" rel="noreferrer"></a> · </span><a href="https://www.instagram.com/powervita_uy/" target="_blank" rel="noreferrer">Instagram @powervita_uy</a>
+    <span id="waFooterBox"><a id="waFooter" href="#" target="_blank" rel="noreferrer"></a> · </span><a href="https://www.instagram.com/powervita_uy/" target="_blank" rel="noreferrer">Instagram @powervita_uy</a> · <a href="/privacy.html">Privacidad</a>
     <p>Suplementos alimenticios. No son medicamentos ni reemplazan una alimentación equilibrada. Los resultados pueden variar según cada persona.</p>
   </footer>
 
@@ -292,6 +292,7 @@
     </div>
   </aside>
 
+  <script src="/seg.js"></script>
   <script>
     var PRECIO = 2150;
     var DESCUENTO = 250; // por cada unidad desde la 2ª (igual que api/pagar.js)
@@ -358,6 +359,7 @@
     var fmt = function (n) { return "$ " + n.toLocaleString("es-UY"); };
     var evId = function (n) { return n + "_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8); };
     var track = function (n, d) { if (window.fbq) fbq("track", n, d, { eventID: evId(n) }); };
+    var seg = function (p, d) { if (window.pvSeg) window.pvSeg(p, d); }; // seguimiento propio, se ve en /app
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
     var waLink = function (txt) { return "https://wa.me/" + WA + "?text=" + encodeURIComponent(txt + "\n\n[ref:uy_" + clave + "]"); };
     // Igual que api/pagar.js: cada 5 unidades una es de regalo, y desde la 2ª cobrada $250 menos
@@ -425,12 +427,14 @@
     }
 
     track("ViewContent", { content_ids: [clave], content_name: P.nombre, content_type: "product", value: PRECIO, currency: "UYU" });
+    seg("visita", { prod: clave });
 
     // Carrito
     function unidades() { return Object.keys(cant).reduce(function (s, k) { return s + cant[k]; }, 0); }
     function agregar(k, n) {
       cant[k] = Math.min((cant[k] || 0) + n, 10);
       track("AddToCart", { content_ids: [k], content_type: "product", value: totalDe(unidades()), currency: "UYU" });
+      seg("carrito", { prod: k, valor: totalDe(unidades()) });
       render();
     }
     function render() {
@@ -477,7 +481,10 @@
       $("paso1").hidden = p !== 1; $("paso2").hidden = p !== 2;
       $("btnSeguir").hidden = p !== 1; $("btnPagar").hidden = p !== 2;
       $("dTitulo").textContent = p === 1 ? "Tu carrito" : "Datos de envío";
-      if (p === 2) setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 300);
+      if (p === 2) {
+        seg("datos", { prod: clave, valor: totalDe(unidades()) });
+        setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 300);
+      }
     }
     function abrir(p) {
       paso(p);
@@ -492,6 +499,7 @@
     }
 
     document.addEventListener("click", function (e) {
+      if (e.target.closest('a[href*="wa.me"]')) { seg("whatsapp", { prod: clave }); return; }
       if (e.target.closest("[data-cerrar]")) { cerrar(); return; }
       var v = e.target.closest("[data-ver]");
       if (v) {
@@ -546,6 +554,7 @@
       $("error").textContent = "";
       var items = Object.keys(cant).map(function (k) { return { prod: k, q: cant[k] }; });
       track("InitiateCheckout", { content_ids: Object.keys(cant), num_items: unidades(), value: totalDe(unidades()), currency: "UYU" });
+      seg("pago", { prod: clave, valor: totalDe(unidades()), nombre: buyer.nombre, telefono: buyer.telefono });
       $("btnPagar").disabled = true; $("btnPagar").textContent = "Abriendo Mercado Pago…";
       fetch("/api/pagar", {
         method: "POST", headers: { "Content-Type": "application/json" },

@@ -89,7 +89,7 @@ async function ventasMP(desde) {
     const pv = todos.filter(p => String(p.external_reference || "").startsWith("pv|"));
     // pv|vitax1,thermox2|... → unidades vendidas
     const unidades = pv.reduce((s, p) => s + String(p.external_reference).split("|")[1].split(",")
-      .reduce((u, x) => u + (parseInt(x.split("x")[1]) || 1), 0), 0);
+      .reduce((u, x) => u + (parseInt(x.match(/x(\d+)$/)?.[1]) || 1), 0), 0); // "prunex" también tiene x
     return {
       n: pv.length,
       unidades,

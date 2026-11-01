@@ -98,7 +98,7 @@ function describirItems(ref) {
   // pv|vitax1,thermox2|tel|origen|ts
   const parte = String(ref || "").split("|")[1] || "";
   return parte.split(",").filter(Boolean).map(x => {
-    const [prod, q] = x.split("x");
+    const [, prod, q] = x.match(/^(.+)x(\d+)$/) || [null, x, "1"]; // "prunex" también tiene x
     return `${q} × ${PRODUCTOS_UY[prod] || prod}`;
   });
 }

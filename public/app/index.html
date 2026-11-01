@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0E3B2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Power Vita">
+<link rel="manifest" href="/app/app.webmanifest">
+<link rel="apple-touch-icon" href="/app/icono-180.png">
+<link rel="icon" href="/app/icono-192.png">
+<title>Power Vita App</title>
+<style>
+:root{--bg:#F2F4F3;--card:#fff;--tx:#16231D;--suave:#66756E;--linea:#E1E6E3;--verde:#0E3B2E;--medio:#2D6A4F;--ok:#127A3A;--okf:#E5F4EA;--warn:#A85B00;--warnf:#FDF1DF;--mal:#B3261E;--malf:#FBEAE8;--azulf:#E8F0F8;--azul:#1F5C99;--wa:#128C4B}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx)}
+button{font:inherit;color:inherit;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:14px 16px calc(92px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+h1{font-size:21px;letter-spacing:-.2px}
+h2{font-size:15px;margin-bottom:10px}
+.nota{color:var(--suave);font-size:13px}
+.card{background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kpi{background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:12px 14px;min-width:0}
+.kpi small{display:block;color:var(--suave);font-size:12.5px;margin-bottom:2px}
+.kpi b{font-size:21px;letter-spacing:-.3px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kpi.grande{grid-column:1/-1}.kpi.grande b{font-size:30px}
+.seg{display:flex;background:#E4E8E6;border-radius:10px;padding:3px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;padding:8px 4px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--suave);min-height:38px}
+.seg button.on{background:#fff;color:var(--tx);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--linea);padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:20}
+nav div{display:flex;max-width:640px;margin:0 auto}
+nav button{flex:1;background:none;border:0;padding:6px 2px;color:#7D8B84;font-size:11.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;min-height:50px}
+nav button.on{color:var(--verde)}
+nav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.badge{position:absolute;top:1px;left:calc(50% + 6px);background:var(--mal);color:#fff;border-radius:10px;padding:0 5px;font-size:10.5px;line-height:16px;min-width:16px;text-align:center}
+.vivo{display:flex;align-items:center;gap:10px}
+.vivo b{font-size:27px;font-variant-numeric:tabular-nums}
+.punto{width:10px;height:10px;border-radius:50%;background:#B8C2BD;flex:none}
+.punto.on{background:#1FA855;animation:lat 1.6s infinite}
+@keyframes lat{50%{box-shadow:0 0 0 6px rgba(31,168,85,.18)}}
+@media (prefers-reduced-motion:reduce){.punto.on{animation:none}}
+.fila{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--linea)}
+.fila:first-of-type{border-top:0}
+.fila>span:last-child{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.emb{margin-bottom:10px}.emb:last-child{margin-bottom:0}
+.emb div:first-child{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:4px;gap:10px}
+.emb b{font-variant-numeric:tabular-nums}
+.barra{height:9px;border-radius:5px;background:#E9EDEB;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--medio);border-radius:5px;min-width:2px}
+.ped{background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cab b{overflow-wrap:anywhere}
+.pr{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:6px}
+.t-ok{background:var(--okf);color:var(--ok)}.t-w{background:var(--warnf);color:var(--warn)}.t-m{background:var(--malf);color:var(--mal)}.t-n{background:#EAEEEC;color:var(--suave)}.t-a{background:var(--azulf);color:var(--azul)}
+.acc{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid var(--linea);background:#fff;font-weight:600;font-size:13.5px;text-decoration:none;color:var(--tx)}
+.btn.prim{background:var(--verde);border-color:var(--verde);color:#fff}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+.btn:disabled{opacity:.55}
+.login{max-width:340px;margin:12vh auto 0;text-align:center}
+.login input{width:100%;font-size:16px;padding:12px;border-radius:10px;border:1px solid #C9D2CD;margin:14px 0 10px;background:#fff}
+.login .btn{width:100%}
+.err{color:var(--mal);font-size:13.5px;margin-top:8px;min-height:18px}
+.aviso{background:var(--warnf);color:#6E3C00;border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.vacio{color:var(--suave);text-align:center;padding:22px 10px;font-size:14px}
+.chat{position:fixed;inset:0;background:var(--bg);z-index:40;display:flex;flex-direction:column}
+.chat .top{background:#fff;border-bottom:1px solid var(--linea);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.chat .lista{flex:1;overflow:auto;padding:14px;max-width:640px;margin:0 auto;width:100%}
+.m{max-width:85%;padding:8px 11px;border-radius:12px;margin-bottom:7px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.m.cliente{background:#fff;border:1px solid var(--linea)}
+.m.bot{background:#DDEFE3;margin-left:auto}
+.cerrar{display:block;text-align:center;margin:18px auto 0;background:none;border:0;color:var(--suave);font-size:13px;text-decoration:underline;min-height:40px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="raiz"></div>
+<nav id="nav" hidden><div>
+  <button data-tab="inicio"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Inicio</button>
+  <button data-tab="pedidos"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v9l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>Pedidos<span class="badge" id="bPed" hidden></span></button>
+  <button data-tab="web"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Web<span class="badge" id="bWeb" hidden></span></button>
+  <button data-tab="clientes"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-12 7l-5 1 1-5a8 8 0 1 1 16-3z"/></svg>Clientes<span class="badge" id="bCli" hidden></span></button>
+</div></nav>
+<script>
+(function(){
+  var raiz=document.getElementById('raiz'), nav=document.getElementById('nav');
+  var CLAVE='pv_app_codigo', S={tab:'inicio',rango:7,datos:null,filtroPed:'pendientes',cargando:false,chat:null};
+  function leer(k){try{return localStorage.getItem(k)||''}catch(_){return ''}}
+  function guardar(k,v){try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(_){}}
+  var codigo=leer(CLAVE);
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  var plata=function(n){return (n<0?'-$ ':'$ ')+Math.abs(Math.round(n||0)).toLocaleString('es-UY')};
+  var tz={timeZone:'America/Montevideo'};
+  function fecha(f){if(!f)return '';var d=new Date(f);return d.toLocaleDateString('es-UY',Object.assign({day:'2-digit',month:'2-digit'},tz))+' '+d.toLocaleTimeString('es-UY',Object.assign({hour:'2-digit',minute:'2-digit'},tz))}
+  function tel(p){return p?'0'+String(p).replace(/^598/,''):''}
+  function wa(p,txt){return 'https://wa.me/'+encodeURIComponent(p)+(txt?'?text='+encodeURIComponent(txt):'')}
+  var PASO={visita:'Mirando el producto',carrito:'Con carrito',datos:'Completando datos',whatsapp:'Abrió WhatsApp',pago:'En el pago',compra:'Compró'};
+
+  function api(accion,cuerpo){
+    return fetch('/api/panel?a='+accion,{method:'POST',headers:{'Content-Type':'application/json','X-Codigo':codigo},body:JSON.stringify(cuerpo||{})})
+      .then(function(r){return r.json().catch(function(){return {}}).then(function(d){if(r.status===401){var e=new Error('clave');e.clave=true;throw e}if(!r.ok)throw new Error(d.error||'Error');return d})});
+  }
+
+  function login(msg){
+    nav.hidden=true;
+    raiz.innerHTML='<main><div class="login"><h1>Power Vita</h1><p class="nota">Ventas, pedidos, visitas y clientes</p><form id="fl"><input id="cl" type="password" placeholder="Contraseña del panel" autocomplete="current-password" aria-label="Contraseña"><button class="btn prim" type="submit">Entrar</button></form><p class="err" role="alert">'+esc(msg||'')+'</p></div></main>';
+    document.getElementById('fl').onsubmit=function(e){e.preventDefault();codigo=document.getElementById('cl').value.trim();if(!codigo)return;this.querySelector('button').disabled=true;cargar(true)};
+    document.getElementById('cl').focus();
+  }
+
+  function cargar(entrando){
+    if(S.cargando)return;S.cargando=true;
+    api('datos',{rango:S.rango}).then(function(d){
+      S.datos=d;S.error='';guardar(CLAVE,codigo);guardar('pv_noseg','1');pintar();
+    }).catch(function(e){
+      if(e.clave){guardar(CLAVE,'');codigo='';S.datos=null;login(entrando?'Contraseña incorrecta':'Volvé a entrar');return}
+      S.error='No se pudo actualizar. Revisá tu conexión.';
+      if(S.datos)pintar();else login(S.error);
+    }).then(function(){S.cargando=false});
+  }
+
+  function selectorRango(){
+    return '<div class="seg" role="group" aria-label="Período">'+[[1,'Hoy'],[7,'7 días'],[30,'30 días']].map(function(r){return '<button data-rango="'+r[0]+'" class="'+(S.rango===r[0]?'on':'')+'">'+r[1]+'</button>'}).join('')+'</div>';
+  }
+  function kpi(t,v,c){return '<div class="kpi '+(c||'')+'"><small>'+esc(t)+'</small><b>'+esc(v)+'</b></div>'}
+
+  function vInicio(d){
+    var v=d.ventas,w=d.web;
+    var h=selectorRango();
+    h+='<div class="card vivo"><span class="punto '+(w.enVivo.length?'on':'')+'"></span><b>'+w.enVivo.length+'</b><span>'+(w.enVivo.length===1?'persona':'personas')+' en la web ahora</span></div>';
+    h+='<div class="grid">'+kpi('Ventas',plata(v.monto),'grande')+kpi('Pedidos',v.pedidos)+kpi('Productos',v.unidades)+kpi('Ticket promedio',plata(v.ticket))+kpi('Por despachar',v.porDespachar)+'</div>';
+    h+='<div class="card"><h2>Resultado del período</h2><div class="fila"><span>Cobrado, sin comisión de MP</span><span>'+plata(v.neto)+'</span></div><div class="fila"><span>Productos y envíos</span><span>'+plata(-v.costos)+'</span></div>';
+    h+='<div class="fila"><span>Anuncios Meta</span><span>'+(v.gastoAnuncios==null?'sin dato':plata(-v.gastoAnuncios))+'</span></div><div class="fila"><span><b>'+(v.gastoAnuncios==null?'Queda antes de anuncios':'Ganancia')+'</b></span><span>'+plata(v.ganancia)+'</span></div>';
+    if(v.gastoAnuncios==null)h+='<p class="nota" style="margin-top:6px">El gasto en anuncios aparece cuando se cargue el token de Meta.</p>';
+    h+='</div>'+vEmbudo(w);
+    return h;
+  }
+  function vEmbudo(w){
+    var base=w.embudo[0]?w.embudo[0].n:0;
+    return '<div class="card"><h2>Embudo</h2>'+w.embudo.map(function(e,i){
+      var pct=base?Math.round(e.n/base*100):0;
+      return '<div class="emb"><div><span>'+esc(e.nombre)+'</span><b>'+e.n+(i&&base?' · '+pct+'%':'')+'</b></div><div class="barra"><i style="width:'+pct+'%"></i></div></div>';
+    }).join('')+'</div>';
+  }
+
+  function vPedidos(d){
+    var todos=d.pedidos, f=S.filtroPed;
+    var lista=todos.filter(function(p){
+      if(f==='pendientes')return p.estado==='approved'&&!p.despachado&&!p.prueba;
+      if(f==='despachados')return p.estado==='approved'&&p.despachado;
+      return true;
+    });
+    var h='<div class="seg" role="group" aria-label="Filtro de pedidos">'+[['pendientes','Por despachar'],['despachados','Despachados'],['todos','Todos']].map(function(x){return '<button data-fped="'+x[0]+'" class="'+(f===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>';
+    if(!lista.length)return h+'<div class="card vacio">'+(f==='pendientes'?'No hay pedidos por despachar.':'No hay pedidos en los últimos 30 días.')+'</div>';
+    return h+lista.map(function(p){
+      var est=p.prueba?'<span class="tag t-n">Compra de prueba</span>':p.estado==='approved'?(p.despachado?'<span class="tag t-ok">Despachado</span>':'<span class="tag t-w">Por despachar</span>'):(p.estado==='pending'||p.estado==='in_process')?'<span class="tag t-a">Pago pendiente</span>':'<span class="tag t-m">'+esc(p.estado==='rejected'?'Pago rechazado':p.estado==='refunded'?'Devuelto':p.estado==='cancelled'?'Cancelado':p.estado)+'</span>';
+      var acc='';
+      if(p.link)acc+='<a class="btn prim" href="'+esc(p.link)+'" target="_blank" rel="noopener">Datos de envío</a>';
+      if(p.telefono)acc+='<a class="btn wa" href="'+esc(wa(p.telefono))+'" target="_blank" rel="noopener">WhatsApp</a>';
+      if(p.estado==='approved')acc+='<button class="btn" data-desp="'+esc(p.id)+'" data-hecho="'+(p.despachado?'0':'1')+'">'+(p.despachado?'Deshacer despacho':'Marcar despachado')+'</button>';
+      return '<article class="ped"><div class="cab"><b>'+esc(p.nombre)+'</b><span class="pr">'+plata(p.monto)+'</span></div>'+
+        '<div class="nota">'+esc(fecha(p.fecha))+(p.direccion?' · '+esc(p.direccion):'')+'</div>'+
+        '<div style="margin-top:6px">'+p.items.map(function(i){return esc(i.q+' × '+i.nombre)}).join('<br>')+'</div>'+est+'<div class="acc">'+acc+'</div></article>';
+    }).join('');
+  }
+
+  function vWeb(d){
+    var w=d.web,h=selectorRango();
+    h+='<div class="card"><div class="vivo"><span class="punto '+(w.enVivo.length?'on':'')+'"></span><b>'+w.enVivo.length+'</b><span>en vivo</span></div>';
+    h+=w.enVivo.map(function(v){return '<div class="fila"><span>'+esc(PASO[v.paso]||v.paso)+(v.prod?' · '+esc(v.prod):'')+'<br><span class="nota">'+esc(v.disp)+(v.origen?' · '+esc(v.origen):'')+'</span></span><span class="nota">'+(v.hace?'hace '+v.hace+' min':'ahora')+'</span></div>'}).join('');
+    h+='</div>';
+    h+='<div class="card"><h2>Tocaron Pagar y no compraron ('+w.abandonos.length+')</h2>';
+    if(!w.abandonos.length)h+='<p class="nota">Nadie en este período.</p>';
+    h+=w.abandonos.map(function(a){
+      var nom=(a.nombre||'').split(' ')[0];
+      var txt='Hola'+(nom?' '+nom:'')+'! Te escribo de Power Vita. Vi que empezaste una compra y no llegó a completarse. ¿Tuviste algún problema con el pago? Si querés, te ayudo por acá.';
+      return '<div class="fila" style="align-items:center"><span><b>'+esc(a.nombre||'Sin nombre')+'</b><br><span class="nota">'+esc(plata(a.valor))+' · '+esc(fecha(a.fecha))+(a.telefono?' · '+esc(tel(a.telefono)):'')+'</span></span><span>'+(a.telefono?'<a class="btn wa" href="'+esc(wa(a.telefono,txt))+'" target="_blank" rel="noopener">Escribir</a>':'')+'</span></div>';
+    }).join('')+'</div>';
+    h+=vEmbudo(w);
+    h+='<div class="card"><h2>Abrieron WhatsApp desde la web</h2><b style="font-size:21px">'+w.whatsapp+'</b></div>';
+    function bloque(t,l){return '<div class="card"><h2>'+esc(t)+'</h2>'+(l.length?l.map(function(x){return '<div class="fila"><span>'+esc(x.nombre)+'</span><span>'+x.n+'</span></div>'}).join(''):'<p class="nota">Sin datos todavía.</p>')+'</div>'}
+    return h+bloque('Por anuncio',w.origenes)+bloque('Por producto',w.productos)+bloque('Por dispositivo',w.dispositivos);
+  }
+
+  var ESTADO={active:['Conversando','t-a'],link_sent:['Link enviado','t-w'],followup_1:['Con seguimiento','t-n'],cold:['Frío','t-n'],sold:['Compró','t-ok'],transferred:['Te toca a vos','t-m'],opted_out:['Pidió no recibir','t-n']};
+  function vClientes(d){
+    if(!d.clientes.length)return '<div class="card vacio">Todavía no hay clientes.</div>';
+    var orden=d.clientes.slice().sort(function(a,b){return (b.transferido?1:0)-(a.transferido?1:0)});
+    return orden.map(function(c){
+      var e=c.transferido?ESTADO.transferred:(ESTADO[c.estado]||[c.estado||'Sin estado','t-n']);
+      return '<article class="ped"><div class="cab"><b>'+esc(c.nombre||tel(c.phone))+'</b><span class="nota">'+esc(fecha(c.ultimo))+'</span></div>'+
+        (c.interes?'<div class="nota">'+esc(c.interes)+'</div>':'')+'<span class="tag '+e[1]+'">'+esc(e[0])+'</span>'+
+        '<div class="acc"><button class="btn" data-chat="'+esc(c.phone)+'" data-nom="'+esc(c.nombre||tel(c.phone))+'">Ver conversación</button><a class="btn wa" href="'+esc(wa(c.phone))+'" target="_blank" rel="noopener">WhatsApp</a></div></article>';
+    }).join('');
+  }
+
+  function pintar(){
+    var d=S.datos;if(!d)return;
+    var av=[d.avisos.mp&&('Mercado Pago: '+d.avisos.mp),d.avisos.seguimiento,d.avisos.clientes,S.error].filter(Boolean);
+    var t={inicio:'Inicio',pedidos:'Pedidos',web:'Web',clientes:'Clientes'}[S.tab];
+    var cuerpo=S.tab==='inicio'?vInicio(d):S.tab==='pedidos'?vPedidos(d):S.tab==='web'?vWeb(d):vClientes(d);
+    raiz.innerHTML='<main><header><h1>'+t+'</h1><span class="nota">'+esc(new Date(d.ahora).toLocaleTimeString('es-UY',Object.assign({hour:'2-digit',minute:'2-digit'},tz)))+'</span></header>'+
+      av.map(function(a){return '<div class="aviso">'+esc(a)+'</div>'}).join('')+cuerpo+
+      '<button class="cerrar" id="salir">Cerrar sesión</button></main>'+(S.chat?vChat():'');
+    nav.hidden=false;
+    [].forEach.call(nav.querySelectorAll('button'),function(b){var on=b.dataset.tab===S.tab;b.classList.toggle('on',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});
+    marca('bPed',d.ventas.porDespachar);marca('bWeb',d.web.abandonos.length);marca('bCli',d.clientes.filter(function(c){return c.transferido}).length);
+  }
+  function marca(id,n){var b=document.getElementById(id);b.hidden=!n;b.textContent=n>99?'99+':n}
+  function vChat(){
+    var c=S.chat;
+    return '<div class="chat" role="dialog" aria-label="Conversación"><div class="top"><b>'+esc(c.nombre)+'</b><button class="btn" id="cerrarChat">Cerrar</button></div><div class="lista">'+
+      (c.mensajes?(c.mensajes.length?c.mensajes.map(function(m){return '<div class="m '+m.rol+'">'+esc(m.texto)+'</div>'}).join(''):'<p class="vacio">Sin mensajes guardados.</p>'):'<p class="vacio">Cargando…</p>')+'</div></div>';
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('button');if(!t)return;
+    if(t.dataset.tab){S.tab=t.dataset.tab;pintar();window.scrollTo(0,0);return}
+    if(t.dataset.rango){S.rango=Number(t.dataset.rango);cargar();return}
+    if(t.dataset.fped){S.filtroPed=t.dataset.fped;pintar();return}
+    if(t.id==='salir'){guardar(CLAVE,'');codigo='';S.datos=null;login();return}
+    if(t.id==='cerrarChat'){S.chat=null;pintar();return}
+    if(t.dataset.chat){
+      S.chat={nombre:t.dataset.nom,mensajes:null};pintar();
+      api('chat',{phone:t.dataset.chat}).then(function(r){if(S.chat){S.chat.mensajes=r.mensajes;pintar();var l=document.querySelector('.chat .lista');if(l)l.scrollTop=l.scrollHeight}}).catch(function(){if(S.chat){S.chat.mensajes=[];pintar()}});
+      return;
+    }
+    if(t.dataset.desp){
+      t.disabled=true;var hecho=t.dataset.hecho==='1',id=t.dataset.desp;
+      api('despachar',{id:id,hecho:hecho}).then(function(){
+        S.datos.pedidos.forEach(function(p){if(String(p.id)===id)p.despachado=hecho});
+        S.datos.ventas.porDespachar=S.datos.pedidos.filter(function(p){return p.estado==='approved'&&!p.prueba&&!p.despachado}).length;
+        S.error='';pintar();
+      }).catch(function(err){S.error=err.message||'No se pudo guardar';pintar()});
+    }
+  });
+
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('/app/sw.js',{scope:'/app/'}).catch(function(){})}
+  if(codigo)cargar();else login();
+  setInterval(function(){if(codigo&&document.visibilityState==='visible'&&S.datos&&!S.chat)cargar()},30000);
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&codigo&&S.datos&&!S.chat)cargar()});
+})();
+</script>
+</body>
+</html>

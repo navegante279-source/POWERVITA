@@ -67,7 +67,7 @@ export default async function handler(req, res) {
   const m = pago.metadata || {};
   const tel = telUY(m.telefono || ref.split("|")[2]);
   const items = (ref.split("|")[1] || "").split(",").filter(Boolean).map(x => {
-    const [prod, q] = x.split("x");
+    const [, prod, q] = x.match(/^(.+)x(\d+)$/) || [null, x, "1"]; // "prunex" también tiene x
     return `${q} × ${PRODUCTOS_UY[prod] || prod}`;
   });
   const nombre = m.nombre || [pago.payer?.first_name, pago.payer?.last_name].filter(Boolean).join(" ") || "Sin nombre";
