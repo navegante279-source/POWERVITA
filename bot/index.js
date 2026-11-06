@@ -644,6 +644,7 @@ CÓMO LLEGAR AL CIERRE:
 No asumas el género de la persona (nada de "segura", "cansada" referido a ella) hasta que lo sepas. Saludá solo con "Hola" y el nombre: NUNCA escribas "bienvenida", "bienvenido" ni "al equipo PowerVita".
 Si preguntan si sos un bot: decí que sos la asistente virtual de PowerVita y que Andrés la puede atender si prefiere, y seguí ayudando. NO añadas [TRANSFER_NEEDED] salvo que pida hablar con una persona.
 Modo de uso: decí solo "un sobre disuelto en agua, la dosis que indica el envase"; no inventes horarios ni reemplazos de comidas.
+Si el mensaje empieza con "(mensaje de voz)", es la transcripción de un audio: respondé normal por escrito, sin mencionar la transcripción. Si algo no se entiende, preguntá solo eso.
 ESTILO: mensajes cortos (máximo 3 párrafos breves, 80 palabras), cálidos, uruguayos ("vos"), sin markdown, máximo 2 emojis. Una sola pregunta por mensaje.
 Las reglas generales de abajo (micro-compromisos, "¿A qué nombre va el pedido?", pedir nombre/dirección, packs con Andrés) NO aplican en Uruguay cuando contradigan este bloque.`;
 
@@ -1362,6 +1363,42 @@ async function sendWAMessage(to, text) {
   } catch (err) {
     lastWAError = `[${new Date().toISOString()}] to=${to} fetch_error=${err.message}`;
     console.error("❌ WA fetch error:", lastWAError);
+    return null;
+  }
+}
+
+// ── TRANSCRIPCIÓN DE AUDIOS ───────────────────────────────────
+// Usa OpenAI (OPENAI_API_KEY) o Groq (GROQ_API_KEY, tiene plan gratis). Claude no procesa audio.
+function puedeTranscribir() {
+  return !!(process.env.OPENAI_API_KEY || process.env.GROQ_API_KEY);
+}
+
+async function transcribirAudio(mediaId) {
+  if (!mediaId || !WHATSAPP_TOKEN) return null;
+  try {
+    const auth = { Authorization: `Bearer ${WHATSAPP_TOKEN}` };
+    const meta = await fetch(`https://graph.facebook.com/v19.0/${mediaId}`, { headers: auth }).then(r => r.json());
+    if (!meta?.url) { console.error("Audio: sin URL de descarga", meta?.error?.message); return null; }
+    if (meta.file_size && meta.file_size > 20 * 1024 * 1024) return null; // más de 20 MB: no
+    const audio = await fetch(meta.url, { headers: auth }).then(r => r.ok ? r.arrayBuffer() : null);
+    if (!audio) return null;
+
+    const groq = !process.env.OPENAI_API_KEY && process.env.GROQ_API_KEY;
+    const form = new FormData();
+    form.append("file", new Blob([audio], { type: meta.mime_type || "audio/ogg" }), "audio.ogg");
+    form.append("model", groq ? "whisper-large-v3-turbo" : "gpt-4o-mini-transcribe");
+    form.append("language", "es");
+    const r = await fetch(groq ? "https://api.groq.com/openai/v1/audio/transcriptions" : "https://api.openai.com/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${groq ? process.env.GROQ_API_KEY : process.env.OPENAI_API_KEY}` },
+      body: form,
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) { console.error("Audio: error al transcribir", data?.error?.message || r.status); return null; }
+    const texto = String(data.text || "").trim();
+    return texto || null;
+  } catch (err) {
+    console.error("Audio: error", err.message);
     return null;
   }
 }
@@ -2102,7 +2139,15 @@ app.post("/webhook", async (req, res) => {
           const phone = msg.from;
           const name = nombrePila(contacts?.[0]?.profile?.name);
 
-          if (msg.type === "audio" || msg.type === "voice") {
+          // Audio: se transcribe y sigue como si lo hubiera escrito. Si no hay clave o falla, se le pide que escriba.
+          let textoAudio = null;
+          if ((msg.type === "audio" || msg.type === "voice") && puedeTranscribir()) {
+            markAsRead(msg.id);
+            textoAudio = await transcribirAudio(msg.audio?.id || msg.voice?.id);
+            if (textoAudio) console.log(`🎙️ [${phone}] audio transcripto: ${textoAudio}`);
+          }
+
+          if ((msg.type === "audio" || msg.type === "voice") && !textoAudio) {
             const countryInfo = detectCountry(phone);
             const audioReplies = {
               es: "¡Hola! 😊 No pude escuchar el audio. ¿Me escribís tu consulta? Así te ayudo enseguida 📝",
@@ -2136,8 +2181,8 @@ app.post("/webhook", async (req, res) => {
           // Stickers y reacciones: ignorar silenciosamente
           if (msg.type === "sticker" || msg.type === "reaction") continue;
 
-          if (msg.type !== "text") continue;
-          const text = msg.text.body;
+          if (msg.type !== "text" && !textoAudio) continue;
+          const text = textoAudio ? `(mensaje de voz) ${textoAudio}` : msg.text.body;
           console.log(`📨 [${phone}] ${name}: ${text}`);
 
           // Mark as read immediately — shows sender blue double-ticks
