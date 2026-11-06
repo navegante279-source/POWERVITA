@@ -457,7 +457,7 @@ function detectHealthConcern(text) {
 
 // ── PRODUCT COMPOUNDS ─────────────────────────────────────────
 const PRODUCT_COMPOUNDS = {
-  "Prunex 1":       "Psyllium, inulina, mucílago de linaza, guindón (ciruela), anís estrella. Lista completa en el envase.",
+  "Prunex 1":       "Psyllium, inulina, mucílago de linaza, guindón (ciruela), alga kelp, anís estrella. Lista completa en el envase.",
   "Flora Liv":      "Lactobacillus acidophilus, Bifidobacterium longum, Streptococcus thermophilus, FOS. Sin gluten.",
   "Liquid Fibra":   "Psyllium husk, inulina de agave, pectina de manzana, fibra de avena. Sin lactosa.",
   "Alpha Balance":  "Cloruro de magnesio, vitamina C, extracto de limón alcalino. Sin gluten. Sin lactosa.",
@@ -580,22 +580,23 @@ DATOS EXACTOS (no inventes ningún otro número):
   1 producto $ 2.150 · 2 productos $ 4.050 · 3 productos $ 5.950 · 4 productos $ 7.850 · 5 productos $ 7.850 (el 5º de regalo) · 6 productos $ 9.750 · 7 productos $ 11.650 · 8 productos $ 13.550 · 9 productos $ 15.450 · 10 productos $ 15.450 (2 de regalo).
   El primero siempre sale $ 2.150 y cada uno de los siguientes $ 1.900: nunca digas que "cada uno" sale $ 1.900 ni que el total es cantidad x $ 1.900. Si pide 4, avisale que por el mismo total lleva 5. Más de 10: [TRANSFER_NEEDED].
 - Si menciona otro precio o promo que vio (por ejemplo en Instagram): decí que es un precio anterior que ya no está vigente, sin negar que fuera nuestro, y dale el precio actual de la tabla.
-- Pago con Mercado Pago: tarjeta de crédito hasta en 10 cuotas sin interés, débito, o efectivo en Abitab / Red Pagos.
+- Pago con Mercado Pago: tarjeta de crédito en cuotas SIN INTERÉS, débito, o efectivo en Abitab / Red Pagos. El máximo de cuotas depende de la tarjeta: Visa hasta 10 (unos $ 215 por mes), OCA hasta 12 (unos $ 179), Mastercard hasta 6 (unos $ 358). Otras tarjetas: las cuotas le aparecen al pagar. NUNCA digas "10 cuotas" sin saber la tarjeta.
+- Si pregunta por cuotas o el precio le pesa: preguntá con qué tarjeta va a pagar y ofrecé según esa tarjeta (Visa 10, OCA 12, Mastercard 6). Si ya la dijo, no la vuelvas a preguntar.
 - Entrega: ${UY_SHIPPING}. Nunca prometas 24-48 hs ni entrega en el día.
 - Cajas: Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres (28 días); Biopro+ Fit trae 24. La dosis es la del envase.
 - Devolución: 5 días hábiles desde que lo recibe para arrepentirse (Ley 17.250), devuelve el producto como lo recibió y se le reintegra el dinero. Si llega vencido, se cambia. Para devoluciones derivá con Andrés.
 
 EL CIERRE = LA PÁGINA DE COMPRA (obligatorio):
 - El pedido se hace SIEMPRE en la página de compra, con el link del producto que recomendaste (está en la lista de precios y links). Ahí elige cantidad, puede sumar otros productos, completa nombre, dirección y departamento, y paga con Mercado Pago. NO pidas los datos de envío por el chat: se cargan en la página.
-- Al mandar el link explicá en 1 línea: "Ahí elegís cuántos querés, cargás tus datos de envío y pagás con Mercado Pago (hasta 10 cuotas sin interés)."
+- Al mandar el link explicá en 1 línea: "Ahí elegís cuántos querés, cargás tus datos de envío y pagás con Mercado Pago (en cuotas sin interés con tarjeta)."
 - Para varios productos o combos también es la página (se mezclan en el carrito). NO derives combos a Andrés.
 - Un solo link por mensaje (el del producto principal). Nunca inventes links ni uses otros.
 
 CÓMO VENDÉS (el mejor vendedor del mundo no presiona: ayuda a decidir, y la persona siente que eligió sola):
 - Primero respondé exactamente lo que preguntó. Nunca esquives una pregunta para hacer otra, ni repitas una pregunta que ya hiciste.
 - Usá sus palabras: si dijo "me siento un globo", hablá de ese globo. Una sola razón concreta de por qué ese producto encaja con lo que contó vale más que cinco beneficios.
-- Sacale el miedo a comprar, según lo que le preocupe: envío gratis, llega en 72 hs hábiles, 10 cuotas de $ 215 sin interés, paga por Mercado Pago, 5 días hábiles para arrepentirse con reintegro. Una o dos cosas, las que correspondan, no todas.
-- Si le parece caro: no discutas. Mostrá el precio en chico con datos reales: 10 cuotas de $ 215, o unos $ 77 por día (28 sobres; Biopro+ Fit, 24 sobres, unos $ 90). Si sigue siendo mucho, decí que lo entendés y que puede empezar con un solo producto.
+- Sacale el miedo a comprar, según lo que le preocupe: envío gratis, llega en 72 hs hábiles, cuotas sin interés según su tarjeta, paga por Mercado Pago, 5 días hábiles para arrepentirse con reintegro. Una o dos cosas, las que correspondan, no todas.
+- Si le parece caro: no discutas. Mostrá el precio en chico con datos reales: las cuotas sin interés de SU tarjeta (si no la sabés, preguntala), o unos $ 77 por día (28 sobres; Biopro+ Fit, 24 sobres, unos $ 90). Si sigue siendo mucho, decí que lo entendés y que puede empezar con un solo producto.
 - Si duda si funciona: sé honesto. Contá para qué está pensado y qué trae; es un suplemento, el resultado varía según la persona y acompaña la alimentación y el movimiento. La honestidad vende más que una promesa.
 - Si dice "lo pienso": decí que está perfecto, preguntá una sola vez si le quedó alguna duda puntual y dejá el link para cuando quiera. Si dice que no, o no le interesa: agradecé con buena onda y no insistas.
 - Si dice "quiero comprar" y no sabés qué producto: no le hagas un diagnóstico. Preguntale cuál quiere o para qué lo busca, una sola vez; apenas lo sepas, mandá el link.
@@ -614,17 +615,24 @@ PROHIBIDO EN URUGUAY, aunque aparezca más abajo en este prompt:
 - Dar consejos médicos o de dosis, o decir que algo es seguro o compatible. Si pregunta por café o cafeína: Thermo T3 trae té verde, y si es sensible a la cafeína o toma mucho café, que lo consulte con su médico.
 
 QUÉ VENDÉS (solo estos datos):
-- Prunex 1: fibras solubles (psyllium, inulina, linaza). Pensado para acompañar el tránsito intestinal. Para digestión pesada, hinchazón, constipación.
+- Prunex 1: fibras solubles (psyllium, inulina, linaza), ciruela (guindón) y alga kelp. Pensado para acompañar el tránsito intestinal. Para digestión pesada, hinchazón, constipación.
 - Vita Xtra T+: complejo multivitamínico y antioxidantes. Pensado para acompañar la energía diaria. Para cansancio o falta de energía.
 - Thermo T3: té verde y L-carnitina. Termogénico pensado para acompañar un plan de descenso de peso.
 - Nocarb-T: fibras solubles y cromo. Pensado para tomar con comidas con muchos carbohidratos.
 - Biopro+ Fit: proteína con Bioprotein+ Colostrum y Prolibra, caja de 24 sobres (no 28). Pensado para el control de peso cuidando el músculo.
+- Leticia, la del video del anuncio, es nutricionista de FuXion. No inventes nada más sobre ella.
 - Quién es: FuXion tiene más de 20 años y está en 37 países. Decilo solo si preguntan si es confiable, junto con que el pago es por Mercado Pago.
 - Si quiere bajar de peso: Thermo T3, y sumá Nocarb-T si come muchos carbohidratos. Otros productos de FuXion: [TRANSFER_NEEDED].
 
 CÓMO LLEGAR AL CIERRE:
-- Lead caliente (nombra un producto, pregunta precio, cómo comprar, envío o pago): en ESE mensaje das producto + $ 2.150 + envío gratis + link + la pregunta de cierre. Sin diagnóstico.
+- Si pregunta algo concreto (precio, cómo comprar, envío, pago, "lo quiero"): respondé eso en ESE mensaje con producto + $ 2.150 + envío gratis + link. Sin diagnóstico.
+- Si solo saluda o pide info general de un producto (ej. "Hola! Quiero info de Prunex", el mensaje del anuncio): NO mandes precio ni link todavía. Contá en 1 línea para qué está pensado y hacé UNA pregunta para entender su caso ("¿Es para vos o para alguien de tu familia? ¿Qué es lo que más te molesta?"). En el siguiente mensaje, con lo que te contó, recomendás + precio + link.
 - Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando. En ese 3er mensaje van SIEMPRE juntos: producto(s) recomendado(s) + precio + link + pregunta de cierre. Nunca preguntes "¿cuándo querés que te llegue?" ni "¿a qué nombre va el pedido?": eso se resuelve en la página.
+- Más de una caja: cada caja dura unos 28 días (casi un mes). Si el problema es de hace tiempo, podés ofrecer UNA vez, como opción y sin presionar, llevar 2 para no cortar ($ 4.050 las dos, envío gratis). Si pide 4, avisale que por el mismo total lleva 5.
+- Persona mayor (65 o más) o compra para otra persona: preguntá una vez si toma alguna medicación. Si toma, aplicá el protocolo de salud (que lo consulte con su médico antes), sin dejar de darle la información.
+- No inventes qué eligen los demás ("la mayoría elige...", "es lo que más se lleva").
+- Cuando diga que va a pagar o que entra al link: pedile que te avise por acá cuando pague, así le coordinamos el envío.
+- Despedidas: si se despide, despedite UNA vez en una línea. Respondé exactamente [NO_REPLY] y nada más SOLO si tu último mensaje ya fue una despedida y ahora solo manda "chau", "gracias", "ok", "dale" o un emoji. Si es la primera despedida, contestá con una línea corta.
 - Si le interesan 2 problemas: recomendá los 2 productos ($ 4.050 los dos, envío gratis) y mandá el link del principal diciendo que en la página suma el otro.
 - Después de resolver una duda, recordá que el link es el mismo; no lo reenvíes en cada mensaje si ya lo tiene, salvo que lo pida o esté por comprar.
 - Urgencia SOLO real y como mucho una vez por conversación: "si lo pedís hoy entra en el próximo despacho". PROHIBIDO inventar stock limitado, descuentos que vencen, precios especiales, clientes, testimonios, kilos o días de resultado.
@@ -1128,7 +1136,7 @@ Productos en líneas separadas con emoji, nunca en párrafo corrido.
 PAGOS${country === "Uruguay" ? " — URUGUAY" : " — SIN CUOTAS EN NINGÚN PAÍS (ABSOLUTO)"}
 ════════════════════════════════
 ${country === "Uruguay" ? `En Uruguay se paga con Mercado Pago (link del producto): tarjeta de crédito, débito o efectivo en Abitab / Red Pagos.
-Si pide cuotas: con tarjeta de crédito hasta 10 cuotas sin interés por Mercado Pago, al pagar en la página de compra.
+Si pide cuotas: con tarjeta de crédito, sin interés, al pagar en la página de compra. Máximo según la tarjeta: Visa 10, OCA 12, Mastercard 6. Preguntá con cuál paga y ofrecé según eso.
 Las reglas de abajo sobre cuotas NO aplican a Uruguay.
 ` : ""}FuXion no maneja cuotas ni financiamiento en ningún país. Pago único siempre.
 NUNCA menciones cuotas como opción. Si el cliente las pide:
@@ -1579,7 +1587,11 @@ async function handleMessage(phone, rawText, contactName) {
 
     // ── POSTVENTA — ya pagó por Mercado Pago (mp-webhook marca purchased) o avisa que pagó ──
     const saysPaid = /acabo de pagar|ya pagu[eé]|ya hice el pago|ya lo pagu[eé]|pago #\d+/i.test(text);
-    if (conv?.purchased || saysPaid) {
+    // Cliente que ya compró y escribe otra cosa (dudas de uso, recompra): sigue la IA, avisando al dueño
+    if (conv?.purchased && !saysPaid) {
+      sendWAMessage(OWNER_PHONE, `📦 CLIENTE (ya compró) — ${contactName || phone} (wa.me/${phone}) escribió:\n"${text}"`).catch(() => {});
+    }
+    if (saysPaid) {
       const asked = (conv?.history || []).some(h => h.role === "assistant" && h.content.includes("dirección y departamento"));
       const reply = asked
         ? `¡Anotado! 📦 ${OWNER_NAME} ya tiene tus datos y coordina el envío con vos. ${UY_SHIPPING}.`
@@ -1751,6 +1763,7 @@ async function handleMessage(phone, rawText, contactName) {
     }
 
     const contextTags = [
+      conv?.purchased ? "[CLIENTE QUE YA COMPRÓ: ayudalo con su duda (uso, envío, cómo le va). Si quiere más, recomendá y mandá el link como siempre. Envíos o reclamos de un pedido: [TRANSFER_NEEDED]]" : "",
       healthTag,
       !healthConcern && objection  ? `[OBJECIÓN DETECTADA: ${objection}]` : "",
       !healthConcern && buySignal  ? (COUNTRY_BUY_LINKS[countryInfo.country]
@@ -1773,6 +1786,17 @@ async function handleMessage(phone, rawText, contactName) {
       aiResponse = `¡Hola! Soy ${agentName} del equipo PowerVita 😊 Tuve un pequeño inconveniente técnico. ${OWNER_NAME} te contactará muy pronto. ¡Disculpa!`;
     }
     await minWait; // ensure minimum delay even when AI was faster
+
+    // La IA decide no contestar (despedida ya hecha y el cliente solo manda "chau", emoji, etc.)
+    if (aiResponse.includes("[NO_REPLY]")) {
+      await saveConversation(phone, {
+        history: [...history, { role: "user", content: text }].slice(-20),
+        retries,
+        last_message_at: new Date().toISOString(),
+      });
+      console.log(`🤐 Sin respuesta (despedida): ${phone}`);
+      return;
+    }
 
     // Detect transfer tag
     const needsTransfer = aiResponse.includes("[TRANSFER_NEEDED]");
@@ -2313,6 +2337,107 @@ app.listen(PORT, () => {
   }, 10_000);
 });
 
+// ── SEGUIMIENTO POSVENTA (Uruguay, pagos de Mercado Pago) ─────
+// 1) ~5 días después del pago: "¿te llegó bien? ¿dudas de cómo tomarlo?"
+// 2) Cuando se le está por terminar: cada caja dura 28 días (Biopro+ Fit 24); avisa 4 días antes.
+// Fuera de las 24 h de WhatsApp solo se puede escribir con plantilla aprobada por Meta.
+// Estado en leads.status: sold → postventa_1 → postventa_2 (un pago nuevo vuelve a "sold").
+const POSTVENTA_TPL_LLEGADA = process.env.POSTVENTA_TPL_LLEGADA || "pv_postventa_llegada";
+const POSTVENTA_TPL_RECOMPRA = process.env.POSTVENTA_TPL_RECOMPRA || "pv_recompra";
+const PV_SLUGS = { vita: "Vita Xtra T+", thermo: "Thermo T3", nocarb: "Nocarb-T", prunex: "Prunex 1", biopro: "Biopro+ Fit" };
+const DIA_MS = 24 * HORA_MS;
+
+// "pv|prunexx2,thermox1|tel|origen|ts" → [{ nombre, cajas }]
+function itemsDelPago(ref = "") {
+  return String(ref.split("|")[1] || "").split(",").filter(Boolean).map(x => {
+    const [, slug, q] = x.match(/^(.+)x(\d+)$/) || [null, x, "1"];
+    return { nombre: PV_SLUGS[slug] || slug, cajas: Number(q) || 1 };
+  });
+}
+
+// Días hasta que se le termina el primer producto
+function diasDeProducto(items) {
+  const dias = items.map(i => i.cajas * (i.nombre === "Biopro+ Fit" ? 24 : 28));
+  return dias.length ? Math.min(...dias) : 28;
+}
+
+function enHorarioPostventa(ahora = new Date()) {
+  const h = new Date(ahora.getTime() - UY_OFFSET_MS).getUTCHours();
+  return h >= 10 && h < 20;
+}
+
+async function sendWATemplate(to, name, params = []) {
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) return { error: { message: "sin token" } };
+  const res = await fetch(`https://graph.facebook.com/v19.0/${WHATSAPP_PHONE_ID}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messaging_product: "whatsapp", to, type: "template",
+      template: { name, language: { code: "es" },
+        components: params.length ? [{ type: "body", parameters: params.map(text => ({ type: "text", text })) }] : [] },
+    }),
+  });
+  return res.json().catch(() => ({ error: { message: "respuesta inválida" } }));
+}
+
+const POSTVENTA_TEXTOS = {
+  postventa_1: (prod) => `Hola! Te escribimos de Power Vita por tu pedido de ${prod}. ¿Ya te llegó bien? Si tenés alguna duda sobre cómo tomarlo, respondé este mensaje y te ayudamos.`,
+  postventa_2: (prod) => `Hola! Tu ${prod} ya debe estar por terminarse: cada caja trae 28 sobres, casi un mes. Si querés seguir sin cortar, respondé este mensaje y te pasamos el link para pedirlo de nuevo, con envío gratis a todo Uruguay.`,
+};
+
+async function runPostventa() {
+  if (!supabase || !enHorarioPostventa()) return;
+  try {
+    const desde = new Date(Date.now() - 400 * DIA_MS).toISOString();
+    const { data: pagos, error } = await supabase
+      .from("pagos_mp").select("id,monto,referencia,telefono,aprobado_at")
+      .gte("aprobado_at", desde).order("aprobado_at", { ascending: false });
+    if (error) { console.error("Postventa error:", error.message); return; }
+
+    // Último pago por teléfono (los de prueba, menos de $ 500, no cuentan)
+    const ultimo = new Map();
+    for (const p of pagos || []) {
+      const tel = p.telefono || String(p.referencia || "").split("|")[2];
+      if (!tel || Number(p.monto) < 500 || ultimo.has(tel)) continue;
+      ultimo.set(tel, p);
+    }
+
+    for (const [tel, pago] of ultimo) {
+      const lead = await getLead(tel);
+      if (!lead || lead.status === "opted_out") continue;
+      const items = itemsDelPago(pago.referencia);
+      const prod = items.map(i => i.nombre).join(" y ") || "pedido";
+      const pagado = new Date(pago.aprobado_at).getTime();
+      const dias = (Date.now() - pagado) / DIA_MS;
+
+      let etapa = null;
+      if (lead.status === "sold" && dias >= 5 && dias < 20) etapa = "postventa_1";
+      const recompra = diasDeProducto(items) - 4;
+      if (["sold", "postventa_1"].includes(lead.status) && dias >= recompra && dias < recompra + 10) etapa = "postventa_2";
+      if (!etapa) continue;
+
+      const conv = await getConversation(tel);
+      if (conv?.opted_out || pendingReplies.has(tel)) continue;
+      const texto = POSTVENTA_TEXTOS[etapa](prod);
+      const ventanaAbierta = conv?.last_message_at && Date.now() - new Date(conv.last_message_at).getTime() < VENTANA_WA_MS;
+      const r = ventanaAbierta
+        ? await sendWAMessage(tel, texto)
+        : await sendWATemplate(tel, etapa === "postventa_1" ? POSTVENTA_TPL_LLEGADA : POSTVENTA_TPL_RECOMPRA, [prod]);
+      if (!r || r.error) { console.error(`Postventa ${etapa} a ${tel} falló:`, r?.error?.message); continue; }
+
+      await saveConversation(tel, { history: [...(conv?.history || []), { role: "assistant", content: texto }].slice(-20) });
+      await saveLead(tel, { status: etapa });
+      sendWAMessage(OWNER_PHONE, `📬 Posventa ${etapa === "postventa_1" ? "(¿te llegó?)" : "(recompra)"} enviada a wa.me/${tel} · ${prod}`).catch(() => {});
+      console.log(`📬 ${etapa} enviado a ${tel}`);
+    }
+  } catch (err) {
+    console.error("Postventa error:", err.message);
+  }
+}
+
+setInterval(runPostventa, 30 * 60 * 1000);
+setTimeout(runPostventa, 90_000);
+
 // Revisa cada 5 min para respetar las 9:00 y las 21:30
 setInterval(runFollowUps, 5 * 60 * 1000);
 setTimeout(runFollowUps, 30_000); // First run 30s after start
@@ -2356,4 +2481,4 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000);
-export { buildSystemPrompt, limpiarPromptUruguay, momentoDeEnvio, debeEnviar, productoDelChat, runFollowUps, closeNowTag, getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
+export { itemsDelPago, diasDeProducto, buildSystemPrompt, limpiarPromptUruguay, momentoDeEnvio, debeEnviar, productoDelChat, runFollowUps, closeNowTag, getAIResponse, detectObjection, hasBuyingSignal, isThirdPartyPurchase, detectHealthConcern, sanitizeForWhatsApp, isBuyLink, COUNTRY_BUY_LINKS, isWarmLead };
