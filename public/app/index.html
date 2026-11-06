@@ -196,7 +196,8 @@ nav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;st
   function sinVer(c){if(!c.transferido)return false;var v=vistos()[c.phone];return !v||new Date(c.ultimo)>new Date(v)}
   function vClientes(d){
     if(!d.clientes.length)return '<div class="card vacio">Todavía no hay clientes.</div>';
-    var orden=d.clientes.slice().sort(function(a,b){return (sinVer(b)?2:b.transferido?1:0)-(sinVer(a)?2:a.transferido?1:0)});
+    // La conversación más reciente arriba de todo
+    var orden=d.clientes.slice().sort(function(a,b){return (new Date(b.ultimo).getTime()||0)-(new Date(a.ultimo).getTime()||0)});
     return orden.map(function(c){
       var e=c.transferido?(sinVer(c)?ESTADO.transferred:['Visto · te toca a vos','t-n']):(ESTADO[c.estado]||[c.estado||'Sin estado','t-n']);
       return '<article class="ped"><div class="cab"><b>'+esc(c.nombre||tel(c.phone))+'</b><span class="nota">'+esc(fecha(c.ultimo))+'</span></div>'+
