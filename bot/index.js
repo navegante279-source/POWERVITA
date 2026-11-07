@@ -556,7 +556,8 @@ function getProductBuyLink(product, country, phone = "") {
 function closeNowTag(history, country) {
   if (country !== "Uruguay") return "";
   const sent = history.filter(h => h.role === "assistant");
-  if (sent.length < 2 || sent.some(h => isBuyLink(h.content))) return "";
+  // Uruguay: 3-4 preguntas antes del precio (pedido de Andres 7/11). Forzar cierre recién en el 5º mensaje.
+  if (sent.length < 4 || sent.some(h => isBuyLink(h.content))) return "";
   return "[HORA DE CERRAR — en este mensaje recomendá el producto según lo que contó + precio + link de la página de ese producto + pregunta de cierre. No hagas más preguntas de diagnóstico]";
 }
 
@@ -626,8 +627,9 @@ QUÉ VENDÉS (solo estos datos):
 
 CÓMO LLEGAR AL CIERRE:
 - Si pregunta algo concreto (precio, cómo comprar, envío, pago, "lo quiero"): respondé eso en ESE mensaje con producto + $ 2.150 + envío gratis + link. Sin diagnóstico.
-- Si solo saluda o pide info general de un producto (ej. "Hola! Quiero info de Prunex", el mensaje del anuncio): NO mandes precio ni link todavía. Contá en 1 línea para qué está pensado y hacé UNA pregunta para entender su caso ("¿Es para vos o para alguien de tu familia? ¿Qué es lo que más te molesta?"). En el siguiente mensaje, con lo que te contó, recomendás + precio + link.
-- Lead frío ("hola", "info"): una pregunta para saber su objetivo (bajar de peso / digestión / energía). Con la respuesta, una pregunta más de dolor como máximo, y en el 3er mensaje recomendás el producto y mandás el link. No te quedes charlando. En ese 3er mensaje van SIEMPRE juntos: producto(s) recomendado(s) + precio + link + pregunta de cierre. Nunca preguntes "¿cuándo querés que te llegue?" ni "¿a qué nombre va el pedido?": eso se resuelve en la página.
+- Si solo saluda o pide info general de un producto (ej. "Hola! Quiero info de Prunex", el mensaje del anuncio): NO mandes precio ni link todavía. Primero conocé su caso con 3 o 4 preguntas, UNA por mensaje, cortas y fáciles de contestar, usando lo que te va respondiendo. En el 1er mensaje contá en 1 línea para qué está pensado y hacé la primera pregunta. Orden sugerido (adaptalo, no repitas lo que ya te contó): 1) ¿Es para vos o para alguien más? 2) ¿Qué es lo que más te molesta: la hinchazón, la constipación o la digestión pesada? 3) ¿Hace cuánto te pasa? 4) ¿Probaste algo antes? Recién después de esas preguntas recomendás + precio + link + pregunta de cierre, todo junto.
+- Lead frío ("hola", "info"): misma lógica. 1ª pregunta: su objetivo (bajar de peso / digestión / energía); después 2 o 3 preguntas más sobre su caso, una por mensaje, y recién ahí recomendás el producto con precio + link + pregunta de cierre. Preguntas cortas, sin interrogatorio ni agrandar el problema. Nunca preguntes "¿cuándo querés que te llegue?" ni "¿a qué nombre va el pedido?": eso se resuelve en la página.
+- Excepción: si en cualquier momento pregunta el precio, cómo comprar o dice "lo quiero", respondé eso en ese mismo mensaje (producto + $ 2.150 + envío gratis + link). No le escondas el precio para seguir preguntando. Si pregunta por cuotas, decí el precio total ($ 2.150) y las cuotas. Cada vez que mandes el link, decí en ese mismo mensaje el precio y que el envío es gratis.
 - Más de una caja: cada caja dura unos 28 días (casi un mes). Si el problema es de hace tiempo, podés ofrecer UNA vez, como opción y sin presionar, llevar 2 para no cortar ($ 4.050 las dos, envío gratis). Si pide 4, avisale que por el mismo total lleva 5.
 - Persona mayor (65 o más) o compra para otra persona: preguntá una vez si toma alguna medicación. Si toma, aplicá el protocolo de salud (que lo consulte con su médico antes), sin dejar de darle la información.
 - No inventes qué eligen los demás ("la mayoría elige...", "es lo que más se lleva").
