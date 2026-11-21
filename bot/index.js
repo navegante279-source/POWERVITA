@@ -12,6 +12,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import crypto from "crypto";
 import ws from "ws";
 import { armarReporte } from "./reporte.js";
+import { MARCA_CURSO, esMensajeDeCurso, esChatDeCurso, promptCurso } from "./curso.js";
 
 // Node.js 18 doesn't have native WebSocket — polyfill before Supabase init
 if (!globalThis.WebSocket) globalThis.WebSocket = ws.WebSocket ?? ws;
@@ -1642,6 +1643,12 @@ async function handleMessage(phone, rawText, contactName) {
     // If already opted out, stay silent
     if (conv?.opted_out) return;
 
+    // ── CURSO "Clientes por WhatsApp" — chats que vienen de la página del curso ──
+    if (esChatDeCurso(conv?.history) || esMensajeDeCurso(text)) {
+      await handleCurso(phone, text, conv, contactName);
+      return;
+    }
+
     // ── POSTVENTA — ya pagó por Mercado Pago (mp-webhook marca purchased) o avisa que pagó ──
     const saysPaid = /acabo de pagar|ya pagu[eé]|ya hice el pago|ya lo pagu[eé]|pago #\d+/i.test(text);
     // Cliente que ya compró y escribe otra cosa (dudas de uso, recompra): sigue la IA, avisando al dueño
@@ -1906,6 +1913,54 @@ async function handleMessage(phone, rawText, contactName) {
   }
 }
 
+// ── MODO CURSO ────────────────────────────────────────────────
+async function handleCurso(phone, text, conv, contactName) {
+  let history = conv?.history || [];
+  const nuevo = !esChatDeCurso(history);
+  if (nuevo) {
+    history = [{ role: "system", content: MARCA_CURSO }];
+    sendWAMessage(OWNER_PHONE, `🎓 CURSO — nuevo contacto
+👤 ${contactName || "Sin nombre"}
+📱 wa.me/${phone}
+💬 Dice: "${text}"`).catch(() => {});
+    pushOwner("🎓 Consulta del curso", `${contactName || "Alguien"} escribió desde la página del curso`, phone);
+  }
+  const messages = [
+    ...history.filter(h => h.role !== "system").map(h => ({ role: h.role, content: h.content })),
+    { role: "user", content: text },
+  ];
+  const minWait = humanDelay(700, 1900);
+  let ai;
+  try {
+    const r = await anthropic.messages.create({ model: "claude-sonnet-4-6", max_tokens: 400, system: promptCurso(), messages });
+    ai = r.content[0].text;
+  } catch (err) {
+    console.error("AI error (curso):", err.message);
+    ai = "¡Hola! Tuve un problema técnico para responderte. Ya le aviso a Andrés y te escribe por acá. [TRANSFER_NEEDED]";
+  }
+  await minWait;
+  if (ai.includes("[NO_REPLY]")) {
+    await saveConversation(phone, { history: [...history, { role: "user", content: text }].slice(-20), last_message_at: new Date().toISOString() });
+    return;
+  }
+  const transferir = ai.includes("[TRANSFER_NEEDED]");
+  const respuesta = sanitizeForWhatsApp(ai.replace("[TRANSFER_NEEDED]", "").trim());
+  // La marca MODO_CURSO va siempre primero para que no se pierda al recortar a 20 mensajes
+  const resto = [...history.filter(h => h.content !== MARCA_CURSO), { role: "user", content: text }, { role: "assistant", content: respuesta }].slice(-19);
+  history = [{ role: "system", content: MARCA_CURSO }, ...resto];
+  await saveConversation(phone, { history, transferred: transferir, last_message_at: new Date().toISOString() });
+  await sendWAMessage(phone, respuesta);
+  await saveLead(phone, { name: contactName, country: detectCountry(phone).country, lang: "es", status: "curso" });
+  if (transferir) {
+    const resumen = history.filter(h => h.role !== "system").slice(-6).map(h => `${h.role === "user" ? "Cliente" : "Bot"}: ${h.content}`).join("\n");
+    sendWAMessage(OWNER_PHONE, `🎓 CURSO — te necesita ${contactName || phone} (wa.me/${phone}). El bot ya no le responde.
+
+${resumen}`).catch(() => {});
+    pushOwner("🎓 Curso: te pasaron un contacto", `${contactName || "Alguien"} necesita que le respondas vos`, phone);
+  }
+  console.log(`🎓 Curso: respondido a ${phone}${transferir ? " → TRANSFER" : ""}`);
+}
+
 // ── DEMORA DE RESPUESTA (para que no parezca automático) ──────
 // Espera 1 a 2 min desde el primer mensaje y junta todo lo que el cliente escriba en ese rato en una
 // sola respuesta. Si sigue escribiendo, deja al menos 20 s desde su último mensaje.
@@ -2038,7 +2093,7 @@ async function reactivateTodayLeads() {
       .from("leads")
       .select("*")
       .gte("updated_at", todayMidnight.toISOString())
-      .not("status", "in", '("sold","opted_out","cold","transferred")');
+      .not("status", "in", '("sold","opted_out","cold","transferred","curso")');
 
     if (error) {
       sendWAMessage(OWNER_PHONE, `❌ Error al buscar leads de hoy: ${error.message}`).catch(() => {});
