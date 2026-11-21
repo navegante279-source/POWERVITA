@@ -2330,6 +2330,13 @@ app.post("/webhook", async (req, res) => {
           // Mark as read immediately — shows sender blue double-ticks
           markAsRead(msg.id);
 
+          // Códigos de verificación de Facebook/Instagram/WhatsApp: no se contestan, se reenvían al dueño
+          if (/(es tu c[oó]digo|c[oó]digo de confirmaci[oó]n|is your (confirmation |verification )?code)/i.test(text) && /\d{4,8}/.test(text)) {
+            sendWAMessage(OWNER_PHONE, `🔐 Llegó un código al número del bot:
+${text}`).catch(() => {});
+            continue;
+          }
+
           // ── Owner commands ────────────────────────────────────
           if (phone === OWNER_PHONE) {
             if (/^VENDIDO\s+\d+/i.test(text.trim())) {
