@@ -6,8 +6,9 @@
 
 export const MARCA_CURSO = "MODO_CURSO";
 
+// Power Vita no vende cursos: cualquier mención a "curso" (salvo "en curso") es una consulta del curso.
 export function esMensajeDeCurso(text = "") {
-  return /curso/i.test(text) && /clientes por whatsapp/i.test(text);
+  return /\bcursos?\b/i.test(text) && !/\ben curso\b/i.test(text);
 }
 
 export function esChatDeCurso(history = []) {
