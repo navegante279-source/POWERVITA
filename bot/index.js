@@ -12,7 +12,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import crypto from "crypto";
 import ws from "ws";
 import { armarReporte } from "./reporte.js";
-import { MARCA_CURSO, esMensajeDeCurso, esChatDeCurso, promptCurso } from "./curso.js";
+import { MARCA_CURSO, esMensajeDeCurso, esChatDeCurso, promptCurso, MARCA_TEMA, yaSePreguntoTema, PREGUNTA_TEMA, REPREGUNTA_TEMA, clasificarTema } from "./curso.js";
 
 // Node.js 18 doesn't have native WebSocket — polyfill before Supabase init
 if (!globalThis.WebSocket) globalThis.WebSocket = ws.WebSocket ?? ws;
@@ -1649,6 +1649,38 @@ async function handleMessage(phone, rawText, contactName) {
       return;
     }
 
+    // ── ¿CURSO O PRODUCTOS? — contacto nuevo sin tema claro ──
+    // Los que vienen de la landing de Power Vita traen [ref:...] y van directo a Power Vita.
+    const historialPrevio = conv?.history || [];
+    const preguntado = yaSePreguntoTema(historialPrevio);
+    const sinCharla = !historialPrevio.some(h => h.role !== "system");
+    if ((sinCharla || preguntado) && !landingRef && !conv?.purchased) {
+      const ultimaPregunta = preguntado ? [...historialPrevio].reverse().find(h => h.role === "assistant")?.content || "" : "";
+      const tema = await clasificarTema(anthropic, text, ultimaPregunta);
+      console.log(`🧭 Tema [${phone}]: ${tema}${preguntado ? " (respuesta a la pregunta)" : ""}`);
+      if (tema === "curso") {
+        await handleCurso(phone, text, conv, contactName);
+        return;
+      }
+      if (tema === "duda" && !historialPrevio.some(h => h.content === REPREGUNTA_TEMA)) {
+        const pregunta = preguntado ? REPREGUNTA_TEMA : PREGUNTA_TEMA;
+        await humanDelay(700, 1900);
+        await sendWAMessage(phone, pregunta);
+        const base = preguntado ? historialPrevio : [{ role: "system", content: MARCA_TEMA }];
+        await saveConversation(phone, {
+          history: [...base, { role: "user", content: text }, { role: "assistant", content: pregunta }].slice(-20),
+          last_message_at: new Date().toISOString(),
+        });
+        if (!preguntado) sendWAMessage(OWNER_PHONE, `🆕 Nuevo contacto — ${contactName || "Sin nombre"} (wa.me/${phone}) dijo "${text}". Le pregunté si es por el curso o por Power Vita.`).catch(() => {});
+        return;
+      }
+      // Productos (o sigue sin quedar claro después de repreguntar): sigue Power Vita como siempre
+      if (preguntado) {
+        conv.history = historialPrevio.filter(h => h.content !== MARCA_TEMA);
+        conv.temaRecienElegido = true;
+      }
+    }
+
     // ── POSTVENTA — ya pagó por Mercado Pago (mp-webhook marca purchased) o avisa que pagó ──
     const saysPaid = /acabo de pagar|ya pagu[eé]|ya hice el pago|ya lo pagu[eé]|pago #\d+/i.test(text);
     // Cliente que ya compró y escribe otra cosa (dudas de uso, recompra): sigue la IA, avisando al dueño
@@ -1678,7 +1710,7 @@ async function handleMessage(phone, rawText, contactName) {
     let retries = conv?.retries || 0;
 
     // ── NUEVO LEAD — notificar al dueño en el primer mensaje ──
-    const isNewLead = !conv || !history.length;
+    const isNewLead = !conv || !history.length || conv.temaRecienElegido;
     if (isNewLead) {
       const flagMap = { Uruguay:"🇺🇾", Argentina:"🇦🇷", Colombia:"🇨🇴", México:"🇲🇽",
         España:"🇪🇸", Brasil:"🇧🇷", Chile:"🇨🇱", Perú:"🇵🇪", "Estados Unidos":"🇺🇸" };
@@ -1918,7 +1950,8 @@ async function handleCurso(phone, text, conv, contactName) {
   let history = conv?.history || [];
   const nuevo = !esChatDeCurso(history);
   if (nuevo) {
-    history = [{ role: "system", content: MARCA_CURSO }];
+    const previo = yaSePreguntoTema(history) ? history.filter(h => h.role !== "system").slice(-4) : [];
+    history = [{ role: "system", content: MARCA_CURSO }, ...previo];
     sendWAMessage(OWNER_PHONE, `🎓 CURSO — nuevo contacto
 👤 ${contactName || "Sin nombre"}
 📱 wa.me/${phone}

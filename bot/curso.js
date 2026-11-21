@@ -84,3 +84,39 @@ OTROS TEMAS
 Si pregunta por suplementos o productos Power Vita, dile que este chat es para el curso y que le avisas a Andrés, y agrega [TRANSFER_NEEDED].
 Si solo se despide o agradece y ya te despediste, responde exactamente [NO_REPLY].`;
 }
+
+// ── ¿CURSO O PRODUCTOS? ───────────────────────────────────────
+// Un contacto nuevo que no deja claro el tema ("hola", "dudas", "info") recibe una pregunta corta.
+// La marca MARCA_TEMA en el historial indica que ya se le preguntó.
+export const MARCA_TEMA = "PREGUNTA_TEMA";
+
+export function yaSePreguntoTema(history = []) {
+  return history.some(h => h.role === "system" && h.content === MARCA_TEMA);
+}
+
+export const PREGUNTA_TEMA =
+  "¡Hola! 👋 Soy el asistente de Andrés Varela. ¿En qué te puedo ayudar?\n\n" +
+  "¿Me escribes por el curso de anuncios para conseguir clientes por WhatsApp, o por los productos de bienestar Power Vita?";
+
+export const REPREGUNTA_TEMA =
+  "Perfecto 😊 Para ayudarte bien: ¿es sobre el curso de anuncios en Facebook e Instagram, o sobre los suplementos Power Vita?";
+
+// Devuelve "curso", "productos" o "duda"
+export async function clasificarTema(anthropic, text, preguntaPrevia = "") {
+  const system =
+    "Clasificas el primer mensaje de WhatsApp que llega a un número que atiende DOS cosas:\n" +
+    "- curso: el curso online de Andrés Varela para dueños de negocios, sobre cómo hacer anuncios en Facebook/Instagram (Meta) que traen clientes por WhatsApp. Temas: curso, clases, anuncios, publicidad, Meta, Facebook, Instagram, campañas, marketing, vender más, conseguir clientes, Hotmart, precio del curso, acceso, devolución de la compra del curso.\n" +
+    "- productos: suplementos de bienestar FuXion de Power Vita en Uruguay (Prunex, Thermo T3, Nocarb-T, Vita Xtra T+, Biopro+ Fit). Temas: digestión, estreñimiento, energía, bajar de peso, ansiedad por comer, proteína, cajas, envío, pedido, cuotas, FuXion.\n" +
+    "- duda: saludo o pedido genérico sin pistas (\"hola\", \"dudas\", \"info\", \"consulta\", \"precio\", \"buenas\").\n" +
+    "Si la persona responde a la pregunta \"¿curso o productos?\", interpreta su respuesta (\"lo primero\", \"el de anuncios\", \"suplementos\", \"lo de la panza\").\n" +
+    "Responde SOLO una palabra: curso, productos o duda.";
+  const content = preguntaPrevia ? `Le preguntamos: "${preguntaPrevia}"\nRespondió: "${text}"` : `Mensaje: "${text}"`;
+  try {
+    const r = await anthropic.messages.create({ model: "claude-haiku-4-5-20251001", max_tokens: 5, system, messages: [{ role: "user", content }] });
+    const t = (r.content[0]?.text || "").toLowerCase();
+    return t.includes("curso") ? "curso" : t.includes("producto") ? "productos" : "duda";
+  } catch (e) {
+    console.error("clasificarTema:", e.message);
+    return "productos";
+  }
+}
