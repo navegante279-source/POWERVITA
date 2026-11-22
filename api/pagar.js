@@ -14,6 +14,11 @@ const SITE = "https://powervita.vercel.app";
 
 const CUOTAS = 10;
 
+// Promo Biopro+ Fit 50% (lote de consumo inmediato, hasta agotar stock): precio fijo por unidad,
+// sin descuento por cantidad y sin contar para el "5º de regalo". Para volver al precio normal: PRECIO_BIOPRO = 0.
+export const PRECIO_BIOPRO = Number(process.env.PRECIO_BIOPRO_UY ?? 1290);
+const esPromo = (prod) => prod === "biopro" && PRECIO_BIOPRO > 0;
+
 // Unidades que se cobran: cada 5, una va de regalo.
 export const pagasUY = (n) => n - Math.floor(n / 5);
 // Total de un pedido de n unidades: la 1ª cobrada a precio lleno, el resto con descuento.
@@ -39,8 +44,11 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
   if (!lineas.length) throw new Error("Producto inválido");
 
   const telefono = clean(buyer.telefono, 20).replace(/\D/g, "");
-  const unidades = lineas.reduce((s, l) => s + l.q, 0);
-  const total = totalUY(unidades);
+  const promo = lineas.filter(l => esPromo(l.prod));
+  const normales = lineas.filter(l => !esPromo(l.prod));
+  const unidadesPromo = promo.reduce((s, l) => s + l.q, 0);
+  const unidades = normales.reduce((s, l) => s + l.q, 0);
+  const total = totalUY(unidades) + unidadesPromo * PRECIO_BIOPRO;
   // pv| identifica las ventas de Power Vita dentro de la cuenta MP (el reporte filtra por esto).
   // Lleva las cantidades completas (regalos incluidos): el webhook arma el envío con esto.
   const ref = `pv|${lineas.map(l => `${l.prod}x${l.q}`).join(",")}|${telefono}|${origen}|${Date.now()}`;
@@ -48,7 +56,7 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
   // MP no acepta precios negativos ni en cero: la 1ª unidad va a precio lleno, las demás con el
   // descuento, y los regalos (las últimas unidades del pedido) no se cobran pero se nombran.
   let regalo = unidades - pagasUY(unidades);
-  const porLinea = lineas.map(l => ({ ...l, pagas: l.q })).reverse();
+  const porLinea = normales.map(l => ({ ...l, pagas: l.q })).reverse();
   for (const l of porLinea) { const r = Math.min(regalo, l.pagas); l.pagas -= r; l.regalo = r; regalo -= r; }
   porLinea.reverse();
   const mpItems = [];
@@ -62,6 +70,9 @@ async function crearPreferencia({ items, buyer = {}, origen }) {
   }
   const regalos = porLinea.filter(l => l.regalo).map(l => `${l.regalo} ${PRODUCTOS_UY[l.prod]}`);
   if (regalos.length) mpItems[mpItems.length - 1].title += ` · + ${regalos.join(", ")} de regalo`;
+  for (const l of promo) {
+    mpItems.push({ id: l.prod, currency_id: "UYU", title: `${PRODUCTOS_UY[l.prod]} — FuXion (promo 50%)`, quantity: l.q, unit_price: PRECIO_BIOPRO });
+  }
 
   const body = {
     items: mpItems,

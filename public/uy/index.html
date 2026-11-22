@@ -172,7 +172,7 @@
       <p class="cat" id="cat"></p>
       <h1 id="nombreProd"></h1>
       <p class="gancho" id="gancho"></p>
-      <div class="precio"><b>$ 2.150</b><span>o 10 cuotas de $ 215 sin interés</span></div>
+      <div class="precio" id="precioFicha"><b>$ 2.150</b><span>o 10 cuotas de $ 215 sin interés</span></div>
       <p class="detalle" id="detalle"></p>
 
       <div class="mix"><b>🎁 Llevá más y ahorrá</b>Podés <b>mezclar productos distintos</b>: por ejemplo 1 Thermo T3 + 1 Nocarb-T = $ 4.050. El descuento vale igual.</div>
@@ -223,7 +223,7 @@
       <details>
         <summary>Preguntas frecuentes</summary>
         <div class="cont">
-          <p><b>¿Qué trae cada caja?</b> Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres individuales. Biopro+ Fit trae 24.</p>
+          <p><b>¿Qué trae cada caja?</b> Prunex 1, Vita Xtra T+, Thermo T3 y Nocarb-T traen 28 sobres individuales. Biopro+ Fit trae 14.</p>
           <p><b>¿Los productos son originales?</b> Sí, son productos FuXion originales y sellados.</p>
           <p><b>¿Puedo tomarlo si estoy embarazada o con medicación?</b> Son suplementos alimenticios, no medicamentos. Si estás embarazada, en lactancia, con alguna enfermedad o tomando medicación, consultá antes con tu médico.</p>
         </div>
@@ -255,7 +255,7 @@
   <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noreferrer" aria-label="Escribinos por WhatsApp"><svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
   <div class="barra" id="barra" hidden>
-    <div class="p"><b id="barraNombre"></b>$ 2.150 · envío gratis</div>
+    <div class="p"><b id="barraNombre"></b><span id="barraPrecio">$ 2.150</span> · envío gratis</div>
     <button class="btn btn-ok" id="ctaBarra" type="button">Agregar al carrito</button>
   </div>
 
@@ -296,6 +296,9 @@
   <script>
     var PRECIO = 2150;
     var DESCUENTO = 250; // por cada unidad desde la 2ª (igual que api/pagar.js)
+    // Promo con precio fijo por caja, sin descuento por cantidad ni regalo (igual que PRECIO_BIOPRO en api/pagar.js)
+    var PROMO = { biopro: 1290 };
+    var precioDe = function (k) { return PROMO[k] || PRECIO; };
     var WA = "59892423078"; // número del bot. Vacío = se ocultan los botones de WhatsApp
     var CUOTAS = 10;
 
@@ -335,7 +338,7 @@
         ing: "Fibra de yacón · Acacia · Inulina · Pectina de manzana · Canela · Té verde · Cromo"
       },
       biopro: {
-        nombre: "Biopro+ Fit", img: "/uy/img/biopro.jpg", para: "Proteína", sobres: 24,
+        nombre: "Biopro+ Fit", img: "/uy/img/biopro.jpg", para: "Proteína", sobres: 14,
         quien: ["Entrenás y querés sumar proteína", "Buscás una colación práctica entre comidas", "Te cuesta llegar a la proteína del día"],
         titulo: "El batido proteico para <em>cuidar tu figura</em>",
         bajada: "Proteína con Prolibra® para acompañar tu alimentación y tu entrenamiento.",
@@ -381,7 +384,11 @@
     // Ficha del producto (se cambia desde los botones de arriba o las tarjetas de abajo sin recargar)
     function mostrar(k) {
       clave = k; P = PRODUCTOS[k]; pack = 1;
-      document.title = P.nombre + " · $ 2.150 | Power Vita Uruguay";
+      var pr = precioDe(k);
+      document.title = P.nombre + " · " + fmt(pr) + " | Power Vita Uruguay";
+      $("precioFicha").innerHTML = (PROMO[k] ? "<s style=\"font-size:.6em;opacity:.6;margin-right:8px\">" + fmt(PRECIO) + "</s><b>" + fmt(pr) + "</b><span>50% OFF · hasta agotar stock · lote de consumo inmediato</span>"
+        : "<b>" + fmt(pr) + "</b><span>o " + CUOTAS + " cuotas de " + fmt(Math.round(pr / CUOTAS)) + " sin interés</span>");
+      $("barraPrecio").textContent = fmt(pr);
       $("cat").textContent = P.para;
       $("nombreProd").textContent = P.nombre;
       $("gancho").innerHTML = P.titulo;
@@ -403,17 +410,19 @@
       }).join("");
       $("otros").innerHTML = Object.keys(PRODUCTOS).filter(function (x) { return x !== k; }).map(function (x) {
         var o = PRODUCTOS[x];
-        return '<button type="button" class="card-p" data-ver="' + x + '"><div class="im"><img src="' + o.img + '" alt="" loading="lazy"></div><b>' + o.nombre + "</b><span>" + o.para + " · " + fmt(PRECIO) + "</span></button>";
+        return '<button type="button" class="card-p" data-ver="' + x + '"><div class="im"><img src="' + o.img + '" alt="" loading="lazy"></div><b>' + o.nombre + "</b><span>" + o.para + " · " + fmt(precioDe(x)) + "</span></button>";
       }).join("");
       renderPacks();
     }
     function renderPacks() {
+      var promo = PROMO[clave];
+      var tot = function (n) { return promo ? n * promo : totalDe(n); };
       $("escala").innerHTML = [1, 2, 3, 5].map(function (n) {
-        var ah = n * PRECIO - totalDe(n);
+        var ah = n * PRECIO - tot(n);
         return '<button type="button" role="radio" aria-checked="' + (n === pack) + '" class="pack' + (n === pack ? " on" : "") + '" data-pack="' + n + '"><span class="rd"></span>' +
-          '<span class="tx">' + (n === 1 ? "1 producto" : n + " productos") + (n === 5 ? '<span class="tag">El 5º gratis</span>' : ah ? '<span class="tag">Ahorrás ' + fmt(ah) + "</span>" : "") +
-          "<small>" + (n === 1 ? "" : "Iguales o combinados · ") + CUOTAS + " cuotas de " + fmt(Math.round(totalDe(n) / CUOTAS)) + "</small></span>" +
-          '<span class="pr">' + (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "") + fmt(totalDe(n)) + "</span></button>";
+          '<span class="tx">' + (n === 1 ? "1 producto" : n + " productos") + (n === 5 && !promo ? '<span class="tag">El 5º gratis</span>' : ah ? '<span class="tag">Ahorrás ' + fmt(ah) + "</span>" : "") +
+          "<small>" + (n === 1 ? "" : "Iguales o combinados · ") + CUOTAS + " cuotas de " + fmt(Math.round(tot(n) / CUOTAS)) + "</small></span>" +
+          '<span class="pr">' + (ah ? "<s>" + fmt(n * PRECIO) + "</s>" : "") + fmt(tot(n)) + "</span></button>";
       }).join("");
     }
     mostrar(clave);
@@ -431,20 +440,22 @@
 
     // Carrito
     function unidades() { return Object.keys(cant).reduce(function (s, k) { return s + cant[k]; }, 0); }
+    function normales() { return Object.keys(cant).reduce(function (s, k) { return s + (PROMO[k] ? 0 : cant[k]); }, 0); }
+    function totalCarrito() { return totalDe(normales()) + Object.keys(cant).reduce(function (s, k) { return s + (PROMO[k] ? cant[k] * PROMO[k] : 0); }, 0); }
     function agregar(k, n) {
       cant[k] = Math.min((cant[k] || 0) + n, 10);
-      track("AddToCart", { content_ids: [k], content_type: "product", value: totalDe(unidades()), currency: "UYU" });
-      seg("carrito", { prod: k, valor: totalDe(unidades()) });
+      track("AddToCart", { content_ids: [k], content_type: "product", value: totalCarrito(), currency: "UYU" });
+      seg("carrito", { prod: k, valor: totalCarrito() });
       render();
     }
     function render() {
-      var keys = Object.keys(cant), n = unidades(), total = totalDe(n), ahorroTotal = n * PRECIO - total;
+      var keys = Object.keys(cant), n = unidades(), nN = normales(), total = totalCarrito(), ahorroTotal = n * PRECIO - total;
       $("badge").textContent = n; $("badge").hidden = !n;
       $("carrito").innerHTML = keys.length ? keys.map(function (k) {
         var x = PRODUCTOS[k];
         return '<div class="linea"><img src="' + x.img + '" alt=""><div class="nom">' + x.nombre + "<small>" + x.para + " · caja de " + x.sobres + " sobres</small>" +
           '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + cant[k] + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Agregar uno">+</button></div></div>' +
-          '<div class="pu">' + fmt(cant[k] * PRECIO) + "</div></div>";
+          '<div class="pu">' + fmt(cant[k] * precioDe(k)) + "</div></div>";
       }).join("") : '<div class="vacio">Tu carrito está vacío<button class="btn btn-borde" type="button" data-cerrar>Seguir comprando</button></div>';
       $("dPie").hidden = !n;
       $("subtotal").textContent = fmt(n * PRECIO);
@@ -453,20 +464,21 @@
       $("total").textContent = fmt(total);
       $("cuotasTotal").textContent = "o " + CUOTAS + " cuotas de " + fmt(Math.round(total / CUOTAS)) + " sin interés";
       // El próximo que sume, ¿cuánto le sale?
-      var siguiente = totalDe(n + 1) - total, regalos = n - pagasDe(n);
+      var siguiente = totalDe(nN + 1) - totalDe(nN), regalos = nN - pagasDe(nN);
       var emp = $("empuje");
-      emp.hidden = !n;
-      emp.className = "empuje" + (n > 1 && (n + 1) % 5 ? " ok" : "");
-      emp.textContent = n === 1 ? "🎁 Sumá un 2º producto y pagalo " + fmt(PRECIO - DESCUENTO) + ": ahorrás " + fmt(DESCUENTO)
-        : (n + 1) % 5 === 0 ? "🎁 ¡Sumá 1 producto más y te lo regalamos!"
+      emp.hidden = !nN;
+      emp.className = "empuje" + (nN > 1 && (nN + 1) % 5 ? " ok" : "");
+      emp.textContent = nN === 1 ? "🎁 Sumá un 2º producto y pagalo " + fmt(PRECIO - DESCUENTO) + ": ahorrás " + fmt(DESCUENTO)
+        : (nN + 1) % 5 === 0 ? "🎁 ¡Sumá 1 producto más y te lo regalamos!"
         : regalos ? "🎉 ¡" + (regalos > 1 ? regalos + " productos" : "1 producto") + " de regalo y ahorrás " + fmt(ahorroTotal) + " en total!"
-        : "🎉 ¡Estás ahorrando " + fmt(ahorroTotal) + "! Llevando 5, el 5º es gratis";
+        : "🎉 ¡Estás ahorrando " + fmt(ahorroTotal) + "! Llevando 5, el 5º es gratis (no cuenta Biopro+ Fit en promo)";
       var faltan = Object.keys(PRODUCTOS).filter(function (k) { return !cant[k]; });
       $("sumarBox").hidden = !n || !faltan.length;
-      $("tituloOtros").textContent = siguiente === 0 ? "Elegí tu producto de regalo 🎁" : "Sumá otro y pagalo " + fmt(siguiente);
+      $("tituloOtros").textContent = siguiente === 0 && nN ? "Elegí tu producto de regalo 🎁" : "Sumá otro producto";
       $("sumar").innerHTML = faltan.map(function (k) {
         var x = PRODUCTOS[k];
-        return '<button type="button" class="mini" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + "</b><span>" + (siguiente ? "+ " + fmt(siguiente) : "¡Gratis! 🎁") + "</span></button>";
+        var sig = PROMO[k] ? PROMO[k] : siguiente;
+        return '<button type="button" class="mini" data-add="' + k + '"><img src="' + x.img + '" alt="" loading="lazy"><b>' + x.nombre + "</b><span>" + (sig ? "+ " + fmt(sig) : "¡Gratis! 🎁") + "</span></button>";
       }).join("");
       $("btnSeguir").textContent = "Finalizar compra · " + fmt(total);
       $("btnPagar").textContent = "💳 Pagar " + fmt(total) + " con Mercado Pago";
@@ -482,7 +494,7 @@
       $("btnSeguir").hidden = p !== 1; $("btnPagar").hidden = p !== 2;
       $("dTitulo").textContent = p === 1 ? "Tu carrito" : "Datos de envío";
       if (p === 2) {
-        seg("datos", { prod: clave, valor: totalDe(unidades()) });
+        seg("datos", { prod: clave, valor: totalCarrito() });
         setTimeout(function () { $("nombre").focus({ preventScroll: true }); }, 300);
       }
     }
@@ -553,8 +565,8 @@
       }
       $("error").textContent = "";
       var items = Object.keys(cant).map(function (k) { return { prod: k, q: cant[k] }; });
-      track("InitiateCheckout", { content_ids: Object.keys(cant), num_items: unidades(), value: totalDe(unidades()), currency: "UYU" });
-      seg("pago", { prod: clave, valor: totalDe(unidades()), nombre: buyer.nombre, telefono: buyer.telefono });
+      track("InitiateCheckout", { content_ids: Object.keys(cant), num_items: unidades(), value: totalCarrito(), currency: "UYU" });
+      seg("pago", { prod: clave, valor: totalCarrito(), nombre: buyer.nombre, telefono: buyer.telefono });
       $("btnPagar").disabled = true; $("btnPagar").textContent = "Abriendo Mercado Pago…";
       fetch("/api/pagar", {
         method: "POST", headers: { "Content-Type": "application/json" },
