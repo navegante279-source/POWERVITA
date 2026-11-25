@@ -15,8 +15,8 @@ export function esChatDeCurso(history = []) {
   return history.some(h => h.role === "system" && h.content === MARCA_CURSO);
 }
 
-// Black Friday del curso: vie 27/11 00:00 a sáb 28/11 23:59 hora Colombia (UTC-5), igual que la página.
-const BF_INI = Date.UTC(2026, 10, 27, 5, 0, 0);
+// Black Friday del curso: desde el 24/11 hasta sáb 28/11 23:59 hora Colombia (UTC-5), igual que la página.
+const BF_INI = Date.UTC(2026, 10, 24, 0, 0, 0);
 const BF_FIN = Date.UTC(2026, 10, 29, 5, 0, 0);
 
 export function esBlackFriday(ahora = Date.now()) {
@@ -26,7 +26,7 @@ export function esBlackFriday(ahora = Date.now()) {
 export function linkPagoCurso(ahora = Date.now()) {
   return esBlackFriday(ahora)
     ? "https://pay.hotmart.com/P108508866T?src=bf_whatsapp"
-    : "https://pay.hotmart.com/P108508866T?checkoutMode=10&src=whatsapp";
+    : "https://pay.hotmart.com/P108508866T?src=whatsapp";
 }
 
 export const PAGINA_CURSO = "https://clientes-por-whatsapp-ten.vercel.app";
@@ -54,7 +54,7 @@ EL CURSO (solo estos datos, no inventes otros)
   6. Qué hacer la semana 2: qué probar, qué apagar y un plan de 30 días.
 - Las clases son videos explicativos con voz, gráficos y ejemplos de campañas reales. No prometas que muestra "cada pantalla" ni grabaciones de pantalla clic por clic.
 - Casos que usa: una tienda online (producto de USD 20, unos USD 5 por venta), un distribuidor de productos de bienestar (menos de USD 0,50 por conversación en las campañas buenas contra unos USD 2,50 en una que había que apagar) y un spa que recibe reservas por chat.
-- Pack de plantillas (opcional, USD 7, se agrega al pagar): textos de anuncios, mensajes de WhatsApp listos para copiar, 30 ganchos, guion de cierre, respuestas a objeciones, kits por rubro, calendario, plan de 30 días y planilla de números (PDF de 19 páginas + planilla).
+- Pack de plantillas (INCLUIDO en el curso sin costo extra, valor USD 7; está dentro del curso, en el módulo "Pack de plantillas"): textos de anuncios, mensajes de WhatsApp listos para copiar, 30 ganchos, guion de cierre, respuestas a objeciones, kits por rubro, calendario, plan de 30 días y planilla de números (PDF de 19 páginas + planilla).
 - Presupuesto sugerido para probar los anuncios: 5 a 10 dólares por día, que se pagan aparte a Meta.
 - Sirve para toda Latinoamérica y España: Meta y WhatsApp funcionan igual. Los ejemplos están en dólares.
 
@@ -64,8 +64,8 @@ PRECIO Y PAGO
 - Acceso inmediato: al aprobarse el pago llega un email de Hotmart con el acceso. Se ve en el celular o la computadora, para siempre.
 - Garantía de 7 días: si no le sirve, pide la devolución desde Hotmart y le devuelven el 100 %.
 ${bf
-  ? `- AHORA ES BLACK FRIDAY (hasta el sábado 28/11 a las 23:59 hora Colombia): el Pack de plantillas va DE REGALO con el curso. Curso + pack por USD 9 (valor USD 16). Menciónalo cuando hables de precio.`
-  : `- Si preguntan por descuentos: el curso ya está a USD 9 y no hay cupones. No anuncies ofertas futuras.`}
+  ? `- AHORA ES BLACK FRIDAY (hasta el sábado 28/11 a las 23:59 hora Colombia): el Pack de plantillas va DE REGALO con el curso. Curso + pack por USD 9 (valor USD 16). Después del Black Friday el pack sigue incluido, pero no lo digas: no anuncies cambios futuros. Menciónalo cuando hables de precio.`
+  : `- Si preguntan por descuentos: el curso ya está a USD 9 con el Pack de plantillas incluido y no hay cupones. No anuncies ofertas futuras.`}
 - Link para comprar: ${link}
 - Página con la clase 1 completa gratis: ${PAGINA_CURSO}
 
